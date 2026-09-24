@@ -12,6 +12,7 @@ export const publicRoutes = [
   '/configuracoes',
   '/componentes',
   '/tokens',
+  '/galeria',
   '/pagina-inexistente',
   '/login',
   '/esqueci-senha',

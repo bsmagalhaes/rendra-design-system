@@ -9,10 +9,7 @@
  */
 @import 'tailwindcss';
 @import 'tw-animate-css';
-@import './theme.css';
-@import '../brand/examples/aurora/theme.css';
-@import '../brand/examples/equilibrio/theme.css';
-@import '../brand/palettes/ardosia.css';
+@import './themes.css';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -180,6 +177,7 @@
   --color-primary-hover-foreground: var(--primary-hover-foreground);
   --color-primary-soft: var(--primary-soft);
   --color-primary-soft-foreground: var(--primary-soft-foreground);
+  --color-primary-text: var(--primary-text);
   --color-secondary: var(--secondary);
   --color-secondary-hover: var(--secondary-hover);
   --color-secondary-foreground: var(--secondary-foreground);

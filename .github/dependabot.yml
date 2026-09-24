@@ -1,0 +1,23 @@
+# Avisa por Pull Request quando dependências e actions ganham versão nova.
+# Cada PR passa pelo CI inteiro antes de você decidir o merge.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    groups:
+      # Atualizações pequenas juntas, para não virar um PR por pacote.
+      menores:
+        update-types: [minor, patch]
+      storybook:
+        patterns: ['storybook', '@storybook/*']
+    # Sem ignore: majors travados hoje (TypeScript 7, ESLint 10, TanStack Table 9) também
+    # chegam como PR. O CI mostra se já é possível atualizar; se quebrar, feche o PR.
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

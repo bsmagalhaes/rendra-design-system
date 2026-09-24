@@ -492,7 +492,7 @@ export function Table<T>({
               </div>
               {(secondary.length > 0 || expandable) && (
                 <Collapsible.Root>
-                  <Collapsible.Trigger className="group flex min-h-touch cursor-pointer items-center gap-1 text-sm font-medium text-primary">
+                  <Collapsible.Trigger className="group flex min-h-touch cursor-pointer items-center gap-1 text-sm font-medium text-primary-text">
                     <span className="group-data-[state=open]:hidden">Ver detalhes</span>
                     <span className="hidden group-data-[state=open]:inline">Ocultar detalhes</span>
                     <ChevronDown

@@ -12,3 +12,7 @@ docs/02.*
 
 # Configuração local do Claude Code
 .claude/
+
+# Referências visuais locais (as oficiais são as do Linux, geradas no CI)
+tests/__screenshots__/win32
+tests/__screenshots__/darwin

@@ -436,8 +436,15 @@ export function TokensPage() {
                   <span className="text-sm font-medium">Suave</span>
                   <RatioChip fg={`--${s.name}-soft-foreground`} bg={`--${s.name}-soft`} />
                 </div>
+                {s.name === 'primary' && (
+                  <div className="flex items-center justify-between gap-2 border-t p-4">
+                    <span className="text-sm font-medium text-primary-text">Como texto</span>
+                    <RatioChip fg="--primary-text" bg="--card" />
+                  </div>
+                )}
                 <div className="flex flex-wrap gap-x-3 gap-y-1 border-t p-4 font-mono text-xs text-muted-foreground">
                   <span>{s.name}</span>
+                  {s.name === 'primary' && <span>primary-text</span>}
                   <span>{s.name}-foreground</span>
                   <span>{s.name}-soft</span>
                   <span>{s.name}-soft-foreground</span>

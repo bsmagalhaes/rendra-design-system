@@ -28,6 +28,7 @@
   --primary-hover-foreground: #ffffff;
   --primary-soft: #e9eef1;
   --primary-soft-foreground: #2e414d;
+  --primary-text: #2e414d;
   --secondary: #ea600d;
   --secondary-hover: #f2803a;
   --secondary-foreground: #1c1917;
@@ -98,6 +99,7 @@
   --primary-hover-foreground: #ffffff;
   --primary-soft: #22313a;
   --primary-soft-foreground: #b8c8d2;
+  --primary-text: #9db4c2;
   --secondary: #ea600d;
   --secondary-hover: #f2803a;
   --secondary-foreground: #1c1917;

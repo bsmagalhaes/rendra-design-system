@@ -39,7 +39,7 @@ function BottomNav() {
                 className={cn(
                   'flex min-h-touch flex-col items-center justify-center gap-1 py-2 text-xs font-medium transition-colors',
                   to === active || item.children?.some((c) => c.to === active)
-                    ? 'text-primary'
+                    ? 'text-primary-text'
                     : 'text-muted-foreground active:text-foreground',
                 )}
               >

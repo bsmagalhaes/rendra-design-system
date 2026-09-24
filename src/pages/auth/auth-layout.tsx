@@ -55,7 +55,7 @@ export function AuthLayout({
             {back && (
               <Link
                 to={back.to}
-                className="-ml-2 flex min-h-touch items-center gap-1 self-start rounded-item px-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary md:min-h-0 md:py-1"
+                className="-ml-2 flex min-h-touch items-center gap-1 self-start rounded-item px-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary-text md:min-h-0 md:py-1"
               >
                 <ArrowLeft className="size-icon-sm" aria-hidden />
                 {back.label}

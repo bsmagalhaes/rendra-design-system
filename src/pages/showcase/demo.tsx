@@ -68,7 +68,7 @@ export function GroupTitle({
 }) {
   return (
     <div id={id} className="flex scroll-mt-6 flex-col gap-1 border-b pb-4">
-      <span className="text-xs font-medium tracking-wide text-primary uppercase">Grupo</span>
+      <span className="text-xs font-medium tracking-wide text-primary-text uppercase">Grupo</span>
       <h2 className="text-2xl">{title}</h2>
       <p className="text-sm text-muted-foreground">{description}</p>
     </div>

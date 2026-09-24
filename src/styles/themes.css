@@ -1,0 +1,12 @@
+/*
+ * TEMAS DO PROJETO
+ * ----------------
+ * Lista os arquivos de marca carregados. É o único import de marca no CSS: o globals.css
+ * é genérico e pode ser atualizado pelo registry sem apagar a marca do projeto.
+ *
+ * Projeto com uma marca só: deixe apenas o theme.css e apague os exemplos.
+ */
+@import './theme.css';
+@import '../brand/examples/aurora/theme.css';
+@import '../brand/examples/equilibrio/theme.css';
+@import '../brand/palettes/ardosia.css';

@@ -21,7 +21,7 @@ import { AuthLayout } from './auth-layout'
 const wait = (ms: number) => new Promise((r) => window.setTimeout(r, ms))
 // Links de texto com 44px de toque no celular
 const link =
-  'inline-flex min-h-touch items-center font-medium text-primary underline-offset-4 hover:text-primary-hover hover:underline md:min-h-0'
+  'inline-flex min-h-touch items-center font-medium text-primary-text underline-offset-4 hover:text-primary-hover hover:underline md:min-h-0'
 
 /* ---------------------------------------------------------------- Login */
 
