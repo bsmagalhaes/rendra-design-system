@@ -150,7 +150,7 @@ function DayList({
           <button
             type="button"
             onClick={() => onEventClick?.(e)}
-            className="flex w-full cursor-pointer items-stretch gap-3 rounded-item border bg-card p-3 text-left transition-colors outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex w-full cursor-pointer items-stretch gap-3 rounded-block border bg-card p-3 text-left transition-colors outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
           >
             <span
               aria-hidden

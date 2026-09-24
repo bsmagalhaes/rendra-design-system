@@ -640,7 +640,7 @@ export function ChatThread({
                 {m.replyTo &&
                   (() => {
                     const quoteClass = cn(
-                      'flex flex-col rounded-item border-l-4 px-2 py-1 text-left text-xs',
+                      'flex flex-col rounded-block border-l-4 px-2 py-1 text-left text-xs',
                       mine && !m.deleted
                         ? 'border-primary-foreground/60 bg-primary-foreground/15'
                         : 'border-primary bg-muted',
@@ -974,7 +974,7 @@ export function ChatComposer({
         </div>
       )}
       {(quote || editing) && (
-        <div className="flex items-start gap-2 rounded-item border-l-4 border-primary bg-muted px-3 py-2 text-xs">
+        <div className="flex items-start gap-2 rounded-block border-l-4 border-primary bg-muted px-3 py-2 text-xs">
           <span className="flex min-w-0 flex-1 flex-col">
             <span className="font-semibold">
               {editing ? 'Editando mensagem' : `Respondendo a ${quote?.author ?? 'mensagem'}`}
