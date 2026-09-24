@@ -9,6 +9,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react'
+import { fieldSpanClass, type FieldSpan } from '@/components/layout/tokens'
 import { cn } from '@/lib/cn'
 
 /*
@@ -56,8 +57,13 @@ export interface FieldProps {
   help?: ReactNode
   /** Mensagem de erro, abaixo do controle, no lugar da ajuda. */
   error?: ReactNode
-  /** Ocupa as duas colunas do grid do formulário. */
-  span?: 'half' | 'full'
+  /**
+   * Largura na grade de formulário (Grid form ou FormSection): xs (17%), sm (25%),
+   * md (33%, padrão: 3 por linha), lg (50%), xl (67%), full. half é o antigo e vale md.
+   */
+  span?: FieldSpan | 'half'
+  /** Começa uma linha nova (ex.: os campos que vêm depois do CEP ou do CNPJ). */
+  newRow?: boolean
   /**
    * Reserva a linha da mensagem mesmo vazia, para o erro não empurrar o que vem abaixo
    * (útil em formulários em grid de 2 colunas com validação ao digitar). Padrão: não
@@ -77,7 +83,8 @@ export function Field({
   required,
   help,
   error,
-  span = 'half',
+  span = 'md',
+  newRow,
   reserveMessage = false,
   id,
   className,
@@ -109,7 +116,12 @@ export function Field({
     >
       <div
         data-slot="field"
-        className={cn('flex min-w-0 flex-col gap-2', span === 'full' && 'md:col-span-2', className)}
+        className={cn(
+          'flex min-w-0 flex-col gap-2',
+          fieldSpanClass[span === 'half' ? 'md' : span],
+          newRow && '@md:col-start-1 @3xl:col-start-1',
+          className,
+        )}
       >
         {label && (
           <Label htmlFor={controlId} required={required}>

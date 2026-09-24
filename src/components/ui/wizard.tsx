@@ -181,7 +181,7 @@ export interface WizardProps {
   onCancel?: () => void
   finishLabel?: string
   orientation?: 'horizontal' | 'vertical'
-  /** Rodapé fixo no fim da área rolável (padrão em página). */
+  /** Botões no rodapé fixo da tela. Padrão: não, seguem junto do card do wizard. */
   stickyFooter?: boolean
 }
 
@@ -194,7 +194,7 @@ export function Wizard({
   onCancel,
   finishLabel = 'Concluir',
   orientation = 'horizontal',
-  stickyFooter = true,
+  stickyFooter = false,
 }: WizardProps) {
   const [current, setCurrent] = useState(0)
   const [errors, setErrors] = useState<number[]>([])

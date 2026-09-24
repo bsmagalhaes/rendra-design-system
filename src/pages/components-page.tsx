@@ -36,6 +36,7 @@ const groups = [
     items: [
       ['input', 'Input'],
       ['textarea', 'Textarea'],
+      ['editor', 'RichTextEditor'],
       ['select', 'Select'],
       ['checkbox-radio', 'Checkbox, Radio, Switch'],
       ['datepicker', 'DatePicker'],
@@ -82,6 +83,7 @@ const groups = [
       ['alert', 'Alert'],
       ['toast', 'Toast'],
       ['modal', 'Modal'],
+      ['texto-orientativo', 'Texto orientativo (InfoHint)'],
       ['popover-tooltip', 'Popover e Tooltip'],
       ['empty-state', 'EmptyState'],
       ['progress-skeleton', 'Progress e Skeleton'],
@@ -205,7 +207,7 @@ export function ComponentsPage() {
             <Demo
               id="primitivas"
               title="Primitivas de layout"
-              description="Toda tela é composta por Container, Stack, Inline, Grid, Section e PageHeader. O conteúdo ocupa 95% da largura a partir de 1024px."
+              description="Toda tela é composta por Container, Stack, Inline, Grid, Section e PageHeader. O respiro da página é igual em todos os lados: 16px no celular e 24px a partir do tablet."
               props="Container (size, padded) · Stack (gap, align) · Inline (gap, justify, wrap, stackOnMobile) · Grid (cols por faixa, responsive: screen | container) · Section · PageHeader"
             >
               <Row label="Grid 1, 2 e 4 colunas">

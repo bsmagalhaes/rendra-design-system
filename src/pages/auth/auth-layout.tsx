@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import { useBrand } from '@/brand'
 import { Stack } from '@/components/layout'
 import { BrandLogo } from '@/components/ui/brand-logo'
+import { useRouteMeta } from '@/hooks/use-route-meta'
 import { cn } from '@/lib/cn'
 
 /**
@@ -29,6 +30,7 @@ export function AuthLayout({
   /** sm: uma coluna (login, senha); md: largura para duas colunas (cadastro). */
   width?: 'sm' | 'md'
 }) {
+  useRouteMeta()
   const { brand } = useBrand()
 
   return (
@@ -36,7 +38,7 @@ export function AuthLayout({
       {/* Texto embaixo à esquerda; o ponto de luz do degradê fica no alto à direita */}
       <aside className="hidden flex-col justify-between bg-gradient-brand p-12 text-gradient-brand-foreground lg:flex">
         <BrandLogo on="brand" className="self-start" />
-        <Stack gap="4" className="max-w-md">
+        <Stack gap="4">
           <p className="text-3xl font-semibold tracking-tight">{brand.tagline}</p>
           <p className="text-base opacity-80">Acesse sua conta para continuar de onde parou.</p>
         </Stack>

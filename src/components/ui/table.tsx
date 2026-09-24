@@ -20,6 +20,7 @@ import {
   RotateCw,
 } from 'lucide-react'
 import { Collapsible } from 'radix-ui'
+import { Link } from 'react-router'
 import { Fragment, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { Badge, type BadgeProps } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -51,6 +52,13 @@ export interface TableColumn<T> {
   accessor: (row: T) => unknown
   /** Renderização própria da célula. */
   cell?: (row: T) => ReactNode
+  /**
+   * Linhas extras abaixo do valor, em texto menor (ex.: razão social e CNPJ abaixo do nome;
+   * e-mail abaixo do telefone). Valores vazios são ignorados.
+   */
+  details?: (row: T) => (ReactNode | null | undefined)[]
+  /** O valor vira link para esta rota (ex.: abrir o cadastro), com hover de clicável. */
+  href?: (row: T) => string
   /**
    * Formato automático: number e currency alinham à direita; date vira DD/MM/AAAA;
    * badge usa badgeTone para escolher a cor.
@@ -182,6 +190,36 @@ function formatValue<T>(col: TableColumn<T>, row: T): ReactNode {
     default:
       return String(v)
   }
+}
+
+/** Valor da célula com link (href) e linhas extras (details), igual no desktop e no card. */
+function CellContent<T>({ col, row, title }: { col: TableColumn<T>; row: T; title?: boolean }) {
+  const main = formatValue(col, row)
+  const extra = (col.details?.(row) ?? []).filter((d) => d != null && d !== '')
+  const value = col.href ? (
+    <Link
+      to={col.href(row)}
+      className={cn(
+        'rounded-item font-medium text-foreground underline-offset-4 transition-colors outline-none hover:text-primary-text hover:underline focus-visible:ring-2 focus-visible:ring-ring',
+        title && 'inline-flex min-h-touch items-center md:min-h-0',
+      )}
+    >
+      {main}
+    </Link>
+  ) : (
+    main
+  )
+  if (!extra.length) return <>{value}</>
+  return (
+    <span className="flex min-w-0 flex-col">
+      <span className="min-w-0">{value}</span>
+      {extra.map((d, i) => (
+        <span key={i} className="truncate text-xs font-normal text-muted-foreground">
+          {d}
+        </span>
+      ))}
+    </span>
+  )
 }
 
 const alignOf = <T,>(c: TableColumn<T>) =>
@@ -582,7 +620,7 @@ export function Table<T>({
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   {title && (
                     <span className="line-clamp-2 text-base font-semibold">
-                      {formatValue(title, row)}
+                      <CellContent col={title} row={row} title />
                     </span>
                   )}
                   {others.map((c) => (
@@ -591,7 +629,7 @@ export function Table<T>({
                       className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground"
                     >
                       <span className="sr-only">{c.header}: </span>
-                      {formatValue(c, row)}
+                      <CellContent col={c} row={row} />
                     </span>
                   ))}
                 </div>
@@ -611,7 +649,9 @@ export function Table<T>({
                       {secondary.map((c) => (
                         <div key={c.id} className="flex flex-col gap-1">
                           <dt className="text-xs text-muted-foreground">{c.header}</dt>
-                          <dd className="text-sm">{formatValue(c, row)}</dd>
+                          <dd className="text-sm">
+                            <CellContent col={c} row={row} />
+                          </dd>
                         </div>
                       ))}
                     </dl>
@@ -633,7 +673,7 @@ export function Table<T>({
 
   /* ---------------- desktop: tabela */
   const desktopBody = () => (
-    <div className="overflow-x-auto" data-allow-overflow>
+    <div className="scrollbar-subtle overflow-x-auto" data-allow-overflow>
       <table className="w-full border-collapse text-sm" aria-label={aria['aria-label']}>
         <thead className="border-b bg-muted/50">
           <tr>
@@ -788,7 +828,7 @@ export function Table<T>({
                             <div
                               className={cn(clamp[c.lines ?? 2], align === 'right' && 'ml-auto')}
                             >
-                              {formatValue(c, row)}
+                              <CellContent col={c} row={row} />
                             </div>
                           </td>
                         )

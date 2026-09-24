@@ -34,6 +34,7 @@ export const FormularioLongo: Story = { args: { path: '/clientes/novo' } }
 export const CadastroEmWizard: Story = { args: { path: '/cadastro' } }
 export const Configuracoes: Story = { args: { path: '/configuracoes' } }
 export const Tarefas: Story = { args: { path: '/tarefas' } }
+export const Atendimento: Story = { args: { path: '/atendimento' } }
 export const Agenda: Story = { args: { path: '/agenda' } }
 export const FunilKanban: Story = { args: { path: '/kanban' } }
 export const Galeria: Story = { args: { path: '/galeria' } }

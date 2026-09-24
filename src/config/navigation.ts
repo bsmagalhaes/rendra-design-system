@@ -2,6 +2,7 @@ import {
   Blocks,
   CalendarDays,
   ClipboardList,
+  Headset,
   Images,
   LayoutDashboard,
   ListChecks,
@@ -91,6 +92,13 @@ export const navigation: NavGroup[] = [
         to: '/tarefas',
         icon: ListChecks,
         description: 'Pendências e prazos da equipe.',
+      },
+      {
+        title: 'Atendimento',
+        to: '/atendimento',
+        icon: Headset,
+        badge: 3,
+        description: 'WhatsApp, redes sociais, site e e-mail em um lugar só.',
       },
       {
         title: 'Agenda',

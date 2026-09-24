@@ -163,7 +163,34 @@ for (const m of menus) {
   })
 }
 
-// Calendário, agenda e kanban
+// Atendimento, painel em modo de ajuste, calendário, agenda e kanban
+await shot(browser, {
+  name: 'safira-atendimento',
+  route: '/atendimento',
+  brand: 'safira',
+  width: 1440,
+  height: 900,
+  act: async (p) => {
+    await p.getByRole('button', { name: /Clínica Vida Plena/ }).click()
+  },
+})
+await shot(browser, {
+  name: 'aurora-atendimento-mobile',
+  route: '/atendimento',
+  brand: 'aurora',
+  width: 390,
+  height: 844,
+  act: async (p) => {
+    await p.getByRole('button', { name: /Clínica Vida Plena/ }).click()
+  },
+})
+await shot(browser, {
+  name: 'safira-dashboard-ajuste',
+  route: '/',
+  brand: 'safira',
+  act: (p) => p.getByRole('button', { name: 'Ajustar dashboard' }).click(),
+})
+
 await shot(browser, { name: 'safira-calendario', route: '/agenda', brand: 'safira' })
 await shot(browser, {
   name: 'equilibrio-agenda',

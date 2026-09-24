@@ -26,9 +26,11 @@ REGRAS QUE NÃO PODEM SER QUEBRADAS
 - Só a escala de espaço permitida (0, 1, 2, 3, 4, 6, 8, 12, 16, 24) e tokens nomeados. Proibido valor arbitrário (p-[13px]), estilo inline, 100vh e degrau fora da escala.
 - Contêiner certo para o volume: Modal até 3 campos, Drawer até cerca de 12, página inteira (seções ou Wizard) acima disso. Nunca modal dentro de modal.
 - Botões sempre pela ActionBar: 1 botão = 100%; 2 botões = cancelar 30% + principal 70%; 3 ou mais = extras no menu.
+- Nunca botão solto: cada ação vai no rodapé fixo, na barra da tabela, no PageHeader actions, no CardHeader actions ou no menu da linha. Troque todo botão avulso do sistema antigo por um desses lugares.
+- Texto orientativo nunca no corpo: parágrafos de instrução, Alerts informativos e botões "Saiba mais" do sistema antigo viram help (ícone de informação ao lado do título, no PageHeader, CardTitle ou FormSection), que abre um modal.
 - Listagem: barra de ferramentas dentro do mesmo card da Table, chips de filtro, estados vazio, carregando e erro, situação antes das ações.
 - Header sempre fixo; título da página no header, com a trilha abaixo; uma única área de rolagem (o main do AppShell).
-- Fundo da tela e dos campos #f5f6f7, cards brancos; conteúdo com 95% da largura a partir de 1024px; contraste mínimo WCAG AA.
+- Fundo da tela e dos campos #f5f6f7, cards brancos; respiro de página de 24px igual em todos os lados; contraste mínimo WCAG AA.
 - Interface em português do Brasil; datas DD/MM/AAAA; valores R$ 1.250,00.
 
 MARCA DESTE PROJETO

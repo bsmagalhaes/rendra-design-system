@@ -14,6 +14,7 @@ import { RadioGroup } from '@/components/ui/radio-group'
 import { Select, type SelectOption } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
+import { RichTextEditor } from '@/components/ui/rich-text-editor'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from '@/components/ui/toast'
 import { Upload } from '@/components/ui/upload'
@@ -300,6 +301,20 @@ export function FormsSection() {
             <Textarea counter maxLength={20} defaultValue="Este texto é longo demais." />
           </Field>
         </Grid>
+      </Demo>
+
+      <Demo
+        id="editor"
+        title="RichTextEditor"
+        description="Texto rico com títulos, negrito, listas, alinhamento, links, tabela, imagem e modo HTML. Cole um print (Ctrl+V) ou arraste uma imagem; toque nela para redimensionar pelos 4 cantos."
+        props="value (HTML), onChange, placeholder, onImageUpload, minHeight, invalid, disabled"
+      >
+        <Field
+          label="Descrição do contrato"
+          help="Aceita HTML: use o botão de código para colar ou editar."
+        >
+          <RichTextEditor defaultValue="<h2>Proposta comercial</h2><p>Plano <strong>Empresa</strong> com <em>suporte dedicado</em>.</p><ul><li>Implantação em 15 dias</li><li>Treinamento da equipe</li></ul><table><tbody><tr><th>Item</th><th>Valor</th></tr><tr><td>Mensalidade</td><td>R$ 1.250,00</td></tr></tbody></table>" />
+        </Field>
       </Demo>
 
       <Demo

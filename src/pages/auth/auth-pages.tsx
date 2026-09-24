@@ -63,6 +63,11 @@ export function LoginPage() {
       }
     >
       <Form form={form} onSubmit={submit} className="gap-4 md:gap-4">
+        <Alert
+          type="info"
+          title="Demonstração"
+          description="Use qualquer e-mail válido e qualquer senha com 6 caracteres ou mais. Uma senha menor mostra a mensagem de erro."
+        />
         {erro && <Alert type="error" title="Não foi possível entrar" description={erro} />}
         <Stack gap="fields">
           <FormField<Login>
@@ -202,6 +207,11 @@ export function VerifyCodePage() {
         }}
         className="flex flex-col gap-6"
       >
+        <Alert
+          type="info"
+          title="Demonstração"
+          description="Digite qualquer código de 6 dígitos. O código 000000 mostra a mensagem de código incorreto."
+        />
         <Field
           label="Código de verificação"
           error={erro}
@@ -367,7 +377,7 @@ export function SignupPage() {
     >
       <Form form={form} onSubmit={submit} className="gap-2 md:gap-2">
         {/* Duas colunas a partir de 768px; uma no celular */}
-        <Grid cols={{ base: 1, md: 2 }} gap="fields">
+        <Grid form>
           <FormField<Signup>
             name="nome"
             label="Seu nome"

@@ -1,13 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
 import { Calendar } from '@/components/ui/calendar'
+import { ChatComposer, ChatThread } from '@/components/ui/chat'
 import { Kanban, moveKanbanCard, type KanbanCard } from '@/components/ui/kanban'
+import { demoTickets } from '@/mocks/chat'
 import { demoCards, demoEvents, pipelineColumns } from '@/mocks/planning'
 
 /* Calendar (calendário e agenda) e Kanban. */
 
 const meta = {
-  title: 'Planejamento/Calendar e Kanban',
+  title: 'Planejamento/Calendar, Kanban e Chat',
   component: Calendar,
   args: { events: demoEvents(), 'aria-label': 'Calendário' },
   argTypes: {
@@ -37,3 +39,22 @@ function KanbanDemo() {
 }
 
 export const QuadroKanban: Story = { render: () => <KanbanDemo /> }
+
+function ChatDemo() {
+  const [messages, setMessages] = useState(() => demoTickets()[6]?.messages ?? [])
+  return (
+    <div className="flex h-chart-md min-h-0 flex-col overflow-hidden rounded-surface border">
+      <ChatThread messages={messages} />
+      <ChatComposer
+        onSend={({ text }) =>
+          setMessages((m) => [
+            ...m,
+            { id: String(Date.now()), from: 'agent', text, time: new Date(), status: 'sent' },
+          ])
+        }
+      />
+    </div>
+  )
+}
+
+export const Chat: Story = { render: () => <ChatDemo /> }

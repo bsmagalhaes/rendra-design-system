@@ -31,9 +31,13 @@ jobs:
         run: npm run build
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
-      # O GitHub Pages não conhece as rotas do app: o 404.html devolve o próprio app,
-      # que abre a tela certa pelo endereço (link direto para /clientes funciona).
-      - run: cp dist/index.html dist/404.html
+          SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+      # SEO e AEO: uma página por rota (link direto responde 200 e o buscador indexa cada
+      # tela), 404.html para o resto, sitemap.xml, robots.txt e llms.txt.
+      - name: Páginas por rota, sitemap, robots e llms.txt
+        run: node scripts/seo-build.mjs
+        env:
+          SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
       - name: Registry do shadcn (dist/r)
         run: npm run registry:build
       - name: Build do Storybook

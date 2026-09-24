@@ -3,8 +3,7 @@ import { Building2, Mail, Rocket, Star, User } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { z } from 'zod'
-import { Container, PageHeader, Stack } from '@/components/layout'
-import { gapClass } from '@/components/layout/tokens'
+import { Container, Grid, PageHeader, Stack } from '@/components/layout'
 import { Card, CardContent } from '@/components/ui/card'
 import { DatePicker } from '@/components/ui/date-picker'
 import { Form, FormField } from '@/components/ui/form'
@@ -13,7 +12,6 @@ import { RadioGroup } from '@/components/ui/radio-group'
 import { Select } from '@/components/ui/select'
 import { toast } from '@/components/ui/toast'
 import { Wizard } from '@/components/ui/wizard'
-import { cn } from '@/lib/cn'
 import { formatCurrency, parseLocaleNumber } from '@/lib/masks'
 import { zBR } from '@/lib/validators'
 
@@ -45,8 +43,6 @@ const steps = [
   { id: 'contrato', title: 'Contrato', description: 'O que contratar' },
   { id: 'revisao', title: 'Revisão', description: 'Confirmar tudo' },
 ]
-
-const grid = cn('grid grid-cols-1 md:grid-cols-2', gapClass.fields)
 
 /** Cadastro complexo em página inteira, em etapas, com validação por etapa. */
 export function ClientWizardPage() {
@@ -81,7 +77,7 @@ export function ClientWizardPage() {
       <Stack gap="section">
         <PageHeader
           title="Cadastro guiado"
-          description="Quatro etapas curtas. Você pode voltar e revisar a qualquer momento."
+          help="Quatro etapas curtas. Você pode voltar e revisar a qualquer momento."
         />
         <Form form={form} onSubmit={() => undefined}>
           <Wizard
@@ -100,19 +96,21 @@ export function ClientWizardPage() {
             {[
               <Card key="dados">
                 <CardContent>
-                  <div className={grid}>
-                    <FormField<Values>
-                      name="nome"
-                      label="Nome ou razão social"
-                      required
-                      span="full"
-                      render={(f) => <Input {...f} icon={<User />} />}
-                    />
+                  <Grid form>
                     <FormField<Values>
                       name="documento"
                       label="CPF ou CNPJ"
                       required
+                      span="sm"
                       render={(f) => <Input {...f} mask="cpfCnpj" />}
+                    />
+                    <FormField<Values>
+                      name="nome"
+                      label="Nome ou razão social"
+                      required
+                      span="xl"
+                      newRow
+                      render={(f) => <Input {...f} icon={<User />} />}
                     />
                     <FormField<Values>
                       name="telefone"
@@ -124,25 +122,34 @@ export function ClientWizardPage() {
                       name="email"
                       label="E-mail"
                       required
-                      span="full"
                       render={(f) => (
                         <Input {...f} type="email" inputMode="email" icon={<Mail />} />
                       )}
                     />
-                  </div>
+                  </Grid>
                 </CardContent>
               </Card>,
               <Card key="endereco">
                 <CardContent>
-                  <div className={grid}>
+                  <Grid form>
                     <FormField<Values>
                       name="cep"
                       label="CEP"
                       required
+                      span="sm"
                       render={(f) => <Input {...f} mask="cep" />}
                     />
                     <FormField<Values>
+                      name="cidade"
+                      label="Cidade"
+                      required
+                      span="lg"
+                      newRow
+                      render={(f) => <Input {...f} />}
+                    />
+                    <FormField<Values>
                       name="uf"
+                      span="xs"
                       label="UF"
                       required
                       render={(f) => (
@@ -156,19 +163,12 @@ export function ClientWizardPage() {
                         />
                       )}
                     />
-                    <FormField<Values>
-                      name="cidade"
-                      label="Cidade"
-                      required
-                      span="full"
-                      render={(f) => <Input {...f} />}
-                    />
-                  </div>
+                  </Grid>
                 </CardContent>
               </Card>,
               <Card key="contrato">
                 <CardContent>
-                  <div className={grid}>
+                  <Grid form>
                     <FormField<Values>
                       name="plano"
                       label="Plano"
@@ -214,7 +214,7 @@ export function ClientWizardPage() {
                       required
                       render={(f) => <DatePicker {...f} label="Início" minDate={new Date()} />}
                     />
-                  </div>
+                  </Grid>
                 </CardContent>
               </Card>,
               <Card key="revisao">

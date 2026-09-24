@@ -1,14 +1,18 @@
 # Rendra Design System
 
-**Design system completo e boilerplate React para sistemas administrativos: tokens, três templates, componentes, AppShell, telas prontas, Storybook e testes de layout.** Feito para ser o ponto de partida de todos os projetos: layouts previsíveis, espaçamento equilibrado e funcionamento completo no celular. Para aplicar a outro sistema, você troca cores, fonte e ícones da marca, e nenhum componente muda.
+**Template de sistema e layout de sistema administrativo em React, gratuito e open source: design system completo e boilerplate com tokens, três templates, componentes, AppShell, telas prontas (dashboard, listagem, cadastro, CRM kanban, agenda e chat omnichannel), Storybook e testes de layout.** Feito para ser o ponto de partida de todos os projetos: layouts previsíveis, espaçamento equilibrado e funcionamento completo no celular. Para aplicar a outro sistema, você troca cores, fonte e ícones da marca, e nenhum componente muda.
 
-![React 19](https://img.shields.io/badge/React-19-149eca) ![TypeScript 5.9](https://img.shields.io/badge/TypeScript-5.9-3178c6) ![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8) ![Vite 8](https://img.shields.io/badge/Vite-8-646cff) ![Storybook 10](https://img.shields.io/badge/Storybook-10-ff4785) ![Playwright](https://img.shields.io/badge/Playwright-608_testes-2ead33) [![CI](https://github.com/bsmagalhaes/rendra-design-system/actions/workflows/ci.yml/badge.svg)](https://github.com/bsmagalhaes/rendra-design-system/actions/workflows/ci.yml)
+![React 19](https://img.shields.io/badge/React-19-149eca) ![TypeScript 5.9](https://img.shields.io/badge/TypeScript-5.9-3178c6) ![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8) ![Vite 8](https://img.shields.io/badge/Vite-8-646cff) ![Storybook 10](https://img.shields.io/badge/Storybook-10-ff4785) ![Playwright](https://img.shields.io/badge/Playwright-722_testes-2ead33) [![CI](https://github.com/bsmagalhaes/rendra-design-system/actions/workflows/ci.yml/badge.svg)](https://github.com/bsmagalhaes/rendra-design-system/actions/workflows/ci.yml)
 
-**Veja funcionando, sem instalar nada:** [demo do app](https://bsmagalhaes.github.io/rendra-design-system/) · [galeria com códigos de modelo](https://bsmagalhaes.github.io/rendra-design-system/galeria) · [Storybook](https://bsmagalhaes.github.io/rendra-design-system/storybook/) · [vitrine de componentes](https://bsmagalhaes.github.io/rendra-design-system/componentes) · [agenda](https://bsmagalhaes.github.io/rendra-design-system/agenda) · [kanban](https://bsmagalhaes.github.io/rendra-design-system/kanban). No demo, o menu do avatar troca modelo, paleta, modo e layout ao vivo.
+**Veja funcionando, sem instalar nada:** [demo do app](https://bsmagalhaes.github.io/rendra-design-system/) · [galeria com códigos de modelo](https://bsmagalhaes.github.io/rendra-design-system/galeria/) · [Storybook](https://bsmagalhaes.github.io/rendra-design-system/storybook/) · [vitrine de componentes](https://bsmagalhaes.github.io/rendra-design-system/componentes/) · [atendimento](https://bsmagalhaes.github.io/rendra-design-system/atendimento/) · [agenda](https://bsmagalhaes.github.io/rendra-design-system/agenda/) · [kanban](https://bsmagalhaes.github.io/rendra-design-system/kanban/). No demo, o menu do avatar troca modelo, paleta, modo e layout ao vivo.
 
-| Calendário e agenda                                     | Kanban                                   |
-| ------------------------------------------------------- | ---------------------------------------- |
-| ![Calendário do mês](docs/images/safira-calendario.png) | ![Kanban](docs/images/aurora-kanban.png) |
+| Atendimento omnichannel                                                                                                                     | Painel com widgets ajustáveis                                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![Atendimento](docs/images/safira-atendimento.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=safira-atendimento) | [![Painel em widgets](docs/images/safira-dashboard-ajuste.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=safira-dashboard-ajuste) |
+
+| Calendário e agenda                                                                                                                             | Kanban                                                                                                                       |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| [![Calendário do mês](docs/images/safira-calendario.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=safira-calendario) | [![Kanban](docs/images/aurora-kanban.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=aurora-kanban) |
 
 ---
 
@@ -18,27 +22,30 @@ O Rendra reúne, num único repositório, tudo o que uma equipe precisa para con
 
 - um **sistema de tokens** travado (espaço, tipografia, cores, raio, sombra, degradê e densidade), em que o que está fora da escala simplesmente não existe;
 - **três templates** com identidade própria e **quatro paletas** de cores combináveis entre si, com sidebar sempre colorida e logotipo que acompanha o tema;
-- **mais de 40 componentes**, um por finalidade, todos reconstruídos para o celular sem versões paralelas;
+- **mais de 50 componentes**, um por finalidade, todos reconstruídos para o celular sem versões paralelas;
 - um **AppShell** configurável por props (menu lateral ou superior, sidebar recolhida, submenu em segunda barra, mega menu);
 - **telas base** prontas (autenticação completa, painel, listagem, detalhe, formulário longo, wizard, configurações);
 - uma **vitrine** navegável e um **Storybook** com mais de 100 stories;
 - **regras escritas e verificadas por máquina**: verificador de regras de design, ESLint com acessibilidade, testes unitários, e testes no navegador de layout, acessibilidade (axe-core) e regressão visual, rodando no CI a cada Pull Request;
-- um **registry do shadcn**: projetos criados a partir do Rendra recebem as melhorias dos componentes com um comando.
+- um **registry do shadcn**: projetos criados a partir do Rendra recebem as melhorias dos componentes com um comando;
+- **SEO e AEO prontos** no demo: título e descrição por tela (`src/config/seo.ts`), página estática por rota, `sitemap.xml`, `robots.txt`, `llms.txt`, Open Graph e dados estruturados (JSON-LD com perguntas frequentes).
 
 Duas regras mestras guiam tudo:
 
 1. **Um componente por finalidade.** Existe um Select, uma Table, um Modal, um Drawer, um Input. Diferenças são props, nunca arquivos novos.
 2. **Mobile-first real.** Tudo é desenhado primeiro para 360px, sem rolagem horizontal, sem ação que dependa de hover e com toque mínimo de 44px.
 
+E duas de boas práticas, verificadas pelo `npm run check:rules`: **nunca botão solto** (cada ação tem lugar previsto: rodapé fixo, barra da tabela, cabeçalho da tela ou do card, menu da linha) e **texto orientativo nunca no corpo da tela** (vai num ícone de informação ao lado do título, que abre um modal).
+
 ---
 
 ## Galeria
 
-> **Quer ampliar sem sair da tela?** Abra a [galeria do demo](https://bsmagalhaes.github.io/rendra-design-system/galeria): cada imagem abre em popup, com setas para passar e Esc para fechar. Aqui no GitHub, clicar numa imagem abre a imagem sozinha (o GitHub não permite popup no README), por isso as telas já aparecem em tamanho de leitura e os grupos extras abrem na própria página.
+> **Clique em qualquer imagem** para abri-la em popup na [galeria do demo](https://bsmagalhaes.github.io/rendra-design-system/galeria/), com setas para passar e Esc para fechar. (O GitHub não permite popup dentro do README; por isso as telas já aparecem em tamanho de leitura aqui e os grupos extras abrem na própria página.)
 
 ## Códigos de modelo
 
-Cada escolha visual tem um código curto: **T** para o tema (formato e fonte), **C** para as cores e **M** para o menu. `T1-C4-M5`, por exemplo, é o tema Safira com as cores Ardósia e o menu superior. Escolha na [galeria](https://bsmagalhaes.github.io/rendra-design-system/galeria), onde cada captura mostra seu código e o bloco "Monte seu código" abre o demo já aplicado, e informe o código no briefing: a IA já sabe o que aplicar e pula essas perguntas.
+Cada escolha visual tem um código curto: **T** para o tema (formato e fonte), **C** para as cores e **M** para o menu. `T1-C4-M5`, por exemplo, é o tema Safira com as cores Ardósia e o menu superior. Escolha na [galeria](https://bsmagalhaes.github.io/rendra-design-system/galeria/), onde cada captura mostra seu código e o bloco "Monte seu código" abre o demo já aplicado, e informe o código no briefing: a IA já sabe o que aplicar e pula essas perguntas.
 
 | Tema                           | Cores                                    | Menu                                                |
 | ------------------------------ | ---------------------------------------- | --------------------------------------------------- |
@@ -57,44 +64,44 @@ Cada template tem formato, fonte, símbolo e paleta próprios.
 
 **Rendra Safira**: quadrado, como uma pedra lapidada. Azul #0B6FE0, verde #98D10A e fonte Poppins.
 
-| Painel                                           | Listagem de clientes                                 |
-| ------------------------------------------------ | ---------------------------------------------------- |
-| ![Safira: painel](docs/images/safira-painel.png) | ![Safira: clientes](docs/images/safira-clientes.png) |
+| Painel                                                                                                                               | Listagem de clientes                                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| [![Safira: painel](docs/images/safira-painel.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=safira-painel) | [![Safira: clientes](docs/images/safira-clientes.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=safira-clientes) |
 
 **Rendra Equilíbrio**: o meio-termo, nem quadrado nem 100% arredondado. Violeta, ciano e fonte DM Sans.
 
-| Painel                                                   | Listagem de clientes                                         |
-| -------------------------------------------------------- | ------------------------------------------------------------ |
-| ![Equilíbrio: painel](docs/images/equilibrio-painel.png) | ![Equilíbrio: clientes](docs/images/equilibrio-clientes.png) |
+| Painel                                                                                                                                           | Listagem de clientes                                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [![Equilíbrio: painel](docs/images/equilibrio-painel.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=equilibrio-painel) | [![Equilíbrio: clientes](docs/images/equilibrio-clientes.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=equilibrio-clientes) |
 
 **Rendra Aurora**: 100% arredondado, como um novo dia. Verde-petróleo, laranja e fonte Inter.
 
-| Painel                                           | Listagem de clientes                                 |
-| ------------------------------------------------ | ---------------------------------------------------- |
-| ![Aurora: painel](docs/images/aurora-painel.png) | ![Aurora: clientes](docs/images/aurora-clientes.png) |
+| Painel                                                                                                                               | Listagem de clientes                                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| [![Aurora: painel](docs/images/aurora-painel.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=aurora-painel) | [![Aurora: clientes](docs/images/aurora-clientes.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=aurora-clientes) |
 
 **Paleta Ardósia**: paleta avulsa, combinável com qualquer modelo. Azul-ardósia #2E414D e laranja #EA600D, com botão laranja #C94F0A e texto branco para passar AA (aqui no modelo Equilíbrio).
 
-| Painel                                             | Listagem de clientes                                   |
-| -------------------------------------------------- | ------------------------------------------------------ |
-| ![Ardósia: painel](docs/images/ardosia-painel.png) | ![Ardósia: clientes](docs/images/ardosia-clientes.png) |
+| Painel                                                                                                                                  | Listagem de clientes                                                                                                                          |
+| --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![Ardósia: painel](docs/images/ardosia-painel.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=ardosia-painel) | [![Ardósia: clientes](docs/images/ardosia-clientes.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=ardosia-clientes) |
 
 ### Calendário, agenda e kanban
 
-| Agenda da semana (T2-C2)                               | Kanban no celular (T1-C1)                                  |
-| ------------------------------------------------------ | ---------------------------------------------------------- |
-| ![Agenda da semana](docs/images/equilibrio-agenda.png) | ![Kanban no celular](docs/images/safira-kanban-mobile.png) |
+| Agenda da semana (T2-C2)                                                                                                                       | Kanban no celular (T1-C1)                                                                                                                             |
+| ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![Agenda da semana](docs/images/equilibrio-agenda.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=equilibrio-agenda) | [![Kanban no celular](docs/images/safira-kanban-mobile.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=safira-kanban-mobile) |
 
 <details>
 <summary><strong>Tipos de menu: M1 a M6</strong> (clique para abrir aqui mesmo)</summary>
 
-| M1: lateral recolhida, segunda barra     | M2: lateral recolhida, submenu na sidebar     |
-| ---------------------------------------- | --------------------------------------------- |
-| ![M1](docs/images/menu-m1.png)           | ![M2](docs/images/menu-m2.png)                |
-| **M3: lateral expandida, segunda barra** | **M4: lateral expandida, submenu na sidebar** |
-| ![M3](docs/images/menu-m3.png)           | ![M4](docs/images/menu-m4.png)                |
-| **M5: superior, lista suspensa**         | **M6: superior, mega menu**                   |
-| ![M5](docs/images/menu-m5.png)           | ![M6](docs/images/menu-m6.png)                |
+| M1: lateral recolhida, segunda barra                                                                         | M2: lateral recolhida, submenu na sidebar                                                                    |
+| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| [![M1](docs/images/menu-m1.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=menu-m1) | [![M2](docs/images/menu-m2.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=menu-m2) |
+| **M3: lateral expandida, segunda barra**                                                                     | **M4: lateral expandida, submenu na sidebar**                                                                |
+| [![M3](docs/images/menu-m3.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=menu-m3) | [![M4](docs/images/menu-m4.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=menu-m4) |
+| **M5: superior, lista suspensa**                                                                             | **M6: superior, mega menu**                                                                                  |
+| [![M5](docs/images/menu-m5.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=menu-m5) | [![M6](docs/images/menu-m6.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=menu-m6) |
 
 </details>
 
@@ -103,11 +110,11 @@ Cada template tem formato, fonte, símbolo e paleta próprios.
 
 O modelo (formato, fonte e símbolo) e a paleta (cores, degradês e sidebar) são camadas independentes: qualquer modelo aceita qualquer paleta. São 12 combinações (3 modelos × 4 paletas), todas na mesma tela de detalhe do cliente.
 
-| Modelo \ Paleta             | Safira                                        | Equilíbrio                                        | Aurora                                        | Ardósia                                        |
-| --------------------------- | --------------------------------------------- | ------------------------------------------------- | --------------------------------------------- | ---------------------------------------------- |
-| **Safira** (quadrado)       | ![](docs/images/matriz-safira-safira.png)     | ![](docs/images/matriz-safira-equilibrio.png)     | ![](docs/images/matriz-safira-aurora.png)     | ![](docs/images/matriz-safira-ardosia.png)     |
-| **Equilíbrio** (meio-termo) | ![](docs/images/matriz-equilibrio-safira.png) | ![](docs/images/matriz-equilibrio-equilibrio.png) | ![](docs/images/matriz-equilibrio-aurora.png) | ![](docs/images/matriz-equilibrio-ardosia.png) |
-| **Aurora** (arredondado)    | ![](docs/images/matriz-aurora-safira.png)     | ![](docs/images/matriz-aurora-equilibrio.png)     | ![](docs/images/matriz-aurora-aurora.png)     | ![](docs/images/matriz-aurora-ardosia.png)     |
+| Modelo \ Paleta             | Safira                                                                                                                                       | Equilíbrio                                                                                                                                           | Aurora                                                                                                                                       | Ardósia                                                                                                                                        |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Safira** (quadrado)       | [![](docs/images/matriz-safira-safira.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=matriz-safira-safira)         | [![](docs/images/matriz-safira-equilibrio.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=matriz-safira-equilibrio)         | [![](docs/images/matriz-safira-aurora.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=matriz-safira-aurora)         | [![](docs/images/matriz-safira-ardosia.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=matriz-safira-ardosia)         |
+| **Equilíbrio** (meio-termo) | [![](docs/images/matriz-equilibrio-safira.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=matriz-equilibrio-safira) | [![](docs/images/matriz-equilibrio-equilibrio.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=matriz-equilibrio-equilibrio) | [![](docs/images/matriz-equilibrio-aurora.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=matriz-equilibrio-aurora) | [![](docs/images/matriz-equilibrio-ardosia.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=matriz-equilibrio-ardosia) |
+| **Aurora** (arredondado)    | [![](docs/images/matriz-aurora-safira.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=matriz-aurora-safira)         | [![](docs/images/matriz-aurora-equilibrio.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=matriz-aurora-equilibrio)         | [![](docs/images/matriz-aurora-aurora.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=matriz-aurora-aurora)         | [![](docs/images/matriz-aurora-ardosia.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=matriz-aurora-ardosia)         |
 
 </details>
 
@@ -116,26 +123,26 @@ O modelo (formato, fonte e símbolo) e a paleta (cores, degradês e sidebar) sã
 
 Mesmo componente, mesma API: no celular a tabela vira cards, a sidebar vira gaveta e a navegação ganha uma barra inferior.
 
-| Safira                             | Equilíbrio                             | Aurora                             | Tabela em cards                               |
-| ---------------------------------- | -------------------------------------- | ---------------------------------- | --------------------------------------------- |
-| ![](docs/images/safira-mobile.png) | ![](docs/images/equilibrio-mobile.png) | ![](docs/images/aurora-mobile.png) | ![](docs/images/equilibrio-mobile-tabela.png) |
+| Safira                                                                                                                 | Equilíbrio                                                                                                                     | Aurora                                                                                                                 | Tabela em cards                                                                                                                              |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![](docs/images/safira-mobile.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=safira-mobile) | [![](docs/images/equilibrio-mobile.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=equilibrio-mobile) | [![](docs/images/aurora-mobile.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=aurora-mobile) | [![](docs/images/equilibrio-mobile-tabela.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=equilibrio-mobile-tabela) |
 
 </details>
 
 <details>
 <summary><strong>Modo escuro e outras telas</strong> (clique para abrir aqui mesmo)</summary>
 
-| Modo escuro (Safira)               | Modo escuro (Equilíbrio)               |
-| ---------------------------------- | -------------------------------------- |
-| ![](docs/images/safira-escuro.png) | ![](docs/images/equilibrio-escuro.png) |
+| Modo escuro (Safira)                                                                                                   | Modo escuro (Equilíbrio)                                                                                                       |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| [![](docs/images/safira-escuro.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=safira-escuro) | [![](docs/images/equilibrio-escuro.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=equilibrio-escuro) |
 
-| Drawer com rodapé fixo (30/70)     | Mega menu no menu superior            |
-| ---------------------------------- | ------------------------------------- |
-| ![](docs/images/safira-drawer.png) | ![](docs/images/aurora-mega-menu.png) |
+| Drawer com rodapé fixo (30/70)                                                                                         | Mega menu no menu superior                                                                                                   |
+| ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| [![](docs/images/safira-drawer.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=safira-drawer) | [![](docs/images/aurora-mega-menu.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=aurora-mega-menu) |
 
-| Login (Aurora)                    |
-| --------------------------------- |
-| ![](docs/images/aurora-login.png) |
+| Login (Aurora)                                                                                                       |
+| -------------------------------------------------------------------------------------------------------------------- |
+| [![](docs/images/aurora-login.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=aurora-login) |
 
 </details>
 
@@ -169,9 +176,12 @@ Todos em `src/components/ui`, um por finalidade, com o ícone de feedback da mar
 | **Formulário**   | Input (máscaras de CPF, CNPJ, CPF ou CNPJ automático, telefone com seletor de DDI embutido e +55 por padrão, CEP, data, hora, moeda e percentual, com ícone, limpar e senha), Textarea com contador, Select (busca, múltiplo com chips, selecionar todos, contador, criar opção, busca remota), Checkbox com indeterminado e grupo, Radio em lista e em cards, Switch, DatePicker (data, período e horário, em pt-BR), Slider, Upload com arrastar e soltar e progresso, OtpInput (2FA), Field, Form, FormField e FormSection com React Hook Form e Zod, e validadores de CPF, CNPJ, telefone, CEP e data |
 | **Navegação**    | Tabs (linha ou pílula, vira seletor quando não cabe), Breadcrumb, Pagination (completa, compacta ou "carregar mais") e Wizard/Stepper (etapas concluída, atual, pendente e com erro, com validação por etapa)                                                                                                                                                                                                                                                                                                                                                                                             |
 | **Dados**        | Table com TanStack Table (seleção, expansão, ordenação, busca, colunas visíveis, ações em massa e por linha, densidade, estados vazio, carregando e erro, forma de cards no celular e **modo remoto**: 15 por página, carregando página por página, com busca e filtros em todos os registros), Card, StatCard, Badge, Avatar e grupo, List, Timeline, Accordion e Chart com Recharts (linha, barra, área e pizza)                                                                                                                                                                                        |
-| **Feedback**     | BrandFeedbackIcon animado (check se desenhando, X se riscando), Toast com Sonner, Alert, Modal (confirmação, destrutiva, informativo e formulário), Drawer (header e rodapé fixos, confirmação de descarte), Popover, Tooltip, EmptyState, ErrorPage (404 e 500), Skeleton e Progress                                                                                                                                                                                                                                                                                                                     |
-| **Planejamento** | Calendar (mês, semana, dia e agenda em lista, no mesmo componente; no celular vira mês compacto com a lista do dia), Kanban (arrastar no computador, menu "Mover para" no toque e no teclado, uma coluna por vez no celular, limite por coluna) e ImageViewer (imagens em popup, com setas, Esc, arrastar e pinça)                                                                                                                                                                                                                                                                                        |
-| **Layout**       | Container (95% da largura a partir de 1024px), Stack, Inline, Grid (por tela ou por container query), Section e PageHeader                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| **Feedback**     | BrandFeedbackIcon animado (check se desenhando, X se riscando), Toast com Sonner, Alert, Modal (confirmação, destrutiva, informativo e formulário), InfoHint (texto orientativo num ícone de informação que abre modal; também como `help` em PageHeader, CardTitle e FormSection), Drawer (header e rodapé fixos, confirmação de descarte, 30%, 40%, 50% ou 75% da tela), Popover, Tooltip, EmptyState, ErrorPage (404 e 500), Skeleton e Progress                                                                                                                                                       |
+| **Atendimento**  | Chat omnichannel: ConversationList (foto com o logotipo do canal: WhatsApp, WhatsApp Web, Instagram, Facebook, TikTok, Google Meu Negócio e Reclame Aqui), ChatThread (cliente, atendente, robô e avisos; botão direito ou "…" para responder, reagir, editar e excluir; citação que leva à mensagem original; áudio em 1x, 1,5x e 2x; baixar anexos) e ChatComposer (textarea que cresce, anexos, emoji, mensagens rápidas, gravação de áudio, arrastar e soltar ou colar prints; no celular, campo, enviar e um botão de ações)                                                                         |
+| **Conteúdo**     | RichTextEditor (Tiptap): formatação completa, listas, alinhamento, links, tabela, imagem com 4 alças para redimensionar, colar print, arrastar imagens e modo HTML                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| **Painel**       | WidgetGrid: widgets que se arrastam e redimensionam no modo "Ajustar dashboard", com a arrumação salva; Chart com velocímetro de meta, funil com conversão, barras com linha, barras coloridas e empilhadas                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Planejamento** | Calendar (mês, semana, dia e agenda em lista, no mesmo componente; no celular vira mês compacto com a lista do dia), Kanban (altura da tela, 5 etapas visíveis e rolagem lateral também pelo touchpad, rolagem infinita por etapa, (+) no título da etapa, totais em R$ de P&S e MRR por etapa e por cartão, arrastar no computador, menu "Mover para" no toque e no teclado, uma coluna por vez no celular, limite por coluna) e ImageViewer (imagens em popup, com setas, Esc, arrastar e pinça)                                                                                                        |
+| **Layout**       | Container (respiro igual em todos os lados), Stack, Inline, Grid (por tela ou por container query), Section e PageHeader                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
 ### AppShell
 
@@ -185,7 +195,7 @@ Tudo configurável por props, com o padrão em `src/config/layout.ts`:
 
 ### Telas base
 
-Login, esqueci a senha, verificação em duas etapas (2FA), nova senha, cadastro, painel com indicadores e gráficos, listagem com barra de ferramentas e filtros, detalhe com abas, formulário longo em seções, cadastro em wizard, configurações com navegação interna, criação e edição de registro em drawer, tarefas, agenda, funil de vendas em kanban, galeria e página 404.
+Login, esqueci a senha, verificação em duas etapas (2FA), nova senha, cadastro, painel com indicadores e gráficos, listagem com barra de ferramentas e filtros, detalhe com abas, formulário longo em seções, cadastro em wizard, configurações com navegação interna, criação e edição de registro em drawer (com busca de CNPJ e CEP), tarefas, atendimento omnichannel, agenda, funil de vendas em kanban, painel em widgets, galeria e página 404.
 
 ### Vitrine, Storybook e testes
 
@@ -331,6 +341,26 @@ O registry nunca traz marca nem configuração: `theme.css`, `themes.css`, `bran
 - [CONTRIBUTING.md](CONTRIBUTING.md): como propor mudanças.
 
 ---
+
+## Perguntas frequentes
+
+**O que é o Rendra Design System?**
+Um template de sistema e design system open source em React, TypeScript e Tailwind CSS. Traz o layout de sistema administrativo pronto (menu, header fixo, rodapé de ações), telas base como dashboard, listagem, cadastro, CRM kanban, agenda e chat, e componentes acessíveis para criar sistemas novos ou migrar o layout de sistemas existentes.
+
+**É gratuito?**
+Sim. Licença MIT, só com bibliotecas gratuitas: React, Tailwind CSS, Radix, shadcn/ui, TanStack Table, Recharts e Tiptap. Nada de Tailwind Plus ou tema pago.
+
+**Funciona no celular?**
+Sim, de verdade: tudo é escrito primeiro para 360px, tabelas viram cartões, o menu vai para a barra inferior, não há rolagem horizontal e os alvos de toque têm pelo menos 44px. Os testes abrem cada tela em cinco larguras, nos três modelos, no modo claro e no escuro.
+
+**Dá para usar como white label, com a marca de cada cliente?**
+Sim. A marca fica isolada em `src/styles/theme.css`, `src/brand/brand.config.ts` e `src/brand/assets`. Há três modelos e quatro paletas prontas, cada combinação tem um código (por exemplo `T1-C2-M3`) e o contraste AA é conferido em `/tokens`.
+
+**Posso migrar o layout do meu sistema com uma IA?**
+Sim. O [`AGENTS.md`](AGENTS.md) (e o `CLAUDE.md` e o `GEMINI.md`) conduz qualquer agente de IA por um briefing guiado, as regras de design e a ordem de migração; o [`docs/PROMPT_MIGRACAO.md`](docs/PROMPT_MIGRACAO.md) traz o prompt pronto.
+
+**Qual a diferença para um template admin comum?**
+As regras são verificadas por máquina: valor fora da escala, cor fixa, botão solto e texto de instrução no corpo da tela quebram o `check:rules`, e layout, acessibilidade e regressão visual rodam no CI a cada Pull Request.
 
 ## Autor
 

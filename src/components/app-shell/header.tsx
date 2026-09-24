@@ -36,6 +36,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { InfoHint } from '@/components/ui/info-hint'
 import { Tooltip } from '@/components/ui/tooltip'
 import { layoutOptions, type ShellLayout } from '@/config/layout'
 import { currentUser, navigation } from '@/config/navigation'
@@ -388,7 +389,7 @@ function TopNav() {
 }
 
 export function Header() {
-  const { layout, setLayout, setMobileNavOpen, setSearchOpen } = useShell()
+  const { layout, setLayout, setMobileNavOpen, setSearchOpen, pageHelp } = useShell()
   const { brand, resolvedMode } = useBrand()
   const crumbs = useCrumbs()
   // Trilha do header: sempre começa em Início.
@@ -399,12 +400,21 @@ export function Header() {
   const ModeIcon = resolvedMode === 'dark' ? Moon : Sun
   const topbar = layout.navigation === 'topbar'
   const hasParent = Boolean(crumbs.length >= 2 && crumbs[crumbs.length - 2]?.to)
+  // No celular, o menu fica no botão central da barra inferior (ou dá lugar à seta de voltar).
+  const menuInFooter = layout.bottomNav || hasParent
   // Título e trilha em uma linha cada; se não couber, reticências (nunca quebra linha).
   const pageTitle = (
     <div className="flex min-w-0 flex-1 flex-col justify-center">
-      <p className="truncate text-sm leading-tight font-semibold md:text-base">
-        {crumbs[crumbs.length - 1]?.label ?? brand.productName}
-      </p>
+      <span className="flex min-w-0 items-center gap-1">
+        <p className="truncate text-sm leading-tight font-semibold md:text-base">
+          {crumbs[crumbs.length - 1]?.label ?? brand.productName}
+        </p>
+        {pageHelp && (
+          <InfoHint title={crumbs[crumbs.length - 1]?.label ?? brand.productName} className="-my-2">
+            {pageHelp}
+          </InfoHint>
+        )}
+      </span>
       <Breadcrumb items={trail} variant="trail" />
     </div>
   )
@@ -416,9 +426,7 @@ export function Header() {
         variant="ghost"
         iconOnly
         aria-label="Abrir menu"
-        // Telas de segundo nível no celular: a seta de voltar ocupa o lugar do menu
-        // (padrão de app), e a navegação segue pela barra inferior.
-        className={cn(topbar ? 'lg:hidden' : 'md:hidden', hasParent && 'max-md:hidden')}
+        className={cn(topbar ? 'lg:hidden' : 'md:hidden', menuInFooter && 'max-md:hidden')}
         onClick={() => setMobileNavOpen(true)}
       >
         <Menu aria-hidden />
@@ -457,7 +465,10 @@ export function Header() {
           </Tooltip>
           <span
             aria-hidden
-            className={cn('mx-1 h-8 w-px shrink-0 bg-border md:mx-2', hasParent && 'max-md:hidden')}
+            className={cn(
+              'mx-1 h-8 w-px shrink-0 bg-border md:mx-2',
+              menuInFooter && 'max-md:hidden',
+            )}
           />
           <BackButton crumbs={crumbs} />
           {pageTitle}

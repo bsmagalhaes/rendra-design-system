@@ -49,7 +49,7 @@ Migre de fora para dentro, com uma verificação ao fim de cada passo:
 
 1. **Tokens e tema.** O projeto passa a ter `theme.css` e `globals.css`. Confira `/tokens`.
 2. **AppShell.** Troque o layout antigo pelo `AppShell` com o menu em `navigation.ts`. O header fixo e a rolagem única do `<main>` já resolvem boa parte dos problemas de layout.
-3. **Formulários e ações.** Troque inputs, selects e botões pelos componentes únicos. Use `Form`, `FormField` e `ActionBar`.
+3. **Formulários e ações.** Troque inputs, selects e botões pelos componentes únicos. Use `Form`, `FormField` e `ActionBar`. Nenhum botão fica solto: cada ação vai para o rodapé fixo, a barra da tabela, o `PageHeader actions`, o `CardHeader actions` ou o menu da linha. Textos de instrução soltos na tela e botões de "informações" viram `help` ao lado do título (ícone que abre um modal).
 4. **Listagens.** Troque as tabelas pela `Table`, com `toolbar`, colunas com `mobile` e estados.
 5. **Feedback.** Troque alertas, toasts e modais antigos por `Alert`, `toast`, `Modal` e `Drawer`, e use o ícone de feedback da marca.
 6. **Telas.** Refaça cada tela com as primitivas (`Container`, `Stack`, `Grid`, `Section`, `PageHeader`), começando pelas mais usadas.

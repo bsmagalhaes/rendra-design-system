@@ -410,6 +410,12 @@ export function Sidebar() {
     window.clearTimeout(timer.current)
     timer.current = window.setTimeout(() => setPeek(false), 200)
   }
+  // Só o foco do teclado (Tab) abre a barra e a mantém aberta. Foco de clique, ou o foco que
+  // um menu devolve ao fechar, não prende a barra aberta depois que o mouse sai.
+  const keyboardFocusInside = () => {
+    const el = document.activeElement
+    return Boolean(el && rootRef.current?.contains(el) && el.matches(':focus-visible'))
+  }
 
   const desktop = layout.navigation === 'sidebar'
 
@@ -427,8 +433,12 @@ export function Sidebar() {
           <div
             ref={rootRef}
             onMouseEnter={openPeek}
-            onMouseLeave={closePeek}
-            onFocus={openPeek}
+            onMouseLeave={() => {
+              if (!keyboardFocusInside()) closePeek()
+            }}
+            onFocus={(e) => {
+              if ((e.target as HTMLElement).matches(':focus-visible')) openPeek()
+            }}
             onBlur={(e) => {
               if (!e.currentTarget.contains(e.relatedTarget as Node | null)) closePeek()
             }}

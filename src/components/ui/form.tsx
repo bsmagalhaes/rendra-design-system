@@ -8,7 +8,7 @@ import {
   type SubmitHandler,
   type UseFormReturn,
 } from 'react-hook-form'
-import { gapClass } from '@/components/layout/tokens'
+import { fieldGridClass, gapClass } from '@/components/layout/tokens'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Field, type FieldProps } from '@/components/ui/field'
 import { cn } from '@/lib/cn'
@@ -92,24 +92,32 @@ export function FormField<T extends FieldValues>({
 
 interface FormSectionProps {
   title: ReactNode
+  /** Subtítulo curto da seção. Instrução de uso vai em `help`. */
   description?: ReactNode
-  /** Colunas no desktop (no mobile sempre 1). Máximo 2. */
+  /** Texto orientativo: ícone de informação ao lado do título, que abre um modal. */
+  help?: ReactNode
+  /**
+   * 1: todos os campos em largura total (texto longo, cartões de seleção, anexos).
+   * Sem valor: grade de formulário, com a largura de cada campo no span do Field.
+   */
   columns?: 1 | 2
   children: ReactNode
   id?: string
 }
 
-/** Seção de formulário: card com título e grid de no máximo 2 colunas. */
-export function FormSection({ title, description, columns = 2, children, id }: FormSectionProps) {
+/** Seção de formulário: card com título e a grade de formulário (3 campos por linha no largo). */
+export function FormSection({ title, description, help, columns, children, id }: FormSectionProps) {
   return (
     <Card id={id} className="scroll-mt-6">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle help={help}>{title}</CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
       <CardContent>
-        <div className={cn('grid grid-cols-1', gapClass.fields, columns === 2 && 'md:grid-cols-2')}>
-          {children}
+        <div className={columns === 1 ? undefined : '@container'}>
+          <div className={cn(columns === 1 ? 'grid grid-cols-1' : fieldGridClass, gapClass.fields)}>
+            {children}
+          </div>
         </div>
       </CardContent>
     </Card>

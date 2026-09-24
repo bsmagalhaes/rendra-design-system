@@ -18,13 +18,13 @@ const segments = [...new Set(all.map((c) => c.segment))].sort()
 
 // API de demonstração: pagina, busca em todos os registros e ordena no "servidor".
 const clientsApi = mockSource(all, {
-  searchIn: (c) => [c.name, c.city, c.email, c.document],
+  searchIn: (c) => [c.name, c.legalName, c.city, c.email, c.phone, c.document],
   sortBy: {
     name: (c) => c.name,
     status: (c) => c.status,
     city: (c) => c.city,
     segment: (c) => c.segment,
-    email: (c) => c.email,
+    contact: (c) => c.phone,
     revenue: (c) => c.revenue,
     createdAt: (c) => c.createdAt,
   },

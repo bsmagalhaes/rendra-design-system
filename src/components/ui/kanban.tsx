@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
-import { ArrowRightLeft, CalendarDays, MoreHorizontal, Plus } from 'lucide-react'
-import { useState, type ReactNode } from 'react'
+import { ArrowRightLeft, CalendarDays, Mail, MoreHorizontal, Phone, Plus, User } from 'lucide-react'
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { Avatar } from '@/components/ui/avatar'
 import { Badge, type BadgeProps } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Tabs } from '@/components/ui/tabs'
 import { useBreakpoint } from '@/hooks/use-breakpoint'
+import { useFillHeight } from '@/hooks/use-fill-height'
 import { cn } from '@/lib/cn'
 
 /*
@@ -21,7 +22,31 @@ import { cn } from '@/lib/cn'
  * Toque e teclado: o menu do card tem "Mover para" (arrastar nunca é o único caminho).
  * Mobile (< 768px): uma coluna por vez, escolhida pelas abas com contador, sem rolagem
  * lateral; os cards mudam de coluna pelo mesmo menu.
+ * Altura: o quadro ocupa o que sobra da tela abaixo dele e nunca passa disso; cada etapa rola
+ * por dentro e vai mostrando mais cards ao chegar no fim (rolagem infinita).
  */
+
+/** Marca o fim da lista: ao aparecer na rolagem da etapa, pede mais cards. */
+function LoadMore({ onVisible }: { onVisible: () => void }) {
+  const ref = useRef<HTMLLIElement>(null)
+  const cb = useRef(onVisible)
+  cb.current = onVisible
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const io = new IntersectionObserver(
+      (entries) => entries.some((e) => e.isIntersecting) && cb.current(),
+      { root: el.closest('[data-kanban-scroll]'), rootMargin: '120px' },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+  return (
+    <li ref={ref} className="py-2 text-center text-xs text-muted-foreground">
+      Carregando mais cards...
+    </li>
+  )
+}
 
 export interface KanbanColumn {
   id: string
@@ -35,14 +60,27 @@ export interface KanbanColumn {
 export interface KanbanCard {
   id: string
   columnId: string
+  /** Empresa ou pessoa. */
   title: string
+  /** Linha abaixo do título: CNPJ da empresa ou CPF da pessoa. */
+  subtitle?: string
   description?: string
+  /** Pessoa de contato: nome, telefone e e-mail. */
+  contact?: { name?: string; phone?: string; email?: string }
   tags?: { label: string; tone?: BadgeProps['tone'] }[]
   /** Nome do responsável (vira avatar com iniciais). */
   assignee?: string
   dueDate?: Date
   /** Valor ou informação curta à direita do rodapé (ex.: "R$ 12.500,00"). */
   meta?: string
+  /** Valores numéricos do card, pelas chaves de valueFields (ex.: { ps: 4800, mrr: 590 }). */
+  values?: Record<string, number>
+}
+
+/** Valor somado no cabeçalho da coluna e mostrado no card (ex.: P&S e MRR). */
+export interface KanbanValueField {
+  key: string
+  label: string
 }
 
 export interface KanbanProps {
@@ -51,10 +89,28 @@ export interface KanbanProps {
   /** Card movido: coluna de destino e posição dentro dela (0 = topo). */
   onCardMove?: (cardId: string, toColumnId: string, toIndex: number) => void
   onCardClick?: (card: KanbanCard) => void
-  /** Botão "Adicionar" no pé de cada coluna. */
+  /** Botão (+) no título de cada etapa. */
   onAddCard?: (columnId: string) => void
+  /** Cards mostrados por vez em cada etapa; ao rolar até o fim, mostra mais. Padrão: 20. */
+  pageSize?: number
+  /**
+   * Busca mais cards no servidor quando a etapa chega ao fim do que já foi carregado.
+   * Sem ela, a rolagem infinita só vai revelando os cards recebidos em cards.
+   */
+  onLoadMore?: (columnId: string) => void
+  /** A etapa ainda tem cards no servidor (usado com onLoadMore). */
+  hasMore?: (columnId: string) => boolean
+  /** Etapas visíveis por vez no desktop; as demais pela rolagem lateral. Padrão: 5. */
+  visibleColumns?: number
   /** Conteúdo próprio do card, no lugar do padrão. */
   renderCard?: (card: KanbanCard) => ReactNode
+  /**
+   * Valores do card (até 2, lado a lado com divisória) e o total de cada um na coluna.
+   * Ex.: [{ key: 'ps', label: 'P&S' }, { key: 'mrr', label: 'MRR' }].
+   */
+  valueFields?: KanbanValueField[]
+  /** Formato dos valores. Padrão: moeda (R$ 1.250,00). */
+  formatValue?: (n: number) => string
   'aria-label'?: string
   className?: string
 }
@@ -69,7 +125,16 @@ const dotTone: Record<NonNullable<BadgeProps['tone']>, string> = {
   outline: 'bg-border',
 }
 
-function CardBody({ card }: { card: KanbanCard }) {
+function CardBody({
+  card,
+  valueFields = [],
+  formatValue,
+}: {
+  card: KanbanCard
+  valueFields?: KanbanValueField[]
+  formatValue: (n: number) => string
+}) {
+  const shown = valueFields.slice(0, 2)
   return (
     <>
       {card.tags && card.tags.length > 0 && (
@@ -81,21 +146,65 @@ function CardBody({ card }: { card: KanbanCard }) {
           ))}
         </span>
       )}
-      <span className="line-clamp-2 text-sm font-medium">{card.title}</span>
+      {/* Só o título reserva o espaço do botão de ações; o resto usa a largura toda. */}
+      <span className="flex flex-col pr-8">
+        <span className="line-clamp-2 text-sm font-medium">{card.title}</span>
+        {card.subtitle && (
+          <span className="text-xs text-muted-foreground tabular-nums">{card.subtitle}</span>
+        )}
+      </span>
       {card.description && (
         <span className="line-clamp-2 text-xs text-muted-foreground">{card.description}</span>
       )}
+      {card.contact && (
+        <span className="flex flex-col gap-1 text-xs text-muted-foreground">
+          {card.contact.name && (
+            <span className="flex min-w-0 items-center gap-1 text-foreground">
+              <User className="size-3 shrink-0" aria-hidden />
+              <span className="truncate">{card.contact.name}</span>
+            </span>
+          )}
+          {card.contact.phone && (
+            <span className="flex min-w-0 items-center gap-1 tabular-nums">
+              <Phone className="size-3 shrink-0" aria-hidden />
+              <span className="truncate">{card.contact.phone}</span>
+            </span>
+          )}
+          {card.contact.email && (
+            <span className="flex min-w-0 items-center gap-1">
+              <Mail className="size-3 shrink-0" aria-hidden />
+              <span className="truncate">{card.contact.email}</span>
+            </span>
+          )}
+        </span>
+      )}
+      {shown.length > 0 && (
+        <span className="grid grid-cols-2 divide-x rounded-item bg-muted text-xs">
+          {shown.map((f) => (
+            <span key={f.key} className="flex min-w-0 flex-col px-2 py-1">
+              <span className="text-muted-foreground">{f.label}:</span>
+              <span className="truncate font-semibold text-foreground tabular-nums">
+                {formatValue(card.values?.[f.key] ?? 0)}
+              </span>
+            </span>
+          ))}
+        </span>
+      )}
       {(card.assignee || card.dueDate || card.meta) && (
-        <span className="flex items-center gap-2 pt-1 text-xs text-muted-foreground">
-          {card.assignee && <Avatar name={card.assignee} size="sm" />}
+        <span className="flex items-center gap-2 border-t pt-2 text-xs text-muted-foreground">
           {card.dueDate && (
             <span className="inline-flex items-center gap-1 tabular-nums">
               <CalendarDays className="size-3" aria-hidden />
-              {format(card.dueDate, 'dd/MM')}
+              {format(card.dueDate, 'dd/MM/yyyy')}
             </span>
           )}
           {card.meta && (
-            <span className="ml-auto font-medium text-foreground tabular-nums">{card.meta}</span>
+            <span className="font-medium text-foreground tabular-nums">{card.meta}</span>
+          )}
+          {card.assignee && (
+            <span className="ml-auto" title={card.assignee}>
+              <Avatar name={card.assignee} size="sm" />
+            </span>
           )}
         </span>
       )}
@@ -110,10 +219,32 @@ export function Kanban({
   onCardClick,
   onAddCard,
   renderCard,
+  valueFields,
+  formatValue = (n) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+  pageSize = 20,
+  visibleColumns = 5,
+  onLoadMore,
+  hasMore,
   className,
   ...aria
 }: KanbanProps) {
   const { isMobile } = useBreakpoint()
+  const boardRef = useFillHeight()
+  // Touchpad: o gesto lateral leva o quadro para o mesmo lado dos dedos (esquerda move o
+  // quadro para a esquerda). A rolagem vertical segue normal dentro de cada etapa.
+  useEffect(() => {
+    const el = boardRef.current
+    if (!el || isMobile) return
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
+      e.preventDefault()
+      el.scrollLeft -= e.deltaX
+    }
+    el.addEventListener('wheel', onWheel, { passive: false })
+    return () => el.removeEventListener('wheel', onWheel)
+  }, [boardRef, isMobile])
+  const [shown, setShown] = useState<Record<string, number>>({})
+  const limitOf = (id: string) => shown[id] ?? pageSize
   const [active, setActive] = useState(columns[0]?.id ?? '')
   const [dragging, setDragging] = useState<string | null>(null)
   const [over, setOver] = useState<{ column: string; index: number } | null>(null)
@@ -135,7 +266,7 @@ export function Kanban({
             size="sm"
             iconOnly
             aria-label={`Ações do card ${card.title}`}
-            className="-mt-1 -mr-1 shrink-0"
+            className="shrink-0"
           >
             <MoreHorizontal />
           </Button>
@@ -184,7 +315,7 @@ export function Kanban({
         if (over) drop(over.column, over.index)
       }}
       className={cn(
-        'relative flex items-start gap-2 rounded-item border bg-card p-3 shadow-sm transition-[box-shadow,opacity]',
+        'relative flex rounded-item border bg-card p-3 shadow-sm transition-[box-shadow,opacity]',
         !isMobile && onCardMove && 'cursor-grab active:cursor-grabbing',
         dragging === card.id && 'opacity-50',
         over?.column === card.columnId &&
@@ -199,73 +330,117 @@ export function Kanban({
           onClick={() => onCardClick(card)}
           className="flex min-w-0 flex-1 cursor-pointer flex-col gap-2 rounded-item text-left outline-none after:absolute after:inset-0 focus-visible:ring-2 focus-visible:ring-ring"
         >
-          {renderCard ? renderCard(card) : <CardBody card={card} />}
+          {renderCard ? (
+            renderCard(card)
+          ) : (
+            <CardBody card={card} valueFields={valueFields} formatValue={formatValue} />
+          )}
         </button>
       ) : (
         <div className="flex min-w-0 flex-1 flex-col gap-2">
-          {renderCard ? renderCard(card) : <CardBody card={card} />}
+          {renderCard ? (
+            renderCard(card)
+          ) : (
+            <CardBody card={card} valueFields={valueFields} formatValue={formatValue} />
+          )}
         </div>
       )}
-      <span className="relative z-10">{moveMenu(card)}</span>
+      <span className="absolute top-2 right-2 z-10">{moveMenu(card)}</span>
     </li>
   )
 
+  const totals = (col: KanbanColumn) =>
+    (valueFields ?? []).slice(0, 2).map((f) => ({
+      ...f,
+      total: inColumn(col.id).reduce((sum, c) => sum + (c.values?.[f.key] ?? 0), 0),
+    }))
+
   const columnHeader = (col: KanbanColumn, count: number) => (
-    <div className="flex items-center gap-2 px-1">
-      <span aria-hidden className={cn('size-2 rounded-full', dotTone[col.tone ?? 'neutral'])} />
-      <h3 className="min-w-0 flex-1 truncate text-sm font-semibold">{col.title}</h3>
-      <Badge tone={col.limit && count > col.limit ? 'warning' : 'neutral'}>
-        {col.limit ? `${count}/${col.limit}` : count}
-      </Badge>
+    <div className="flex flex-col gap-2 px-1">
+      <div className="flex items-center gap-2">
+        <span aria-hidden className={cn('size-2 rounded-full', dotTone[col.tone ?? 'neutral'])} />
+        <h3 className="min-w-0 flex-1 truncate text-sm font-semibold">{col.title}</h3>
+        <Badge tone={col.limit && count > col.limit ? 'warning' : 'neutral'}>
+          {col.limit ? `${count}/${col.limit}` : count}
+        </Badge>
+        {onAddCard && (
+          <Button
+            variant="ghost"
+            size="sm"
+            iconOnly
+            aria-label={`Adicionar card em ${col.title}`}
+            onClick={() => onAddCard(col.id)}
+            className="-my-1 -mr-1 rounded-full"
+          >
+            <Plus />
+          </Button>
+        )}
+      </div>
+      {valueFields && valueFields.length > 0 && (
+        <div className="grid grid-cols-2 divide-x rounded-item bg-card text-xs">
+          {totals(col).map((t) => (
+            <span key={t.key} className="flex min-w-0 flex-col px-2 py-1">
+              <span className="text-muted-foreground">Total {t.label}</span>
+              <span className="truncate font-semibold tabular-nums">{formatValue(t.total)}</span>
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   )
 
   const columnList = (col: KanbanColumn) => {
-    const list = inColumn(col.id)
+    const all = inColumn(col.id)
+    const list = all.slice(0, limitOf(col.id))
+    const more = all.length > list.length || Boolean(hasMore?.(col.id))
     return (
-      <ol
-        aria-label={`Cards em ${col.title}`}
-        onDragOver={(e) => {
-          if (!dragging) return
-          e.preventDefault()
-          setOver({ column: col.id, index: list.length })
-        }}
-        onDrop={(e) => {
-          e.preventDefault()
-          drop(col.id, over?.column === col.id ? over.index : list.length)
-        }}
-        className={cn(
-          'flex min-h-24 flex-col gap-2 rounded-surface p-2 transition-colors',
-          over?.column === col.id && 'bg-primary-soft/60',
-        )}
+      <div
+        data-kanban-scroll
+        className="min-h-0 flex-1 scrollbar-subtle overflow-y-auto overscroll-y-contain"
       >
-        {list.map((c, i) => cardItem(c, i))}
-        {list.length === 0 && (
-          <li className="flex min-h-16 items-center justify-center rounded-item border border-dashed text-xs text-muted-foreground">
-            Nenhum card
-          </li>
-        )}
-      </ol>
+        <ol
+          aria-label={`Cards em ${col.title}`}
+          onDragOver={(e) => {
+            if (!dragging) return
+            e.preventDefault()
+            setOver({ column: col.id, index: list.length })
+          }}
+          onDrop={(e) => {
+            e.preventDefault()
+            drop(col.id, over?.column === col.id ? over.index : list.length)
+          }}
+          className={cn(
+            'flex min-h-24 flex-col gap-2 rounded-surface p-2 transition-colors',
+            over?.column === col.id && 'bg-primary-soft/60',
+          )}
+        >
+          {list.map((c, i) => cardItem(c, i))}
+          {list.length === 0 && (
+            <li className="flex min-h-16 items-center justify-center rounded-item border border-dashed text-xs text-muted-foreground">
+              Nenhum card
+            </li>
+          )}
+          {more && (
+            <LoadMore
+              onVisible={() => {
+                if (all.length > list.length)
+                  setShown((s) => ({ ...s, [col.id]: limitOf(col.id) + pageSize }))
+                else onLoadMore?.(col.id)
+              }}
+            />
+          )}
+        </ol>
+      </div>
     )
   }
 
-  const addButton = (col: KanbanColumn) =>
-    onAddCard ? (
-      <Button
-        variant="ghost"
-        size="sm"
-        icon={<Plus />}
-        fullWidth
-        className="justify-start text-muted-foreground"
-        onClick={() => onAddCard(col.id)}
-      >
-        Adicionar card
-      </Button>
-    ) : null
-
   if (isMobile) {
     return (
-      <div className={cn('flex min-w-0 flex-col gap-3', className)} aria-label={aria['aria-label']}>
+      <div
+        ref={boardRef}
+        className={cn('flex h-board min-w-0 flex-col gap-3', className)}
+        aria-label={aria['aria-label']}
+      >
         <Tabs
           variant="pill"
           aria-label="Colunas"
@@ -275,32 +450,39 @@ export function Kanban({
             value: col.id,
             label: col.title,
             count: inColumn(col.id).length,
-            content: (
-              <div className="flex flex-col gap-2 rounded-surface bg-muted">
-                {columnList(col)}
-                {onAddCard && <div className="px-2 pb-2">{addButton(col)}</div>}
-              </div>
-            ),
+            content: null,
           }))}
         />
+        {columns
+          .filter((col) => col.id === active)
+          .map((col) => (
+            <div
+              key={col.id}
+              className="flex min-h-0 flex-1 flex-col gap-2 rounded-surface bg-muted p-2"
+            >
+              {columnHeader(col, inColumn(col.id).length)}
+              {columnList(col)}
+            </div>
+          ))}
       </div>
     )
   }
 
   return (
     <section
+      ref={boardRef}
       aria-label={aria['aria-label'] ?? 'Quadro kanban'}
       data-allow-overflow
-      className={cn('flex min-w-0 gap-4 overflow-x-auto pb-2', className)}
+      style={{ '--kanban-cols': Math.min(visibleColumns, columns.length) } as CSSProperties}
+      className={cn('flex h-board min-w-0 scrollbar-subtle gap-4 overflow-x-auto', className)}
     >
       {columns.map((col) => (
         <div
           key={col.id}
-          className="flex w-3xs min-w-3xs flex-1 shrink-0 flex-col gap-2 rounded-surface bg-muted p-2"
+          className="flex min-h-0 w-kanban-col flex-col gap-2 rounded-surface bg-muted p-2"
         >
           <div className="pt-1">{columnHeader(col, inColumn(col.id).length)}</div>
           {columnList(col)}
-          {addButton(col)}
         </div>
       ))}
     </section>

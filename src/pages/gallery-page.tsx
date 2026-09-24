@@ -1,5 +1,7 @@
-import { Check, Copy, Maximize2, Play } from 'lucide-react'
+import { Check, Copy, Maximize2, RotateCcw } from 'lucide-react'
 import { useState } from 'react'
+import { useBrand } from '@/brand'
+import { useShell } from '@/components/app-shell/shell-context'
 import { Container, Grid, PageHeader, Section, Stack } from '@/components/layout'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -8,14 +10,7 @@ import { Field } from '@/components/ui/field'
 import { ImageViewer, type ViewerImage } from '@/components/ui/image-viewer'
 import { Select } from '@/components/ui/select'
 import { toast } from '@/components/ui/toast'
-import {
-  applyModelCode,
-  colorCodes,
-  formatModelCode,
-  menuCodes,
-  parseModelCode,
-  themeCodes,
-} from '@/config/presets'
+import { colorCodes, currentModelCode, menuCodes, themeCodes } from '@/config/presets'
 import { cn } from '@/lib/cn'
 
 /*
@@ -87,10 +82,18 @@ const groups: Group[] = [
   },
   {
     id: 'componentes',
-    title: 'Calendário, agenda e kanban',
-    description: 'Telas de demonstração dos componentes de planejamento.',
+    title: 'Atendimento, painel, agenda e kanban',
+    description:
+      'Chat omnichannel, painel em widgets ajustáveis, calendário, agenda e funil em kanban.',
     shape: 'wide',
     items: [
+      { file: 'safira-atendimento', caption: 'Atendimento omnichannel', code: 'T1-C1-M1' },
+      { file: 'aurora-atendimento-mobile', caption: 'Atendimento no celular', code: 'T3-C3' },
+      {
+        file: 'safira-dashboard-ajuste',
+        caption: 'Painel com widgets ajustáveis',
+        code: 'T1-C1-M1',
+      },
       { file: 'safira-calendario', caption: 'Calendário do mês', code: 'T1-C1-M1' },
       { file: 'equilibrio-agenda', caption: 'Agenda da semana', code: 'T2-C2-M1' },
       { file: 'aurora-kanban', caption: 'Kanban com cards', code: 'T3-C3-M1' },
@@ -139,7 +142,7 @@ const groups: Group[] = [
 ]
 
 // Lista única, na ordem da página: o visualizador passa de um grupo para o outro.
-const all: (ViewerImage & { group: string; code?: string })[] = groups.flatMap((g) =>
+const all: (ViewerImage & { group: string; code?: string; file: string })[] = groups.flatMap((g) =>
   g.items
     .filter((i) => url(i.file))
     .map((i) => ({
@@ -148,21 +151,47 @@ const all: (ViewerImage & { group: string; code?: string })[] = groups.flatMap((
       caption: i.code ? `${i.caption} · ${i.code}` : i.caption,
       group: g.id,
       code: i.code,
+      file: i.file,
     })),
 )
 
-/** Aplica o código no próprio demo e recarrega na tela inicial, já com o modelo novo. */
-function openInDemo(code: string) {
-  if (!applyModelCode(code)) return
-  window.location.assign(import.meta.env.BASE_URL)
-}
-
+/**
+ * Monte seu código: cada escolha já muda o sistema na hora (tema, cores e menu), sem sair
+ * da galeria. O código mostrado é sempre o do que está aplicado agora.
+ */
 function CodeBuilder() {
-  const [theme, setTheme] = useState('T1')
-  const [color, setColor] = useState('C1')
-  const [menu, setMenu] = useState('M1')
+  const { brand, palette, setBrandId, setPaletteId } = useBrand()
+  const { layout, applyLayout, resetLayout } = useShell()
   const [copied, setCopied] = useState(false)
-  const code = formatModelCode(parseModelCode(`${theme}-${color}-${menu}`))
+
+  const theme = themeCodes.find((t) => t.brand === brand.id)?.code ?? 'T1'
+  const color = colorCodes.find((c) => c.palette === palette.id)?.code ?? 'C1'
+  const menu =
+    menuCodes.find((m) =>
+      Object.entries(m.layout).every(([k, v]) => layout[k as keyof typeof layout] === v),
+    )?.code ?? ''
+  const code = currentModelCode(brand.id, palette.id, layout)
+
+  const setTheme = (t: string) => {
+    const next = themeCodes.find((x) => x.code === t)
+    if (!next) return
+    // Trocar o tema volta as cores para as dele; mantém a paleta escolhida, se houver.
+    const keep = colorCodes.find((c) => c.code === color)?.palette
+    setBrandId(next.brand)
+    if (keep) setPaletteId(keep)
+  }
+  const setColor = (c: string) => {
+    const next = colorCodes.find((x) => x.code === c)
+    if (next) setPaletteId(next.palette)
+  }
+  const setMenu = (m: string) => {
+    const next = menuCodes.find((x) => x.code === m)
+    if (next) applyLayout(next.layout)
+  }
+  const restore = () => {
+    setBrandId('safira')
+    resetLayout()
+  }
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(code)
@@ -203,7 +232,8 @@ function CodeBuilder() {
           <Field label="Menu (M)" help="Posição, sidebar e submenu.">
             <Select
               label="Menu"
-              value={menu}
+              value={menu || null}
+              placeholder="Personalizado"
               onChange={(v) => v && setMenu(v)}
               options={menuCodes.map((m) => ({
                 value: m.code,
@@ -215,18 +245,19 @@ function CodeBuilder() {
         </Grid>
         <div className="flex flex-col gap-4 rounded-surface bg-muted p-4 md:flex-row md:items-center">
           <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <span className="text-sm text-muted-foreground">Seu código</span>
+            <span className="text-sm text-muted-foreground">Código aplicado agora</span>
             <span className="font-mono text-2xl font-semibold tracking-wide">{code}</span>
             <span className="text-sm text-muted-foreground">
-              Informe este código no briefing e a IA já sabe o tema, as cores e o menu.
+              As mudanças já aparecem no sistema inteiro. Informe este código no briefing e a IA
+              aplica o mesmo tema, as mesmas cores e o mesmo menu no seu projeto.
             </span>
           </div>
           <div className="grid grid-actions-2 gap-3 md:flex">
-            <Button variant="outline" icon={copied ? <Check /> : <Copy />} onClick={copy}>
-              {copied ? 'Copiado' : 'Copiar'}
+            <Button variant="outline" icon={<RotateCcw />} onClick={restore}>
+              Padrão
             </Button>
-            <Button icon={<Play />} onClick={() => openInDemo(code)}>
-              Ver no demo
+            <Button icon={copied ? <Check /> : <Copy />} onClick={copy}>
+              {copied ? 'Copiado' : 'Copiar código'}
             </Button>
           </div>
         </div>
@@ -235,12 +266,19 @@ function CodeBuilder() {
   )
 }
 
+/** ?imagem=nome-do-arquivo abre a galeria já com essa imagem em popup (links do README). */
+function initialImage() {
+  const name = new URLSearchParams(window.location.search).get('imagem')
+  const i = name ? all.findIndex((img) => img.file === name) : -1
+  return i >= 0 ? i : null
+}
+
 export function GalleryPage() {
-  const [open, setOpen] = useState<number | null>(null)
+  const [open, setOpen] = useState<number | null>(initialImage)
 
   return (
-    <Container>
-      <Stack gap="12">
+    <Container padded>
+      <Stack gap="section">
         <PageHeader
           title="Galeria"
           description="Capturas do app real em todos os templates, cores e menus. Toque em uma imagem para ampliar; use as setas para passar. O código de cada captura aplica o mesmo modelo no seu projeto."
