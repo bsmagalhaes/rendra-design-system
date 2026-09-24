@@ -4,7 +4,23 @@ O que mudou em cada versão e o que um projeto derivado precisa fazer para atual
 
 ## Não publicado
 
-Nada ainda.
+### Adicionado
+
+- **Paleta a partir de 4 cores e do degradê** (`src/brand/palette.ts`): `createPalette(sementes)` gera o claro e o escuro de uma paleta (texto sobre cada cor, fundo suave, primária como texto, foco, sidebar, degradês, gráficos, sombra e superfícies do escuro) com contraste AA conferido e ajustado, e registra os ajustes. As paletas prontas são só as sementes em `src/brand/palettes.ts`; `npm run palettes:build` gera `src/styles/palettes.css`, e o CI confere se está em dia.
+- **White label em tempo de execução:** `applyPalette(sementes)` injeta a paleta de um cliente sem build, com o mesmo resultado do build.
+- **Input:** `onCentsChange` entrega moeda em centavos inteiros (R$ 1.250,50 vira 125050), e `onLookup` faz a busca de CEP e CNPJ dentro do próprio campo (ViaCEP e BrasilAPI), com carregamento e cancelamento; `toCents` e `formatCents` em `src/lib/masks.ts`. Hook `useLookup` para outros campos.
+- **Testes de comportamento** com Vitest e Testing Library para Table, Select, Input, Modal, Drawer, Button, Alert, Tabs, Pagination, Accordion, InfoHint, EmptyState e os campos de formulário, cada um ao lado do componente; `renderApp` com os provedores do app; `npm run test:coverage` com piso de cobertura por arquivo, cobrado no CI. De 28 para 98 testes.
+- **Verificador de regras:** `classe-dinamica` (classe montada por template string, que o Tailwind não gera) e `css-fora-do-lugar` (arquivo .css fora de `src/styles` e `src/brand`). A regra de fonte fixa só olha contexto de fonte, e não reprova mais a palavra "Inter" num texto.
+- **Documentação de entrada para agentes:** "Em um minuto" no `AGENTS.md` e a seção "Cor: três camadas" no `DESIGN_RULES.md` (modelo, paleta de 4 cores e degradê, e sistema fixo), com o briefing de cores perguntando só as 4 cores e o degradê, e a pergunta de white label (5.7).
+
+### Alterado
+
+- **Neutros e cores de sistema iguais em todas as paletas** (fundo, card, borda, texto, erro, sucesso, alerta e informação): antes cada paleta os redefinia à mão. As superfícies do modo escuro saem do fundo do degradê de cada paleta, com o brilho numa faixa fixa. A tela Novo cliente passou a usar a busca embutida do Input.
+- **Chart:** anima só a entrada; com a largura mudando, vai direto à nova forma (e não anima com "reduzir movimento").
+
+### Removido
+
+- `src/brand/palettes/ardosia.css` e os blocos de paleta de `src/brand/examples/*/theme.css`: as quatro paletas saem do gerador. **Projeto derivado:** passe as 4 cores e o degradê da sua marca para `src/brand/palettes.ts` e rode `npm run palettes:build`; os valores escritos à mão no `theme.css` para primária, secundária, sidebar, degradês e gráficos deixam de ser usados.
 
 ## 1.0.0 (24/09/2026)
 

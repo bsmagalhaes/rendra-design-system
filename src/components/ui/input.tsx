@@ -1,5 +1,5 @@
 import IMask, { type FactoryArg, type InputMask } from 'imask'
-import { ChevronDown, Eye, EyeOff, X } from 'lucide-react'
+import { ChevronDown, Eye, EyeOff, Loader2, X } from 'lucide-react'
 import {
   forwardRef,
   useEffect,
@@ -9,6 +9,7 @@ import {
   type InputHTMLAttributes,
   type ReactNode,
 } from 'react'
+import { useLookup, type LookupResult } from '@/hooks/use-lookup'
 import { cn } from '@/lib/cn'
 import { controlAdornmentButton, controlFrame, controlInput, type ControlSize } from '@/lib/control'
 import {
@@ -16,6 +17,7 @@ import {
   internationalPhoneMask,
   masks,
   phoneCountries,
+  toCents,
   type MaskName,
   type PhoneCountry,
 } from '@/lib/masks'
@@ -51,6 +53,17 @@ export interface InputProps extends Omit<
   ddiOptions?: PhoneCountry[]
   /** Esconde o seletor de DDI do telefone (só números brasileiros). */
   hideDdi?: boolean
+  /**
+   * Moeda (mask="currency"): recebe o valor em centavos inteiros (R$ 1.250,50 -> 125050),
+   * ou null quando vazio. Guarde e some dinheiro sempre em centavos.
+   */
+  onCentsChange?: (cents: number | null) => void
+  /**
+   * CEP, CNPJ e CPF ou CNPJ (mask="cep", "cnpj" ou "cpfCnpj"): busca os dados assim que o
+   * campo fica completo (ViaCEP e BrasilAPI), mostra o carregamento no campo e entrega o
+   * resultado. A tela decide o que preencher; use `result.message` como ajuda do Field.
+   */
+  onLookup?: (result: LookupResult) => void
   className?: string
 }
 
@@ -79,6 +92,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     onDdiChange,
     ddiOptions = phoneCountries,
     hideDdi,
+    onCentsChange,
+    onLookup,
     ...props
   },
   ref,
@@ -89,8 +104,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const [showPassword, setShowPassword] = useState(false)
   const [inner, setInner] = useState(String(value ?? defaultValue ?? ''))
   const current = value ?? inner
-  const cb = useRef({ onChange, onValueChange })
-  cb.current = { onChange, onValueChange }
+  const cb = useRef({ onChange, onValueChange, onCentsChange })
+  cb.current = { onChange, onValueChange, onCentsChange }
+  const lookupKind =
+    mask === 'cep' ? 'cep' : mask === 'cnpj' ? 'cnpj' : mask === 'cpfCnpj' ? 'auto' : undefined
+  const searching = useLookup(lookupKind, current, onLookup)
 
   // Telefone: seletor de DDI embutido. Controlado pela prop ddi ou interno.
   const isPhone = mask === 'phone'
@@ -110,6 +128,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       setInner(m.value)
       cb.current.onChange?.(m.value)
       cb.current.onValueChange?.(m.unmaskedValue, m.value)
+      if (mask === 'currency') cb.current.onCentsChange?.(toCents(m.value))
     })
     return () => {
       m.destroy()
@@ -132,6 +151,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     setInner('')
     onChange?.('')
     onValueChange?.('', '')
+    onCentsChange?.(null)
     inputRef.current?.focus()
   }
 
@@ -172,6 +192,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         placeholder={placeholder ?? def?.placeholder}
         disabled={disabled}
         aria-invalid={invalid || undefined}
+        aria-busy={searching || undefined}
         className={controlInput}
         {...(maskKey
           ? { defaultValue: current }
@@ -185,6 +206,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
             })}
         {...props}
       />
+      {searching && (
+        <span role="status" className="flex shrink-0 text-muted-foreground [&_svg]:size-icon-sm">
+          <Loader2 className="animate-spin" aria-hidden />
+          <span className="sr-only">Buscando…</span>
+        </span>
+      )}
       {suffix && <span className="shrink-0 text-sm text-muted-foreground">{suffix}</span>}
       {clearable && current && !disabled && (
         <button

@@ -51,6 +51,21 @@ Tudo o que é da marca mora em dois arquivos e numa pasta:
 
 **Nenhum componente pode conter** cor hexadecimal, `rgb()`, nome de fonte, logotipo ou ícone de marca fixo. Componentes leem a marca por `useBrand()` e as cores pelos nomes semânticos (`bg-primary`, `text-muted-foreground`). Em JavaScript, como nos gráficos, use as variáveis do tema, por exemplo `var(--chart-1)` e `var(--primary)`. As `--color-*` do Tailwind são inline e não existem no CSS.
 
+### Cor: três camadas
+
+A cor de um projeto tem **três camadas**, e só uma delas é da marca:
+
+| Camada      | O que é                                                                                                                                     | Onde fica                                                                          | Muda por projeto?                   |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------- |
+| **Modelo**  | Formato e fonte: Safira (quadrado), Equilíbrio (intermediário) ou Aurora (arredondado). São só três.                                        | `src/styles/theme.css` e `src/brand/examples` (`--radius`, `--brand-font`)         | Escolhe-se um dos três              |
+| **Paleta**  | A cor da marca: **4 cores** (primária, hover da primária, secundária, hover da secundária) e o **degradê da marca** (3 paradas). Nada mais. | Sementes em `src/brand/palettes.ts`; o resto é gerado em `src/styles/palettes.css` | Sim: é a identidade do cliente      |
+| **Sistema** | Neutros do modo claro (fundo #f5f6f7, card branco, borda, texto) e cores de sistema: erro, sucesso, alerta e informação.                    | `src/styles/theme.css`                                                             | **Não**: iguais em todas as paletas |
+
+Das 4 cores e do degradê, o gerador (`createPalette`, em `src/brand/palette.ts`) calcula todo o resto: texto sobre cada cor, fundo suave, primária como texto, foco, sidebar, degradês, gráficos, sombra e as superfícies do modo escuro. Cada par é conferido para **WCAG AA** na geração; se uma cor não passa com o texto pedido, ele a escurece (ou clareia) até passar e registra o ajuste. Nunca escreva à mão as variáveis de paleta nem peça ao cliente mais que as 4 cores e o degradê.
+
+- **Paleta pronta ou do cliente, no build:** acrescente as sementes em `src/brand/palettes.ts` e rode `npm run palettes:build`. O CI confere se o `palettes.css` está em dia.
+- **White label (várias marcas, sem build):** `applyPalette(sementes)` gera e injeta a paleta de um cliente em tempo de execução, com o mesmo resultado; depois é só `data-palette` com o id dela.
+
 ### Templates
 
 São três modelos, cada um com formato, fonte e símbolo fixos:

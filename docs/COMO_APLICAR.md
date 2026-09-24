@@ -33,21 +33,46 @@ A ideia é trazer a base e depois migrar tela por tela, sem parar o projeto.
 
 ## Troca de marca, passo a passo
 
-| Passo | Arquivo                     | O que fazer                                                                                                                                                                                                                                                                                  |
-| ----- | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1     | `src/styles/theme.css`      | Troque os valores (não os nomes) das variáveis: `--primary`, `--primary-hover`, `--secondary`, `--secondary-hover`, os `*-foreground` e `*-hover-foreground`, as semânticas, as superfícies, a sidebar, os degradês e os gráficos. Faça isso no bloco `:root` (claro) e no `.dark` (escuro). |
-| 2     | `src/styles/theme.css`      | Troque a fonte: os `@font-face` apontam para `src/brand/assets/fonts`. O nome da família (`Brand Sans`) pode ficar. Máximo de 3 pesos.                                                                                                                                                       |
-| 3     | `src/brand/brand.config.ts` | Nome do produto, empresa, frase do login, `shape` (`square`, `rounded`, `pill`) e `sidebarLogo` (`dark` para sidebar escura, `auto` para sidebar clara).                                                                                                                                     |
-| 4     | `src/brand/assets`          | `logo-light.svg` (fundo claro), `logo-dark.svg` (fundo escuro), `symbol.svg` (em `fill="currentColor"`) e `favicon.svg`. Para ícones de feedback próprios, preencha `feedbackIcons` no `brand.config.ts`.                                                                                    |
-| 5     | Navegador                   | Abra `/tokens` nos modos claro e escuro: nenhum selo de contraste pode marcar "falha". Abra `/componentes` e confira.                                                                                                                                                                        |
+A cor tem três camadas (detalhe em "Cor: três camadas", no `DESIGN_RULES.md`): o **modelo** (formato e fonte: Safira, Equilíbrio ou Aurora), a **paleta** (4 cores e o degradê da marca) e o **sistema** (neutros e cores de erro, sucesso, alerta e informação, que não mudam). Trocar a marca é trocar a paleta, e às vezes o modelo; o sistema fica.
 
-Para adotar um dos templates de exemplo como marca ativa, copie `src/brand/examples/<template>/theme.css` sobre `src/styles/theme.css`, troque os seletores `:root[data-brand='<id>']` e `:root[data-palette='<id>']` por `:root`, e `:root[data-palette='<id>'].dark` por `.dark`, juntando os blocos de modelo e paleta. Depois copie `brand.config.ts` e `assets` sobre `src/brand`.
+| Passo | Arquivo                     | O que fazer                                                                                                                                                                                                                                          |
+| ----- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | `src/brand/palettes.ts`     | Cores da marca: `primary`, `primaryHover`, `secondary`, `secondaryHover` e `gradient` (3 cores, da luz ao fundo). Opcional: `onPrimary` e `onSecondary` (`'light'` força texto branco). Deixe a paleta do projeto em primeiro lugar: ela é a padrão. |
+| 2     | Terminal                    | `npm run palettes:build`: gera `src/styles/palettes.css` com o claro, o escuro e todo o resto, com AA conferido. Os ajustes de contraste aparecem no terminal e no comentário do arquivo.                                                            |
+| 3     | `src/styles/theme.css`      | Só se o modelo mudar: `--radius` e a fonte (os `@font-face` apontam para `src/brand/assets/fonts`; máximo de 3 pesos). Neutros e cores de sistema ficam como estão.                                                                                  |
+| 4     | `src/brand/brand.config.ts` | Nome do produto, empresa, frase do login, `shape` (`square`, `rounded`, `pill`) e `sidebarLogo`.                                                                                                                                                     |
+| 5     | `src/brand/assets`          | `logo-light.svg` (fundo claro), `logo-dark.svg` (fundo escuro), `symbol.svg` (em `fill="currentColor"`) e `favicon.svg`. Para ícones de feedback próprios, preencha `feedbackIcons` no `brand.config.ts`.                                            |
+| 6     | Navegador                   | Abra `/tokens` nos modos claro e escuro: nenhum selo de contraste pode marcar "falha". Abra `/componentes` e confira.                                                                                                                                |
+
+Para adotar um dos outros modelos como marca ativa, copie `src/brand/examples/<modelo>/theme.css` (fonte e raio) sobre a parte de modelo de `src/styles/theme.css`, troque o seletor `:root[data-brand='<id>']` por `:root` e copie `brand.config.ts` e `assets` sobre `src/brand`.
+
+### White label: marca de cada cliente em tempo de execução
+
+Quando cada cliente (tenant) cadastra a própria marca, não há build por cliente. Leia as 4 cores e o degradê da configuração do tenant e aplique na entrada do app:
+
+```ts
+import { applyPalette } from '@/brand'
+
+const tenant = await carregarTenant() // { id, nome, cores } da sua API
+applyPalette({
+  id: tenant.id,
+  name: tenant.nome,
+  primary: tenant.cores.primaria,
+  primaryHover: tenant.cores.primariaHover,
+  secondary: tenant.cores.secundaria,
+  secondaryHover: tenant.cores.secundariaHover,
+  gradient: tenant.cores.degrade, // [luz, meio, fundo]
+})
+document.documentElement.dataset.palette = tenant.id
+```
+
+`applyPalette` gera exatamente o que o build geraria (claro, escuro e AA conferido) e devolve os ajustes feitos, para o painel de cadastro mostrar ao parceiro quando uma cor precisou ser escurecida.
 
 ## Ordem de migração
 
 Migre de fora para dentro, com uma verificação ao fim de cada passo:
 
-1. **Tokens e tema.** O projeto passa a ter `theme.css` e `globals.css`. Confira `/tokens`.
+1. **Tokens e tema.** O projeto passa a ter `theme.css`, `palettes.css` (gerado das 4 cores e do degradê da marca) e `globals.css`. Confira `/tokens`.
 2. **AppShell.** Troque o layout antigo pelo `AppShell` com o menu em `navigation.ts`. O header fixo e a rolagem única do `<main>` já resolvem boa parte dos problemas de layout.
 3. **Formulários e ações.** Troque inputs, selects e botões pelos componentes únicos. Use `Form`, `FormField` e `ActionBar`. Nenhum botão fica solto: cada ação vai para o rodapé fixo, a barra da tabela, o `PageHeader actions`, o `CardHeader actions` ou o menu da linha. Textos de instrução soltos na tela e botões de "informações" viram `help` ao lado do título (ícone que abre um modal).
 4. **Listagens.** Troque as tabelas pela `Table`, com `toolbar`, colunas com `mobile` e estados.

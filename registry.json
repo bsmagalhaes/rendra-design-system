@@ -45,6 +45,11 @@
           "target": "src/hooks/use-fill-height.ts"
         },
         {
+          "path": "src/hooks/use-lookup.ts",
+          "type": "registry:file",
+          "target": "src/hooks/use-lookup.ts"
+        },
+        {
           "path": "src/hooks/use-route-meta.ts",
           "type": "registry:file",
           "target": "src/hooks/use-route-meta.ts"
@@ -64,6 +69,11 @@
           "path": "src/brand/use-brand.ts",
           "type": "registry:file",
           "target": "src/brand/use-brand.ts"
+        },
+        {
+          "path": "src/brand/palette.ts",
+          "type": "registry:file",
+          "target": "src/brand/palette.ts"
         }
       ]
     },
@@ -1204,6 +1214,429 @@
           "path": "src/components/ui/wizard.tsx",
           "type": "registry:file",
           "target": "src/components/ui/wizard.tsx"
+        }
+      ]
+    },
+    {
+      "name": "test-utils",
+      "type": "registry:item",
+      "title": "Preparação dos testes",
+      "description": "Preparação do Vitest para testes de componente (matchMedia, ResizeObserver e o que o Radix usa no jsdom) e renderApp com os provedores do app. Aponte setupFiles para src/test/setup.ts.",
+      "devDependencies": [
+        "@testing-library/jest-dom@^7.0.1",
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "jsdom@^30.1.1",
+        "react-router@^8.4.0",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": ["https://bsmagalhaes.github.io/rendra-design-system/r/tooltip.json"],
+      "files": [
+        { "path": "src/test/setup.ts", "type": "registry:file", "target": "src/test/setup.ts" },
+        { "path": "src/test/render.tsx", "type": "registry:file", "target": "src/test/render.tsx" }
+      ]
+    },
+    {
+      "name": "accordion-test",
+      "type": "registry:item",
+      "title": "accordion (teste)",
+      "description": "Testes de comportamento do accordion, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/accordion.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/accordion.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/accordion.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "alert-test",
+      "type": "registry:item",
+      "title": "alert (teste)",
+      "description": "Testes de comportamento do alert, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/alert.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/alert.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/alert.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "button-test",
+      "type": "registry:item",
+      "title": "button (teste)",
+      "description": "Testes de comportamento do button, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/button.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/button.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "checkbox-test",
+      "type": "registry:item",
+      "title": "checkbox (teste)",
+      "description": "Testes de comportamento do checkbox, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/checkbox.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/checkbox.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/checkbox.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "drawer-test",
+      "type": "registry:item",
+      "title": "drawer (teste)",
+      "description": "Testes de comportamento do drawer, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/drawer.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/drawer.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/drawer.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "empty-state-test",
+      "type": "registry:item",
+      "title": "empty-state (teste)",
+      "description": "Testes de comportamento do empty-state, com Vitest e Testing Library.",
+      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.1"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/empty-state.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/empty-state.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/empty-state.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "field-test",
+      "type": "registry:item",
+      "title": "field (teste)",
+      "description": "Testes de comportamento do field, com Vitest e Testing Library.",
+      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.1"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/field.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/field.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/field.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "info-hint-test",
+      "type": "registry:item",
+      "title": "info-hint (teste)",
+      "description": "Testes de comportamento do info-hint, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/info-hint.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/info-hint.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/info-hint.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "input-test",
+      "type": "registry:item",
+      "title": "input (teste)",
+      "description": "Testes de comportamento do input, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/input.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/input.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "modal-test",
+      "type": "registry:item",
+      "title": "modal (teste)",
+      "description": "Testes de comportamento do modal, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/modal.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/modal.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/modal.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "otp-input-test",
+      "type": "registry:item",
+      "title": "otp-input (teste)",
+      "description": "Testes de comportamento do otp-input, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/otp-input.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/otp-input.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/otp-input.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pagination-test",
+      "type": "registry:item",
+      "title": "pagination (teste)",
+      "description": "Testes de comportamento do pagination, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/pagination.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/pagination.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/pagination.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "radio-group-test",
+      "type": "registry:item",
+      "title": "radio-group (teste)",
+      "description": "Testes de comportamento do radio-group, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/radio-group.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/radio-group.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/radio-group.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "select-test",
+      "type": "registry:item",
+      "title": "select (teste)",
+      "description": "Testes de comportamento do select, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": ["https://bsmagalhaes.github.io/rendra-design-system/r/select.json"],
+      "files": [
+        {
+          "path": "src/components/ui/select.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/select.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "switch-test",
+      "type": "registry:item",
+      "title": "switch (teste)",
+      "description": "Testes de comportamento do switch, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/switch.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/switch.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/switch.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "table-test",
+      "type": "registry:item",
+      "title": "table (teste)",
+      "description": "Testes de comportamento do table, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/table.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/table.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/table.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "tabs-test",
+      "type": "registry:item",
+      "title": "tabs (teste)",
+      "description": "Testes de comportamento do tabs, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tabs.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/tabs.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/tabs.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "textarea-test",
+      "type": "registry:item",
+      "title": "textarea (teste)",
+      "description": "Testes de comportamento do textarea, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/textarea.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/textarea.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/textarea.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "upload-test",
+      "type": "registry:item",
+      "title": "upload (teste)",
+      "description": "Testes de comportamento do upload, com Vitest e Testing Library.",
+      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.1"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/upload.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/upload.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/upload.test.tsx"
         }
       ]
     }

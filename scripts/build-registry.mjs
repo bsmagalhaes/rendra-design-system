@@ -15,7 +15,7 @@
  * Marca (theme.css, themes.css, brand.config.ts, src/brand/index.ts, assets) e configuração
  * (src/config) são do projeto e nunca entram no registry.
  */
-import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, join, posix } from 'node:path'
 import { format, resolveConfig } from 'prettier'
 
@@ -51,6 +51,9 @@ const core = {
     'src/brand/brand-context.ts',
     'src/brand/brand-provider.tsx',
     'src/brand/use-brand.ts',
+    // Gerador de paleta (4 cores e degradê -> paleta completa com AA). Genérico: a marca
+    // em si (src/brand/palettes.ts) é do projeto.
+    'src/brand/palette.ts',
   ],
 }
 const tokens = {
@@ -80,7 +83,30 @@ const ui = ls('src/components/ui', ['.tsx']).map((file) => ({
   files: [file],
 }))
 
-const items = [core, tokens, layout, appShell, ...ui]
+/*
+ * Testes, como itens opcionais: quem tem meta de cobertura instala o teste junto com o
+ * componente (npx shadcn add @rendra/table-test); quem não usa Vitest não recebe as
+ * dependências de teste. test-utils traz a preparação e o renderApp.
+ */
+const testUtils = {
+  name: 'test-utils',
+  title: 'Preparação dos testes',
+  description:
+    'Preparação do Vitest para testes de componente (matchMedia, ResizeObserver e o que o Radix usa no jsdom) e renderApp com os provedores do app. Aponte setupFiles para src/test/setup.ts.',
+  files: ['src/test/setup.ts', 'src/test/render.tsx'],
+  dev: ['vitest', 'jsdom', '@testing-library/react', '@testing-library/user-event'],
+}
+const uiTests = ui
+  .filter((i) => existsSync(join(ROOT, i.files[0].replace(/\.tsx$/, '.test.tsx'))))
+  .map((i) => ({
+    name: `${i.name}-test`,
+    title: `${i.name} (teste)`,
+    description: `Testes de comportamento do ${i.name}, com Vitest e Testing Library.`,
+    files: [i.files[0].replace(/\.tsx$/, '.test.tsx')],
+  }))
+
+const items = [core, tokens, layout, appShell, ...ui, testUtils, ...uiTests]
+const isTest = (item) => item === testUtils || item.name.endsWith('-test')
 
 // Descobre a qual item pertence cada arquivo, para transformar import em dependência.
 const owner = new Map()
@@ -124,7 +150,11 @@ function analyze(item) {
     }
   }
   // Todo componente depende dos tokens (as classes só existem com o globals.css).
-  if (item.name !== 'tokens' && item.name !== 'core') reg.add('tokens')
+  if (item.name !== 'tokens' && item.name !== 'core' && !isTest(item)) reg.add('tokens')
+  if (isTest(item)) {
+    for (const d of item.dev ?? []) deps.add(`${d}@${versions[d]}`)
+    return { devDependencies: [...deps].sort(), registryDependencies: [...reg].sort() }
+  }
   return { dependencies: [...deps].sort(), registryDependencies: [...reg].sort() }
 }
 
@@ -137,13 +167,13 @@ const index = {
 
 mkdirSync(OUT, { recursive: true })
 for (const item of items) {
-  const { dependencies, registryDependencies } = analyze(item)
+  const { dependencies, devDependencies, registryDependencies } = analyze(item)
   const entry = {
     name: item.name,
     type: 'registry:item',
     title: item.title,
     description: item.description,
-    dependencies,
+    ...(devDependencies ? { devDependencies } : { dependencies }),
     registryDependencies: registryDependencies.map((n) => `${BASE}/r/${n}.json`),
     files: item.files.map((f) => ({ path: f, type: 'registry:file', target: f })),
   }

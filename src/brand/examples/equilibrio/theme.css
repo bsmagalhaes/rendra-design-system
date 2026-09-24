@@ -1,10 +1,8 @@
 /*
  * TEMPLATE: Rendra Equilíbrio (formato rounded, entre o quadrado e o 100% arredondado)
- * Mesmos nomes de variável de src/styles/theme.css, valores diferentes.
- * Duas camadas: [data-brand='equilibrio'] (modelo: fonte e raio) e [data-palette='equilibrio'] (cores).
- * Qualquer modelo pode usar qualquer paleta. Ao adotar como template ativo, troque os
- * seletores por :root e .dark e junte as duas camadas.
- * Semânticas (destructive, success, warning) herdam do template ativo.
+ * Este arquivo é só o MODELO: fonte e raio ([data-brand='equilibrio']).
+ * As cores vêm da paleta, que é gerada a partir de 4 cores e do degradê (src/brand/palettes.ts)
+ * e combina com qualquer modelo. Cores de sistema e neutros ficam em src/styles/theme.css.
  */
 @font-face {
   font-family: 'Equilibrio Sans';
@@ -28,139 +26,9 @@
   src: url('./assets/fonts/brand-600.woff2') format('woff2');
 }
 
-/* MODELO EQUILIBRIO: fonte e raio. As cores ficam na paleta abaixo, que pode ser combinada
- * com qualquer modelo (atributo data-palette no <html>). */
+/* MODELO EQUILIBRIO: fonte e raio. As cores vêm da paleta (atributo data-palette no <html>),
+ * que combina com qualquer modelo. */
 :root[data-brand='equilibrio'] {
   --brand-font: 'Equilibrio Sans', ui-sans-serif, system-ui, sans-serif;
   --radius: 0.625rem;
-}
-
-/* PALETA EQUILIBRIO */
-:root[data-palette='equilibrio'] {
-  color-scheme: light;
-
-  --background: #f5f6f7;
-  --background-image: none;
-  --foreground: #1d1a2e;
-  --card: #ffffff;
-  --card-foreground: #1d1a2e;
-  --popover: #ffffff;
-  --popover-foreground: #1d1a2e;
-  --muted: #f0eef6;
-  --muted-foreground: #5e5a72;
-  --border: #e3e0ee;
-  --input: #8c88a0;
-  --field: #f5f6f7;
-  --ring: #5b3fd1;
-  --overlay: rgb(29 26 46 / 0.5);
-
-  --primary: #5b3fd1;
-  --primary-hover: #4a31b3;
-  --primary-foreground: #ffffff;
-  --primary-hover-foreground: #ffffff;
-  --primary-soft: #efebfc;
-  --primary-soft-foreground: #4a31b3;
-  --primary-text: #5b3fd1;
-  --secondary: #0e7490;
-  --secondary-hover: #0b5f76;
-  --secondary-foreground: #ffffff;
-  --secondary-hover-foreground: #ffffff;
-  --accent: #f3f1f9;
-  --accent-foreground: #1d1a2e;
-
-  --info: #0e7490;
-  --info-foreground: #ffffff;
-  --info-soft: #e5f4f8;
-  --info-soft-foreground: #0b5f76;
-
-  --sidebar: #1d1a2e;
-  --sidebar-image: radial-gradient(120% 120% at 80% 0%, #3b2a8c 0%, #241d45 45%, #1d1a2e 100%);
-  --sidebar-foreground: #eceaf5;
-  --sidebar-muted-foreground: #aba6c4;
-  --sidebar-border: rgb(255 255 255 / 0.08);
-  --sidebar-accent: rgb(255 255 255 / 0.06);
-  --sidebar-active: rgb(165 148 249 / 0.2);
-  --sidebar-active-foreground: #ffffff;
-  --sidebar-indicator: #a594f9;
-
-  --gradient-brand: radial-gradient(120% 120% at 80% 0%, #7c63f0 0%, #4a31b3 45%, #1d1a2e 100%);
-  --gradient-brand-foreground: #ffffff;
-  --gradient-soft: linear-gradient(135deg, #efebfc 0%, #ffffff 65%);
-  --gradient-accent: linear-gradient(90deg, #5b3fd1 0%, #0e7490 100%);
-
-  --chart-1: #5b3fd1;
-  --chart-2: #0e7490;
-  --chart-3: #a594f9;
-  --chart-4: #1d1a2e;
-  --chart-5: #d97706;
-
-  --shadow-color: 29 26 46;
-  --elevation-sm: 0 1px 2px rgb(var(--shadow-color) / 0.06);
-  --elevation-md:
-    0 2px 8px -2px rgb(var(--shadow-color) / 0.1), 0 1px 2px rgb(var(--shadow-color) / 0.05);
-  --elevation-lg:
-    0 12px 32px -8px rgb(var(--shadow-color) / 0.16), 0 2px 6px rgb(var(--shadow-color) / 0.05);
-}
-
-:root[data-palette='equilibrio'].dark {
-  color-scheme: dark;
-  --background: #13111d;
-  --background-image: none;
-  --foreground: #eceaf5;
-  --card: #1b1828;
-  --card-foreground: #eceaf5;
-  --popover: #221e31;
-  --popover-foreground: #eceaf5;
-  --muted: #242033;
-  --muted-foreground: #aba6c4;
-  --border: #2f2a42;
-  --input: #6e6887;
-  --field: #16131f;
-  --ring: #a594f9;
-  --overlay: rgb(0 0 0 / 0.65);
-
-  --primary: #a594f9;
-  --primary-hover: #bcaffb;
-  --primary-foreground: #1a1235;
-  --primary-hover-foreground: #1a1235;
-  --primary-soft: #2a2350;
-  --primary-soft-foreground: #c9befd;
-  --primary-text: #a594f9;
-  --secondary: #67c7de;
-  --secondary-hover: #88d4e6;
-  --secondary-foreground: #04222b;
-  --secondary-hover-foreground: #04222b;
-  --accent: #231f33;
-  --accent-foreground: #eceaf5;
-
-  --info: #67c7de;
-  --info-foreground: #04222b;
-  --info-soft: #10303a;
-  --info-soft-foreground: #9adcec;
-
-  --sidebar: #16131f;
-  --sidebar-image: radial-gradient(120% 120% at 80% 0%, #2e2270 0%, #1b1730 45%, #13111d 100%);
-  --sidebar-foreground: #eceaf5;
-  --sidebar-muted-foreground: #aba6c4;
-  --sidebar-border: rgb(255 255 255 / 0.08);
-  --sidebar-accent: rgb(255 255 255 / 0.06);
-  --sidebar-active: rgb(165 148 249 / 0.2);
-  --sidebar-active-foreground: #ffffff;
-  --sidebar-indicator: #a594f9;
-
-  --gradient-brand: radial-gradient(120% 120% at 80% 0%, #3b2a8c 0%, #241d45 45%, #13111d 100%);
-  --gradient-brand-foreground: #eceaf5;
-  --gradient-soft: linear-gradient(135deg, #2a2350 0%, #1b1828 65%);
-  --gradient-accent: linear-gradient(90deg, #a594f9 0%, #67c7de 100%);
-
-  --chart-1: #a594f9;
-  --chart-2: #67c7de;
-  --chart-3: #7c63f0;
-  --chart-4: #d7d1fb;
-  --chart-5: #f2b04f;
-
-  --shadow-color: 0 0 0;
-  --elevation-sm: 0 1px 2px rgb(var(--shadow-color) / 0.3);
-  --elevation-md: 0 4px 12px -2px rgb(var(--shadow-color) / 0.35);
-  --elevation-lg: 0 16px 40px -8px rgb(var(--shadow-color) / 0.5);
 }
