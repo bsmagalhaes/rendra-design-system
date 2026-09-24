@@ -42,7 +42,7 @@ jobs:
         run: npm run registry:build
       - name: Build do Storybook
         run: npm run build-storybook -- --quiet --output-dir dist/storybook
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
