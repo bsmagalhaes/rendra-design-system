@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatCurrency, parseLocaleNumber, toE164 } from './masks'
+import { formatCents, formatCurrency, parseLocaleNumber, toCents, toE164 } from './masks'
 
 describe('parseLocaleNumber', () => {
   it('converte valores mascarados em número', () => {
@@ -27,5 +27,24 @@ describe('toE164', () => {
   })
   it('devolve vazio sem número', () => {
     expect(toE164('55', '')).toBe('')
+  })
+})
+
+describe('toCents e formatCents', () => {
+  it('converte moeda em centavos inteiros, sem arredondamento de ponto flutuante', () => {
+    expect(toCents('R$ 1.250,50')).toBe(125050)
+    expect(toCents('R$ 0,10')).toBe(10)
+    expect(toCents('R$ 0,1')).toBe(10)
+    expect(toCents('R$ 19,99')).toBe(1999)
+    expect(toCents('R$ 1.000')).toBe(100000)
+    // 0,1 + 0,2 em ponto flutuante dá 0,30000000000000004; em centavos, 30.
+    expect((toCents('R$ 0,10') ?? 0) + (toCents('R$ 0,20') ?? 0)).toBe(30)
+  })
+  it('devolve null quando vazio', () => {
+    expect(toCents('')).toBeNull()
+    expect(toCents('R$ ')).toBeNull()
+  })
+  it('volta de centavos para o texto do campo', () => {
+    expect(formatCents(125050).replace(/\s/g, ' ')).toBe('R$ 1.250,50')
   })
 })

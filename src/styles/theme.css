@@ -1,15 +1,21 @@
 /*
- * TEMA DA MARCA (arquivo 1 de 2 da marca)
- * ---------------------------------------
- * Único lugar do sistema com cor, fonte, raio e sombra concretos.
+ * TEMA FIXO DO SISTEMA (o que NÃO muda entre paletas)
+ * ---------------------------------------------------
+ * A cor de um projeto tem três camadas, e só uma é da marca:
+ *
+ *   1. MODELO (formato e fonte): Safira (quadrado), Equilíbrio (intermediário) ou Aurora
+ *      (arredondado). Aqui e em src/brand/examples: --brand-font e --radius.
+ *   2. PALETA (a cor da marca): só 4 cores (primária, hover da primária, secundária, hover
+ *      da secundária) e o degradê da marca. Sementes em src/brand/palettes.ts; o resto
+ *      (texto sobre cada cor, fundo suave, sidebar, gráficos, modo escuro) é gerado com AA
+ *      conferido em src/styles/palettes.css. Cliente sem build: applyPalette().
+ *   3. SISTEMA (este arquivo, igual para todas as paletas): neutros do modo claro (fundo
+ *      #f5f6f7, card branco, borda, texto) e as cores de sistema: erro, sucesso, alerta e
+ *      informação, nos modos claro e escuro.
+ *
  * Componentes consomem apenas os nomes semânticos (bg-primary, text-muted-foreground...).
- * Para trocar de marca: edite os valores abaixo, troque os arquivos de src/brand/assets
- * e ajuste src/brand/brand.config.ts. Nada mais.
  *
- * Todo template define: primary, primary-hover, secondary e secondary-hover (cores da marca),
- * mais as neutras e as semânticas.
- *
- * Cada cor semântica tem quatro papéis:
+ * Cada cor de sistema tem quatro papéis:
  *   --x              preenchimento forte (botão, badge sólido)
  *   --x-foreground   texto sobre o preenchimento forte
  *   --x-soft         fundo suave (alert, badge suave, linha selecionada)
@@ -60,32 +66,9 @@
   --border: #dbe2eb;
   --input: #808fa4;
   --field: #f5f6f7;
-  --ring: #0e6cdb;
   --overlay: rgb(7 20 42 / 0.55);
 
-  /* Marca */
-  /* Primária #0B6FE0 e secundária #98D10A. No hover, cada uma troca para a outra.
-     #0B6FE0 dá 4,8:1 com texto branco (AA); o tom anterior, #0C78F4, dava 4,2:1. */
-  --primary: #0b6fe0;
-  --primary-hover: #98d10a;
-  --primary-foreground: #ffffff;
-  --primary-hover-foreground: #0b1d37;
-  --primary-soft: #e7f0fc;
-  --primary-soft-foreground: #0b58b5;
-  /* Primária usada como texto ou ícone sobre o fundo (link, destaque). No escuro fica
-     mais clara para manter contraste AA; a primária em si continua sendo o preenchimento. */
-  --primary-text: #0a64cc;
-
-  /* Cor secundária da marca: segunda cor de destaque, com hover próprio */
-  --secondary: #98d10a;
-  --secondary-hover: #0b6fe0;
-  --secondary-foreground: #0b1d37;
-  --secondary-hover-foreground: #ffffff;
-
-  --accent: #edf3fb;
-  --accent-foreground: #0b1d37;
-
-  /* Semânticas */
+  /* Cores de sistema (iguais em todas as paletas) */
   --destructive: #b72c05;
   --destructive-hover: #962404;
   --destructive-foreground: #ffffff;
@@ -107,19 +90,8 @@
   --info-soft: #e7f0fc;
   --info-soft-foreground: #0b58b5;
 
-  /* Navegação lateral: navy em gradiente, identidade da marca nos dois modos */
-  --sidebar: #0b1d37;
-  --sidebar-image: radial-gradient(120% 120% at 80% 0%, #034889 0%, #0b1d37 45%, #07142a 100%);
-  --sidebar-foreground: #e6eef8;
-  --sidebar-muted-foreground: #a9bbd2;
-  --sidebar-border: rgb(127 180 239 / 0.16);
-  --sidebar-accent: rgb(127 180 239 / 0.12);
-  --sidebar-active: rgb(12 120 244 / 0.22);
-  --sidebar-active-foreground: #ffffff;
-  --sidebar-indicator: #98d10a;
-
   /*
-   * DEGRADÊS: três por template, com regra de uso fixa.
+   * DEGRADÊS (gerados pela paleta), com regra de uso fixa.
    *   gradient-brand   forte. Só em: sidebar, painel lateral do login, destaque de página,
    *                    tela de erro. No máximo um por tela. Texto por cima usa
    *                    --gradient-brand-foreground e o ponto de luz nunca fica atrás do texto.
@@ -129,20 +101,8 @@
    *                    borda de destaque de 2 a 4px, linha de gráfico. Nunca com texto por cima.
    * Proibido: degradê em botão, input, badge, fundo de texto corrido ou de tabela.
    */
-  --gradient-brand: radial-gradient(120% 120% at 80% 0%, #034889 0%, #0b1d37 45%, #07142a 100%);
-  --gradient-brand-foreground: #ffffff;
-  --gradient-soft: linear-gradient(135deg, #e7f0fc 0%, #ffffff 65%);
-  --gradient-accent: linear-gradient(90deg, #0b6fe0 0%, #98d10a 100%);
 
-  /* Gráficos: sequência da marca, depois apoio semântico */
-  --chart-1: #0b6fe0;
-  --chart-2: #98d10a;
-  --chart-3: #7fb4ef;
-  --chart-4: #0459a9;
-  --chart-5: #b45309;
-
-  /* Sombras: três níveis, sutis. Preferir borda de 1px. */
-  --shadow-color: 11 29 55;
+  /* Sombras: três níveis, sutis. Preferir borda de 1px. A cor (--shadow-color) vem da paleta. */
   --elevation-sm: 0 1px 2px rgb(var(--shadow-color) / 0.06);
   --elevation-md:
     0 2px 8px -2px rgb(var(--shadow-color) / 0.1), 0 1px 2px rgb(var(--shadow-color) / 0.06);
@@ -153,37 +113,8 @@
 .dark {
   color-scheme: dark;
 
-  --background: #07142a;
-  --background-image: radial-gradient(120% 80% at 80% 0%, #0a2a52 0%, #0b1d37 40%, #07142a 100%);
-  --foreground: #e8eff8;
-  --card: #0d2240;
-  --card-foreground: #e8eff8;
-  --popover: #102849;
-  --popover-foreground: #e8eff8;
-  --muted: #13294a;
-  --muted-foreground: #a3b4ca;
-  --border: #1f3a5f;
-  --input: #56719a;
-  --field: #0a1a33;
-  --ring: #0c78f4;
-  --overlay: rgb(2 8 20 / 0.7);
-
-  --primary: #0b6fe0;
-  --primary-hover: #98d10a;
-  --primary-foreground: #ffffff;
-  --primary-hover-foreground: #07142a;
-  --primary-soft: #11305a;
-  --primary-soft-foreground: #7fb4ef;
-  --primary-text: #5b9ff6;
-
-  --secondary: #98d10a;
-  --secondary-hover: #0b6fe0;
-  --secondary-foreground: #07142a;
-  --secondary-hover-foreground: #ffffff;
-
-  --accent: #152d50;
-  --accent-foreground: #e8eff8;
-
+  /* As superfícies do escuro vêm da paleta (geradas a partir do fundo do degradê).
+     Aqui ficam só as cores de sistema do modo escuro. */
   --destructive: #b72c05;
   --destructive-hover: #cf3b0e;
   --destructive-foreground: #ffffff;
@@ -205,21 +136,6 @@
   --info-soft: #11305a;
   --info-soft-foreground: #7fb4ef;
 
-  --sidebar: #07142a;
-  --sidebar-image: radial-gradient(120% 120% at 80% 0%, #034889 0%, #0b1d37 45%, #07142a 100%);
-
-  --gradient-brand: radial-gradient(120% 120% at 80% 0%, #034889 0%, #0b1d37 45%, #07142a 100%);
-  --gradient-brand-foreground: #ffffff;
-  --gradient-soft: linear-gradient(135deg, #11305a 0%, #0d2240 65%);
-  --gradient-accent: linear-gradient(90deg, #0c78f4 0%, #98d10a 100%);
-
-  --chart-1: #0c78f4;
-  --chart-2: #98d10a;
-  --chart-3: #7fb4ef;
-  --chart-4: #c9ddf5;
-  --chart-5: #f2b04f;
-
-  --shadow-color: 0 0 0;
   --elevation-sm: 0 1px 2px rgb(var(--shadow-color) / 0.3);
   --elevation-md: 0 4px 12px -2px rgb(var(--shadow-color) / 0.35);
   --elevation-lg: 0 16px 40px -8px rgb(var(--shadow-color) / 0.5);

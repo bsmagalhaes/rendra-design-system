@@ -21,5 +21,27 @@ export default defineConfig({
   // Demo no GitHub Pages: o build de publicação define BASE_PATH=/rendra-design-system/.
   base: process.env.BASE_PATH ?? '/',
   // Testes unitários (Vitest). Os testes de layout (Playwright) ficam em tests/.
-  test: { include: ['src/**/*.test.{ts,tsx}'], environment: 'node' },
+  test: {
+    include: ['src/**/*.test.{ts,tsx}'],
+    // Funções puras no Node; testes de componente pedem jsdom na primeira linha do arquivo.
+    environment: 'node',
+    setupFiles: ['src/test/setup.ts'],
+    coverage: {
+      provider: 'v8',
+      include: ['src/lib/**', 'src/brand/palette.ts', 'src/hooks/**', 'src/components/ui/**'],
+      exclude: ['**/*.test.{ts,tsx}'],
+      reporter: ['text-summary', 'html'],
+      // Piso por arquivo (linhas): a cobertura de quem já tem teste não pode cair. Componente
+      // novo ou alterado entra com o próprio teste (ao lado dele) e ganha uma linha aqui.
+      thresholds: {
+        'src/lib/{masks,lookup,validators}.ts': { lines: 85 },
+        'src/brand/palette.ts': { lines: 90 },
+        'src/hooks/use-lookup.ts': { lines: 90 },
+        'src/components/ui/{input,select,modal,alert,accordion,checkbox,field,radio-group,switch,tabs,textarea}.tsx':
+          { lines: 85 },
+        'src/components/ui/{table,drawer,button}.tsx': { lines: 75 },
+        'src/components/ui/{pagination,otp-input,upload}.tsx': { lines: 60 },
+      },
+    },
+  },
 })

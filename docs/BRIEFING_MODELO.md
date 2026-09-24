@@ -134,14 +134,16 @@ O tema define forma e fonte (`src/brand/brand.config.ts` e `src/styles/theme.css
 
 **5.2 Cores da identidade** (se 5.1 = 3)
 
-- Cor primária (botão principal, destaque):
-- Cor da primária no hover (padrão: a primária um pouco mais escura, ou a secundária):
-- Cor secundária:
-- Cor da secundária no hover:
-- Cor destrutiva (padrão: vermelho do tema):
-- Cor da sidebar, que é sempre colorida (padrão: derivada da primária, escura):
+Uma paleta é só **4 cores e o degradê da marca**. Pergunte apenas isto:
 
-A IA confere o contraste de cada par em `/tokens` e, se algum ficar abaixo de AA, propõe o tom mais próximo que passa antes de aplicar.
+- Cor primária (botão principal, links, destaque):
+- Cor da primária no hover (padrão: a primária um pouco mais escura, ou a secundária):
+- Cor secundária (segundo destaque, indicador do menu):
+- Cor da secundária no hover:
+- Degradê da marca, usado na sidebar e no painel do login (3 cores, da luz ao fundo; padrão: tons da primária, do médio ao bem escuro):
+- Texto sobre a primária e a secundária: automático (padrão, o que passar AA), sempre branco ou sempre escuro:
+
+**Não pergunte** erro, sucesso, alerta, informação, fundo, card, borda nem as cores do modo escuro: são do sistema ou geradas. As sementes vão em `src/brand/palettes.ts` e `npm run palettes:build` gera o resto com AA conferido; se uma cor precisar de ajuste para passar, o gerador mostra o tom usado, e a IA confirma com o usuário antes de seguir.
 
 **5.3 Qual paleta pronta** (se 5.1 = 2)
 
@@ -162,7 +164,13 @@ A IA confere o contraste de cada par em `/tokens` e, se algum ficar abaixo de AA
 **5.6 O usuário final pode trocar modelo e paleta** pelo menu do avatar
 
 1. **Não**, só a marca do projeto: padrão para produto de cliente.
-2. **Sim**: útil para white label ou sistema com várias marcas.
+2. **Sim**: útil para demonstração ou sistema com várias marcas.
+
+**5.7 White label: cada cliente (tenant) com a sua marca**
+
+1. **Não**: uma marca só, definida no build. Padrão.
+2. **Sim, marcas conhecidas no build**: cada uma vira uma entrada em `src/brand/palettes.ts`.
+3. **Sim, marcas cadastradas em tempo de execução** (o parceiro escolhe as cores num painel): as 4 cores e o degradê vêm da API ou da configuração do tenant, e o app chama `applyPalette(sementes)` na entrada. Pergunte de onde vêm as cores e quem as cadastra.
 
 - Referências visuais que o cliente admira (aberta, opcional):
 
