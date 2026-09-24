@@ -1,0 +1,221 @@
+/*
+ * TEMA DA MARCA (arquivo 1 de 2 da marca)
+ * ---------------------------------------
+ * Único lugar do sistema com cor, fonte, raio e sombra concretos.
+ * Componentes consomem apenas os nomes semânticos (bg-primary, text-muted-foreground...).
+ * Para trocar de marca: edite os valores abaixo, troque os arquivos de src/brand/assets
+ * e ajuste src/brand/brand.config.ts. Nada mais.
+ *
+ * Todo template define: primary, primary-hover, secondary e secondary-hover (cores da marca),
+ * mais as neutras e as semânticas.
+ *
+ * Cada cor semântica tem quatro papéis:
+ *   --x              preenchimento forte (botão, badge sólido)
+ *   --x-foreground   texto sobre o preenchimento forte
+ *   --x-soft         fundo suave (alert, badge suave, linha selecionada)
+ *   --x-soft-foreground  texto e ícone sobre o fundo suave
+ * Todos os pares foram conferidos para contraste mínimo WCAG AA (4,5:1).
+ */
+
+/* Fonte da marca, declarada com nome próprio. */
+@font-face {
+  font-family: 'Brand Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../brand/assets/fonts/brand-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Brand Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../brand/assets/fonts/brand-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Brand Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../brand/assets/fonts/brand-600.woff2') format('woff2');
+}
+
+:root {
+  color-scheme: light;
+
+  /* Fonte e forma */
+  --brand-font: 'Brand Sans', ui-sans-serif, system-ui, sans-serif;
+  --radius: 0.625rem;
+
+  /* Superfícies e neutros */
+  --background: #fcfcfc;
+  --background-image: none;
+  --foreground: #0b1d37;
+  --card: #ffffff;
+  --card-foreground: #0b1d37;
+  --popover: #ffffff;
+  --popover-foreground: #0b1d37;
+  --muted: #eaeff5;
+  --muted-foreground: #4f5f76;
+  --border: #dbe2eb;
+  --input: #808fa4;
+  --field: #fcfcfc;
+  --ring: #0e6cdb;
+  --overlay: rgb(7 20 42 / 0.55);
+
+  /* Marca */
+  /* Primária #0C78F4 e secundária #A7E90A. No hover, cada uma troca para a outra. */
+  --primary: #0c78f4;
+  --primary-hover: #98d10a;
+  --primary-foreground: #ffffff;
+  --primary-hover-foreground: #0b1d37;
+  --primary-soft: #e7f0fc;
+  --primary-soft-foreground: #0b58b5;
+
+  /* Cor secundária da marca: segunda cor de destaque, com hover próprio */
+  --secondary: #98d10a;
+  --secondary-hover: #0c78f4;
+  --secondary-foreground: #0b1d37;
+  --secondary-hover-foreground: #ffffff;
+
+  --accent: #edf3fb;
+  --accent-foreground: #0b1d37;
+
+  /* Semânticas */
+  --destructive: #b72c05;
+  --destructive-hover: #962404;
+  --destructive-foreground: #ffffff;
+  --destructive-soft: #fcebe6;
+  --destructive-soft-foreground: #962404;
+
+  --success: #157a3c;
+  --success-foreground: #ffffff;
+  --success-soft: #e6f5eb;
+  --success-soft-foreground: #14632f;
+
+  --warning: #b45309;
+  --warning-foreground: #ffffff;
+  --warning-soft: #fdf2e1;
+  --warning-soft-foreground: #8a3d06;
+
+  --info: #0e6cdb;
+  --info-foreground: #ffffff;
+  --info-soft: #e7f0fc;
+  --info-soft-foreground: #0b58b5;
+
+  /* Navegação lateral: navy em gradiente, identidade da marca nos dois modos */
+  --sidebar: #0b1d37;
+  --sidebar-image: radial-gradient(120% 120% at 80% 0%, #034889 0%, #0b1d37 45%, #07142a 100%);
+  --sidebar-foreground: #e6eef8;
+  --sidebar-muted-foreground: #a9bbd2;
+  --sidebar-border: rgb(127 180 239 / 0.16);
+  --sidebar-accent: rgb(127 180 239 / 0.12);
+  --sidebar-active: rgb(12 120 244 / 0.22);
+  --sidebar-active-foreground: #ffffff;
+  --sidebar-indicator: #98d10a;
+
+  /*
+   * DEGRADÊS: três por template, com regra de uso fixa.
+   *   gradient-brand   forte. Só em: sidebar, painel lateral do login, destaque de página,
+   *                    tela de erro. No máximo um por tela. Texto por cima usa
+   *                    --gradient-brand-foreground e o ponto de luz nunca fica atrás do texto.
+   *   gradient-soft    suave. Destaque de superfície (StatCard principal, cabeçalho especial).
+   *                    Texto normal por cima (foreground), contraste AA garantido.
+   *   gradient-accent  primária para secundária. Só em elementos finos: barra de progresso,
+   *                    borda de destaque de 2 a 4px, linha de gráfico. Nunca com texto por cima.
+   * Proibido: degradê em botão, input, badge, fundo de texto corrido ou de tabela.
+   */
+  --gradient-brand: radial-gradient(120% 120% at 80% 0%, #034889 0%, #0b1d37 45%, #07142a 100%);
+  --gradient-brand-foreground: #ffffff;
+  --gradient-soft: linear-gradient(135deg, #e7f0fc 0%, #ffffff 65%);
+  --gradient-accent: linear-gradient(90deg, #0c78f4 0%, #98d10a 100%);
+
+  /* Gráficos: sequência da marca, depois apoio semântico */
+  --chart-1: #0c78f4;
+  --chart-2: #98d10a;
+  --chart-3: #7fb4ef;
+  --chart-4: #0459a9;
+  --chart-5: #b45309;
+
+  /* Sombras: três níveis, sutis. Preferir borda de 1px. */
+  --shadow-color: 11 29 55;
+  --elevation-sm: 0 1px 2px rgb(var(--shadow-color) / 0.06);
+  --elevation-md:
+    0 2px 8px -2px rgb(var(--shadow-color) / 0.1), 0 1px 2px rgb(var(--shadow-color) / 0.06);
+  --elevation-lg:
+    0 12px 32px -8px rgb(var(--shadow-color) / 0.18), 0 2px 6px rgb(var(--shadow-color) / 0.06);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --background: #07142a;
+  --background-image: radial-gradient(120% 80% at 80% 0%, #0a2a52 0%, #0b1d37 40%, #07142a 100%);
+  --foreground: #e8eff8;
+  --card: #0d2240;
+  --card-foreground: #e8eff8;
+  --popover: #102849;
+  --popover-foreground: #e8eff8;
+  --muted: #13294a;
+  --muted-foreground: #a3b4ca;
+  --border: #1f3a5f;
+  --input: #56719a;
+  --field: #0a1a33;
+  --ring: #0c78f4;
+  --overlay: rgb(2 8 20 / 0.7);
+
+  --primary: #0c78f4;
+  --primary-hover: #98d10a;
+  --primary-foreground: #ffffff;
+  --primary-hover-foreground: #07142a;
+  --primary-soft: #11305a;
+  --primary-soft-foreground: #7fb4ef;
+
+  --secondary: #98d10a;
+  --secondary-hover: #0c78f4;
+  --secondary-foreground: #07142a;
+  --secondary-hover-foreground: #ffffff;
+
+  --accent: #152d50;
+  --accent-foreground: #e8eff8;
+
+  --destructive: #b72c05;
+  --destructive-hover: #cf3b0e;
+  --destructive-foreground: #ffffff;
+  --destructive-soft: #3a1a10;
+  --destructive-soft-foreground: #f5a48c;
+
+  --success: #4fcb80;
+  --success-foreground: #04200f;
+  --success-soft: #0f3326;
+  --success-soft-foreground: #86e0a8;
+
+  --warning: #f2b04f;
+  --warning-foreground: #2a1702;
+  --warning-soft: #362612;
+  --warning-soft-foreground: #f7c77e;
+
+  --info: #0c78f4;
+  --info-foreground: #ffffff;
+  --info-soft: #11305a;
+  --info-soft-foreground: #7fb4ef;
+
+  --sidebar: #07142a;
+  --sidebar-image: radial-gradient(120% 120% at 80% 0%, #034889 0%, #0b1d37 45%, #07142a 100%);
+
+  --gradient-brand: radial-gradient(120% 120% at 80% 0%, #034889 0%, #0b1d37 45%, #07142a 100%);
+  --gradient-brand-foreground: #ffffff;
+  --gradient-soft: linear-gradient(135deg, #11305a 0%, #0d2240 65%);
+  --gradient-accent: linear-gradient(90deg, #0c78f4 0%, #98d10a 100%);
+
+  --chart-1: #0c78f4;
+  --chart-2: #98d10a;
+  --chart-3: #7fb4ef;
+  --chart-4: #c9ddf5;
+  --chart-5: #f2b04f;
+
+  --shadow-color: 0 0 0;
+  --elevation-sm: 0 1px 2px rgb(var(--shadow-color) / 0.3);
+  --elevation-md: 0 4px 12px -2px rgb(var(--shadow-color) / 0.35);
+  --elevation-lg: 0 16px 40px -8px rgb(var(--shadow-color) / 0.5);
+}

@@ -1,0 +1,131 @@
+import { RadioGroup as R } from 'radix-ui'
+import type { ReactNode } from 'react'
+import { cn } from '@/lib/cn'
+
+export interface RadioOption {
+  value: string
+  label: ReactNode
+  description?: ReactNode
+  icon?: ReactNode
+  disabled?: boolean
+}
+
+export interface RadioGroupProps {
+  options: RadioOption[]
+  value?: string
+  defaultValue?: string
+  onChange?: (value: string) => void
+  /** list: bolinha e texto; cards: cartões selecionáveis com ícone e descrição. */
+  variant?: 'list' | 'cards'
+  /** Colunas dos cards a partir de md (no mobile sempre 1). */
+  columns?: 1 | 2 | 3
+  orientation?: 'vertical' | 'horizontal'
+  invalid?: boolean
+  disabled?: boolean
+  id?: string
+  name?: string
+  'aria-describedby'?: string
+  'aria-label'?: string
+}
+
+const cols = { 1: '', 2: 'md:grid-cols-2', 3: 'md:grid-cols-3' } as const
+
+/** Radio único: em lista ou em cards, por prop. */
+export function RadioGroup({
+  options,
+  value,
+  defaultValue,
+  onChange,
+  variant = 'list',
+  columns = 2,
+  orientation = 'vertical',
+  invalid,
+  disabled,
+  id,
+  name,
+  ...aria
+}: RadioGroupProps) {
+  const dot = (
+    <span
+      aria-hidden
+      className={cn(
+        'flex size-icon-md shrink-0 items-center justify-center rounded-full border border-input bg-card transition-colors group-data-[state=checked]:border-primary',
+        invalid && 'border-destructive',
+      )}
+    >
+      <span className="size-2 scale-0 rounded-full bg-primary transition-transform duration-150 group-data-[state=checked]:scale-100" />
+    </span>
+  )
+
+  return (
+    <R.Root
+      id={id}
+      name={name}
+      value={value}
+      defaultValue={defaultValue}
+      onValueChange={onChange}
+      disabled={disabled}
+      aria-invalid={invalid || undefined}
+      aria-describedby={aria['aria-describedby']}
+      aria-label={aria['aria-label']}
+      className={cn(
+        variant === 'cards'
+          ? cn('grid grid-cols-1 gap-3', cols[columns])
+          : orientation === 'horizontal'
+            ? 'flex flex-col sm:flex-row sm:flex-wrap sm:gap-x-6'
+            : 'flex flex-col',
+      )}
+    >
+      {options.map((o) =>
+        variant === 'cards' ? (
+          <R.Item
+            key={o.value}
+            value={o.value}
+            disabled={o.disabled}
+            className={cn(
+              'group relative flex cursor-pointer items-start gap-3 rounded-control border bg-card p-4 text-left transition-[border-color,box-shadow,background-color]',
+              'hover:border-primary data-[state=checked]:border-primary data-[state=checked]:bg-primary-soft data-[state=checked]:ring-1 data-[state=checked]:ring-primary',
+              'disabled:cursor-not-allowed disabled:opacity-50',
+              invalid && 'border-destructive',
+            )}
+          >
+            {o.icon && (
+              <span className="flex size-control-sm shrink-0 items-center justify-center rounded-control bg-muted text-foreground transition-colors group-data-[state=checked]:bg-primary group-data-[state=checked]:text-primary-foreground md:size-control-md [&_svg]:size-icon-md">
+                {o.icon}
+              </span>
+            )}
+            <span className="flex min-w-0 flex-1 flex-col gap-1">
+              <span className="text-sm font-semibold">{o.label}</span>
+              {o.description && (
+                <span className="text-sm text-muted-foreground">{o.description}</span>
+              )}
+            </span>
+            {dot}
+          </R.Item>
+        ) : (
+          <label
+            key={o.value}
+            className={cn(
+              'flex min-h-touch cursor-pointer items-start gap-3 py-3 md:min-h-0 md:py-1',
+              o.disabled && 'cursor-not-allowed opacity-60',
+            )}
+          >
+            <R.Item
+              value={o.value}
+              disabled={o.disabled}
+              className="group flex pt-px outline-none focus-visible:[&>span]:focus-ring"
+            >
+              {dot}
+            </R.Item>
+            <span className="flex min-w-0 flex-col gap-1">
+              <span className="text-sm font-medium">{o.label}</span>
+              {o.description && (
+                <span className="text-sm text-muted-foreground">{o.description}</span>
+              )}
+            </span>
+          </label>
+        ),
+      )}
+    </R.Root>
+  )
+}

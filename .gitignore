@@ -1,0 +1,14 @@
+node_modules
+dist
+storybook-static
+test-results
+playwright-report
+screenshots
+*.local
+.DS_Store
+
+# Documentos internos (não publicar)
+docs/02.*
+
+# Configuração local do Claude Code
+.claude/
