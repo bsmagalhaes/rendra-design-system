@@ -67,7 +67,7 @@ function Profile() {
             Trocar foto
           </Button>
         </div>
-        <div className="grid grid-cols-1 gap-x-6 gap-y-2 md:grid-cols-2">
+        <Grid cols={{ base: 1, md: 2 }} gap="fields">
           <Field label="Nome" required>
             <Input defaultValue={currentUser.name} autoComplete="name" />
           </Field>
@@ -80,7 +80,7 @@ function Profile() {
           <Field label="Celular">
             <Input mask="phone" defaultValue="(11) 98765-4321" />
           </Field>
-        </div>
+        </Grid>
       </Stack>
     </Panel>
   )
@@ -89,7 +89,7 @@ function Profile() {
 function Company() {
   return (
     <Panel title="Empresa" description="Dados que aparecem em propostas e faturas.">
-      <div className="grid grid-cols-1 gap-x-6 gap-y-2 md:grid-cols-2">
+      <Grid cols={{ base: 1, md: 2 }} gap="fields">
         <Field label="Razão social" required span="full">
           <Input defaultValue="Rendra Serviços Ltda." />
         </Field>
@@ -112,7 +112,7 @@ function Company() {
         <Field label="Cidade">
           <Input defaultValue="São Paulo" />
         </Field>
-      </div>
+      </Grid>
     </Panel>
   )
 }
@@ -150,7 +150,7 @@ function Security() {
   return (
     <Stack gap="6">
       <Panel title="Senha" description="Troque a senha periodicamente.">
-        <div className="grid grid-cols-1 gap-x-6 gap-y-2 md:grid-cols-2">
+        <Grid cols={{ base: 1, md: 2 }} gap="fields">
           <Field label="Senha atual" required span="full">
             <Input type="password" autoComplete="current-password" />
           </Field>
@@ -160,7 +160,7 @@ function Security() {
           <Field label="Confirmar senha nova" required>
             <Input type="password" autoComplete="new-password" />
           </Field>
-        </div>
+        </Grid>
       </Panel>
       <Panel title="Verificação em duas etapas" description="Pede um código a cada novo acesso.">
         <Switch
@@ -201,7 +201,7 @@ function Appearance() {
   return (
     <Panel title="Aparência" description="Modelo, paleta de cores e tema. Salvo neste navegador.">
       <Stack gap="6">
-        <Field label="Modelo" help="Define formato, fonte e símbolo." compact>
+        <Field label="Modelo" help="Define formato, fonte e símbolo.">
           <RadioGroup
             variant="cards"
             columns={3}
@@ -214,7 +214,7 @@ function Appearance() {
             }))}
           />
         </Field>
-        <Field label="Paleta de cores" help="Combine qualquer modelo com qualquer paleta." compact>
+        <Field label="Paleta de cores" help="Combine qualquer modelo com qualquer paleta.">
           <ButtonGroup
             aria-label="Paleta de cores"
             value={palette.id}
@@ -222,7 +222,7 @@ function Appearance() {
             options={palettes.map((p) => ({ value: p.id, label: p.name }))}
           />
         </Field>
-        <Field label="Tema" compact>
+        <Field label="Tema">
           <ButtonGroup
             aria-label="Tema"
             value={mode}
@@ -245,7 +245,7 @@ function LayoutSettings() {
     key: K,
     label: string,
   ) => (
-    <Field label={label} compact>
+    <Field label={label}>
       <ButtonGroup
         aria-label={label}
         value={layout[key]}

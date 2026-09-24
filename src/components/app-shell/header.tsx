@@ -1,4 +1,5 @@
 import {
+  ArrowLeft,
   ChevronDown,
   LayoutTemplate,
   LogOut,
@@ -60,6 +61,24 @@ function useCrumbs(): BreadcrumbItem[] {
         to: i < all.length - 1 ? m.pathname : undefined,
       }
     })
+}
+
+/**
+ * Voltar das telas de segundo nível (ex.: Novo cliente, Detalhe do cliente): leva à tela-pai
+ * da trilha, não ao histórico, para ser previsível mesmo quando a pessoa chegou por um link.
+ */
+function BackButton({ crumbs }: { crumbs: BreadcrumbItem[] }) {
+  const parent = crumbs.length >= 2 ? crumbs[crumbs.length - 2] : undefined
+  if (!parent?.to) return null
+  return (
+    <Tooltip content={`Voltar para ${parent.label}`} side="bottom">
+      <Button variant="ghost" iconOnly asChild className="shrink-0">
+        <Link to={parent.to} aria-label={`Voltar para ${parent.label}`}>
+          <ArrowLeft aria-hidden />
+        </Link>
+      </Button>
+    </Tooltip>
+  )
 }
 
 const modes: { value: ColorMode; label: string; icon: typeof Sun }[] = [
@@ -379,6 +398,16 @@ export function Header() {
       : [{ label: 'Início', to: '/' }, ...crumbs]
   const ModeIcon = resolvedMode === 'dark' ? Moon : Sun
   const topbar = layout.navigation === 'topbar'
+  const hasParent = Boolean(crumbs.length >= 2 && crumbs[crumbs.length - 2]?.to)
+  // Título e trilha em uma linha cada; se não couber, reticências (nunca quebra linha).
+  const pageTitle = (
+    <div className="flex min-w-0 flex-1 flex-col justify-center">
+      <p className="truncate text-sm leading-tight font-semibold md:text-base">
+        {crumbs[crumbs.length - 1]?.label ?? brand.productName}
+      </p>
+      <Breadcrumb items={trail} variant="trail" />
+    </div>
+  )
   const collapsed = layout.sidebar === 'collapsed'
 
   return (
@@ -387,7 +416,9 @@ export function Header() {
         variant="ghost"
         iconOnly
         aria-label="Abrir menu"
-        className={topbar ? 'lg:hidden' : 'md:hidden'}
+        // Telas de segundo nível no celular: a seta de voltar ocupa o lugar do menu
+        // (padrão de app), e a navegação segue pela barra inferior.
+        className={cn(topbar ? 'lg:hidden' : 'md:hidden', hasParent && 'max-md:hidden')}
         onClick={() => setMobileNavOpen(true)}
       >
         <Menu aria-hidden />
@@ -402,7 +433,10 @@ export function Header() {
           >
             <BrandLogo on="surface" />
           </Link>
-          <Breadcrumb items={crumbs} className="flex-1 px-2 md:px-0 lg:hidden" />
+          <span className="flex min-w-0 flex-1 items-center gap-1 lg:hidden">
+            <BackButton crumbs={crumbs} />
+            {pageTitle}
+          </span>
           <div className="hidden min-w-0 flex-1 lg:flex lg:justify-center">
             {layout.topbarSubmenu === 'mega' ? <MegaMenu /> : <TopNav />}
           </div>
@@ -421,13 +455,12 @@ export function Header() {
               <PanelLeft aria-hidden />
             </Button>
           </Tooltip>
-          <span aria-hidden className="mx-1 h-8 w-px shrink-0 bg-border md:mx-2" />
-          <div className="flex min-w-0 flex-1 flex-col justify-center">
-            <p className="truncate text-sm leading-tight font-semibold md:text-base">
-              {crumbs[crumbs.length - 1]?.label ?? brand.productName}
-            </p>
-            <Breadcrumb items={trail} variant="trail" />
-          </div>
+          <span
+            aria-hidden
+            className={cn('mx-1 h-8 w-px shrink-0 bg-border md:mx-2', hasParent && 'max-md:hidden')}
+          />
+          <BackButton crumbs={crumbs} />
+          {pageTitle}
         </>
       )}
 

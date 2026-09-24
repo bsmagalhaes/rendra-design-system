@@ -96,7 +96,6 @@ export function ClientsListPage() {
           ]}
           bulkActions={(sel) => (
             <Button
-              size="sm"
               variant="outline"
               icon={<Download />}
               onClick={() => toast.success(`${sel.length} clientes exportados`)}
@@ -135,7 +134,7 @@ export function ClientsListPage() {
               placeholder: 'Buscar por nome, cidade ou e-mail',
             },
             primaryAction: (
-              <Button size="sm" icon={<Plus />} onClick={() => setDrawer('create')}>
+              <Button icon={<Plus />} onClick={() => setDrawer('create')}>
                 Novo cliente
               </Button>
             ),
@@ -153,7 +152,7 @@ export function ClientsListPage() {
             ],
             filters: (
               <Stack gap="4">
-                <Field label="Situação" compact>
+                <Field label="Situação">
                   <Select
                     multiple
                     label="Situação"
@@ -162,7 +161,7 @@ export function ClientsListPage() {
                     options={statuses.map((s) => ({ value: s, label: s }))}
                   />
                 </Field>
-                <Field label="Segmento" compact>
+                <Field label="Segmento">
                   <Select
                     label="Segmento"
                     clearable
@@ -176,7 +175,6 @@ export function ClientsListPage() {
             actions: (
               <Button
                 variant="outline"
-                size="sm"
                 icon={<Download />}
                 onClick={() => toast.info('Exportação iniciada')}
               >

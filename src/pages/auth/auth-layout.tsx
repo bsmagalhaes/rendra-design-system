@@ -32,7 +32,7 @@ export function AuthLayout({
   const { brand } = useBrand()
 
   return (
-    <div className="grid min-h-dvh lg:grid-cols-2">
+    <div className="grid min-h-dvh grid-cols-1 lg:grid-cols-2">
       {/* Texto embaixo à esquerda; o ponto de luz do degradê fica no alto à direita */}
       <aside className="hidden flex-col justify-between bg-gradient-brand p-12 text-gradient-brand-foreground lg:flex">
         <BrandLogo on="brand" className="self-start" />
@@ -45,7 +45,7 @@ export function AuthLayout({
         </span>
       </aside>
 
-      <main className="flex items-start justify-center px-4 pt-safe pb-12 md:items-center md:px-8">
+      <main className="flex min-w-0 items-start justify-center px-4 pt-safe pb-12 md:items-center md:px-8">
         <Stack
           gap="8"
           className={cn('w-full pt-8 md:pt-0', width === 'md' ? 'max-w-xl' : 'max-w-sm')}

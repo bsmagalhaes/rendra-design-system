@@ -128,7 +128,7 @@ function EventChip({
       )}
     >
       {!event.allDay && (
-        <span className="shrink-0 tabular-nums font-normal">{hhmm(event.start)}</span>
+        <span className="shrink-0 font-normal tabular-nums">{hhmm(event.start)}</span>
       )}
       <span className="truncate">{event.title}</span>
     </button>
@@ -244,19 +244,18 @@ export function Calendar({
         >
           {title}
         </h2>
-        <Button variant="outline" size="sm" onClick={() => setDate(new Date())}>
+        <Button variant="outline" onClick={() => setDate(new Date())}>
           Hoje
         </Button>
-        <Button variant="ghost" size="sm" iconOnly aria-label="Anterior" onClick={() => step(-1)}>
+        <Button variant="ghost" iconOnly aria-label="Anterior" onClick={() => step(-1)}>
           <ChevronLeft />
         </Button>
-        <Button variant="ghost" size="sm" iconOnly aria-label="Próximo" onClick={() => step(1)}>
+        <Button variant="ghost" iconOnly aria-label="Próximo" onClick={() => step(1)}>
           <ChevronRight />
         </Button>
       </div>
       {(isMobile ? mobileViews : views).length > 1 && (
         <ButtonGroup
-          size="sm"
           fullWidth={isMobile}
           aria-label="Visão do calendário"
           className="md:ml-auto"
@@ -534,12 +533,12 @@ export function Calendar({
                   >
                     {span < 0.75 ? (
                       <span className="truncate font-medium">
-                        <span className="tabular-nums font-normal">{hhmm(e.start)}</span> {e.title}
+                        <span className="font-normal tabular-nums">{hhmm(e.start)}</span> {e.title}
                       </span>
                     ) : (
                       <>
                         <span className="truncate font-medium">{e.title}</span>
-                        <span className="truncate tabular-nums font-normal">{timeRange(e)}</span>
+                        <span className="truncate font-normal tabular-nums">{timeRange(e)}</span>
                       </>
                     )}
                   </button>

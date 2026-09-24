@@ -78,7 +78,7 @@ export function DataToolbar({
   const columnsMenu = columns?.length ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" icon={<Columns3 />}>
+        <Button variant="outline" icon={<Columns3 />}>
           Colunas
         </Button>
       </DropdownMenuTrigger>
@@ -99,7 +99,7 @@ export function DataToolbar({
   ) : null
 
   const filterButton = (onClick?: () => void) => (
-    <Button variant="outline" size="sm" icon={<Filter />} onClick={onClick}>
+    <Button variant="outline" icon={<Filter />} onClick={onClick}>
       Filtros
       {filterCount > 0 && (
         <span className="rounded-full bg-primary px-2 text-xs text-primary-foreground tabular-nums">
@@ -112,12 +112,11 @@ export function DataToolbar({
   return (
     <div className="flex flex-col gap-3 border-b p-4">
       {selectionBar && !isMobile ? (
-        <div className="flex min-h-control-sm flex-wrap items-center gap-3">{selectionBar}</div>
+        <div className="flex min-h-control-md flex-wrap items-center gap-3">{selectionBar}</div>
       ) : (
         <div className="flex flex-col gap-3 md:flex-row md:items-center">
           {search && (
             <Input
-              size="sm"
               icon={<Search />}
               clearable
               value={search.value}

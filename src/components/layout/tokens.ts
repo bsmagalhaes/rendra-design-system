@@ -18,9 +18,8 @@ export const gapClass: Record<Space, string> = {
   '24': 'gap-24',
   // Espaço entre seções de página: menor no mobile, cheio no desktop.
   section: 'gap-8 md:gap-12',
-  // Entre campos de formulário (Field). O Field já reserva uma linha para ajuda e erro
-  // abaixo do controle, então o espaço vertical é pequeno: 24px do campo ao próximo rótulo.
-  fields: 'gap-x-4 gap-y-1 md:gap-x-6',
+  // Entre campos de formulário (Field): 16px do fim de um campo ao rótulo do próximo.
+  fields: 'gap-x-4 gap-y-4 md:gap-x-6',
 }
 
 export const alignClass = {
