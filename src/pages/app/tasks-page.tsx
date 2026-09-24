@@ -108,7 +108,6 @@ export function TasksPage() {
           ]}
           bulkActions={(sel, clear) => (
             <Button
-              size="sm"
               variant="outline"
               icon={<Check />}
               onClick={() => {
@@ -122,7 +121,7 @@ export function TasksPage() {
           toolbar={{
             search: { value: search, onChange: setSearch, placeholder: 'Buscar tarefa' },
             primaryAction: (
-              <Button size="sm" icon={<Plus />} onClick={() => toast.info('Nova tarefa')}>
+              <Button icon={<Plus />} onClick={() => toast.info('Nova tarefa')}>
                 Nova tarefa
               </Button>
             ),

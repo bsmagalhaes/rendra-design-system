@@ -236,7 +236,6 @@ export function ClientFormPage() {
             />
             <FormField<Values>
               name="boasVindas"
-              compact
               span="full"
               render={(f) => (
                 <Switch

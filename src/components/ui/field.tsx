@@ -54,11 +54,17 @@ export interface FieldProps {
   required?: boolean
   /** Texto de ajuda sempre visível (substitui tooltip no mobile). */
   help?: ReactNode
-  /** Mensagem de erro. Ocupa o mesmo espaço reservado da ajuda. */
+  /** Mensagem de erro, abaixo do controle, no lugar da ajuda. */
   error?: ReactNode
   /** Ocupa as duas colunas do grid do formulário. */
   span?: 'half' | 'full'
-  /** Não reserva espaço para ajuda e erro (para campos sem validação, como switches). */
+  /**
+   * Reserva a linha da mensagem mesmo vazia, para o erro não empurrar o que vem abaixo
+   * (útil em formulários em grid de 2 colunas com validação ao digitar). Padrão: não
+   * reserva, e os campos ficam mais próximos.
+   */
+  reserveMessage?: boolean
+  /** Obsoleto: sem reserva já é o padrão. Mantido para não quebrar telas existentes. */
   compact?: boolean
   /** id do controle; gerado automaticamente se omitido. */
   id?: string
@@ -72,7 +78,7 @@ export function Field({
   help,
   error,
   span = 'half',
-  compact = false,
+  reserveMessage = false,
   id,
   className,
   children,
@@ -111,7 +117,7 @@ export function Field({
           </Label>
         )}
         {child}
-        {(!compact || message) && (
+        {(reserveMessage || message) && (
           <p
             id={messageId}
             role={invalid ? 'alert' : undefined}

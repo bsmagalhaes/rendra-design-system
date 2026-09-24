@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { z } from 'zod'
 import { Container, PageHeader, Stack } from '@/components/layout'
+import { gapClass } from '@/components/layout/tokens'
 import { Card, CardContent } from '@/components/ui/card'
 import { DatePicker } from '@/components/ui/date-picker'
 import { Form, FormField } from '@/components/ui/form'
@@ -12,6 +13,7 @@ import { RadioGroup } from '@/components/ui/radio-group'
 import { Select } from '@/components/ui/select'
 import { toast } from '@/components/ui/toast'
 import { Wizard } from '@/components/ui/wizard'
+import { cn } from '@/lib/cn'
 import { formatCurrency, parseLocaleNumber } from '@/lib/masks'
 import { zBR } from '@/lib/validators'
 
@@ -44,7 +46,7 @@ const steps = [
   { id: 'revisao', title: 'Revisão', description: 'Confirmar tudo' },
 ]
 
-const grid = 'grid grid-cols-1 gap-x-6 gap-y-2 md:grid-cols-2'
+const grid = cn('grid grid-cols-1 md:grid-cols-2', gapClass.fields)
 
 /** Cadastro complexo em página inteira, em etapas, com validação por etapa. */
 export function ClientWizardPage() {

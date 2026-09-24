@@ -441,7 +441,7 @@ export function Table<T>({
     bulkMenu && bulkMenu.length > 0 ? (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" iconOnly aria-label="Mais ações para os selecionados">
+          <Button variant="outline" iconOnly aria-label="Mais ações para os selecionados">
             <MoreHorizontal />
           </Button>
         </DropdownMenuTrigger>
@@ -505,7 +505,7 @@ export function Table<T>({
           {bulkActions?.(selectedRows, clearSelection)}
           {bulkMenuButton}
         </div>
-        <Button variant="ghost" size="sm" className="ml-auto" onClick={clearSelection}>
+        <Button variant="ghost" className="ml-auto" onClick={clearSelection}>
           Limpar seleção
         </Button>
       </>

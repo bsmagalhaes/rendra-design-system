@@ -44,9 +44,12 @@ Primeira versão publicada: design system, boilerplate, três templates, quatro 
 - **Fundo do modo claro** #F5F6F7 (tela e campos) com cards brancos, para o campo se destacar do card.
 - **Ardósia**: botão laranja com texto branco, no tom #C94F0A (AA; o #EA600D com branco dá 3,4:1).
 - **Menu superior** com botão "Mais": os itens que não cabem na largura vão para ele, e o menu nunca passa por cima da busca e dos ícones.
+- **Login, esqueci a senha e nova senha** sem rolagem lateral em telas estreitas: a coluna do formulário agora encolhe (antes ficava presa à largura do conteúdo e estourava com a fonte do Linux).
 - **Rolagem por âncora corrigida**: o `<main>` do AppShell passou a ser `relative`. Antes, elementos absolutos (texto para leitor de tela, inputs ocultos) esticavam a página, e um link com `#âncora` (como `/componentes#primitivas`) rolava a página inteira, encolhendo a sidebar e deixando um vão em branco. O teste de layout agora falha se a página ficar mais alta que a tela.
 - Títulos das categorias da vitrine em negrito.
-- **Espaço entre campos** padronizado em 24px com o novo `gap="fields"` (Grid, Stack e FormSection). A linha de ajuda e erro do Field ficou 4px mais perto do controle. No drawer de novo cliente o espaço caiu de 40px para 24px.
+- **Seta de voltar no header** nas telas de segundo nível, à esquerda do título e da trilha, levando à tela-pai; no celular ocupa o lugar do menu, e título e trilha encurtam com reticências em vez de quebrar.
+- **Tamanho médio como padrão** também na barra das tabelas (busca, Colunas, Filtros, Novo e seleção) e na barra do calendário.
+- **Espaço entre campos** padronizado em 16px com o novo `gap="fields"` (Grid, Stack e FormSection). O Field não reserva mais uma linha vazia para a mensagem: ela aparece só com ajuda ou erro, 4px abaixo do controle (`reserveMessage` volta a reservar; `compact` ficou obsoleto). No drawer de novo cliente o espaço caiu de 40px para 16px.
 
 ### Para atualizar um projeto que já usa o Rendra
 

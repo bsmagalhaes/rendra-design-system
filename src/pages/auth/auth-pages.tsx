@@ -82,10 +82,9 @@ export function LoginPage() {
             )}
           />
         </Stack>
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
           <FormField<Login>
             name="lembrar"
-            compact
             render={(f) => (
               <Checkbox
                 checked={f.value === true}

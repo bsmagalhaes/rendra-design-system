@@ -110,6 +110,8 @@ Três por template, cada um com lugar certo:
 - Primeiro bloco de toda tela: `<Container padded><Stack gap="section"><PageHeader ... />`.
 - **O título da página fica no header do AppShell**, com a trilha (breadcrumb) logo abaixo. O `PageHeader` mostra só a descrição e as ações, e mantém o `h1` para leitores de tela. Use `showTitle` apenas quando o título do corpo for outro, como o nome do cliente no detalhe.
 - **O header é sempre fixo**, em todas as páginas. A única área de rolagem da tela é o `<main>` do AppShell.
+- **Telas de segundo nível têm seta de voltar** à esquerda do título e da trilha (automática: aparece quando a trilha tem tela-pai, como Clientes em Novo cliente). Ela leva à tela-pai, não ao histórico. No celular, a seta ocupa o lugar do botão de menu. Título e trilha ficam em uma linha cada e, se não couberem, encurtam com reticências; nunca quebram linha.
+- **Tamanho médio (`md`) é o padrão** de campos e botões em formulários, barras de tabela e do calendário. O pequeno (`sm`) fica para ações dentro de linhas, cards e menus.
 
 ### Qual contêiner usar
 
@@ -144,9 +146,9 @@ Conteúdo de página agrupado em `Card`, com borda de 1px e sem sombra pesada. *
 
 ### Formulário
 
-Rótulo **sempre acima** do campo; obrigatório marcado no rótulo (`required`); erro **abaixo**, em espaço reservado (o layout não pula); no máximo **2 colunas** no desktop e sempre 1 no mobile; campos agrupados em `FormSection` com título; ações no rodapé (`ActionBar`). Validação com React Hook Form + Zod (`Form`, `FormField`, validadores em `src/lib/validators.ts`: CPF, CNPJ, telefone, CEP, data).
+Rótulo **sempre acima** do campo; obrigatório marcado no rótulo (`required`); erro **abaixo** do campo, no lugar da ajuda (sem linha vazia reservada; em grid de 2 colunas com validação ao digitar, use `reserveMessage` para o erro não empurrar a linha); no máximo **2 colunas** no desktop e sempre 1 no mobile; campos agrupados em `FormSection` com título; ações no rodapé (`ActionBar`). Validação com React Hook Form + Zod (`Form`, `FormField`, validadores em `src/lib/validators.ts`: CPF, CNPJ, telefone, CEP, data).
 
-**Espaço entre campos:** sempre `gap="fields"` no `Grid` ou no `Stack` que contém os `Field` (o `FormSection` já usa). São 24px do fim de um campo ao rótulo do próximo, porque o `Field` já reserva a linha de ajuda e erro. Nunca empilhe campos com `gap="4"` ou `gap="6"`: a linha reservada soma ao gap e o formulário fica espaçado demais, como acontecia no drawer.
+**Espaço entre campos:** sempre `gap="fields"` no `Grid` ou no `Stack` que contém os `Field` (o `FormSection` já usa): 16px do fim de um campo ao rótulo do próximo, e 8px do rótulo ao controle. Nunca empilhe campos com outro gap.
 
 ### Tabela: sempre `<Table>`
 
@@ -177,7 +179,7 @@ Cada componente se reconstrói sozinho, com a mesma API:
 | Tabs                 | Se as abas não couberem na largura do bloco, viram um Select. Nunca rolagem lateral.                                                                                                                                                                                                                                                                           |
 | Wizard               | "Etapa 2 de 5", com barra de progresso e nome da etapa; Voltar e Avançar no rodapé fixo.                                                                                                                                                                                                                                                                       |
 | Sidebar              | Gaveta aberta pelo botão de menu, com barra inferior de até 4 itens (`bottomNav` em `navigation.ts`).                                                                                                                                                                                                                                                          |
-| Header               | Compacto: menu, título com trilha em texto e ícones. A busca global vira ícone que abre em tela cheia.                                                                                                                                                                                                                                                         |
+| Header               | Compacto: menu (ou a seta de voltar, nas telas de segundo nível), título com trilha em texto e ícones. A busca global vira ícone que abre em tela cheia.                                                                                                                                                                                                       |
 | Breadcrumb           | Dentro das páginas, vira botão voltar com o nome da tela atual. No header, trilha só em texto.                                                                                                                                                                                                                                                                 |
 | Tooltip              | Não existe hover: informação essencial vai em texto de ajuda visível ou em Popover por toque.                                                                                                                                                                                                                                                                  |
 | Chart                | Legenda abaixo, eixos simplificados e "Ver como lista" quando há muitos pontos.                                                                                                                                                                                                                                                                                |
@@ -238,7 +240,7 @@ Antes de entregar qualquer mudança de interface:
 - [ ] O componente se reconstrói no mobile sem arquivo separado.
 - [ ] Contêiner certo para o volume: modal até 3 campos, drawer até cerca de 12, página acima disso.
 - [ ] Botões pela `ActionBar` (100%, 30/70, menu), com carregamento no envio.
-- [ ] Formulário: rótulo acima, obrigatório marcado, erro abaixo em espaço reservado, no máximo 2 colunas.
+- [ ] Formulário: rótulo acima, obrigatório marcado, erro abaixo do campo, `gap="fields"` entre campos, no máximo 2 colunas.
 - [ ] Tabela: seleção primeiro, situação antes das ações, ações por último, números à direita, vazio, carregando e erro.
 - [ ] Cores só por token semântico; contraste AA conferido em `/tokens`, nos modos claro e escuro.
 - [ ] Ícone de feedback da marca em toast, alert, confirmação, vazio e erro.
