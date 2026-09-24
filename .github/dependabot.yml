@@ -14,8 +14,9 @@ updates:
         update-types: [minor, patch]
       storybook:
         patterns: ['storybook', '@storybook/*']
-    # Sem ignore: majors travados hoje (TypeScript 7, ESLint 10, TanStack Table 9) também
-    # chegam como PR. O CI mostra se já é possível atualizar; se quebrar, feche o PR.
+    # Sem ignore: versões maiores (ESLint 10, TanStack Table 9) também chegam como PR, e o
+    # CI mostra se já dá para atualizar. Se quebrar, feche o PR com um comentário: a
+    # migração vira um PR próprio (ESLint e @eslint/js sobem juntos).
 
   - package-ecosystem: github-actions
     directory: /

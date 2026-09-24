@@ -4,7 +4,15 @@ O que mudou em cada versão e o que um projeto derivado precisa fazer para atual
 
 ## Não publicado
 
+Nada ainda.
+
+## 1.1.0 (24/09/2026)
+
+Paleta a partir de 4 cores e do degradê, white label em tempo de execução, testes de comportamento e correções do modelo Aurora.
+
 ### Corrigido
+
+- **Teste visual:** a tolerância por pixel caiu de 0,2 para 0,05. A padrão não via mudanças em superfícies claras, e os círculos do Aurora passaram sem ser notados. As referências foram geradas de novo.
 
 - **Modelo Aurora:** cartões do kanban e blocos de informação viravam círculo ou pílula, porque usavam o raio de controle ou de item (9999px). Agora controle e item usam 1,75rem, que deixa 100% redondo tudo que tem até 56px e dá cantos de 28px ao que é mais alto. Papel novo **`rounded-block`** (canto pequeno em todos os modelos) para o cartão do kanban, os valores dentro dele, as citações do chat, os eventos da agenda e o skeleton.
 
