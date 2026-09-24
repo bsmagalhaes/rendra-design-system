@@ -2,7 +2,7 @@
 
 ## Como usar
 
-1. Troque `[LINK DO REPOSITÓRIO]` pelo endereço deste repositório (GitHub, GitLab ou um caminho local).
+1. Troque `[LINK DO REPOSITÓRIO]` pelo endereço do repositório: o oficial é https://github.com/bsmagalhaes/rendra-design-system. Use outro se tiver uma cópia própria (fork ou caminho local).
 2. Abra a IA do projeto de destino (Claude Code, por exemplo) na raiz desse projeto.
 3. Cole o bloco inteiro abaixo como primeira mensagem.
 4. A IA trabalha em etapas e mostra o resultado de cada uma antes de seguir. Aprove ou peça ajustes a cada etapa.
@@ -11,12 +11,13 @@
 ## Prompt
 
 ```text
-Você vai aplicar neste projeto o design system e boilerplate Rendra, disponível em [LINK DO REPOSITÓRIO].
+Você vai aplicar neste projeto o design system e boilerplate Rendra, disponível em [LINK DO REPOSITÓRIO] (repositório oficial: https://github.com/bsmagalhaes/rendra-design-system).
 
 ANTES DE QUALQUER ALTERAÇÃO
-1. Leia no repositório de referência, nesta ordem: README.md, DESIGN_RULES.md, docs/COMO_APLICAR.md e CLAUDE.md. O DESIGN_RULES.md é obrigatório e vale mais do que qualquer hábito seu.
-2. Analise este projeto: stack, versão do React e do Tailwind, bundler, estrutura de pastas, telas existentes, componentes de interface existentes e como a marca está aplicada hoje.
-3. Me apresente um plano curto: caminho escolhido (projeto novo ou existente, conforme docs/COMO_APLICAR.md), o que será copiado, o que será substituído, a lista de telas a migrar em ordem e os riscos. Espere minha aprovação.
+1. Leia no repositório de referência, nesta ordem: AGENTS.md, DESIGN_RULES.md, docs/COMO_APLICAR.md e docs/BRIEFING_MODELO.md. O DESIGN_RULES.md é obrigatório e vale mais do que qualquer hábito seu.
+2. Siga o fluxo de início do AGENTS.md para migração: conduza o briefing de docs/BRIEFING_MODELO.md (agrupado, no máximo duas rodadas, aceitando "não sei, sugira"), grave em docs/BRIEFING.md deste projeto e peça minha confirmação.
+3. Analise este projeto: stack, versão do React e do Tailwind, bundler, estrutura de pastas, telas existentes, componentes de interface existentes e como a marca está aplicada hoje.
+4. Me apresente um plano curto: caminho escolhido (projeto novo ou existente, conforme docs/COMO_APLICAR.md), o que será copiado, o que será substituído, a lista de telas a migrar em ordem e os riscos. Espere minha aprovação.
 
 REGRAS QUE NÃO PODEM SER QUEBRADAS
 - Um componente por finalidade: um Select, uma Table, um Modal, um Drawer, um Input, um Button. Diferenças são props, nunca arquivos novos. Antes de criar, procure um existente e acrescente uma prop.
