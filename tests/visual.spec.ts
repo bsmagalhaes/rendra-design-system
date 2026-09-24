@@ -4,13 +4,13 @@ import { openRoute, routeName, templates, useTheme } from './helpers'
 
 /*
  * REGRESSÃO VISUAL: compara cada tela com a referência aprovada em
- * tests/visual.spec.ts-snapshots/. Pega o que o teste de layout não vê: cor que mudou,
+ * tests/__screenshots__/linux/. Pega o que o teste de layout não vê: cor que mudou,
  * espaçamento que quebrou, ícone que sumiu.
  *
  * A renderização de fonte muda entre sistemas operacionais, por isso as referências são
  * geradas e comparadas no Linux (CI do GitHub). Para atualizar depois de uma mudança
- * visual intencional, rode o workflow "Atualizar referências visuais" no GitHub Actions
- * (ou, localmente no Linux, npm run test:visual:update).
+ * visual intencional, aplique o rótulo "atualizar-visual" no Pull Request (ou, localmente
+ * no Linux, rode npm run test:visual:update).
  */
 
 const widths = [360, 1280]

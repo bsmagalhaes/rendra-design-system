@@ -18,7 +18,7 @@ Obrigado pelo interesse. Este repositório é mantido por [Bruno Magalhaes](http
    ```
 4. Abra o Pull Request explicando o que mudou e por quê, com capturas em 360px e 1280px quando houver mudança visual.
 5. O CI roda tudo de novo, mais o build, o Storybook e a regressão visual. O merge só é liberado com tudo verde.
-6. **Mudança visual intencional:** a regressão visual vai falhar, como esperado. Na aba Actions, rode o workflow "Atualizar referências visuais" escolhendo o branch do seu Pull Request. Ele gera as capturas novas e faz commit nele. Quem revisa confere as imagens no próprio PR.
+6. **Mudança visual intencional:** a regressão visual vai falhar, como esperado. O mantenedor aplica no Pull Request o rótulo `atualizar-visual`: o GitHub gera as capturas novas no Linux e faz commit no branch. Quem revisa confere as imagens no próprio PR.
 7. Registre a mudança em `CHANGELOG.md`, na seção "Não publicado".
 8. O mantenedor revisa, pode pedir ajustes e decide se a contribuição entra.
 
