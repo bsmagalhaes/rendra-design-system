@@ -1,0 +1,6 @@
+dist
+storybook-static
+playwright-report
+test-results
+screenshots
+node_modules

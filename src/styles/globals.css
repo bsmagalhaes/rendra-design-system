@@ -1,0 +1,421 @@
+/*
+ * TOKENS ESTRUTURAIS
+ * ------------------
+ * Este arquivo não contém nenhum valor de marca. Ele define a escala permitida
+ * (espaço, tipografia, raio, alturas) e liga os nomes semânticos às variáveis de theme.css.
+ *
+ * As escalas padrão do Tailwind são zeradas de propósito: classes fora da escala
+ * (p-5, text-4xl, bg-blue-500, shadow-2xl, font-bold) simplesmente não existem.
+ */
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import './theme.css';
+@import '../brand/examples/aurora/theme.css';
+@import '../brand/examples/equilibrio/theme.css';
+@import '../brand/palettes/ardosia.css';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Espaçamento: base 4px, apenas os degraus permitidos */
+  --spacing-*: initial;
+  --spacing: initial;
+  --spacing-0: 0px;
+  --spacing-px: 1px;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-24: 6rem;
+
+  /* Dimensões nomeadas (não são espaçamento, são tamanhos de peça) */
+  --spacing-control-sm: 2.75rem;
+  --spacing-control-md: 3rem;
+  --spacing-control-lg: 3.25rem;
+  --spacing-touch: 2.75rem;
+  --spacing-icon-sm: 1rem;
+  --spacing-icon-md: 1.25rem;
+  --spacing-icon-lg: 1.5rem;
+  --spacing-header: 3.5rem;
+  --spacing-chart-sm: 12rem;
+  --spacing-chart-md: 16rem;
+
+  /* Larguras de estrutura */
+  --container-sidebar: 16rem;
+  --container-sidebar-collapsed: 4.5rem;
+  --container-content: 95%;
+
+  /* Tipografia: 7 tamanhos. Valores base são os do mobile; md: amplia os títulos. */
+  --text-*: initial;
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1rem;
+  --text-xs--letter-spacing: 0.01em;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.25rem;
+  --text-sm--letter-spacing: 0em;
+  --text-base: 1rem;
+  --text-base--line-height: 1.5rem;
+  --text-base--letter-spacing: 0em;
+  --text-lg: 1.0625rem;
+  --text-lg--line-height: 1.625rem;
+  --text-lg--letter-spacing: -0.005em;
+  --text-xl: 1.125rem;
+  --text-xl--line-height: 1.625rem;
+  --text-xl--letter-spacing: -0.01em;
+  --text-2xl: 1.3125rem;
+  --text-2xl--line-height: 1.75rem;
+  --text-2xl--letter-spacing: -0.015em;
+  --text-3xl: 1.5rem;
+  --text-3xl--line-height: 2rem;
+  --text-3xl--letter-spacing: -0.02em;
+
+  /* Três pesos, e só três */
+  --font-weight-*: initial;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  --tracking-*: initial;
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.04em;
+
+  /* Animação */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Ícones animados: traço se desenhando, entrada com mola, tremor de erro */
+  --animate-draw: rd-draw 420ms var(--ease-out) 200ms both;
+  --animate-pop: rd-pop 420ms var(--ease-spring) both;
+  --animate-shake: rd-shake 420ms var(--ease-in-out) 620ms both;
+
+  @keyframes rd-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes rd-pop {
+    0% {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+    60% {
+      opacity: 1;
+      transform: scale(1.12);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes rd-shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    20%,
+    60% {
+      transform: translateX(-8%);
+    }
+    40%,
+    80% {
+      transform: translateX(8%);
+    }
+  }
+}
+
+/* Nomes semânticos ligados às variáveis da marca (inline: resolvem no elemento). */
+@theme inline {
+  --font-*: initial;
+  --font-sans: var(--brand-font);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --radius-*: initial;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-full: 9999px;
+  /* Raios por papel, controlados pelo formato ativo (data-shape) */
+  --radius-control: var(--shape-control);
+  --radius-surface: var(--shape-surface);
+  --radius-item: var(--shape-item);
+  --radius-avatar: var(--shape-avatar);
+
+  --shadow-*: initial;
+  --shadow-sm: var(--elevation-sm);
+  --shadow-md: var(--elevation-md);
+  --shadow-lg: var(--elevation-lg);
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --text-shadow-*: initial;
+
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-field: var(--field);
+  --color-ring: var(--ring);
+  --color-overlay: var(--overlay);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover-foreground: var(--primary-hover-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-foreground: var(--primary-soft-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary-hover-foreground: var(--secondary-hover-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-hover: var(--destructive-hover);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-destructive-soft-foreground: var(--destructive-soft-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-soft: var(--success-soft);
+  --color-success-soft-foreground: var(--success-soft-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-soft-foreground: var(--warning-soft-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-info-soft: var(--info-soft);
+  --color-info-soft-foreground: var(--info-soft-foreground);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-muted-foreground: var(--sidebar-muted-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-active: var(--sidebar-active);
+  --color-sidebar-active-foreground: var(--sidebar-active-foreground);
+  --color-sidebar-indicator: var(--sidebar-indicator);
+
+  --color-gradient-brand-foreground: var(--gradient-brand-foreground);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+}
+
+/*
+ * FORMATO: square, rounded ou pill. O padrão vem do brand.config (atributo no <html>);
+ * qualquer componente sobrescreve com a prop shape, que grava data-shape nele mesmo.
+ * Em pill, superfícies grandes (card, drawer) ganham raio generoso, não 100%.
+ */
+@layer base {
+  :root,
+  [data-shape='rounded'] {
+    --shape-control: calc(var(--radius) - 2px);
+    --shape-surface: var(--radius);
+    --shape-item: calc(var(--radius) - 4px);
+    --shape-avatar: 9999px;
+  }
+  [data-shape='square'] {
+    --shape-control: 0px;
+    --shape-surface: 0px;
+    --shape-item: 0px;
+    --shape-avatar: 0px;
+  }
+  [data-shape='pill'] {
+    --shape-control: 9999px;
+    --shape-surface: calc(var(--radius) + 0.75rem);
+    --shape-item: 9999px;
+    --shape-avatar: 9999px;
+  }
+}
+
+/* A partir de md: controles compactos (mouse) e títulos no tamanho cheio. */
+@layer base {
+  @media (width >= 48rem) {
+    :root {
+      --spacing-control-sm: 2rem;
+      --spacing-control-md: 2.5rem;
+      --spacing-control-lg: 3rem;
+      --spacing-header: 4rem;
+      --text-xl: 1.25rem;
+      --text-xl--line-height: 1.75rem;
+      --text-2xl: 1.5rem;
+      --text-2xl--line-height: 2rem;
+      --text-3xl: 1.875rem;
+      --text-3xl--line-height: 2.375rem;
+    }
+  }
+
+  html {
+    font-family: var(--font-sans);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply min-h-dvh bg-background text-base text-foreground antialiased;
+    background-image: var(--background-image);
+    background-attachment: fixed;
+  }
+
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-semibold text-balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Foco visível padrão para qualquer elemento focável por teclado */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--primary-soft);
+    color: var(--primary-soft-foreground);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Utilitários de estrutura (sem valores de marca) */
+/* Degradês: regras de uso em theme.css. Nunca em botão, input ou fundo de texto corrido. */
+@utility bg-gradient-brand {
+  background-color: var(--sidebar);
+  background-image: var(--gradient-brand);
+}
+@utility bg-gradient-soft {
+  background-image: var(--gradient-soft);
+}
+@utility bg-gradient-accent {
+  background-image: var(--gradient-accent);
+}
+
+@utility bg-sidebar-brand {
+  background-color: var(--sidebar);
+  background-image: var(--sidebar-image);
+}
+
+@utility pb-safe {
+  padding-bottom: max(var(--spacing-4), env(safe-area-inset-bottom));
+}
+
+@utility pt-safe {
+  padding-top: max(var(--spacing-4), env(safe-area-inset-top));
+}
+
+/* Recorte circular no canto do símbolo, onde entra o selo de status do BrandFeedbackIcon */
+@utility mask-status-cutout {
+  mask-image: radial-gradient(34% 34% at 78% 78%, transparent 98%, black 100%);
+}
+
+/* Atrasos de animação em sequência */
+@utility anim-delay-1 {
+  animation-delay: 120ms;
+}
+@utility anim-delay-2 {
+  animation-delay: 240ms;
+}
+
+@utility focus-ring {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Largura de painéis flutuantes: nunca maior que a tela menos o gutter de 16px de cada lado */
+@utility w-popover {
+  width: min(22rem, calc(100vw - 2rem));
+}
+
+@utility w-popover-sm {
+  width: min(16rem, calc(100vw - 2rem));
+}
+
+/* Gaveta de navegação no mobile: largura da sidebar, sem passar de 85% da tela */
+@utility w-sidebar-drawer {
+  width: min(var(--container-sidebar), 85vw);
+}
+
+@utility max-w-popover {
+  max-width: min(22rem, calc(100vw - 2rem));
+}
+
+/* Respiro da área segura (notch, barra de gestos) sem padding mínimo */
+@utility pb-safe-inset {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Altura da lista da busca global no desktop */
+@utility max-h-command {
+  max-height: min(24rem, 60dvh);
+}
+
+/* Painéis flutuantes com a largura do gatilho (Select, DatePicker) */
+@utility w-trigger {
+  width: max(var(--radix-popover-trigger-width), 16rem);
+}
+
+/* Bottom sheet no mobile: nunca maior que 85% da altura visível */
+@utility max-h-sheet {
+  max-height: 85dvh;
+}
+
+/* Barra de ações: 30% cancelar, 70% principal; com menu de ações extras à esquerda */
+@utility grid-actions-2 {
+  grid-template-columns: 3fr 7fr;
+}
+@utility grid-actions-3 {
+  grid-template-columns: auto 3fr 7fr;
+}
+
+/* Largura dinâmica do Progress, via variável CSS (nunca estilo inline) */
+@utility w-progress {
+  width: var(--progress, 0%);
+}
+
+/* Caixas do OtpInput: quantidade vem da variável --otp */
+@utility grid-cols-otp {
+  grid-template-columns: repeat(var(--otp, 6), minmax(0, 1fr));
+}

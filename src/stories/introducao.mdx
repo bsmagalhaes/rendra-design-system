@@ -1,0 +1,20 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Introdução" />
+
+# Design system Rendra
+
+Componentes, tokens e telas base do boilerplate. Use a barra no topo para trocar:
+
+- **Template**: Safira (quadrado), Equilíbrio (meio-termo) ou Aurora (100% arredondado).
+- **Paleta**: as cores do próprio modelo ou de outro template.
+- **Modo**: claro ou escuro.
+- **Viewport**: o padrão é celular (360px). Troque para tablet e desktop no ícone de viewport.
+
+## Regras que valem para tudo
+
+1. **Um componente por finalidade.** Diferenças são props, nunca um arquivo novo.
+2. **Mobile-first de verdade.** Sem rolagem horizontal no celular; componentes se reconstroem (a Table vira cards, o Select vira painel inferior).
+3. **A marca fica em dois arquivos:** `src/styles/theme.css` e `src/brand/brand.config.ts`.
+
+Leia o `DESIGN_RULES.md` na raiz do repositório antes de alterar qualquer interface.

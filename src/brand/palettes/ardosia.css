@@ -1,0 +1,143 @@
+/*
+ * PALETA: Ardósia (combinável com qualquer modelo)
+ * Primária #2E414D (azul-ardósia) e secundária #EA600D (laranja).
+ * Texto sobre o laranja é escuro: branco daria 3,4:1, abaixo do AA.
+ * Destrutivo em carmim para não confundir com a secundária.
+ */
+:root[data-palette='ardosia'] {
+  color-scheme: light;
+
+  --background: #fcfcfc;
+  --background-image: none;
+  --foreground: #1c262d;
+  --card: #ffffff;
+  --card-foreground: #1c262d;
+  --popover: #ffffff;
+  --popover-foreground: #1c262d;
+  --muted: #f0f3f5;
+  --muted-foreground: #55636c;
+  --border: #e2e7ea;
+  --input: #87949c;
+  --field: #fcfcfc;
+  --ring: #ea600d;
+  --overlay: rgb(28 38 45 / 0.5);
+
+  --primary: #2e414d;
+  --primary-hover: #22323c;
+  --primary-foreground: #ffffff;
+  --primary-hover-foreground: #ffffff;
+  --primary-soft: #e9eef1;
+  --primary-soft-foreground: #2e414d;
+  --secondary: #ea600d;
+  --secondary-hover: #f2803a;
+  --secondary-foreground: #1c1917;
+  --secondary-hover-foreground: #1c1917;
+  --accent: #f3f5f7;
+  --accent-foreground: #1c262d;
+
+  --destructive: #c0262d;
+  --destructive-hover: #a11f25;
+  --destructive-foreground: #ffffff;
+  --destructive-soft: #fbeaea;
+  --destructive-soft-foreground: #9e1e24;
+  --info: #2e414d;
+  --info-foreground: #ffffff;
+  --info-soft: #e9eef1;
+  --info-soft-foreground: #2e414d;
+
+  --sidebar: #2e414d;
+  --sidebar-image: radial-gradient(120% 120% at 80% 0%, #3e5664 0%, #2e414d 45%, #1f2d36 100%);
+  --sidebar-foreground: #eef2f4;
+  --sidebar-muted-foreground: #afbdc6;
+  --sidebar-border: rgb(255 255 255 / 0.1);
+  --sidebar-accent: rgb(255 255 255 / 0.07);
+  --sidebar-active: rgb(234 96 13 / 0.2);
+  --sidebar-active-foreground: #ffffff;
+  --sidebar-indicator: #ea600d;
+
+  --gradient-brand: radial-gradient(120% 120% at 80% 0%, #3e5664 0%, #2e414d 45%, #1f2d36 100%);
+  --gradient-brand-foreground: #ffffff;
+  --gradient-soft: linear-gradient(135deg, #fdf0e8 0%, #ffffff 65%);
+  --gradient-accent: linear-gradient(90deg, #2e414d 0%, #ea600d 100%);
+
+  --chart-1: #2e414d;
+  --chart-2: #ea600d;
+  --chart-3: #7f97a6;
+  --chart-4: #f2a36e;
+  --chart-5: #1f2d36;
+
+  --shadow-color: 28 38 45;
+  --elevation-sm: 0 1px 2px rgb(var(--shadow-color) / 0.06);
+  --elevation-md:
+    0 2px 8px -2px rgb(var(--shadow-color) / 0.1), 0 1px 2px rgb(var(--shadow-color) / 0.05);
+  --elevation-lg:
+    0 12px 32px -8px rgb(var(--shadow-color) / 0.16), 0 2px 6px rgb(var(--shadow-color) / 0.05);
+}
+
+:root[data-palette='ardosia'].dark {
+  color-scheme: dark;
+
+  --background: #12191e;
+  --background-image: none;
+  --foreground: #e9eef1;
+  --card: #1a2329;
+  --card-foreground: #e9eef1;
+  --popover: #1f2a31;
+  --popover-foreground: #e9eef1;
+  --muted: #222d34;
+  --muted-foreground: #a7b4bc;
+  --border: #2c3941;
+  --input: #5e6e78;
+  --field: #151d22;
+  --ring: #ea600d;
+  --overlay: rgb(0 0 0 / 0.65);
+
+  --primary: #3e5664;
+  --primary-hover: #4b6778;
+  --primary-foreground: #ffffff;
+  --primary-hover-foreground: #ffffff;
+  --primary-soft: #22313a;
+  --primary-soft-foreground: #b8c8d2;
+  --secondary: #ea600d;
+  --secondary-hover: #f2803a;
+  --secondary-foreground: #1c1917;
+  --secondary-hover-foreground: #1c1917;
+  --accent: #202b32;
+  --accent-foreground: #e9eef1;
+
+  --destructive: #c0262d;
+  --destructive-hover: #d6353c;
+  --destructive-foreground: #ffffff;
+  --destructive-soft: #3a1a1c;
+  --destructive-soft-foreground: #f4a6a9;
+  --info: #8fa6b4;
+  --info-foreground: #12191e;
+  --info-soft: #1e2a31;
+  --info-soft-foreground: #b8c8d2;
+
+  --sidebar: #12191e;
+  --sidebar-image: radial-gradient(120% 120% at 80% 0%, #2e414d 0%, #1a252c 45%, #12191e 100%);
+  --sidebar-foreground: #e9eef1;
+  --sidebar-muted-foreground: #a7b4bc;
+  --sidebar-border: rgb(255 255 255 / 0.08);
+  --sidebar-accent: rgb(255 255 255 / 0.06);
+  --sidebar-active: rgb(234 96 13 / 0.22);
+  --sidebar-active-foreground: #ffffff;
+  --sidebar-indicator: #ea600d;
+
+  --gradient-brand: radial-gradient(120% 120% at 80% 0%, #2e414d 0%, #1a252c 45%, #12191e 100%);
+  --gradient-brand-foreground: #e9eef1;
+  --gradient-soft: linear-gradient(135deg, #2a2019 0%, #1a2329 65%);
+  --gradient-accent: linear-gradient(90deg, #8fa6b4 0%, #ea600d 100%);
+
+  --chart-1: #8fa6b4;
+  --chart-2: #ea600d;
+  --chart-3: #5e7c8e;
+  --chart-4: #f2a36e;
+  --chart-5: #c9d5dc;
+
+  --shadow-color: 0 0 0;
+  --elevation-sm: 0 1px 2px rgb(var(--shadow-color) / 0.3);
+  --elevation-md: 0 4px 12px -2px rgb(var(--shadow-color) / 0.35);
+  --elevation-lg: 0 16px 40px -8px rgb(var(--shadow-color) / 0.5);
+}

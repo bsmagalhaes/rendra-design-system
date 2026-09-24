@@ -1,0 +1,242 @@
+# DESIGN_RULES
+
+Regras obrigatórias de interface deste repositório. Foram escritas para serem seguidas por pessoas e por IAs. Leia o documento inteiro antes de criar ou alterar qualquer tela ou componente. Se uma regra impedir o que você precisa fazer, pare e pergunte: não contorne.
+
+Três verificações automáticas garantem boa parte destas regras. Rode as três antes de entregar:
+
+```bash
+npm run check:rules   # cor fixa, valor arbitrário, fora da escala, estilo inline, fonte, 100vh, arquivos duplicados
+npm run lint          # TypeScript, React Hooks e acessibilidade (jsx-a11y)
+npm run test:layout   # todas as rotas, 5 larguras, 3 templates: rolagem, largura e toque de 44px
+```
+
+---
+
+## 1. Regra mestra 1: um componente por finalidade
+
+Existe **um** Select, **uma** Table, **um** Modal, **um** Drawer, **um** Input, **um** Button. Toda diferença de comportamento ou de aparência é resolvida por **props**, nunca por um arquivo novo.
+
+| Proibido                                  | Correto                                                                       |
+| ----------------------------------------- | ----------------------------------------------------------------------------- |
+| `SelectSimples` e `SelectComBusca`        | `<Select searchable />`                                                       |
+| `TabelaComCheckbox` e `TabelaSimples`     | `<Table selectable />`                                                        |
+| `ModalGrande` e `ModalPequeno`            | `<Modal size="lg" />`                                                         |
+| `InputCPF`, `InputTelefone`, `InputSenha` | `<Input mask="cpf" />`, `<Input mask="phone" />`, `<Input type="password" />` |
+| `BotaoPrimario`, `BotaoIcone`             | `<Button variant="primary" />`, `<Button iconOnly />`                         |
+
+Antes de criar um componente, procure em `src/components/ui` um que resolva o caso com uma prop a mais. Se existir, **acrescente a prop**. Componente duplicado é erro de revisão. O `check:rules` barra nomes de arquivo como `*-mobile`, `*Simples`, `*Grande`, `*ComBusca`.
+
+Componentes existentes (`src/components/ui`): accordion, action-bar, alert, avatar (e AvatarGroup), badge, brand-feedback-icon, breadcrumb, button, button-group, card, chart, checkbox (e CheckboxGroup), data-toolbar, date-picker, drawer, dropdown-menu, empty-state, error-page, field (Label, Field), form (Form, FormField, FormSection), input, list, modal, otp-input, pagination, popover, progress, radio-group, select, separator, skeleton, slider, stat-card, switch, table, tabs, textarea, timeline, toast, tooltip, upload, wizard (Wizard e Stepper). Internos, sem uso direto em tela: overlay-shell, picker-panel.
+
+## 2. Regra mestra 2: mobile-first real, sem exceção
+
+O sistema precisa **funcionar** 100% no celular, e não só "não quebrar".
+
+- Todo estilo é escrito primeiro para **360px** e depois ampliado com `sm:`, `md:`, `lg:`.
+- **Proibida rolagem horizontal no mobile**, em qualquer tela ou componente, inclusive tabelas.
+- Componente que não cabe no mobile **se reconstrói em outro formato dentro do próprio componente**, com a **mesma API de props**. Proibido criar `TableMobile`, `SelectMobile` ou similares.
+- **Toda interação funciona por toque.** Proibida ação que dependa de hover para aparecer. O hover só pode antecipar ou enfeitar algo que também é acessível por toque ou teclado.
+- Área de toque mínima de **44x44px** em qualquer elemento clicável no mobile. Se o desenho for menor (checkbox, switch), amplie a área com pseudo-elemento e marque `data-touch="expanded"`.
+- Inputs com fonte mínima de **16px** no mobile, para o iOS não dar zoom. Isso já está na moldura dos campos.
+- Detecção de tela: **um único hook**, `useBreakpoint()` (`src/hooks/use-breakpoint.ts`). Para reagir ao espaço de um bloco, e não da tela, use container queries: `<Grid responsive="container" />` ou `@container`.
+- Alturas de tela com **100dvh** (`h-dvh`, `min-h-dvh`), nunca 100vh.
+
+## 3. A marca fica isolada
+
+Tudo o que é da marca mora em dois arquivos e numa pasta:
+
+1. `src/styles/theme.css`: cores, fonte, raio, sombras e degradês, como variáveis CSS.
+2. `src/brand/brand.config.ts`: nome do produto, logotipos (claro e escuro), símbolo, favicon, formato e ícones de feedback.
+3. `src/brand/assets/`: os SVGs e as fontes da marca.
+
+**Nenhum componente pode conter** cor hexadecimal, `rgb()`, nome de fonte, logotipo ou ícone de marca fixo. Componentes leem a marca por `useBrand()` e as cores pelos nomes semânticos (`bg-primary`, `text-muted-foreground`). Em JavaScript, como nos gráficos, use as variáveis do tema, por exemplo `var(--chart-1)` e `var(--primary)`. As `--color-*` do Tailwind são inline e não existem no CSS.
+
+### Templates
+
+São três modelos, cada um com formato, fonte e símbolo fixos:
+
+| Modelo                | Formato                  | Paleta padrão                                   |
+| --------------------- | ------------------------ | ----------------------------------------------- |
+| Rendra Safira (ativo) | `square`, quadrado       | azul #0C78F4, verde #98D10A, destrutivo #B72C05 |
+| Rendra Equilíbrio     | `rounded`, meio-termo    | violeta + ciano                                 |
+| Rendra Aurora         | `pill`, 100% arredondado | verde-petróleo + laranja                        |
+
+- **O modelo não muda de formato.** O formato vem do `brand.config.ts` (`shape`). Os componentes não têm prop `shape`: usam `rounded-control`, `rounded-surface`, `rounded-item` e `rounded-avatar`.
+- **A sidebar é sempre colorida**, também no modo claro: cada paleta define um degradê na cor da marca (`--sidebar` e `--sidebar-image`), com texto claro e contraste AA. Nunca sidebar branca ou cinza.
+- **O logotipo acompanha o tema.** Use sempre `<BrandLogo on="sidebar" | "surface" | "brand" />`: ele monta o selo com o símbolo do modelo e as cores da paleta ativa. Só use os SVGs de logo como estão (`logoMode: 'image'` no `brand.config.ts`) quando a arte oficial não puder ser recolorida.
+- **A paleta pode ser trocada.** Qualquer modelo pode usar a paleta de outro: no `<html>`, `data-brand` define o modelo e `data-palette` define as cores.
+- Todo template define `primary`, `primary-hover`, `secondary`, `secondary-hover`, os `*-foreground` correspondentes e os `*-hover-foreground`. A cor de hover pode ser outra cor da marca: o texto sobre ela usa o `*-hover-foreground`.
+
+## 4. Tokens
+
+### Espaçamento
+
+Base de 4px. **Só estes degraus existem:** `0, 1, 2, 3, 4, 6, 8, 12, 16, 24` (0 a 96px). A escala padrão do Tailwind foi zerada: `p-5`, `gap-7` e `w-64` **não geram CSS** e quebram o layout em silêncio. O `check:rules` barra esses degraus.
+
+- Espaço interno de componentes: de 2 a 6.
+- Espaço entre seções: de 8 a 16. Use `<Stack gap="section">`, que é menor no mobile.
+- Padding lateral de página: 4 no mobile (16px). A partir de 1024px o conteúdo ocupa **95% da área**, sem recuo interno.
+- Tamanhos de peça têm token nomeado: `h-control-sm|md|lg`, `size-touch`, `size-icon-sm|md|lg`, `h-header`, `h-chart-sm|md`, `w-sidebar`. Se precisar de um tamanho novo, **crie o token** em `src/styles/globals.css`. Nunca use valor arbitrário.
+
+### Tipografia
+
+Sete tamanhos (`text-xs` a `text-3xl`), com line-height e letter-spacing definidos. Os títulos são menores no mobile e têm tracking levemente negativo. Três pesos, e só três: `font-normal` (400), `font-medium` (500) e `font-semibold` (600). A fonte vem de `--brand-font`.
+
+### Cores
+
+Tokens semânticos: `background`, `foreground`, `card`, `popover`, `muted`, `muted-foreground`, `border`, `input`, `field`, `ring`, `primary`, `secondary`, `accent`, `destructive`, `success`, `warning`, `info`. Cada semântica tem fundo forte, texto sobre o forte, fundo suave (`*-soft`) e texto sobre o suave (`*-soft-foreground`). **Contraste mínimo WCAG AA:** 4,5:1 para texto e 3:1 para bordas de campo e foco. A página `/tokens` mede os pares ao vivo. No modo claro, o fundo da página e dos campos é **#fcfcfc** em todos os templates: nada de fundo tingido.
+
+### Raio, sombra e densidade
+
+- Raio: `--radius`, com os derivados por papel (`rounded-control`, `rounded-surface`, `rounded-item`, `rounded-avatar`) controlados pelo formato do template.
+- Sombra: três níveis (`shadow-sm`, `shadow-md`, `shadow-lg`), sutis. Superfície de página usa **borda de 1px**, e a sombra fica para o que flutua.
+- Densidade: input, botão e select têm a **mesma altura** em cada tamanho (`sm`, `md`, `lg`). No mobile, 44, 48 e 52px. A partir de 768px, 32, 40 e 48px.
+
+### Degradês
+
+Três por template, cada um com lugar certo:
+
+- `bg-gradient-brand` (forte): só sidebar, painel lateral do login e telas de erro. **No máximo um por tela.** O texto usa `text-gradient-brand-foreground`, e o ponto de luz nunca fica atrás do texto.
+- `bg-gradient-soft` (suave): destaque de superfície, em no máximo um StatCard por tela.
+- `bg-gradient-accent` (detalhe): barra de progresso, borda de destaque, linha de gráfico. Nunca com texto por cima.
+- **Proibido:** degradê em botão, input, badge, fundo de texto corrido ou de tabela.
+
+## 5. Composição de tela
+
+### Estrutura
+
+- Toda tela é composta pelas primitivas de `@/components/layout`: `Container`, `Stack`, `Inline`, `Grid`, `Section` e `PageHeader`. Não use classes de layout soltas para a estrutura da página.
+- Primeiro bloco de toda tela: `<Container padded><Stack gap="section"><PageHeader ... />`.
+- **O título da página fica no header do AppShell**, com a trilha (breadcrumb) logo abaixo. O `PageHeader` mostra só a descrição e as ações, e mantém o `h1` para leitores de tela. Use `showTitle` apenas quando o título do corpo for outro, como o nome do cliente no detalhe.
+- **O header é sempre fixo**, em todas as páginas. A única área de rolagem da tela é o `<main>` do AppShell.
+
+### Qual contêiner usar
+
+| Conteúdo                                                      | Contêiner                                                         |
+| ------------------------------------------------------------- | ----------------------------------------------------------------- |
+| Confirmação, mensagem, formulário de até 3 campos simples     | `Modal`                                                           |
+| Formulário ou detalhe de volume médio, até cerca de 12 campos | `Drawer`                                                          |
+| Formulário longo, cadastro complexo                           | Página inteira, em seções (`FormSection`) ou em etapas (`Wizard`) |
+
+Se o conteúdo rola muito ou tem muitos campos, não cabe em modal. **Nunca modal dentro de modal.** A confirmação de descarte do Drawer é a única exceção: um modal de confirmação por cima do drawer.
+
+### Drawer
+
+Único, desliza da direita. **Header fixo** (ícone, título, descrição, fechar), **body** como única área rolável e **footer fixo** com borda superior e as ações. Props: `size` (`sm`, `md`, `lg`, `xl`, `full`) e `dirty`. Fecha por Esc e por clique fora, e com `dirty` pede confirmação antes. No mobile ocupa a tela inteira (100dvh), e o footer respeita `env(safe-area-inset-bottom)`.
+
+### Botões de ação: use sempre `<ActionBar>`
+
+- **Um botão:** 100% da largura.
+- **Dois botões:** cancelar com 30% à esquerda (outline) e ação principal com 70% à direita (primária).
+- **Três ou mais:** as secundárias vão para o menu de três pontinhos.
+- Vale para drawer, modal e formulário em página, em qualquer largura. Só as barras de ferramentas acima de tabelas usam botões de largura automática.
+- O envio mostra carregamento e fica desabilitado enquanto processa (`loading`).
+- Em formulário de página, use `sticky`: o rodapé fica fixo no fim da área rolável.
+
+### Cabeçalho de listagem
+
+De cima para baixo: descrição e ação principal (`PageHeader`); **barra de ferramentas dentro do mesmo card da tabela** (busca à esquerda, filtros no meio, ações e colunas à direita); **chips** dos filtros aplicados, com limpar; e então a tabela. Filtros com muitas opções abrem em popover (desktop) ou drawer de tela cheia (mobile), nunca empurrando o conteúdo. Na `Table` isso tudo é a prop `toolbar`.
+
+### Card
+
+Conteúdo de página agrupado em `Card`, com borda de 1px e sem sombra pesada. **Não aninhe card dentro de card:** para hierarquia interna, use `Separator` ou título de seção. **Nunca rolagem dentro de card.**
+
+### Formulário
+
+Rótulo **sempre acima** do campo; obrigatório marcado no rótulo (`required`); erro **abaixo**, em espaço reservado (o layout não pula); no máximo **2 colunas** no desktop e sempre 1 no mobile; campos agrupados em `FormSection` com título; ações no rodapé (`ActionBar`). Validação com React Hook Form + Zod (`Form`, `FormField`, validadores em `src/lib/validators.ts`: CPF, CNPJ, telefone, CEP, data).
+
+### Tabela: sempre `<Table>`
+
+- Texto com no máximo 3 linhas (`lines`), com reticências acima disso.
+- Até 2 ações visíveis por linha como ícone; acima disso, uma visível e o resto no menu de três pontinhos (`rowActions`).
+- Ações na última coluna, à direita, com largura fixa. Seleção na primeira coluna (`selectable`). **Colunas de situação (`kind: 'badge'`) ficam por padrão logo antes das ações** (`statusLast`).
+- Números e moeda alinhados à direita (`kind: 'number' | 'currency'`); datas em formato curto (`kind: 'date'`).
+- Sempre com estado vazio (`empty`), carregando (`loading`, com skeleton da mesma estrutura) e erro (`error`, `onRetry`).
+- Paginação no rodapé do card, à direita (`pageSize`).
+- Ao marcar linhas, aparecem as ações em massa (`bulkActions`) e o menu com mais ações (`bulkMenu`).
+- Colunas pouco importantes começam ocultas (`hidden`) e ficam disponíveis no menu Colunas.
+
+### Rolagem
+
+Uma única área de rolagem por tela: o `<main>` do AppShell. Drawer e modal têm a própria, no body. **Nunca rolagem dentro de card.** No desktop, tabela muito larga pode rolar na horizontal só dentro do próprio contêiner (`data-allow-overflow`). No mobile, nunca.
+
+## 6. Comportamento no mobile (abaixo de 768px)
+
+Cada componente se reconstrói sozinho, com a mesma API:
+
+| Componente           | No mobile                                                                                                                                                                                                                                                                                                                                                      |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Table                | Lista de cards. Colunas `mobile: 'primary'` no topo (até 3, a primeira como título); `secondary` recolhidas em "Ver detalhes", com animação; `hidden` não aparecem. Ações no rodapé do card. Com `selectable`, checkbox no card e ações em massa numa barra fixa no rodapé da tela. Paginação com anterior e próxima, ou "Carregar mais" (`mobilePagination`). |
+| Barra de ferramentas | Busca na largura total; filtros, ordenação e colunas viram um único botão "Filtros" com contador, que abre um drawer de tela cheia.                                                                                                                                                                                                                            |
+| Drawer e Modal       | Tela inteira, com header e footer fixos, footer acima da área segura e do teclado (`interactive-widget=resizes-content`), 100dvh.                                                                                                                                                                                                                              |
+| Select e DatePicker  | Painel inferior (bottom sheet), com busca no topo e confirmação no rodapé.                                                                                                                                                                                                                                                                                     |
+| Tabs                 | Se as abas não couberem na largura do bloco, viram um Select. Nunca rolagem lateral.                                                                                                                                                                                                                                                                           |
+| Wizard               | "Etapa 2 de 5", com barra de progresso e nome da etapa; Voltar e Avançar no rodapé fixo.                                                                                                                                                                                                                                                                       |
+| Sidebar              | Gaveta aberta pelo botão de menu, com barra inferior de até 4 itens (`bottomNav` em `navigation.ts`).                                                                                                                                                                                                                                                          |
+| Header               | Compacto: menu, título com trilha em texto e ícones. A busca global vira ícone que abre em tela cheia.                                                                                                                                                                                                                                                         |
+| Breadcrumb           | Dentro das páginas, vira botão voltar com o nome da tela atual. No header, trilha só em texto.                                                                                                                                                                                                                                                                 |
+| Tooltip              | Não existe hover: informação essencial vai em texto de ajuda visível ou em Popover por toque.                                                                                                                                                                                                                                                                  |
+| Chart                | Legenda abaixo, eixos simplificados e "Ver como lista" quando há muitos pontos.                                                                                                                                                                                                                                                                                |
+| StatCards e grids    | 1 coluna, ou 2 para cards pequenos.                                                                                                                                                                                                                                                                                                                            |
+| Inputs com máscara   | `inputMode` certo automaticamente (numeric, tel, decimal).                                                                                                                                                                                                                                                                                                     |
+| Formulário em página | Rodapé com os botões fixo no fim da tela (`ActionBar sticky`).                                                                                                                                                                                                                                                                                                 |
+
+## 7. AppShell e layout
+
+Tudo é prop do `<AppShell>`, com o padrão em `src/config/layout.ts`:
+
+- `navigation`: `sidebar` (lateral) ou `topbar` (superior).
+- `sidebar`: `collapsed` (padrão, só ícones) ou `expanded`.
+- `expandOnHover`: com a sidebar recolhida, abre por cima do conteúdo ao passar o mouse ou focar pelo teclado.
+- `submenu`: `panel` (segunda barra lateral) ou `inline` (dentro da sidebar).
+- `topbarSubmenu`: `dropdown` (navegável) ou `mega` (mega menu com seções e descrições).
+- `bottomNav`: barra inferior no celular.
+- `userConfigurable`: permite que o usuário troque o layout (menu do avatar e Configurações).
+
+A sidebar tem z-index maior que o header. O menu vem de `src/config/navigation.ts`, e o item ativo é sempre o destino mais específico que combina com o endereço.
+
+## 8. Feedback com a marca
+
+`BrandFeedbackIcon` (success, error, warning, info) renderiza o símbolo da marca tingido pela cor semântica, com selo de status, para o significado não depender só da cor. Com `animated`, o check se desenha, o X se risca e o erro treme, respeitando "reduzir movimento". É **obrigatório** em toast, alert, modal de confirmação, estado vazio e tela de erro. Os componentes `Toast`, `Alert`, `Modal`, `EmptyState` e `ErrorPage` já o usam. Cada tipo pode ser trocado por um SVG próprio em `brand.config.ts` (`feedbackIcons`).
+
+## 9. Acessibilidade
+
+Teclado em tudo; foco visível (`:focus-visible` global com `--ring`); contraste AA; rótulo em todo campo; `aria-label` em botão só com ícone (`iconOnly`); um `h1` por página; textos da interface em **português do Brasil**; datas em DD/MM/AAAA; valores em R$ 1.250,00.
+
+## 10. O que é proibido
+
+1. Valor arbitrário do Tailwind (`p-[13px]`, `w-[37rem]`, `text-[#fff]`).
+2. Cor fixa em componente (hexadecimal, `rgb()`, `hsl()`) fora de `src/styles` e `src/brand`.
+3. Espaçamento fora da escala (`p-5`, `gap-7`, `h-48`, `w-64`).
+4. Estilo inline (`style={{ ... }}`), exceto para passar variável CSS dinâmica (`--x`).
+5. Nome de fonte fixo em componente.
+6. Logotipo, símbolo ou ícone de marca importado fora de `src/brand` (use `<BrandLogo />` e `useBrand()`).
+7. Sidebar branca ou cinza: ela é sempre colorida na cor da paleta.
+8. Componente duplicado ou paralelo (`SelectSimples`, `ModalGrande`).
+9. Versão mobile separada de componente (`TableMobile`).
+10. Modal com muitos campos (mais de 3) ou modal dentro de modal.
+11. Rolagem horizontal no mobile.
+12. Ação que só aparece com hover.
+13. Rolagem dentro de card; card dentro de card.
+14. `100vh` (use `100dvh`).
+15. Degradê em botão, input, badge ou atrás de texto corrido; mais de um degradê forte por tela.
+16. Fundo tingido no modo claro (a página e os campos usam #fcfcfc).
+17. Título da página repetido no corpo quando já está no header.
+
+## 11. Checklist de revisão
+
+Antes de entregar qualquer mudança de interface:
+
+- [ ] Reaproveitei um componente existente, com prop nova se preciso, em vez de criar outro.
+- [ ] A tela usa `Container`, `Stack`, `Grid`, `Section` e `PageHeader`, e não classes de layout soltas.
+- [ ] Escrevi primeiro para 360px e testei em 360, 390, 768, 1280 e 1920.
+- [ ] Nada depende de hover; todo clicável tem 44px no mobile.
+- [ ] O componente se reconstrói no mobile sem arquivo separado.
+- [ ] Contêiner certo para o volume: modal até 3 campos, drawer até cerca de 12, página acima disso.
+- [ ] Botões pela `ActionBar` (100%, 30/70, menu), com carregamento no envio.
+- [ ] Formulário: rótulo acima, obrigatório marcado, erro abaixo em espaço reservado, no máximo 2 colunas.
+- [ ] Tabela: seleção primeiro, situação antes das ações, ações por último, números à direita, vazio, carregando e erro.
+- [ ] Cores só por token semântico; contraste AA conferido em `/tokens`, nos modos claro e escuro.
+- [ ] Ícone de feedback da marca em toast, alert, confirmação, vazio e erro.
+- [ ] `npm run check:rules`, `npm run lint`, `npm run typecheck` e `npm run test:layout` passando.
+- [ ] Story no Storybook para o componente e para cada prop relevante.

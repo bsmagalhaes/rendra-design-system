@@ -1,0 +1,77 @@
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { createMemoryRouter, RouterProvider } from 'react-router'
+import { Container, Grid, PageHeader, Section, Stack } from '@/components/layout'
+import { routes } from '@/routes'
+import { TokensPage } from '@/pages/tokens-page'
+
+/*
+ * Telas base e AppShell como stories de página, com alternância de template,
+ * paleta e modo na toolbar. Cada story abre uma rota do app num roteador em memória.
+ */
+
+function Screen({ path }: { path: string }) {
+  const router = createMemoryRouter(routes, { initialEntries: [path] })
+  return (
+    <div className="h-dvh">
+      <RouterProvider router={router} />
+    </div>
+  )
+}
+
+const meta = {
+  title: 'Telas/AppShell e telas base',
+  component: Screen,
+  parameters: { layout: 'fullscreen', router: false },
+  args: { path: '/' },
+} satisfies Meta<typeof Screen>
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Painel: Story = { args: { path: '/' } }
+export const ListagemDeClientes: Story = { args: { path: '/clientes' } }
+export const DetalheComAbas: Story = { args: { path: '/clientes/1000' } }
+export const FormularioLongo: Story = { args: { path: '/clientes/novo' } }
+export const CadastroEmWizard: Story = { args: { path: '/cadastro' } }
+export const Configuracoes: Story = { args: { path: '/configuracoes' } }
+export const Tarefas: Story = { args: { path: '/tarefas' } }
+export const Vitrine: Story = { args: { path: '/componentes' } }
+export const Pagina404: Story = { args: { path: '/nao-existe' } }
+export const Login: Story = { args: { path: '/login' } }
+export const EsqueciASenha: Story = { args: { path: '/esqueci-senha' } }
+export const Verificacao2FA: Story = { args: { path: '/verificacao?origem=senha' } }
+export const NovaSenha: Story = { args: { path: '/nova-senha' } }
+export const Cadastro: Story = { args: { path: '/cadastre-se' } }
+
+export const Tokens: Story = {
+  name: 'Fundamentos: tokens e identidade',
+  parameters: { router: true },
+  render: () => <TokensPage />,
+}
+
+export const Primitivas: Story = {
+  name: 'Layout: primitivas',
+  parameters: { router: true, layout: 'padded' },
+  render: () => (
+    <Container padded>
+      <Stack gap="section">
+        <PageHeader
+          title="Primitivas"
+          showTitle
+          description="Container, Stack, Inline, Grid, Section e PageHeader."
+        />
+        <Section title="Grid 1, 2 e 4 colunas" description="Uma coluna no celular.">
+          <Grid cols={{ base: 1, sm: 2, lg: 4 }}>
+            {[1, 2, 3, 4].map((n) => (
+              <div
+                key={n}
+                className="flex h-12 items-center justify-center rounded-control border border-primary bg-primary-soft text-sm font-medium text-primary-soft-foreground"
+              >
+                {n}
+              </div>
+            ))}
+          </Grid>
+        </Section>
+      </Stack>
+    </Container>
+  ),
+}

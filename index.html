@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Boilerplate</title>
+    <script>
+      // Aplica modo e marca antes da pintura para evitar flash de tema errado.
+      try {
+        var m = localStorage.getItem('ui-mode') || 'system'
+        var dark =
+          m === 'dark' || (m === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
+        document.documentElement.classList.toggle('dark', dark)
+        var b = localStorage.getItem('ui-brand')
+        if (b) document.documentElement.dataset.brand = b
+        var p = localStorage.getItem('ui-palette') || b
+        if (p) document.documentElement.dataset.palette = p
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
