@@ -8,6 +8,7 @@ import {
   type SubmitHandler,
   type UseFormReturn,
 } from 'react-hook-form'
+import { gapClass } from '@/components/layout/tokens'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Field, type FieldProps } from '@/components/ui/field'
 import { cn } from '@/lib/cn'
@@ -107,7 +108,7 @@ export function FormSection({ title, description, columns = 2, children, id }: F
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
       <CardContent>
-        <div className={cn('grid grid-cols-1 gap-x-6 gap-y-2', columns === 2 && 'md:grid-cols-2')}>
+        <div className={cn('grid grid-cols-1', gapClass.fields, columns === 2 && 'md:grid-cols-2')}>
           {children}
         </div>
       </CardContent>

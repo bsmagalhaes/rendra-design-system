@@ -35,7 +35,7 @@ Para **contribuição**, pule o briefing: leia o [`CONTRIBUTING.md`](CONTRIBUTIN
 Use o roteiro de [`docs/BRIEFING_MODELO.md`](docs/BRIEFING_MODELO.md).
 
 - Siga o **"Como conduzir"** do modelo. Blocos abertos (negócio, usuários, telas, dados, acesso, prazo) vão agrupados, o bloco inteiro de uma vez.
-- **Navegação, tema e cores são um fluxo guiado, nesta ordem**: posição do menu; depois só as opções do caminho escolhido (sidebar: estado, abrir no hover, submenu; menu superior: lista suspensa ou mega menu); barra inferior; tema (modelo e fonte); cores (as do tema, outra paleta pronta ou a identidade do cliente); logotipo; modo de cor. Uma decisão por mensagem, opções numeradas com o padrão marcado, pulando o que não se aplica.
+- **Navegação, tema e cores são um fluxo guiado, nesta ordem**: primeiro pergunte se o usuário tem um **código de modelo** da galeria (`T1-C4-M5`: tema, cores e menu; tabela no item 3.0 do modelo e em `src/config/presets.ts`) e pule o que o código já responde; depois, posição do menu; depois só as opções do caminho escolhido (sidebar: estado, abrir no hover, submenu; menu superior: lista suspensa ou mega menu); barra inferior; tema (modelo e fonte); cores (as do tema, outra paleta pronta ou a identidade do cliente); logotipo; modo de cor. Uma decisão por mensagem, opções numeradas com o padrão marcado, pulando o que não se aplica.
 - Nunca decida sozinho o modelo, a paleta, a posição do menu, o tipo de sidebar ou de submenu. Se o usuário pedir sugestão, recomende, explique em uma frase e peça confirmação.
 - Aceite "não sei" e ofereça uma sugestão fundamentada. Por exemplo: "sugiro o modelo Equilíbrio e menu lateral recolhido, porque...".
 - Não invente dados do negócio, números ou metas. O que o usuário não souber fica marcado como pendente.
@@ -75,7 +75,7 @@ Ao fim de **cada etapa**:
 - **Contêiner certo:** modal até 3 campos, drawer até cerca de 12, página em seções ou wizard acima disso. Nunca modal dentro de modal.
 - **Botões pela `ActionBar`:** 1 botão com 100%, 2 botões com 30% e 70%, a partir de 3 as extras vão para o menu.
 - **Header sempre fixo**, título da página no header com a trilha abaixo, uma única área de rolagem (o `<main>`).
-- **Sidebar sempre colorida**, fundo claro #fcfcfc, conteúdo com 95% da largura a partir de 1024px, contraste AA.
+- **Sidebar sempre colorida**, fundo da tela e dos campos cinza bem claro #f5f6f7 com cards brancos, conteúdo com 95% da largura a partir de 1024px, contraste AA.
 - **Interface em português do Brasil**, datas em DD/MM/AAAA e valores em R$ 1.250,00.
 
 ## Comandos

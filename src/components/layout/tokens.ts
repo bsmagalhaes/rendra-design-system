@@ -2,7 +2,8 @@
  * Mapas de classes das primitivas de layout. Classes completas e estáticas,
  * para o Tailwind encontrá-las. Só os degraus da escala permitida.
  */
-export type Space = '0' | '1' | '2' | '3' | '4' | '6' | '8' | '12' | '16' | '24' | 'section'
+export type Space =
+  '0' | '1' | '2' | '3' | '4' | '6' | '8' | '12' | '16' | '24' | 'section' | 'fields'
 
 export const gapClass: Record<Space, string> = {
   '0': 'gap-0',
@@ -17,6 +18,9 @@ export const gapClass: Record<Space, string> = {
   '24': 'gap-24',
   // Espaço entre seções de página: menor no mobile, cheio no desktop.
   section: 'gap-8 md:gap-12',
+  // Entre campos de formulário (Field). O Field já reserva uma linha para ajuda e erro
+  // abaixo do controle, então o espaço vertical é pequeno: 24px do campo ao próximo rótulo.
+  fields: 'gap-x-4 gap-y-1 md:gap-x-6',
 }
 
 export const alignClass = {

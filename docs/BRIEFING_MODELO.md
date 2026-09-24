@@ -8,7 +8,8 @@ Roteiro usado pela IA (e por pessoas) antes de começar. As respostas vão para 
 - Os blocos 3 (navegação), 4 (tema) e 5 (cores) são um **fluxo guiado**, nesta ordem: uma decisão por mensagem, com as opções numeradas, uma frase de quando usar cada uma e o padrão marcado. A resposta decide a próxima pergunta, e o que não se aplica é pulado (quem escolhe menu superior nunca ouve perguntas de sidebar).
 - Se o usuário responder várias decisões de uma vez, aceite e pule para a próxima em aberto.
 - Aceite "não sei, sugira": recomende com base nos blocos 1 e 2, explique em uma frase e peça confirmação.
-- O usuário pode ver cada opção no demo (https://bsmagalhaes.github.io/rendra-design-system/): o menu do avatar troca modelo, paleta e layout ao vivo.
+- O usuário pode ver cada opção na galeria do demo (https://bsmagalhaes.github.io/rendra-design-system/galeria): cada captura mostra seu **código de modelo**, e o bloco "Monte seu código" gera o código e abre o demo já aplicado.
+- **Antes do fluxo guiado, pergunte pelo código (3.0).** Com o código, as perguntas que ele responde são puladas; confirme em uma frase o que o código significa.
 
 ---
 
@@ -32,6 +33,30 @@ Roteiro usado pela IA (e por pessoas) antes de começar. As respostas vão para 
 - Acessibilidade ou restrição especial (baixa visão, uso com luvas, conexão ruim):
 
 ## 3. Navegação (fluxo guiado)
+
+**3.0 Código de modelo** (primeira pergunta do fluxo guiado)
+
+> Você já escolheu um modelo na galeria? Se tiver o código (por exemplo `T1-C4-M5`), me passe e eu já sei o tema, as cores e o menu. Pode ser só uma parte, como `T2` ou `C4-M6`. Se não tiver, seguimos pelas perguntas.
+
+| Parte | Código | O que define                                                | Perguntas que pula |
+| ----- | ------ | ----------------------------------------------------------- | ------------------ |
+| Tema  | T1     | Safira: quadrado                                            | 4.1                |
+| Tema  | T2     | Equilíbrio: levemente arredondado                           | 4.1                |
+| Tema  | T3     | Aurora: 100% arredondado                                    | 4.1                |
+| Cores | C1     | Paleta Safira (azul e verde)                                | 5.1 e 5.3          |
+| Cores | C2     | Paleta Equilíbrio (violeta e ciano)                         | 5.1 e 5.3          |
+| Cores | C3     | Paleta Aurora (verde-petróleo e laranja)                    | 5.1 e 5.3          |
+| Cores | C4     | Paleta Ardósia (grafite e laranja)                          | 5.1 e 5.3          |
+| Menu  | M1     | Lateral recolhida, abre no hover, submenu em segunda barra  | 3.1 a 3.5          |
+| Menu  | M2     | Lateral recolhida, abre no hover, submenu dentro da sidebar | 3.1 a 3.5          |
+| Menu  | M3     | Lateral expandida, submenu em segunda barra                 | 3.1 a 3.5          |
+| Menu  | M4     | Lateral expandida, submenu dentro da sidebar                | 3.1 a 3.5          |
+| Menu  | M5     | Menu superior com lista suspensa                            | 3.1 a 3.5          |
+| Menu  | M6     | Menu superior com mega menu                                 | 3.1 a 3.5          |
+
+A fonte da verdade dos códigos é `src/config/presets.ts` (também aplica o código no app: `?codigo=T1-C4-M5`). Registre o código no briefing. Tema sem cores (`T2`) usa as cores do próprio tema; cores da identidade do cliente não têm código e seguem pelo 5.2.
+
+- Código informado:
 
 Cada resposta vira um valor em `src/config/layout.ts` (entre parênteses). No celular, qualquer escolha vira gaveta mais barra inferior.
 

@@ -4,6 +4,7 @@ import {
   LogOut,
   Menu,
   Monitor,
+  MoreHorizontal,
   Moon,
   PanelLeft,
   Palette,
@@ -12,6 +13,7 @@ import {
   Sun,
   User,
 } from 'lucide-react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation, useMatches, useNavigate, type UIMatch } from 'react-router'
 import { useBrand } from '@/brand'
 import type { ColorMode } from '@/brand/brand-context'
@@ -232,54 +234,135 @@ function UserMenu() {
 }
 
 /** Menu superior (layout topbar), a partir de 1024px. */
+/**
+ * Menu superior. Os itens que não cabem na largura vão para o botão "Mais", no fim da
+ * barra: o menu nunca passa por cima da busca e dos ícones, com qualquer número de itens.
+ */
 function TopNav() {
   const { pathname } = useLocation()
+  const items = navigation.flatMap((g) => g.items)
+  const navRef = useRef<HTMLElement>(null)
+  const widths = useRef<number[]>([])
+  const [count, setCount] = useState(items.length)
+
+  useLayoutEffect(() => {
+    const nav = navRef.current
+    if (!nav) return
+    const measure = () => {
+      const lis = [...nav.querySelectorAll<HTMLLIElement>('li[data-item]')]
+      // Mede só quando todos estão visíveis (primeira pintura e depois da fonte carregar).
+      if (lis.length === items.length && lis.every((li) => li.offsetWidth > 0))
+        widths.current = lis.map((li) => li.offsetWidth + 4)
+      const avail = nav.clientWidth
+      const total = widths.current.reduce((a, b) => a + b, 0)
+      if (total <= avail) return setCount(items.length)
+      const more = 104 // largura reservada para o botão Mais
+      let used = 0
+      let n = 0
+      for (const w of widths.current) {
+        if (used + w > avail - more) break
+        used += w
+        n++
+      }
+      setCount(n)
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(nav)
+    void document.fonts?.ready.then(() => {
+      setCount(items.length)
+      requestAnimationFrame(measure)
+    })
+    return () => ro.disconnect()
+  }, [items.length])
+
   const link =
     'inline-flex h-control-md items-center gap-2 rounded-item px-3 text-sm font-medium whitespace-nowrap transition-colors [&_svg]:size-icon-sm'
   const idle = 'text-muted-foreground hover:bg-accent hover:text-foreground'
   const active = 'bg-primary-soft text-primary-soft-foreground'
+  const isActive = (item: (typeof items)[number]) =>
+    item.children
+      ? item.children.some((c) => pathname.startsWith(c.to))
+      : item.to === '/'
+        ? pathname === '/'
+        : pathname.startsWith(item.to ?? '/')
+  const overflow = items.slice(count)
+
   return (
-    <nav aria-label="Navegação principal" className="hidden min-w-0 lg:block">
-      <ul className="flex items-center gap-1">
-        {navigation
-          .flatMap((g) => g.items)
-          .map((item) => {
-            const Icon = item.icon
-            if (item.children) {
-              const childActive = item.children.some((c) => pathname.startsWith(c.to))
-              return (
-                <li key={item.title}>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className={cn(link, childActive ? active : idle)}>
-                      <Icon aria-hidden />
-                      {item.title}
-                      <ChevronDown aria-hidden />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start">
-                      {item.children.map((c) => (
-                        <DropdownMenuItem key={c.to} asChild>
-                          <Link to={c.to}>{c.title}</Link>
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </li>
-              )
-            }
-            const to = item.to ?? '/'
+    <nav ref={navRef} aria-label="Navegação principal" className="hidden w-full min-w-0 lg:block">
+      <ul className="flex items-center justify-center gap-1">
+        {items.map((item, i) => {
+          const Icon = item.icon
+          const hidden = i >= count
+          if (item.children) {
             return (
-              <li key={item.title}>
-                <NavLink
-                  to={to}
-                  end={to === '/'}
-                  className={({ isActive }) => cn(link, isActive ? active : idle)}
-                >
-                  <Icon aria-hidden />
-                  {item.title}
-                </NavLink>
+              <li key={item.title} data-item className={cn(hidden && 'hidden')}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger className={cn(link, isActive(item) ? active : idle)}>
+                    <Icon aria-hidden />
+                    {item.title}
+                    <ChevronDown aria-hidden />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start">
+                    {item.children.map((c) => (
+                      <DropdownMenuItem key={c.to} asChild>
+                        <Link to={c.to}>{c.title}</Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </li>
             )
-          })}
+          }
+          const to = item.to ?? '/'
+          return (
+            <li key={item.title} data-item className={cn(hidden && 'hidden')}>
+              <NavLink
+                to={to}
+                end={to === '/'}
+                className={({ isActive: on }) => cn(link, on ? active : idle)}
+              >
+                <Icon aria-hidden />
+                {item.title}
+              </NavLink>
+            </li>
+          )
+        })}
+        {overflow.length > 0 && (
+          <li>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className={cn(link, overflow.some(isActive) ? active : idle)}
+                aria-label={`Mais ${overflow.length} itens do menu`}
+              >
+                <MoreHorizontal aria-hidden />
+                Mais
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {overflow.flatMap((item) => {
+                  const Icon = item.icon
+                  return item.children
+                    ? item.children.map((c) => (
+                        <DropdownMenuItem key={c.to} asChild>
+                          <Link to={c.to}>
+                            <Icon aria-hidden />
+                            {c.title}
+                          </Link>
+                        </DropdownMenuItem>
+                      ))
+                    : [
+                        <DropdownMenuItem key={item.title} asChild>
+                          <Link to={item.to ?? '/'}>
+                            <Icon aria-hidden />
+                            {item.title}
+                          </Link>
+                        </DropdownMenuItem>,
+                      ]
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </li>
+        )}
       </ul>
     </nav>
   )

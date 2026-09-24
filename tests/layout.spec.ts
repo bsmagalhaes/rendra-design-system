@@ -37,6 +37,9 @@ for (const template of templates) {
             const res = await auditLayout(page, width < MOBILE)
             expect.soft(errors, 'erros de JavaScript na página').toEqual([])
             expect.soft(res.scroll, 'rolagem horizontal na página').toBeLessThanOrEqual(0)
+            expect
+              .soft(res.pageOverflowY, 'página mais alta que a tela fora do <main>')
+              .toBeLessThanOrEqual(0)
             expect.soft(res.wide, 'elementos maiores que a tela').toEqual([])
             if (width < MOBILE)
               expect.soft(res.small, 'alvos de toque menores que 44px').toEqual([])

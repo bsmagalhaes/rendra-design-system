@@ -61,7 +61,7 @@ export function ClientDrawer({
       <Stack gap="6">
         <Stack gap="2">
           <p className="text-sm font-semibold">Dados principais</p>
-          <Grid cols={{ base: 1, md: 2 }} gap="4" responsive="container">
+          <Grid cols={{ base: 1, md: 2 }} gap="fields" responsive="container">
             <Field label="Nome" required span="full">
               <Input onChange={touch} defaultValue={mode === 'edit' ? 'Padaria Bom Grão' : ''} />
             </Field>
@@ -79,7 +79,7 @@ export function ClientDrawer({
         <Separator />
         <Stack gap="2">
           <p className="text-sm font-semibold">Contrato</p>
-          <Grid cols={{ base: 1, md: 2 }} gap="4" responsive="container">
+          <Grid cols={{ base: 1, md: 2 }} gap="fields" responsive="container">
             <Field label="Segmento">
               <Select
                 label="Segmento"

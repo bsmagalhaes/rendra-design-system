@@ -7,7 +7,7 @@
 :root[data-palette='ardosia'] {
   color-scheme: light;
 
-  --background: #fcfcfc;
+  --background: #f5f6f7;
   --background-image: none;
   --foreground: #1c262d;
   --card: #ffffff;
@@ -18,7 +18,7 @@
   --muted-foreground: #55636c;
   --border: #e2e7ea;
   --input: #87949c;
-  --field: #fcfcfc;
+  --field: #f5f6f7;
   --ring: #ea600d;
   --overlay: rgb(28 38 45 / 0.5);
 
@@ -29,10 +29,12 @@
   --primary-soft: #e9eef1;
   --primary-soft-foreground: #2e414d;
   --primary-text: #2e414d;
-  --secondary: #ea600d;
-  --secondary-hover: #f2803a;
-  --secondary-foreground: #1c1917;
-  --secondary-hover-foreground: #1c1917;
+  /* Laranja com texto branco: #C94F0A é o tom mais próximo de #EA600D que passa AA
+     com branco (4,56:1; o #EA600D dá 3,4:1). O #EA600D segue nos degradês e gráficos. */
+  --secondary: #c94f0a;
+  --secondary-hover: #a8400a;
+  --secondary-foreground: #ffffff;
+  --secondary-hover-foreground: #ffffff;
   --accent: #f3f5f7;
   --accent-foreground: #1c262d;
 
@@ -100,10 +102,12 @@
   --primary-soft: #22313a;
   --primary-soft-foreground: #b8c8d2;
   --primary-text: #9db4c2;
-  --secondary: #ea600d;
-  --secondary-hover: #f2803a;
-  --secondary-foreground: #1c1917;
-  --secondary-hover-foreground: #1c1917;
+  /* Laranja com texto branco: #C94F0A é o tom mais próximo de #EA600D que passa AA
+     com branco (4,56:1; o #EA600D dá 3,4:1). O #EA600D segue nos degradês e gráficos. */
+  --secondary: #c94f0a;
+  --secondary-hover: #a8400a;
+  --secondary-foreground: #ffffff;
+  --secondary-hover-foreground: #ffffff;
   --accent: #202b32;
   --accent-foreground: #e9eef1;
 

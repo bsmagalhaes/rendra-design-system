@@ -14,6 +14,7 @@ import { Demo, Row } from './showcase/demo'
 import { FeedbackSection } from './showcase/feedback-section'
 import { FormsSection } from './showcase/forms-section'
 import { NavigationSection } from './showcase/navigation-section'
+import { PlanningSection } from './showcase/planning-section'
 
 /*
  * VITRINE /componentes: cada componente com variantes, tamanhos e estados,
@@ -64,6 +65,14 @@ const groups = [
       ['timeline', 'Timeline'],
       ['accordion', 'Accordion'],
       ['chart', 'Chart'],
+    ],
+  },
+  {
+    title: 'Planejamento',
+    items: [
+      ['calendario', 'Calendar (agenda)'],
+      ['kanban', 'Kanban'],
+      ['visualizador', 'ImageViewer'],
     ],
   },
   {
@@ -122,7 +131,7 @@ function SectionNav({ active, onNavigate }: { active: string; onNavigate?: () =>
     <div className="flex flex-col gap-4">
       {groups.map((g) => (
         <div key={g.title} className="flex flex-col gap-1">
-          <span className="px-3 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+          <span className="px-3 text-xs font-semibold tracking-wide text-foreground uppercase">
             {g.title}
           </span>
           <ul className="flex flex-col">
@@ -189,6 +198,7 @@ export function ComponentsPage() {
             <FormsSection />
             <NavigationSection />
             <DataSection />
+            <PlanningSection />
             <FeedbackSection />
             <CompositionSection />
 

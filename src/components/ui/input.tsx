@@ -1,5 +1,5 @@
 import IMask, { type FactoryArg, type InputMask } from 'imask'
-import { Eye, EyeOff, X } from 'lucide-react'
+import { ChevronDown, Eye, EyeOff, X } from 'lucide-react'
 import {
   forwardRef,
   useEffect,
@@ -11,7 +11,14 @@ import {
 } from 'react'
 import { cn } from '@/lib/cn'
 import { controlAdornmentButton, controlFrame, controlInput, type ControlSize } from '@/lib/control'
-import { masks, type MaskName } from '@/lib/masks'
+import {
+  DEFAULT_DDI,
+  internationalPhoneMask,
+  masks,
+  phoneCountries,
+  type MaskName,
+  type PhoneCountry,
+} from '@/lib/masks'
 
 export interface InputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -33,6 +40,17 @@ export interface InputProps extends Omit<
   onChange?: (value: string) => void
   /** Recebe o valor sem máscara (só dígitos, ou número para moeda e percentual). */
   onValueChange?: (unmasked: string, masked: string) => void
+  /**
+   * Telefone (mask="phone"): DDI escolhido no seletor embutido à esquerda, sem o "+".
+   * Padrão "55". Com +55 a máscara é a brasileira; com outro DDI, só dígitos.
+   * O valor do campo continua sendo o número nacional; o completo sai de toE164(ddi, valor).
+   */
+  ddi?: string
+  onDdiChange?: (ddi: string) => void
+  /** Países do seletor de DDI. Padrão: phoneCountries (Brasil primeiro). */
+  ddiOptions?: PhoneCountry[]
+  /** Esconde o seletor de DDI do telefone (só números brasileiros). */
+  hideDdi?: boolean
   className?: string
 }
 
@@ -57,6 +75,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     className,
     inputMode,
     placeholder,
+    ddi: ddiProp,
+    onDdiChange,
+    ddiOptions = phoneCountries,
+    hideDdi,
     ...props
   },
   ref,
@@ -70,10 +92,19 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const cb = useRef({ onChange, onValueChange })
   cb.current = { onChange, onValueChange }
 
+  // Telefone: seletor de DDI embutido. Controlado pela prop ddi ou interno.
+  const isPhone = mask === 'phone'
+  const [innerDdi, setInnerDdi] = useState(ddiProp ?? DEFAULT_DDI)
+  const ddi = ddiProp ?? innerDdi
+  const showDdi = isPhone && !hideDdi
+  const intl = isPhone && ddi !== DEFAULT_DDI
+  const def = intl ? internationalPhoneMask : mask ? masks[mask] : undefined
+  const maskKey = intl ? 'phone-intl' : mask
+
   // Máscara: criada uma vez por tipo de máscara, sincronizada com o valor controlado.
   useEffect(() => {
-    if (!mask || !inputRef.current) return
-    const m = IMask(inputRef.current, masks[mask].options)
+    if (!maskKey || !def || !inputRef.current) return
+    const m = IMask(inputRef.current, def.options)
     maskRef.current = m
     m.on('accept', () => {
       setInner(m.value)
@@ -84,7 +115,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       m.destroy()
       maskRef.current = null
     }
-  }, [mask])
+    // A máscara só muda com o tipo (maskKey); def acompanha o maskKey.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [maskKey])
 
   useEffect(() => {
     const m = maskRef.current
@@ -92,7 +125,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   }, [value])
 
   const isPassword = type === 'password'
-  const def = mask ? masks[mask] : undefined
+  const country = ddiOptions.find((c) => c.ddi === ddi)
 
   const clear = () => {
     if (maskRef.current) maskRef.current.value = ''
@@ -104,6 +137,29 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 
   return (
     <div data-slot="control" className={cn(controlFrame({ size, invalid }), className)}>
+      {showDdi && (
+        // Seletor nativo transparente sobre o "+55": no celular abre a lista do sistema.
+        <span className="relative -ml-1 flex h-full shrink-0 items-center gap-1 border-r pr-2 text-sm font-medium">
+          <span aria-hidden>+{ddi}</span>
+          <ChevronDown className="size-icon-sm text-muted-foreground" aria-hidden />
+          <select
+            aria-label={`Código do país (DDI): ${country?.name ?? ''} +${ddi}`}
+            value={ddi}
+            disabled={disabled}
+            onChange={(e) => {
+              setInnerDdi(e.target.value)
+              onDdiChange?.(e.target.value)
+            }}
+            className="absolute inset-0 cursor-pointer opacity-0 disabled:cursor-not-allowed"
+          >
+            {ddiOptions.map((c) => (
+              <option key={c.ddi} value={c.ddi}>
+                {c.name} (+{c.ddi})
+              </option>
+            ))}
+          </select>
+        </span>
+      )}
       {icon && (
         <span className="flex shrink-0 text-muted-foreground [&_svg]:size-icon-sm" aria-hidden>
           {icon}
@@ -117,7 +173,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         disabled={disabled}
         aria-invalid={invalid || undefined}
         className={controlInput}
-        {...(mask
+        {...(maskKey
           ? { defaultValue: current }
           : {
               value: current,

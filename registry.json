@@ -32,6 +32,11 @@
           "type": "registry:file",
           "target": "src/hooks/use-breakpoint.ts"
         },
+        {
+          "path": "src/hooks/use-debounced-value.ts",
+          "type": "registry:file",
+          "target": "src/hooks/use-debounced-value.ts"
+        },
         { "path": "src/brand/types.ts", "type": "registry:file", "target": "src/brand/types.ts" },
         {
           "path": "src/brand/brand-context.ts",
@@ -348,6 +353,28 @@
       ]
     },
     {
+      "name": "calendar",
+      "type": "registry:item",
+      "title": "calendar",
+      "description": "Componente calendar do Rendra Design System.",
+      "dependencies": ["date-fns@^4.4.0", "lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button-group.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/card.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/empty-state.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/calendar.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/calendar.tsx"
+        }
+      ]
+    },
+    {
       "name": "card",
       "type": "registry:item",
       "title": "card",
@@ -554,6 +581,7 @@
         "https://bsmagalhaes.github.io/rendra-design-system/r/card.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/field.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/layout.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
       ],
       "files": [
@@ -598,6 +626,29 @@
           "path": "src/components/ui/input.tsx",
           "type": "registry:file",
           "target": "src/components/ui/input.tsx"
+        }
+      ]
+    },
+    {
+      "name": "kanban",
+      "type": "registry:item",
+      "title": "kanban",
+      "description": "Componente kanban do Rendra Design System.",
+      "dependencies": ["date-fns@^4.4.0", "lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/avatar.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/badge.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tabs.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/kanban.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/kanban.tsx"
         }
       ]
     },

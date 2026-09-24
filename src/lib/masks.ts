@@ -54,6 +54,48 @@ export const masks: Record<
   },
 }
 
+/** País para o seletor de DDI do telefone. */
+export interface PhoneCountry {
+  /** DDI sem o "+", ex.: "55". */
+  ddi: string
+  /** Nome em português, mostrado na lista. */
+  name: string
+}
+
+/** DDI padrão do campo de telefone. */
+export const DEFAULT_DDI = '55'
+
+/** Lista padrão do seletor de DDI (Brasil primeiro). Troque com a prop ddiOptions do Input. */
+export const phoneCountries: PhoneCountry[] = [
+  { ddi: '55', name: 'Brasil' },
+  { ddi: '54', name: 'Argentina' },
+  { ddi: '56', name: 'Chile' },
+  { ddi: '57', name: 'Colômbia' },
+  { ddi: '595', name: 'Paraguai' },
+  { ddi: '598', name: 'Uruguai' },
+  { ddi: '52', name: 'México' },
+  { ddi: '1', name: 'Estados Unidos e Canadá' },
+  { ddi: '351', name: 'Portugal' },
+  { ddi: '34', name: 'Espanha' },
+  { ddi: '33', name: 'França' },
+  { ddi: '39', name: 'Itália' },
+  { ddi: '49', name: 'Alemanha' },
+  { ddi: '44', name: 'Reino Unido' },
+]
+
+/** Máscara do número fora do Brasil: só dígitos, em grupos, até 15 (limite do padrão E.164). */
+export const internationalPhoneMask = {
+  options: { mask: '000 000 000 000 000' } as FactoryArg,
+  inputMode: 'tel' as InputMode,
+  placeholder: 'Número com DDD',
+}
+
+/** Número completo no padrão internacional: toE164("55", "(11) 91234-5678") = "+5511912345678". */
+export function toE164(ddi: string, national: string) {
+  const digits = national.replace(/\D/g, '')
+  return digits ? `+${ddi}${digits}` : ''
+}
+
 /** Converte "R$ 1.250,00" ou "12,5 %" em número. */
 export function parseLocaleNumber(masked: string): number | null {
   const clean = masked.replace(/[^\d,-]/g, '').replace(',', '.')
