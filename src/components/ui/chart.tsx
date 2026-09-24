@@ -1,5 +1,5 @@
 import { ArrowDown, BarChart3, List as ListIcon } from 'lucide-react'
-import { useId, useState, type CSSProperties } from 'react'
+import { useId, useRef, useState, type CSSProperties } from 'react'
 import {
   Area,
   AreaChart,
@@ -347,6 +347,17 @@ function Cartesian({
 }: CartesianChartProps) {
   const { isMobile } = useBreakpoint()
   const [asList, setAsList] = useState(false)
+  // Anima só a entrada. Se a largura muda depois (barra de rolagem que aparece, janela
+  // redimensionada), o gráfico vai direto à nova forma, sem desenhar fora do card no meio do
+  // caminho. Com "reduzir movimento" no sistema, não anima.
+  const [animate, setAnimate] = useState(
+    () => !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,
+  )
+  const firstWidth = useRef<number | null>(null)
+  const onResize = (width: number) => {
+    if (firstWidth.current === null) firstWidth.current = width
+    else if (Math.abs(width - firstWidth.current) > 1) setAnimate(false)
+  }
   const canList = isMobile && data.length > listThreshold
   const showList = canList && asList
   const colors = series.map((s, i) => colorVar(s.color ?? i + 1))
@@ -404,6 +415,7 @@ function Cartesian({
       // Empilhadas: só a barra de cima tem os cantos arredondados.
       radius={!stacked || lastBar ? [4, 4, 0, 0] : [0, 0, 0, 0]}
       maxBarSize={40}
+      isAnimationActive={animate}
     >
       {colorByCategory && data.map((_, j) => <Cell key={j} fill={colorVar(j + 1)} />)}
     </Bar>
@@ -422,6 +434,7 @@ function Cartesian({
           outerRadius="85%"
           paddingAngle={2}
           stroke="var(--card)"
+          isAnimationActive={animate}
         >
           {data.map((_, i) => (
             <Cell key={i} fill={colorVar(i + 1)} />
@@ -464,6 +477,7 @@ function Cartesian({
               strokeWidth={2}
               dot={{ r: 3, fill: colors[i], strokeWidth: 0 }}
               activeDot={{ r: 5 }}
+              isAnimationActive={animate}
             />
           ),
         )}
@@ -494,6 +508,7 @@ function Cartesian({
             stroke={colors[i]}
             strokeWidth={2}
             fill={`url(#area-${s.key})`}
+            isAnimationActive={animate}
           />
         ))}
       </AreaChart>
@@ -516,6 +531,7 @@ function Cartesian({
             strokeWidth={2}
             dot={false}
             activeDot={{ r: 4 }}
+            isAnimationActive={animate}
           />
         ))}
       </LineChart>
@@ -565,7 +581,7 @@ function Cartesian({
                 : 'h-chart-md',
           )}
         >
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" onResize={onResize}>
             {chart}
           </ResponsiveContainer>
         </div>
