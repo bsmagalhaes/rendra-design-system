@@ -1,6 +1,7 @@
 import {
   Blocks,
   ClipboardList,
+  Images,
   LayoutDashboard,
   ListChecks,
   Palette,
@@ -106,6 +107,12 @@ export const navigation: NavGroup[] = [
         to: '/tokens',
         icon: Palette,
         description: 'Cores, tipografia e formato.',
+      },
+      {
+        title: 'Galeria',
+        to: '/galeria',
+        icon: Images,
+        description: 'Capturas de todos os templates e paletas.',
       },
       {
         title: 'Configurações',

@@ -117,7 +117,8 @@ const preview: Preview = {
       },
     },
     controls: { expanded: true, sort: 'requiredFirst' },
-    a11y: { test: 'todo' },
+    // Violação de acessibilidade aparece como erro no painel Accessibility de cada story.
+    a11y: { test: 'error' },
     options: {
       storySort: {
         order: [

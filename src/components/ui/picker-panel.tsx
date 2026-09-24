@@ -25,7 +25,22 @@ interface PickerPanelProps {
   footer?: ReactNode
   /** Largura no desktop: do gatilho ou automática (calendário). */
   width?: 'trigger' | 'auto'
+  /**
+   * Botão sobreposto ao gatilho (ex.: limpar). Fica como irmão do gatilho, nunca dentro
+   * dele: botão dentro de botão é HTML inválido e confunde leitores de tela.
+   */
+  adornment?: ReactNode
   align?: 'start' | 'center' | 'end'
+}
+
+function Anchor({ adornment, children }: { adornment?: ReactNode; children: ReactNode }) {
+  if (!adornment) return children
+  return (
+    <div className="relative w-full min-w-0">
+      {children}
+      {adornment}
+    </div>
+  )
 }
 
 export function PickerPanel({
@@ -37,6 +52,7 @@ export function PickerPanel({
   children,
   footer,
   width = 'trigger',
+  adornment,
   align = 'start',
 }: PickerPanelProps) {
   const { isMobile } = useBreakpoint()
@@ -44,7 +60,9 @@ export function PickerPanel({
   if (isMobile) {
     return (
       <Dialog.Root open={open} onOpenChange={onOpenChange}>
-        <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
+        <Anchor adornment={adornment}>
+          <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
+        </Anchor>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-40 bg-overlay data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0" />
           <Dialog.Content
@@ -74,7 +92,9 @@ export function PickerPanel({
 
   return (
     <Popover.Root open={open} onOpenChange={onOpenChange}>
-      <Popover.Trigger asChild>{trigger}</Popover.Trigger>
+      <Anchor adornment={adornment}>
+        <Popover.Trigger asChild>{trigger}</Popover.Trigger>
+      </Anchor>
       <Popover.Portal>
         <Popover.Content
           align={align}

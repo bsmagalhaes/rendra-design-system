@@ -69,6 +69,12 @@ const rules = [
     message:
       'SVG de marca importado fora de src/brand. Leia o logotipo e o símbolo via useBrand().',
   },
+  {
+    id: 'primaria-como-texto',
+    test: /(?<![\w-])(?:[\w-]+:)*text-primary(?![\w-])/g,
+    message:
+      'Primária como texto usa text-primary-text (tom que passa AA no claro e no escuro). text-primary é só para o preenchimento.',
+  },
 ]
 
 // Degraus fora da escala não geram CSS (o Tailwind ignora em silêncio e o layout quebra).

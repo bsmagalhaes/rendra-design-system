@@ -1,0 +1,34 @@
+# Atualiza as referências da regressão visual depois de uma mudança visual intencional.
+# Rode pela aba Actions, escolhendo o branch do seu Pull Request (nunca a main, que é
+# protegida). O workflow gera as capturas novas e faz um commit no próprio branch.
+name: Atualizar referências visuais
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
+    env:
+      HOME: /root
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run test:visual:update
+      - name: Commit das referências
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/__screenshots__/linux
+          git diff --cached --quiet && echo "Nenhuma referência mudou." && exit 0
+          git commit -m "Atualiza referências visuais"
+          git push

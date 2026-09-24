@@ -4,7 +4,12 @@ import { forwardRef, useEffect, useId, useMemo, useRef, useState, type ReactNode
 import { Button } from '@/components/ui/button'
 import { useBreakpoint } from '@/hooks/use-breakpoint'
 import { cn } from '@/lib/cn'
-import { controlAdornmentButton, controlFrame, type ControlSize } from '@/lib/control'
+import {
+  controlAdornmentButton,
+  controlAdornmentSpace,
+  controlFrame,
+  type ControlSize,
+} from '@/lib/control'
 import { PickerPanel } from './picker-panel'
 
 export interface SelectOption {
@@ -20,7 +25,10 @@ export interface SelectOption {
 interface BaseProps {
   options?: SelectOption[]
   placeholder?: string
-  /** Título do painel no mobile. Padrão: placeholder. */
+  /**
+   * Nome do campo: título do painel no mobile e, quando o Select não está dentro de um
+   * Field (sem id ligado a um rótulo visível), nome acessível do gatilho.
+   */
   label?: string
   size?: ControlSize
   invalid?: boolean
@@ -211,6 +219,21 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
     )
   }
 
+  const showClear = clearable && hasValue && !disabled
+  const clear = showClear ? (
+    <button
+      type="button"
+      aria-label="Limpar seleção"
+      className={cn(
+        controlAdornmentButton,
+        'absolute top-1/2 right-8 mr-0 -translate-y-1/2 md:mr-0',
+      )}
+      onClick={() => (multiple ? commitMulti([]) : commitSingle(null))}
+    >
+      <X aria-hidden />
+    </button>
+  ) : undefined
+
   const trigger = (
     <button
       ref={ref}
@@ -222,6 +245,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
       aria-haspopup="listbox"
       aria-invalid={invalid || undefined}
       aria-describedby={props['aria-describedby']}
+      aria-label={id ? undefined : label}
       disabled={disabled}
       // Teclas no gatilho não chegam à lista (Enter não seleciona opção com o painel fechado).
       onKeyDown={(e) => e.stopPropagation()}
@@ -232,30 +256,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
       )}
     >
       <span className="flex min-w-0 flex-1 items-center">{display}</span>
-      {clearable && hasValue && !disabled && (
-        <span
-          role="button"
-          tabIndex={0}
-          aria-label="Limpar seleção"
-          className={controlAdornmentButton}
-          onPointerDown={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            if (multiple) commitMulti([])
-            else commitSingle(null)
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault()
-              e.stopPropagation()
-              if (multiple) commitMulti([])
-              else commitSingle(null)
-            }
-          }}
-        >
-          <X aria-hidden />
-        </span>
-      )}
+      {showClear && <span aria-hidden className={cn(controlAdornmentSpace, '-mr-1')} />}
       <ChevronDown
         aria-hidden
         className={cn(
@@ -306,7 +307,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
       )}
       {showCreate && (
         <Command.Item value={`__criar__${query}`} onSelect={create} className={itemClass}>
-          <Plus className="size-icon-sm shrink-0 text-primary" aria-hidden />
+          <Plus className="size-icon-sm shrink-0 text-primary-text" aria-hidden />
           <span className="truncate">
             Criar <strong className="font-semibold">“{query.trim()}”</strong>
           </span>
@@ -350,7 +351,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
                   )}
                 </span>
                 {!multiple && checked && (
-                  <Check className="size-icon-sm shrink-0 text-primary" aria-hidden />
+                  <Check className="size-icon-sm shrink-0 text-primary-text" aria-hidden />
                 )}
               </Command.Item>
             )
@@ -406,6 +407,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
         open={open}
         onOpenChange={onOpenChange}
         trigger={trigger}
+        adornment={clear}
         title={label ?? placeholder}
         header={search}
         footer={footer}

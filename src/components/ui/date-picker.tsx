@@ -8,7 +8,12 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/field'
 import { useBreakpoint } from '@/hooks/use-breakpoint'
 import { cn } from '@/lib/cn'
-import { controlAdornmentButton, controlFrame, type ControlSize } from '@/lib/control'
+import {
+  controlAdornmentButton,
+  controlAdornmentSpace,
+  controlFrame,
+  type ControlSize,
+} from '@/lib/control'
 import { PickerPanel } from './picker-panel'
 
 export type { DateRange }
@@ -160,7 +165,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
       range_end: '[&>button]:bg-primary [&>button]:text-primary-foreground',
       range_middle:
         '[&>button]:rounded-none [&>button]:bg-primary-soft [&>button]:text-primary-soft-foreground [&>button]:hover:bg-primary-soft',
-      today: '[&>button]:font-semibold [&>button]:text-primary',
+      today: '[&>button]:font-semibold [&>button]:text-primary-text',
       outside: 'opacity-40',
       disabled: 'opacity-30',
     }
@@ -196,6 +201,21 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
       />
     )
 
+    const showClear = clearable && !!text && !disabled
+    const clear = showClear ? (
+      <button
+        type="button"
+        aria-label="Limpar data"
+        className={cn(
+          controlAdornmentButton,
+          'absolute top-1/2 right-1 mr-0 -translate-y-1/2 md:right-2 md:mr-0',
+        )}
+        onClick={() => commit(null)}
+      >
+        <X aria-hidden />
+      </button>
+    ) : undefined
+
     const trigger = (
       <button
         ref={ref}
@@ -217,28 +237,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
         >
           {text ?? placeholder}
         </span>
-        {clearable && text && !disabled && (
-          <span
-            role="button"
-            tabIndex={0}
-            aria-label="Limpar data"
-            className={controlAdornmentButton}
-            onPointerDown={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              commit(null)
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                e.stopPropagation()
-                commit(null)
-              }
-            }}
-          >
-            <X aria-hidden />
-          </span>
-        )}
+        {showClear && <span aria-hidden className={cn(controlAdornmentSpace, '-mr-2 md:-mr-1')} />}
       </button>
     )
 
@@ -286,6 +285,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
         open={open}
         onOpenChange={onOpenChange}
         trigger={trigger}
+        adornment={clear}
         title={label ?? placeholder}
         footer={footer}
         width="auto"

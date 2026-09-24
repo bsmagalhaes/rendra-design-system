@@ -31,4 +31,10 @@ export const controlInput =
 
 /** Botão pequeno dentro da moldura (limpar, mostrar senha). */
 export const controlAdornmentButton =
-  '-mr-2 flex size-control-sm shrink-0 cursor-pointer items-center justify-center rounded-item text-muted-foreground transition-colors hover:bg-accent hover:text-foreground md:-mr-1 md:size-8 [&_svg]:size-icon-sm'
+  '-mr-2 flex size-control-sm shrink-0 cursor-pointer items-center justify-center rounded-item text-muted-foreground transition-colors outline-none hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring md:-mr-1 md:size-8 [&_svg]:size-icon-sm'
+
+/**
+ * Reserva, dentro de um gatilho, o espaço do botão sobreposto (limpar do Select e do
+ * DatePicker), para o texto não passar por baixo dele.
+ */
+export const controlAdornmentSpace = 'size-control-sm shrink-0 md:size-8'

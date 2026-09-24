@@ -2,7 +2,9 @@
 
 **Design system completo e boilerplate React para sistemas administrativos: tokens, três templates, componentes, AppShell, telas prontas, Storybook e testes de layout.** Feito para ser o ponto de partida de todos os projetos: layouts previsíveis, espaçamento equilibrado e funcionamento completo no celular. Para aplicar a outro sistema, você troca cores, fonte e ícones da marca, e nenhum componente muda.
 
-![React 19](https://img.shields.io/badge/React-19-149eca) ![TypeScript 5.9](https://img.shields.io/badge/TypeScript-5.9-3178c6) ![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8) ![Vite 8](https://img.shields.io/badge/Vite-8-646cff) ![Storybook 10](https://img.shields.io/badge/Storybook-10-ff4785) ![Playwright](https://img.shields.io/badge/Playwright-225_testes-2ead33)
+![React 19](https://img.shields.io/badge/React-19-149eca) ![TypeScript 5.9](https://img.shields.io/badge/TypeScript-5.9-3178c6) ![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8) ![Vite 8](https://img.shields.io/badge/Vite-8-646cff) ![Storybook 10](https://img.shields.io/badge/Storybook-10-ff4785) ![Playwright](https://img.shields.io/badge/Playwright-570_testes-2ead33) [![CI](https://github.com/bsmagalhaes/rendra-design-system/actions/workflows/ci.yml/badge.svg)](https://github.com/bsmagalhaes/rendra-design-system/actions/workflows/ci.yml)
+
+**Veja funcionando, sem instalar nada:** [demo do app](https://bsmagalhaes.github.io/rendra-design-system/) · [Storybook](https://bsmagalhaes.github.io/rendra-design-system/storybook/) · [vitrine de componentes](https://bsmagalhaes.github.io/rendra-design-system/componentes). No demo, o menu do avatar troca modelo, paleta, modo e layout ao vivo.
 
 ---
 
@@ -16,7 +18,8 @@ O Rendra reúne, num único repositório, tudo o que uma equipe precisa para con
 - um **AppShell** configurável por props (menu lateral ou superior, sidebar recolhida, submenu em segunda barra, mega menu);
 - **telas base** prontas (autenticação completa, painel, listagem, detalhe, formulário longo, wizard, configurações);
 - uma **vitrine** navegável e um **Storybook** com mais de 100 stories;
-- **regras escritas e verificadas por máquina**: um verificador de regras de design, ESLint com acessibilidade e 225 testes de layout com Playwright.
+- **regras escritas e verificadas por máquina**: verificador de regras de design, ESLint com acessibilidade, testes unitários, e testes no navegador de layout, acessibilidade (axe-core) e regressão visual, rodando no CI a cada Pull Request;
+- um **registry do shadcn**: projetos criados a partir do Rendra recebem as melhorias dos componentes com um comando.
 
 Duas regras mestras guiam tudo:
 
@@ -27,11 +30,13 @@ Duas regras mestras guiam tudo:
 
 ## Galeria
 
+> **Quer ampliar sem sair da tela?** Abra a [galeria do demo](https://bsmagalhaes.github.io/rendra-design-system/galeria): cada imagem abre em popup, com setas para passar e Esc para fechar. Aqui no GitHub, clicar numa imagem abre a imagem sozinha (o GitHub não permite popup no README), por isso as telas já aparecem em tamanho de leitura e os grupos extras abrem na própria página.
+
 ### Os três templates
 
 Cada template tem formato, fonte, símbolo e paleta próprios.
 
-**Rendra Safira**: quadrado, como uma pedra lapidada. Azul #0C78F4, verde #98D10A e fonte Poppins.
+**Rendra Safira**: quadrado, como uma pedra lapidada. Azul #0B6FE0, verde #98D10A e fonte Poppins.
 
 | Painel                                           | Listagem de clientes                                 |
 | ------------------------------------------------ | ---------------------------------------------------- |
@@ -55,7 +60,8 @@ Cada template tem formato, fonte, símbolo e paleta próprios.
 | -------------------------------------------------- | ------------------------------------------------------ |
 | ![Ardósia: painel](docs/images/ardosia-painel.png) | ![Ardósia: clientes](docs/images/ardosia-clientes.png) |
 
-### Modelo × paleta de cores
+<details>
+<summary><strong>Modelo × paleta de cores: as 12 combinações</strong> (clique para abrir aqui mesmo)</summary>
 
 O modelo (formato, fonte e símbolo) e a paleta (cores, degradês e sidebar) são camadas independentes: qualquer modelo aceita qualquer paleta. São 12 combinações (3 modelos × 4 paletas), todas na mesma tela de detalhe do cliente.
 
@@ -65,7 +71,10 @@ O modelo (formato, fonte e símbolo) e a paleta (cores, degradês e sidebar) sã
 | **Equilíbrio** (meio-termo) | ![](docs/images/matriz-equilibrio-safira.png) | ![](docs/images/matriz-equilibrio-equilibrio.png) | ![](docs/images/matriz-equilibrio-aurora.png) | ![](docs/images/matriz-equilibrio-ardosia.png) |
 | **Aurora** (arredondado)    | ![](docs/images/matriz-aurora-safira.png)     | ![](docs/images/matriz-aurora-equilibrio.png)     | ![](docs/images/matriz-aurora-aurora.png)     | ![](docs/images/matriz-aurora-ardosia.png)     |
 
-### No celular
+</details>
+
+<details>
+<summary><strong>No celular</strong> (clique para abrir aqui mesmo)</summary>
 
 Mesmo componente, mesma API: no celular a tabela vira cards, a sidebar vira gaveta e a navegação ganha uma barra inferior.
 
@@ -73,7 +82,10 @@ Mesmo componente, mesma API: no celular a tabela vira cards, a sidebar vira gave
 | ---------------------------------- | -------------------------------------- | ---------------------------------- | --------------------------------------------- |
 | ![](docs/images/safira-mobile.png) | ![](docs/images/equilibrio-mobile.png) | ![](docs/images/aurora-mobile.png) | ![](docs/images/equilibrio-mobile-tabela.png) |
 
-### Modo escuro e outras telas
+</details>
+
+<details>
+<summary><strong>Modo escuro e outras telas</strong> (clique para abrir aqui mesmo)</summary>
 
 | Modo escuro (Safira)               | Modo escuro (Equilíbrio)               |
 | ---------------------------------- | -------------------------------------- |
@@ -86,6 +98,8 @@ Mesmo componente, mesma API: no celular a tabela vira cards, a sidebar vira gave
 | Login (Aurora)                    |
 | --------------------------------- |
 | ![](docs/images/aurora-login.png) |
+
+</details>
 
 > As imagens são geradas a partir do app real com `npm run docs:images`.
 
@@ -138,14 +152,18 @@ Login, esqueci a senha, verificação em duas etapas (2FA), nova senha, cadastro
 
 - **Vitrine** na rota `/componentes`: cada componente com variantes, tamanhos e estados (padrão, hover, foco, ativo, desabilitado, carregando, erro) e as regras de composição.
 - **Storybook 10** com mais de 100 stories: viewport de celular por padrão, com tablet e desktop, e alternância de template, paleta e modo claro/escuro na barra.
-- **Testes de layout com Playwright**: 15 rotas × 5 larguras (360, 390, 768, 1280 e 1920) × 3 templates = 225 testes. Falham se houver rolagem horizontal, elemento maior que a tela, toque menor que 44px no celular ou erro de JavaScript, e geram capturas de todas as telas.
+- **Testes de layout com Playwright** (`npm run test:layout`): 15 rotas × 5 larguras (360, 390, 768, 1280 e 1920) × 3 templates no modo claro, mais 360 e 1280 no escuro, somando 315 testes. Falham se houver rolagem horizontal, elemento maior que a tela, toque menor que 44px no celular ou erro de JavaScript, e geram capturas de todas as telas.
+- **Testes de acessibilidade com axe-core** (`npm run test:a11y`): 135 testes, todas as rotas nos três templates, claro e escuro, mais a paleta Ardósia e o celular. Falham em qualquer violação WCAG 2.1 A ou AA, inclusive contraste.
+- **Regressão visual** (`npm run test:visual`): 120 capturas comparadas com a referência aprovada. Pegam cor que mudou, espaçamento que quebrou e ícone que sumiu. As referências são geradas no Linux do CI; depois de uma mudança visual intencional, rode o workflow "Atualizar referências visuais" no branch do Pull Request.
+- **Testes unitários com Vitest** (`npm test`): validadores de CPF, CNPJ e data, esquemas Zod, máscaras e navegação.
+- **CI no GitHub Actions**: todo Pull Request passa por tipos, lint, formatação, regras, unitários, build, Storybook e os três testes no navegador. A `main` só aceita merge com tudo verde. O Dependabot abre PR semanal quando uma dependência ganha versão nova.
 - **Verificador de regras** (`npm run check:rules`): barra cor fixa, valor arbitrário, degrau fora da escala, estilo inline, fonte fixa, `100vh` e arquivos duplicados ou mobile.
 
 ---
 
 ## Stack
 
-React 19, TypeScript 5.9 (estrito), Vite 8, Tailwind CSS 4 (tema via `@theme`), shadcn/ui (copiado para o projeto), Radix UI, class-variance-authority, tailwind-merge com clsx, Lucide, React Router 8, TanStack Table 8, cmdk, Sonner, React Hook Form, Zod 4, IMask, React Day Picker 10, date-fns 4, Recharts 3, Storybook 10, Playwright, ESLint 9 (TypeScript, React Hooks e jsx-a11y) e Prettier com prettier-plugin-tailwindcss. Somente bibliotecas gratuitas e de código aberto.
+React 19, TypeScript 5.9 (estrito), Vite 8, Tailwind CSS 4 (tema via `@theme`), shadcn/ui (copiado para o projeto), Radix UI, class-variance-authority, tailwind-merge com clsx, Lucide, React Router 8, TanStack Table 8, cmdk, Sonner, React Hook Form, Zod 4, IMask, React Day Picker 10, date-fns 4, Recharts 3, Storybook 10, Playwright com axe-core, Vitest, ESLint 9 (TypeScript, React Hooks e jsx-a11y) e Prettier com prettier-plugin-tailwindcss. Somente bibliotecas gratuitas e de código aberto.
 
 ---
 
@@ -182,7 +200,7 @@ A versão completa do prompt de migração, com todas as regras, está em [docs/
 
 ## Como rodar
 
-Pré-requisito: Node.js 20 ou mais recente.
+Pré-requisito: Node.js 22 ou mais recente (o CI usa o 24).
 
 ```bash
 npm install
@@ -191,18 +209,22 @@ npm run dev                       # app em http://localhost:5173
 npm run storybook                 # Storybook em http://localhost:6006
 ```
 
-| Comando                      | O que faz                                            |
-| ---------------------------- | ---------------------------------------------------- |
-| `npm run dev`                | Sobe o app com recarga automática                    |
-| `npm run build`              | Checagem de tipos e build de produção                |
-| `npm run typecheck`          | Checagem de tipos                                    |
-| `npm run lint`               | ESLint com TypeScript, React Hooks e acessibilidade  |
-| `npm run check:rules`        | Verificador de regras de design                      |
-| `npm run test:layout`        | Testes de layout (capturas em `screenshots/`)        |
-| `npm run test:layout:report` | Relatório dos testes                                 |
-| `npm run storybook`          | Storybook                                            |
-| `npm run build-storybook`    | Build estático do Storybook                          |
-| `npm run docs:images`        | Regenera as imagens deste README (com o app rodando) |
+| Comando                      | O que faz                                             |
+| ---------------------------- | ----------------------------------------------------- |
+| `npm run dev`                | Sobe o app com recarga automática                     |
+| `npm run build`              | Checagem de tipos e build de produção                 |
+| `npm run typecheck`          | Checagem de tipos                                     |
+| `npm run lint`               | ESLint com TypeScript, React Hooks e acessibilidade   |
+| `npm run check:rules`        | Verificador de regras de design                       |
+| `npm test`                   | Testes unitários (Vitest)                             |
+| `npm run test:layout`        | Testes de layout (capturas em `screenshots/`)         |
+| `npm run test:a11y`          | Testes de acessibilidade (axe-core)                   |
+| `npm run test:visual`        | Regressão visual (referências do Linux, ver acima)    |
+| `npm run test:layout:report` | Relatório dos testes                                  |
+| `npm run storybook`          | Storybook                                             |
+| `npm run build-storybook`    | Build estático do Storybook                           |
+| `npm run registry:build`     | Gera o registry do shadcn (`registry.json`, `dist/r`) |
+| `npm run docs:images`        | Regenera as imagens deste README (com o app rodando)  |
 
 No app, o menu do avatar troca **modelo**, **paleta**, **tema** e **layout**. As mesmas opções estão em Configurações.
 
@@ -212,7 +234,7 @@ No app, o menu do avatar troca **modelo**, **paleta**, **tema** e **layout**. As
 
 ```text
 src/
-  styles/        theme.css (marca) e globals.css (tokens estruturais)
+  styles/        theme.css (marca), themes.css (temas carregados) e globals.css (tokens estruturais)
   brand/         brand.config.ts, assets (logotipos, símbolo, fontes) e examples (Equilíbrio, Aurora)
   components/
     ui/          componentes, um por finalidade
@@ -242,6 +264,22 @@ O passo a passo completo, inclusive como adotar o Equilíbrio ou o Aurora como m
 
 ---
 
+## Receber atualizações nos seus projetos
+
+Um projeto criado a partir do Rendra não fica parado no tempo. Os componentes são publicados como um **registry do shadcn/ui** junto com o demo. Para trazer a versão mais nova de um componente, com as dependências dele:
+
+```bash
+npx shadcn@latest add https://bsmagalhaes.github.io/rendra-design-system/r/select.json
+# ou, com o components.json do boilerplate:
+npx shadcn@latest add @rendra/select
+```
+
+Itens disponíveis: cada componente de `src/components/ui` pelo nome do arquivo (`button`, `table`, `select`...), mais `core` (funções, hooks e provedor de marca), `tokens` (`globals.css`), `layout` e `app-shell`. A lista completa está em [`registry.json`](registry.json).
+
+O registry nunca traz marca nem configuração: `theme.css`, `themes.css`, `brand.config.ts`, `src/brand/index.ts`, os assets e `src/config` são do seu projeto e não são tocados. Arquivos iguais são pulados, e o shadcn pergunta antes de sobrescrever um arquivo que você alterou. Quando uma versão pedir um token de cor novo no tema, o [CHANGELOG](CHANGELOG.md) diz qual e com que valor.
+
+---
+
 ## Documentação
 
 - [DESIGN_RULES.md](DESIGN_RULES.md): todas as regras de interface, o que é proibido e o checklist de revisão. **Leitura obrigatória antes de alterar qualquer interface.**
@@ -250,6 +288,8 @@ O passo a passo completo, inclusive como adotar o Equilíbrio ou o Aurora como m
 - [AGENTS.md](AGENTS.md): fluxo de início para qualquer IA (tipo de trabalho, briefing e etapas).
 - [docs/BRIEFING_MODELO.md](docs/BRIEFING_MODELO.md): roteiro do briefing.
 - [CLAUDE.md](CLAUDE.md): instruções para o Claude Code.
+- [CHANGELOG.md](CHANGELOG.md): o que mudou em cada versão e o que fazer para atualizar.
+- [CONTRIBUTING.md](CONTRIBUTING.md): como propor mudanças.
 
 ---
 

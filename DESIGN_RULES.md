@@ -57,7 +57,7 @@ São três modelos, cada um com formato, fonte e símbolo fixos:
 
 | Modelo                | Formato                  | Paleta padrão                                   |
 | --------------------- | ------------------------ | ----------------------------------------------- |
-| Rendra Safira (ativo) | `square`, quadrado       | azul #0C78F4, verde #98D10A, destrutivo #B72C05 |
+| Rendra Safira (ativo) | `square`, quadrado       | azul #0B6FE0, verde #98D10A, destrutivo #B72C05 |
 | Rendra Equilíbrio     | `rounded`, meio-termo    | violeta + ciano                                 |
 | Rendra Aurora         | `pill`, 100% arredondado | verde-petróleo + laranja                        |
 
@@ -66,6 +66,7 @@ São três modelos, cada um com formato, fonte e símbolo fixos:
 - **O logotipo acompanha o tema.** Use sempre `<BrandLogo on="sidebar" | "surface" | "brand" />`: ele monta o selo com o símbolo do modelo e as cores da paleta ativa. Só use os SVGs de logo como estão (`logoMode: 'image'` no `brand.config.ts`) quando a arte oficial não puder ser recolorida.
 - **A paleta pode ser trocada.** Qualquer modelo pode usar a paleta de outro: no `<html>`, `data-brand` define o modelo e `data-palette` define as cores.
 - Todo template define `primary`, `primary-hover`, `secondary`, `secondary-hover`, os `*-foreground` correspondentes e os `*-hover-foreground`. A cor de hover pode ser outra cor da marca: o texto sobre ela usa o `*-hover-foreground`.
+- **Primária como preenchimento e como texto são tokens diferentes.** `bg-primary` é o preenchimento (botão, selo). Para link, ícone ou destaque em texto sobre o fundo, use `text-primary-text`, nunca `text-primary`: no modo escuro a primária costuma ficar escura demais para texto, e o `--primary-text` é o tom que passa AA. Todo tema define `--primary-text` no claro e no escuro, e a página `/tokens` mostra o contraste dele.
 
 ## 4. Tokens
 

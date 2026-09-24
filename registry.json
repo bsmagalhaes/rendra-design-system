@@ -1,0 +1,1051 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "rendra",
+  "homepage": "https://github.com/bsmagalhaes/rendra-design-system",
+  "items": [
+    {
+      "name": "core",
+      "type": "registry:item",
+      "title": "Núcleo",
+      "description": "Funções e hooks usados pelos componentes: cn, moldura dos campos, máscaras, validadores, formato, contraste, useBreakpoint e o provedor de marca (sem a marca em si).",
+      "dependencies": [
+        "class-variance-authority@^0.7.1",
+        "clsx@^2.1.1",
+        "imask@^7.6.1",
+        "tailwind-merge@^3.7.0",
+        "zod@^4.6.5"
+      ],
+      "registryDependencies": [],
+      "files": [
+        { "path": "src/lib/cn.ts", "type": "registry:file", "target": "src/lib/cn.ts" },
+        { "path": "src/lib/contrast.ts", "type": "registry:file", "target": "src/lib/contrast.ts" },
+        { "path": "src/lib/control.ts", "type": "registry:file", "target": "src/lib/control.ts" },
+        { "path": "src/lib/masks.ts", "type": "registry:file", "target": "src/lib/masks.ts" },
+        { "path": "src/lib/shape.ts", "type": "registry:file", "target": "src/lib/shape.ts" },
+        {
+          "path": "src/lib/validators.ts",
+          "type": "registry:file",
+          "target": "src/lib/validators.ts"
+        },
+        {
+          "path": "src/hooks/use-breakpoint.ts",
+          "type": "registry:file",
+          "target": "src/hooks/use-breakpoint.ts"
+        },
+        { "path": "src/brand/types.ts", "type": "registry:file", "target": "src/brand/types.ts" },
+        {
+          "path": "src/brand/brand-context.ts",
+          "type": "registry:file",
+          "target": "src/brand/brand-context.ts"
+        },
+        {
+          "path": "src/brand/brand-provider.tsx",
+          "type": "registry:file",
+          "target": "src/brand/brand-provider.tsx"
+        },
+        {
+          "path": "src/brand/use-brand.ts",
+          "type": "registry:file",
+          "target": "src/brand/use-brand.ts"
+        }
+      ]
+    },
+    {
+      "name": "tokens",
+      "type": "registry:item",
+      "title": "Tokens estruturais",
+      "description": "globals.css: escala de espaço, tipografia, raio por papel, tokens nomeados e utilitários. Não contém marca: as cores vêm de themes.css, que é do projeto.",
+      "dependencies": ["tailwindcss@^4.3.3", "tw-animate-css@^1.4.0"],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/styles/globals.css",
+          "type": "registry:file",
+          "target": "src/styles/globals.css"
+        }
+      ]
+    },
+    {
+      "name": "layout",
+      "type": "registry:item",
+      "title": "Primitivas de layout",
+      "description": "Container, Stack, Inline, Grid, Section e PageHeader.",
+      "dependencies": ["radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/breadcrumb.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/layout/index.ts",
+          "type": "registry:file",
+          "target": "src/components/layout/index.ts"
+        },
+        {
+          "path": "src/components/layout/page-header.tsx",
+          "type": "registry:file",
+          "target": "src/components/layout/page-header.tsx"
+        },
+        {
+          "path": "src/components/layout/primitives.tsx",
+          "type": "registry:file",
+          "target": "src/components/layout/primitives.tsx"
+        },
+        {
+          "path": "src/components/layout/tokens.ts",
+          "type": "registry:file",
+          "target": "src/components/layout/tokens.ts"
+        }
+      ]
+    },
+    {
+      "name": "app-shell",
+      "type": "registry:item",
+      "title": "AppShell",
+      "description": "Casca da aplicação: sidebar, header, menu superior, mega menu, busca, notificações e barra inferior. Lê o menu e o layout de src/config, que é do projeto.",
+      "dependencies": [
+        "cmdk@^1.1.1",
+        "lucide-react@^1.47.0",
+        "radix-ui@^1.6.7",
+        "react-router@^8.4.0"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/avatar.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-logo.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/breadcrumb.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/popover.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tooltip.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/app-shell/app-shell.tsx",
+          "type": "registry:file",
+          "target": "src/components/app-shell/app-shell.tsx"
+        },
+        {
+          "path": "src/components/app-shell/command-search.tsx",
+          "type": "registry:file",
+          "target": "src/components/app-shell/command-search.tsx"
+        },
+        {
+          "path": "src/components/app-shell/header.tsx",
+          "type": "registry:file",
+          "target": "src/components/app-shell/header.tsx"
+        },
+        {
+          "path": "src/components/app-shell/mega-menu.tsx",
+          "type": "registry:file",
+          "target": "src/components/app-shell/mega-menu.tsx"
+        },
+        {
+          "path": "src/components/app-shell/notifications.tsx",
+          "type": "registry:file",
+          "target": "src/components/app-shell/notifications.tsx"
+        },
+        {
+          "path": "src/components/app-shell/shell-context.ts",
+          "type": "registry:file",
+          "target": "src/components/app-shell/shell-context.ts"
+        },
+        {
+          "path": "src/components/app-shell/sidebar.tsx",
+          "type": "registry:file",
+          "target": "src/components/app-shell/sidebar.tsx"
+        }
+      ]
+    },
+    {
+      "name": "accordion",
+      "type": "registry:item",
+      "title": "accordion",
+      "description": "Componente accordion do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0", "radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/accordion.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/accordion.tsx"
+        }
+      ]
+    },
+    {
+      "name": "action-bar",
+      "type": "registry:item",
+      "title": "action-bar",
+      "description": "Componente action-bar do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/action-bar.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/action-bar.tsx"
+        }
+      ]
+    },
+    {
+      "name": "alert",
+      "type": "registry:item",
+      "title": "alert",
+      "description": "Componente alert do Rendra Design System.",
+      "dependencies": ["class-variance-authority@^0.7.1", "lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/alert.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/alert.tsx"
+        }
+      ]
+    },
+    {
+      "name": "avatar",
+      "type": "registry:item",
+      "title": "avatar",
+      "description": "Componente avatar do Rendra Design System.",
+      "dependencies": ["class-variance-authority@^0.7.1", "radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/avatar.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/avatar.tsx"
+        }
+      ]
+    },
+    {
+      "name": "badge",
+      "type": "registry:item",
+      "title": "badge",
+      "description": "Componente badge do Rendra Design System.",
+      "dependencies": ["class-variance-authority@^0.7.1"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/badge.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/badge.tsx"
+        }
+      ]
+    },
+    {
+      "name": "brand-feedback-icon",
+      "type": "registry:item",
+      "title": "brand-feedback-icon",
+      "description": "Componente brand-feedback-icon do Rendra Design System.",
+      "dependencies": ["class-variance-authority@^0.7.1"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/brand-feedback-icon.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/brand-feedback-icon.tsx"
+        }
+      ]
+    },
+    {
+      "name": "brand-logo",
+      "type": "registry:item",
+      "title": "brand-logo",
+      "description": "Componente brand-logo do Rendra Design System.",
+      "dependencies": ["class-variance-authority@^0.7.1"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/brand-logo.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/brand-logo.tsx"
+        }
+      ]
+    },
+    {
+      "name": "breadcrumb",
+      "type": "registry:item",
+      "title": "breadcrumb",
+      "description": "Componente breadcrumb do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0", "react-router@^8.4.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/breadcrumb.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/breadcrumb.tsx"
+        }
+      ]
+    },
+    {
+      "name": "button-group",
+      "type": "registry:item",
+      "title": "button-group",
+      "description": "Componente button-group do Rendra Design System.",
+      "dependencies": [],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/button-group.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/button-group.tsx"
+        }
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:item",
+      "title": "button",
+      "description": "Componente button do Rendra Design System.",
+      "dependencies": [
+        "class-variance-authority@^0.7.1",
+        "lucide-react@^1.47.0",
+        "radix-ui@^1.6.7"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/button.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "card",
+      "type": "registry:item",
+      "title": "card",
+      "description": "Componente card do Rendra Design System.",
+      "dependencies": [],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/card.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "chart",
+      "type": "registry:item",
+      "title": "chart",
+      "description": "Componente chart do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0", "recharts@^3.10.1"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/chart.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:item",
+      "title": "checkbox",
+      "description": "Componente checkbox do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0", "radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/checkbox.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/checkbox.tsx"
+        }
+      ]
+    },
+    {
+      "name": "data-toolbar",
+      "type": "registry:item",
+      "title": "data-toolbar",
+      "description": "Componente data-toolbar do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/action-bar.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/drawer.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/popover.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/switch.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/data-toolbar.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/data-toolbar.tsx"
+        }
+      ]
+    },
+    {
+      "name": "date-picker",
+      "type": "registry:item",
+      "title": "date-picker",
+      "description": "Componente date-picker do Rendra Design System.",
+      "dependencies": ["date-fns@^4.4.0", "lucide-react@^1.47.0", "react-day-picker@^10.0.1"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/field.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/picker-panel.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/date-picker.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/date-picker.tsx"
+        }
+      ]
+    },
+    {
+      "name": "drawer",
+      "type": "registry:item",
+      "title": "drawer",
+      "description": "Componente drawer do Rendra Design System.",
+      "dependencies": ["radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/modal.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/overlay-shell.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/drawer.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/drawer.tsx"
+        }
+      ]
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:item",
+      "title": "dropdown-menu",
+      "description": "Componente dropdown-menu do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0", "radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/dropdown-menu.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/dropdown-menu.tsx"
+        }
+      ]
+    },
+    {
+      "name": "empty-state",
+      "type": "registry:item",
+      "title": "empty-state",
+      "description": "Componente empty-state do Rendra Design System.",
+      "dependencies": [],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/empty-state.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/empty-state.tsx"
+        }
+      ]
+    },
+    {
+      "name": "error-page",
+      "type": "registry:item",
+      "title": "error-page",
+      "description": "Componente error-page do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0", "react-router@^8.4.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/error-page.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/error-page.tsx"
+        }
+      ]
+    },
+    {
+      "name": "field",
+      "type": "registry:item",
+      "title": "field",
+      "description": "Componente field do Rendra Design System.",
+      "dependencies": ["radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/field.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/field.tsx"
+        }
+      ]
+    },
+    {
+      "name": "form",
+      "type": "registry:item",
+      "title": "form",
+      "description": "Componente form do Rendra Design System.",
+      "dependencies": ["react-hook-form@^7.88.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/card.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/field.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/form.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "image-viewer",
+      "type": "registry:item",
+      "title": "image-viewer",
+      "description": "Componente image-viewer do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0", "radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/image-viewer.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/image-viewer.tsx"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:item",
+      "title": "input",
+      "description": "Componente input do Rendra Design System.",
+      "dependencies": ["imask@^7.6.1", "lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/input.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/input.tsx"
+        }
+      ]
+    },
+    {
+      "name": "list",
+      "type": "registry:item",
+      "title": "list",
+      "description": "Componente list do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0", "react-router@^8.4.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/list.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/list.tsx"
+        }
+      ]
+    },
+    {
+      "name": "modal",
+      "type": "registry:item",
+      "title": "modal",
+      "description": "Componente modal do Rendra Design System.",
+      "dependencies": ["radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/action-bar.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/overlay-shell.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/modal.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/modal.tsx"
+        }
+      ]
+    },
+    {
+      "name": "otp-input",
+      "type": "registry:item",
+      "title": "otp-input",
+      "description": "Componente otp-input do Rendra Design System.",
+      "dependencies": [],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/otp-input.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/otp-input.tsx"
+        }
+      ]
+    },
+    {
+      "name": "overlay-shell",
+      "type": "registry:item",
+      "title": "overlay-shell",
+      "description": "Componente overlay-shell do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0", "radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/overlay-shell.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/overlay-shell.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pagination",
+      "type": "registry:item",
+      "title": "pagination",
+      "description": "Componente pagination do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/select.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/pagination.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/pagination.tsx"
+        }
+      ]
+    },
+    {
+      "name": "picker-panel",
+      "type": "registry:item",
+      "title": "picker-panel",
+      "description": "Componente picker-panel do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0", "radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/picker-panel.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/picker-panel.tsx"
+        }
+      ]
+    },
+    {
+      "name": "popover",
+      "type": "registry:item",
+      "title": "popover",
+      "description": "Componente popover do Rendra Design System.",
+      "dependencies": ["radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/popover.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/popover.tsx"
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "type": "registry:item",
+      "title": "progress",
+      "description": "Componente progress do Rendra Design System.",
+      "dependencies": ["class-variance-authority@^0.7.1", "radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/progress.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/progress.tsx"
+        }
+      ]
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:item",
+      "title": "radio-group",
+      "description": "Componente radio-group do Rendra Design System.",
+      "dependencies": ["radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/radio-group.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/radio-group.tsx"
+        }
+      ]
+    },
+    {
+      "name": "select",
+      "type": "registry:item",
+      "title": "select",
+      "description": "Componente select do Rendra Design System.",
+      "dependencies": ["cmdk@^1.1.1", "lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/picker-panel.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/select.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/select.tsx"
+        }
+      ]
+    },
+    {
+      "name": "separator",
+      "type": "registry:item",
+      "title": "separator",
+      "description": "Componente separator do Rendra Design System.",
+      "dependencies": [],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/separator.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/separator.tsx"
+        }
+      ]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:item",
+      "title": "skeleton",
+      "description": "Componente skeleton do Rendra Design System.",
+      "dependencies": [],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/skeleton.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/skeleton.tsx"
+        }
+      ]
+    },
+    {
+      "name": "slider",
+      "type": "registry:item",
+      "title": "slider",
+      "description": "Componente slider do Rendra Design System.",
+      "dependencies": ["radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/slider.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/slider.tsx"
+        }
+      ]
+    },
+    {
+      "name": "stat-card",
+      "type": "registry:item",
+      "title": "stat-card",
+      "description": "Componente stat-card do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/card.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/skeleton.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/stat-card.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/stat-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "switch",
+      "type": "registry:item",
+      "title": "switch",
+      "description": "Componente switch do Rendra Design System.",
+      "dependencies": ["radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/switch.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/switch.tsx"
+        }
+      ]
+    },
+    {
+      "name": "table",
+      "type": "registry:item",
+      "title": "table",
+      "description": "Componente table do Rendra Design System.",
+      "dependencies": [
+        "@tanstack/react-table@^8.21.3",
+        "date-fns@^4.4.0",
+        "lucide-react@^1.47.0",
+        "radix-ui@^1.6.7"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/badge.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/card.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/checkbox.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/data-toolbar.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/empty-state.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/pagination.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/select.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/skeleton.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tooltip.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/table.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/table.tsx"
+        }
+      ]
+    },
+    {
+      "name": "tabs",
+      "type": "registry:item",
+      "title": "tabs",
+      "description": "Componente tabs do Rendra Design System.",
+      "dependencies": ["radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/select.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/tabs.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/tabs.tsx"
+        }
+      ]
+    },
+    {
+      "name": "textarea",
+      "type": "registry:item",
+      "title": "textarea",
+      "description": "Componente textarea do Rendra Design System.",
+      "dependencies": [],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/textarea.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/textarea.tsx"
+        }
+      ]
+    },
+    {
+      "name": "timeline",
+      "type": "registry:item",
+      "title": "timeline",
+      "description": "Componente timeline do Rendra Design System.",
+      "dependencies": [],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/timeline.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/timeline.tsx"
+        }
+      ]
+    },
+    {
+      "name": "toast",
+      "type": "registry:item",
+      "title": "toast",
+      "description": "Componente toast do Rendra Design System.",
+      "dependencies": ["sonner@^2.0.8"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/toast.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/toast.tsx"
+        }
+      ]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:item",
+      "title": "tooltip",
+      "description": "Componente tooltip do Rendra Design System.",
+      "dependencies": ["radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/tooltip.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/tooltip.tsx"
+        }
+      ]
+    },
+    {
+      "name": "upload",
+      "type": "registry:item",
+      "title": "upload",
+      "description": "Componente upload do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/progress.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/upload.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/upload.tsx"
+        }
+      ]
+    },
+    {
+      "name": "wizard",
+      "type": "registry:item",
+      "title": "wizard",
+      "description": "Componente wizard do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/action-bar.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/progress.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/wizard.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/wizard.tsx"
+        }
+      ]
+    }
+  ]
+}

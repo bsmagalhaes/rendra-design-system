@@ -15,7 +15,7 @@ Você vai aplicar neste projeto o design system e boilerplate Rendra, disponíve
 
 ANTES DE QUALQUER ALTERAÇÃO
 1. Leia no repositório de referência, nesta ordem: AGENTS.md, DESIGN_RULES.md, docs/COMO_APLICAR.md e docs/BRIEFING_MODELO.md. O DESIGN_RULES.md é obrigatório e vale mais do que qualquer hábito seu.
-2. Siga o fluxo de início do AGENTS.md para migração: conduza o briefing de docs/BRIEFING_MODELO.md (agrupado, no máximo duas rodadas, aceitando "não sei, sugira"), grave em docs/BRIEFING.md deste projeto e peça minha confirmação.
+2. Siga o fluxo de início do AGENTS.md para migração: conduza o briefing de docs/BRIEFING_MODELO.md como ele manda (blocos abertos agrupados; navegação, tema e cores em fluxo guiado, uma decisão por vez; aceitando "não sei, sugira"), grave em docs/BRIEFING.md deste projeto e peça minha confirmação.
 3. Analise este projeto: stack, versão do React e do Tailwind, bundler, estrutura de pastas, telas existentes, componentes de interface existentes e como a marca está aplicada hoje.
 4. Me apresente um plano curto: caminho escolhido (projeto novo ou existente, conforme docs/COMO_APLICAR.md), o que será copiado, o que será substituído, a lista de telas a migrar em ordem e os riscos. Espere minha aprovação.
 

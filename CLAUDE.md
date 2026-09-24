@@ -29,7 +29,10 @@ npm run storybook     # Storybook em http://localhost:6006
 npm run typecheck     # TypeScript
 npm run lint          # ESLint (TS, hooks, acessibilidade)
 npm run check:rules   # regras de design que o Tailwind não barra
-npm run test:layout   # Playwright: rotas x larguras x templates
+npm test              # unitários (Vitest)
+npm run test:layout   # Playwright: rotas x larguras x templates, claro e escuro
+npm run test:a11y     # acessibilidade (axe-core, WCAG 2.1 AA)
+npm run test:visual   # regressão visual (referências geradas no Linux do CI)
 npm run build         # build de produção
 ```
 
