@@ -12,6 +12,7 @@
         "class-variance-authority@^0.7.1",
         "clsx@^2.1.1",
         "imask@^7.6.1",
+        "react-router@^8.4.0",
         "tailwind-merge@^3.7.0",
         "zod@^4.6.5"
       ],
@@ -20,6 +21,7 @@
         { "path": "src/lib/cn.ts", "type": "registry:file", "target": "src/lib/cn.ts" },
         { "path": "src/lib/contrast.ts", "type": "registry:file", "target": "src/lib/contrast.ts" },
         { "path": "src/lib/control.ts", "type": "registry:file", "target": "src/lib/control.ts" },
+        { "path": "src/lib/lookup.ts", "type": "registry:file", "target": "src/lib/lookup.ts" },
         { "path": "src/lib/masks.ts", "type": "registry:file", "target": "src/lib/masks.ts" },
         { "path": "src/lib/shape.ts", "type": "registry:file", "target": "src/lib/shape.ts" },
         {
@@ -36,6 +38,16 @@
           "path": "src/hooks/use-debounced-value.ts",
           "type": "registry:file",
           "target": "src/hooks/use-debounced-value.ts"
+        },
+        {
+          "path": "src/hooks/use-fill-height.ts",
+          "type": "registry:file",
+          "target": "src/hooks/use-fill-height.ts"
+        },
+        {
+          "path": "src/hooks/use-route-meta.ts",
+          "type": "registry:file",
+          "target": "src/hooks/use-route-meta.ts"
         },
         { "path": "src/brand/types.ts", "type": "registry:file", "target": "src/brand/types.ts" },
         {
@@ -77,8 +89,10 @@
       "description": "Container, Stack, Inline, Grid, Section e PageHeader.",
       "dependencies": ["radix-ui@^1.6.7"],
       "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/app-shell.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/breadcrumb.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/info-hint.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
       ],
       "files": [
@@ -123,6 +137,7 @@
         "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/info-hint.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/popover.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tooltip.json"
@@ -190,6 +205,7 @@
       "description": "Componente action-bar do Rendra Design System.",
       "dependencies": ["lucide-react@^1.47.0"],
       "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/app-shell.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
@@ -382,6 +398,7 @@
       "dependencies": [],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/info-hint.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
       ],
       "files": [
@@ -408,6 +425,30 @@
           "path": "src/components/ui/chart.tsx",
           "type": "registry:file",
           "target": "src/components/ui/chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "chat",
+      "type": "registry:item",
+      "title": "chat",
+      "description": "Componente chat do Rendra Design System.",
+      "dependencies": ["date-fns@^4.4.0", "lucide-react@^1.47.0", "radix-ui@^1.6.7"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/avatar.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/badge.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/popover.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/chat.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/chat.tsx"
         }
       ]
     },
@@ -561,6 +602,7 @@
       "dependencies": ["radix-ui@^1.6.7"],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/layout.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
       ],
       "files": [
@@ -608,6 +650,26 @@
           "path": "src/components/ui/image-viewer.tsx",
           "type": "registry:file",
           "target": "src/components/ui/image-viewer.tsx"
+        }
+      ]
+    },
+    {
+      "name": "info-hint",
+      "type": "registry:item",
+      "title": "info-hint",
+      "description": "Componente info-hint do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/modal.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/info-hint.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/info-hint.tsx"
         }
       ]
     },
@@ -820,6 +882,34 @@
       ]
     },
     {
+      "name": "rich-text-editor",
+      "type": "registry:item",
+      "title": "rich-text-editor",
+      "description": "Componente rich-text-editor do Rendra Design System.",
+      "dependencies": [
+        "@tiptap/extension-image@^3.31.3",
+        "@tiptap/extension-placeholder@^3.31.3",
+        "@tiptap/extension-table@^3.31.3",
+        "@tiptap/extension-text-align@^3.31.3",
+        "@tiptap/react@^3.31.3",
+        "@tiptap/starter-kit@^3.31.3",
+        "lucide-react@^1.47.0"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tooltip.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/rich-text-editor.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/rich-text-editor.tsx"
+        }
+      ]
+    },
+    {
       "name": "select",
       "type": "registry:item",
       "title": "select",
@@ -940,7 +1030,8 @@
         "@tanstack/react-table@^8.21.3",
         "date-fns@^4.4.0",
         "lucide-react@^1.47.0",
-        "radix-ui@^1.6.7"
+        "radix-ui@^1.6.7",
+        "react-router@^8.4.0"
       ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/badge.json",
@@ -1075,6 +1166,24 @@
           "path": "src/components/ui/upload.tsx",
           "type": "registry:file",
           "target": "src/components/ui/upload.tsx"
+        }
+      ]
+    },
+    {
+      "name": "widget-grid",
+      "type": "registry:item",
+      "title": "widget-grid",
+      "description": "Componente widget-grid do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0", "react-grid-layout@^2.2.4"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/widget-grid.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/widget-grid.tsx"
         }
       ]
     },
