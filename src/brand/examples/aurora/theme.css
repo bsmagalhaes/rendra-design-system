@@ -38,7 +38,7 @@
 :root[data-palette='aurora'] {
   color-scheme: light;
 
-  --background: #fcfcfc;
+  --background: #f5f6f7;
   --background-image: none;
   --foreground: #1c1f1e;
   --card: #ffffff;
@@ -49,7 +49,7 @@
   --muted-foreground: #58615c;
   --border: #dfe4e0;
   --input: #838d87;
-  --field: #fcfcfc;
+  --field: #f5f6f7;
   --ring: #0f766e;
   --overlay: rgb(20 24 22 / 0.5);
 

@@ -140,7 +140,10 @@ export function AppShell({ userConfigurable = true, ...props }: AppShellProps) {
               ref={mainRef}
               id="conteudo"
               tabIndex={-1}
-              className="min-h-0 flex-1 overflow-y-auto overscroll-contain outline-none"
+              // relative: elementos absolutos do conteúdo (texto só para leitor de tela, inputs
+              // ocultos) ficam presos à rolagem do main. Sem isso eles esticam o <html>, e um
+              // link com #âncora rola a página inteira, deixando um vão em branco embaixo.
+              className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain outline-none"
             >
               <Outlet />
             </main>

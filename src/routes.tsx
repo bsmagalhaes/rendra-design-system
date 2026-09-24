@@ -51,6 +51,16 @@ export const routes: RouteObject[] = [
         lazy: page(() => import('@/pages/app/client-wizard-page'), 'ClientWizardPage'),
       },
       {
+        path: 'agenda',
+        handle: h('Agenda'),
+        lazy: page(() => import('@/pages/app/agenda-page'), 'AgendaPage'),
+      },
+      {
+        path: 'kanban',
+        handle: h('Funil de vendas'),
+        lazy: page(() => import('@/pages/app/kanban-page'), 'KanbanPage'),
+      },
+      {
         path: 'tarefas',
         handle: h('Tarefas'),
         lazy: page(() => import('@/pages/app/tasks-page'), 'TasksPage'),

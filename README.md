@@ -2,9 +2,13 @@
 
 **Design system completo e boilerplate React para sistemas administrativos: tokens, três templates, componentes, AppShell, telas prontas, Storybook e testes de layout.** Feito para ser o ponto de partida de todos os projetos: layouts previsíveis, espaçamento equilibrado e funcionamento completo no celular. Para aplicar a outro sistema, você troca cores, fonte e ícones da marca, e nenhum componente muda.
 
-![React 19](https://img.shields.io/badge/React-19-149eca) ![TypeScript 5.9](https://img.shields.io/badge/TypeScript-5.9-3178c6) ![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8) ![Vite 8](https://img.shields.io/badge/Vite-8-646cff) ![Storybook 10](https://img.shields.io/badge/Storybook-10-ff4785) ![Playwright](https://img.shields.io/badge/Playwright-570_testes-2ead33) [![CI](https://github.com/bsmagalhaes/rendra-design-system/actions/workflows/ci.yml/badge.svg)](https://github.com/bsmagalhaes/rendra-design-system/actions/workflows/ci.yml)
+![React 19](https://img.shields.io/badge/React-19-149eca) ![TypeScript 5.9](https://img.shields.io/badge/TypeScript-5.9-3178c6) ![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8) ![Vite 8](https://img.shields.io/badge/Vite-8-646cff) ![Storybook 10](https://img.shields.io/badge/Storybook-10-ff4785) ![Playwright](https://img.shields.io/badge/Playwright-608_testes-2ead33) [![CI](https://github.com/bsmagalhaes/rendra-design-system/actions/workflows/ci.yml/badge.svg)](https://github.com/bsmagalhaes/rendra-design-system/actions/workflows/ci.yml)
 
-**Veja funcionando, sem instalar nada:** [demo do app](https://bsmagalhaes.github.io/rendra-design-system/) · [Storybook](https://bsmagalhaes.github.io/rendra-design-system/storybook/) · [vitrine de componentes](https://bsmagalhaes.github.io/rendra-design-system/componentes). No demo, o menu do avatar troca modelo, paleta, modo e layout ao vivo.
+**Veja funcionando, sem instalar nada:** [demo do app](https://bsmagalhaes.github.io/rendra-design-system/) · [galeria com códigos de modelo](https://bsmagalhaes.github.io/rendra-design-system/galeria) · [Storybook](https://bsmagalhaes.github.io/rendra-design-system/storybook/) · [vitrine de componentes](https://bsmagalhaes.github.io/rendra-design-system/componentes) · [agenda](https://bsmagalhaes.github.io/rendra-design-system/agenda) · [kanban](https://bsmagalhaes.github.io/rendra-design-system/kanban). No demo, o menu do avatar troca modelo, paleta, modo e layout ao vivo.
+
+| Calendário e agenda                                     | Kanban                                   |
+| ------------------------------------------------------- | ---------------------------------------- |
+| ![Calendário do mês](docs/images/safira-calendario.png) | ![Kanban](docs/images/aurora-kanban.png) |
 
 ---
 
@@ -32,6 +36,21 @@ Duas regras mestras guiam tudo:
 
 > **Quer ampliar sem sair da tela?** Abra a [galeria do demo](https://bsmagalhaes.github.io/rendra-design-system/galeria): cada imagem abre em popup, com setas para passar e Esc para fechar. Aqui no GitHub, clicar numa imagem abre a imagem sozinha (o GitHub não permite popup no README), por isso as telas já aparecem em tamanho de leitura e os grupos extras abrem na própria página.
 
+## Códigos de modelo
+
+Cada escolha visual tem um código curto: **T** para o tema (formato e fonte), **C** para as cores e **M** para o menu. `T1-C4-M5`, por exemplo, é o tema Safira com as cores Ardósia e o menu superior. Escolha na [galeria](https://bsmagalhaes.github.io/rendra-design-system/galeria), onde cada captura mostra seu código e o bloco "Monte seu código" abre o demo já aplicado, e informe o código no briefing: a IA já sabe o que aplicar e pula essas perguntas.
+
+| Tema                           | Cores                                    | Menu                                                |
+| ------------------------------ | ---------------------------------------- | --------------------------------------------------- |
+| **T1** Safira (quadrado)       | **C1** Safira (azul e verde)             | **M1** lateral recolhida, submenu em segunda barra  |
+| **T2** Equilíbrio (meio-termo) | **C2** Equilíbrio (violeta e ciano)      | **M2** lateral recolhida, submenu dentro da sidebar |
+| **T3** Aurora (arredondado)    | **C3** Aurora (verde-petróleo e laranja) | **M3** lateral expandida, submenu em segunda barra  |
+|                                | **C4** Ardósia (grafite e laranja)       | **M4** lateral expandida, submenu dentro da sidebar |
+|                                |                                          | **M5** menu superior com lista suspensa             |
+|                                |                                          | **M6** menu superior com mega menu                  |
+
+No demo, o endereço também aplica um código: [`/?codigo=T1-C4-M5`](https://bsmagalhaes.github.io/rendra-design-system/?codigo=T1-C4-M5). Os códigos ficam em [`src/config/presets.ts`](src/config/presets.ts).
+
 ### Os três templates
 
 Cada template tem formato, fonte, símbolo e paleta próprios.
@@ -54,11 +73,30 @@ Cada template tem formato, fonte, símbolo e paleta próprios.
 | ------------------------------------------------ | ---------------------------------------------------- |
 | ![Aurora: painel](docs/images/aurora-painel.png) | ![Aurora: clientes](docs/images/aurora-clientes.png) |
 
-**Paleta Ardósia**: paleta avulsa, combinável com qualquer modelo. Azul-ardósia #2E414D e laranja #EA600D (aqui no modelo Equilíbrio).
+**Paleta Ardósia**: paleta avulsa, combinável com qualquer modelo. Azul-ardósia #2E414D e laranja #EA600D, com botão laranja #C94F0A e texto branco para passar AA (aqui no modelo Equilíbrio).
 
 | Painel                                             | Listagem de clientes                                   |
 | -------------------------------------------------- | ------------------------------------------------------ |
 | ![Ardósia: painel](docs/images/ardosia-painel.png) | ![Ardósia: clientes](docs/images/ardosia-clientes.png) |
+
+### Calendário, agenda e kanban
+
+| Agenda da semana (T2-C2)                               | Kanban no celular (T1-C1)                                  |
+| ------------------------------------------------------ | ---------------------------------------------------------- |
+| ![Agenda da semana](docs/images/equilibrio-agenda.png) | ![Kanban no celular](docs/images/safira-kanban-mobile.png) |
+
+<details>
+<summary><strong>Tipos de menu: M1 a M6</strong> (clique para abrir aqui mesmo)</summary>
+
+| M1: lateral recolhida, segunda barra     | M2: lateral recolhida, submenu na sidebar     |
+| ---------------------------------------- | --------------------------------------------- |
+| ![M1](docs/images/menu-m1.png)           | ![M2](docs/images/menu-m2.png)                |
+| **M3: lateral expandida, segunda barra** | **M4: lateral expandida, submenu na sidebar** |
+| ![M3](docs/images/menu-m3.png)           | ![M4](docs/images/menu-m4.png)                |
+| **M5: superior, lista suspensa**         | **M6: superior, mega menu**                   |
+| ![M5](docs/images/menu-m5.png)           | ![M6](docs/images/menu-m6.png)                |
+
+</details>
 
 <details>
 <summary><strong>Modelo × paleta de cores: as 12 combinações</strong> (clique para abrir aqui mesmo)</summary>
@@ -125,14 +163,15 @@ A marca fica isolada em `src/styles/theme.css`, `src/brand/brand.config.ts` e `s
 
 Todos em `src/components/ui`, um por finalidade, com o ícone de feedback da marca onde houver feedback.
 
-| Grupo          | Componentes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Ações**      | Button (6 variantes, tamanhos, ícone, só ícone, carregando, largura total), ButtonGroup (agrupado ou segmentado), DropdownMenu e ActionBar (regra 100%, 30/70 e menu)                                                                                                                                                                                                                                                                                                                                                                                        |
-| **Formulário** | Input (máscaras de CPF, CNPJ, CPF ou CNPJ automático, telefone, CEP, data, hora, moeda e percentual, com ícone, limpar e senha), Textarea com contador, Select (busca, múltiplo com chips, selecionar todos, contador, criar opção, busca remota), Checkbox com indeterminado e grupo, Radio em lista e em cards, Switch, DatePicker (data, período e horário, em pt-BR), Slider, Upload com arrastar e soltar e progresso, OtpInput (2FA), Field, Form, FormField e FormSection com React Hook Form e Zod, e validadores de CPF, CNPJ, telefone, CEP e data |
-| **Navegação**  | Tabs (linha ou pílula, vira seletor quando não cabe), Breadcrumb, Pagination (completa, compacta ou "carregar mais") e Wizard/Stepper (etapas concluída, atual, pendente e com erro, com validação por etapa)                                                                                                                                                                                                                                                                                                                                                |
-| **Dados**      | Table com TanStack Table (seleção, expansão, ordenação, busca, colunas visíveis, ações em massa e por linha, densidade, estados vazio, carregando e erro, e forma de cards no celular), Card, StatCard, Badge, Avatar e grupo, List, Timeline, Accordion e Chart com Recharts (linha, barra, área e pizza)                                                                                                                                                                                                                                                   |
-| **Feedback**   | BrandFeedbackIcon animado (check se desenhando, X se riscando), Toast com Sonner, Alert, Modal (confirmação, destrutiva, informativo e formulário), Drawer (header e rodapé fixos, confirmação de descarte), Popover, Tooltip, EmptyState, ErrorPage (404 e 500), Skeleton e Progress                                                                                                                                                                                                                                                                        |
-| **Layout**     | Container (95% da largura a partir de 1024px), Stack, Inline, Grid (por tela ou por container query), Section e PageHeader                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| Grupo            | Componentes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Ações**        | Button (6 variantes, tamanhos, ícone, só ícone, carregando, largura total), ButtonGroup (agrupado ou segmentado), DropdownMenu e ActionBar (regra 100%, 30/70 e menu)                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| **Formulário**   | Input (máscaras de CPF, CNPJ, CPF ou CNPJ automático, telefone com seletor de DDI embutido e +55 por padrão, CEP, data, hora, moeda e percentual, com ícone, limpar e senha), Textarea com contador, Select (busca, múltiplo com chips, selecionar todos, contador, criar opção, busca remota), Checkbox com indeterminado e grupo, Radio em lista e em cards, Switch, DatePicker (data, período e horário, em pt-BR), Slider, Upload com arrastar e soltar e progresso, OtpInput (2FA), Field, Form, FormField e FormSection com React Hook Form e Zod, e validadores de CPF, CNPJ, telefone, CEP e data |
+| **Navegação**    | Tabs (linha ou pílula, vira seletor quando não cabe), Breadcrumb, Pagination (completa, compacta ou "carregar mais") e Wizard/Stepper (etapas concluída, atual, pendente e com erro, com validação por etapa)                                                                                                                                                                                                                                                                                                                                                                                             |
+| **Dados**        | Table com TanStack Table (seleção, expansão, ordenação, busca, colunas visíveis, ações em massa e por linha, densidade, estados vazio, carregando e erro, forma de cards no celular e **modo remoto**: 15 por página, carregando página por página, com busca e filtros em todos os registros), Card, StatCard, Badge, Avatar e grupo, List, Timeline, Accordion e Chart com Recharts (linha, barra, área e pizza)                                                                                                                                                                                        |
+| **Feedback**     | BrandFeedbackIcon animado (check se desenhando, X se riscando), Toast com Sonner, Alert, Modal (confirmação, destrutiva, informativo e formulário), Drawer (header e rodapé fixos, confirmação de descarte), Popover, Tooltip, EmptyState, ErrorPage (404 e 500), Skeleton e Progress                                                                                                                                                                                                                                                                                                                     |
+| **Planejamento** | Calendar (mês, semana, dia e agenda em lista, no mesmo componente; no celular vira mês compacto com a lista do dia), Kanban (arrastar no computador, menu "Mover para" no toque e no teclado, uma coluna por vez no celular, limite por coluna) e ImageViewer (imagens em popup, com setas, Esc, arrastar e pinça)                                                                                                                                                                                                                                                                                        |
+| **Layout**       | Container (95% da largura a partir de 1024px), Stack, Inline, Grid (por tela ou por container query), Section e PageHeader                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
 ### AppShell
 
@@ -146,15 +185,15 @@ Tudo configurável por props, com o padrão em `src/config/layout.ts`:
 
 ### Telas base
 
-Login, esqueci a senha, verificação em duas etapas (2FA), nova senha, cadastro, painel com indicadores e gráficos, listagem com barra de ferramentas e filtros, detalhe com abas, formulário longo em seções, cadastro em wizard, configurações com navegação interna, criação e edição de registro em drawer, tarefas e página 404.
+Login, esqueci a senha, verificação em duas etapas (2FA), nova senha, cadastro, painel com indicadores e gráficos, listagem com barra de ferramentas e filtros, detalhe com abas, formulário longo em seções, cadastro em wizard, configurações com navegação interna, criação e edição de registro em drawer, tarefas, agenda, funil de vendas em kanban, galeria e página 404.
 
 ### Vitrine, Storybook e testes
 
 - **Vitrine** na rota `/componentes`: cada componente com variantes, tamanhos e estados (padrão, hover, foco, ativo, desabilitado, carregando, erro) e as regras de composição.
 - **Storybook 10** com mais de 100 stories: viewport de celular por padrão, com tablet e desktop, e alternância de template, paleta e modo claro/escuro na barra.
-- **Testes de layout com Playwright** (`npm run test:layout`): 15 rotas × 5 larguras (360, 390, 768, 1280 e 1920) × 3 templates no modo claro, mais 360 e 1280 no escuro, somando 315 testes. Falham se houver rolagem horizontal, elemento maior que a tela, toque menor que 44px no celular ou erro de JavaScript, e geram capturas de todas as telas.
-- **Testes de acessibilidade com axe-core** (`npm run test:a11y`): 135 testes, todas as rotas nos três templates, claro e escuro, mais a paleta Ardósia e o celular. Falham em qualquer violação WCAG 2.1 A ou AA, inclusive contraste.
-- **Regressão visual** (`npm run test:visual`): 120 capturas comparadas com a referência aprovada. Pegam cor que mudou, espaçamento que quebrou e ícone que sumiu. As referências são geradas no Linux do CI; depois de uma mudança visual intencional, aplique o rótulo `atualizar-visual` no Pull Request.
+- **Testes de layout com Playwright** (`npm run test:layout`): 16 rotas × 5 larguras (360, 390, 768, 1280 e 1920) × 3 templates no modo claro, mais 360 e 1280 no escuro, somando 336 testes. Falham se houver rolagem horizontal, elemento maior que a tela, toque menor que 44px no celular ou erro de JavaScript, e geram capturas de todas as telas.
+- **Testes de acessibilidade com axe-core** (`npm run test:a11y`): 144 testes, todas as rotas nos três templates, claro e escuro, mais a paleta Ardósia e o celular. Falham em qualquer violação WCAG 2.1 A ou AA, inclusive contraste.
+- **Regressão visual** (`npm run test:visual`): 128 capturas comparadas com a referência aprovada. Pegam cor que mudou, espaçamento que quebrou e ícone que sumiu. As referências são geradas no Linux do CI; depois de uma mudança visual intencional, aplique o rótulo `atualizar-visual` no Pull Request.
 - **Testes unitários com Vitest** (`npm test`): validadores de CPF, CNPJ e data, esquemas Zod, máscaras e navegação.
 - **CI no GitHub Actions**: todo Pull Request passa por tipos, lint, formatação, regras, unitários, build, Storybook e os três testes no navegador. A `main` só aceita merge com tudo verde. O Dependabot abre PR semanal quando uma dependência ganha versão nova.
 - **Verificador de regras** (`npm run check:rules`): barra cor fixa, valor arbitrário, degrau fora da escala, estilo inline, fonte fixa, `100vh` e arquivos duplicados ou mobile.
@@ -169,7 +208,7 @@ React 19, TypeScript 5.9 (estrito), Vite 8, Tailwind CSS 4 (tema via `@theme`), 
 
 ## Começar com IA
 
-O repositório vem preparado para agentes de IA de desenvolvimento. Ao abrir o projeto, a IA lê as instruções sozinha, pergunta se é **projeto novo** ou **migração de layout**, conduz um **briefing** (negócio, usuários, marca, menu, telas e dados), registra tudo em `docs/BRIEFING.md` e só então constrói, em etapas e com as verificações passando.
+O repositório vem preparado para agentes de IA de desenvolvimento. Ao abrir o projeto, a IA lê as instruções sozinha, pergunta se é **projeto novo** ou **migração de layout**, conduz um **briefing** (negócio, usuários, menu, tema, cores, telas e dados; se você já tiver um **código de modelo** da galeria, ele pula essas escolhas), registra tudo em `docs/BRIEFING.md` e só então constrói, em etapas e com as verificações passando.
 
 | Ferramenta                                   | Arquivo lido automaticamente                                         |
 | -------------------------------------------- | -------------------------------------------------------------------- |

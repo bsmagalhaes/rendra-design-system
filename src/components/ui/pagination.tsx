@@ -34,7 +34,7 @@ export function Pagination({
   total,
   onPageChange,
   onPageSizeChange,
-  pageSizes = [10, 20, 50],
+  pageSizes = [15, 30, 50],
   mobileMode = 'pages',
   loading,
   className,

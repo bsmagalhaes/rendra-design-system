@@ -48,7 +48,7 @@
   --radius: 0.625rem;
 
   /* Superfícies e neutros */
-  --background: #fcfcfc;
+  --background: #f5f6f7;
   --background-image: none;
   --foreground: #0b1d37;
   --card: #ffffff;
@@ -59,7 +59,7 @@
   --muted-foreground: #4f5f76;
   --border: #dbe2eb;
   --input: #808fa4;
-  --field: #fcfcfc;
+  --field: #f5f6f7;
   --ring: #0e6cdb;
   --overlay: rgb(7 20 42 / 0.55);
 

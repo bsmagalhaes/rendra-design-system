@@ -35,6 +35,10 @@ export async function openRoute(page: Page, route: string) {
   page.on('pageerror', (e) => errors.push(e.message))
   await page.goto(route, { waitUntil: 'networkidle' })
   await page.evaluate(() => document.fonts.ready)
+  // Tabelas remotas: espera a primeira página chegar.
+  await page.waitForFunction(() => !document.querySelector('[data-remote-loading]'), undefined, {
+    timeout: 10_000,
+  })
   await page.waitForTimeout(300)
   return errors
 }
@@ -45,6 +49,7 @@ export async function openRoute(page: Page, route: string) {
  *   2. elemento que ultrapassa a largura da tela (exceto o que rola no próprio contêiner,
  *      marcado com data-allow-overflow);
  *   3. no mobile, elemento clicável com área de toque menor que 44x44px.
+ *   4. no AppShell, a página mais alta que a tela (algo escapou da rolagem do <main>).
  */
 export async function auditLayout(page: Page, mobile: boolean) {
   return page.evaluate((mobile) => {
@@ -78,7 +83,12 @@ export async function auditLayout(page: Page, mobile: boolean) {
           small.push(`${describe(el)} ${Math.round(t.width)}x${Math.round(t.height)}`)
       }
     }
+    // No AppShell só o <main> rola: a página em si nunca pode ficar mais alta que a tela.
+    const inShell = Boolean(document.querySelector('main#conteudo'))
     return {
+      pageOverflowY: inShell
+        ? document.documentElement.scrollHeight - document.documentElement.clientHeight
+        : 0,
       scroll: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       wide: [...new Set(wide)].slice(0, 10),
       small: [...new Set(small)].slice(0, 10),

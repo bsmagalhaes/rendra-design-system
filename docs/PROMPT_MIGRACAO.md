@@ -28,7 +28,7 @@ REGRAS QUE NÃO PODEM SER QUEBRADAS
 - Botões sempre pela ActionBar: 1 botão = 100%; 2 botões = cancelar 30% + principal 70%; 3 ou mais = extras no menu.
 - Listagem: barra de ferramentas dentro do mesmo card da Table, chips de filtro, estados vazio, carregando e erro, situação antes das ações.
 - Header sempre fixo; título da página no header, com a trilha abaixo; uma única área de rolagem (o main do AppShell).
-- Fundo claro #fcfcfc; conteúdo com 95% da largura a partir de 1024px; contraste mínimo WCAG AA.
+- Fundo da tela e dos campos #f5f6f7, cards brancos; conteúdo com 95% da largura a partir de 1024px; contraste mínimo WCAG AA.
 - Interface em português do Brasil; datas DD/MM/AAAA; valores R$ 1.250,00.
 
 MARCA DESTE PROJETO

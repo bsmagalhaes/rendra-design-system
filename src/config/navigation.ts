@@ -1,11 +1,13 @@
 import {
   Blocks,
+  CalendarDays,
   ClipboardList,
   Images,
   LayoutDashboard,
   ListChecks,
   Palette,
   Settings,
+  SquareKanban,
   Users,
   type LucideIcon,
 } from 'lucide-react'
@@ -89,6 +91,19 @@ export const navigation: NavGroup[] = [
         to: '/tarefas',
         icon: ListChecks,
         description: 'Pendências e prazos da equipe.',
+      },
+      {
+        title: 'Agenda',
+        to: '/agenda',
+        icon: CalendarDays,
+        description: 'Compromissos por mês, semana, dia ou lista.',
+      },
+      {
+        title: 'Funil de vendas',
+        shortTitle: 'Funil',
+        to: '/kanban',
+        icon: SquareKanban,
+        description: 'Negócios em kanban, de contato a fechado.',
       },
     ],
   },

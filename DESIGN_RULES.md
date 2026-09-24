@@ -85,7 +85,7 @@ Sete tamanhos (`text-xs` a `text-3xl`), com line-height e letter-spacing definid
 
 ### Cores
 
-Tokens semânticos: `background`, `foreground`, `card`, `popover`, `muted`, `muted-foreground`, `border`, `input`, `field`, `ring`, `primary`, `secondary`, `accent`, `destructive`, `success`, `warning`, `info`. Cada semântica tem fundo forte, texto sobre o forte, fundo suave (`*-soft`) e texto sobre o suave (`*-soft-foreground`). **Contraste mínimo WCAG AA:** 4,5:1 para texto e 3:1 para bordas de campo e foco. A página `/tokens` mede os pares ao vivo. No modo claro, o fundo da página e dos campos é **#fcfcfc** em todos os templates: nada de fundo tingido.
+Tokens semânticos: `background`, `foreground`, `card`, `popover`, `muted`, `muted-foreground`, `border`, `input`, `field`, `ring`, `primary`, `secondary`, `accent`, `destructive`, `success`, `warning`, `info`. Cada semântica tem fundo forte, texto sobre o forte, fundo suave (`*-soft`) e texto sobre o suave (`*-soft-foreground`). **Contraste mínimo WCAG AA:** 4,5:1 para texto e 3:1 para bordas de campo e foco. A página `/tokens` mede os pares ao vivo. No modo claro, o fundo da página e dos campos é o cinza bem claro **#f5f6f7** em todos os templates, e os cards são brancos: o campo se destaca do card sem precisar de cor. Nada de fundo tingido.
 
 ### Raio, sombra e densidade
 
@@ -132,11 +132,11 @@ Se o conteúdo rola muito ou tem muitos campos, não cabe em modal. **Nunca moda
 - **Três ou mais:** as secundárias vão para o menu de três pontinhos.
 - Vale para drawer, modal e formulário em página, em qualquer largura. Só as barras de ferramentas acima de tabelas usam botões de largura automática.
 - O envio mostra carregamento e fica desabilitado enquanto processa (`loading`).
-- Em formulário de página, use `sticky`: o rodapé fica fixo no fim da área rolável.
+- **Salvar, cadastrar e criar ficam sempre no rodapé fixo**, nunca soltos no body nem dentro de um card: em formulário de página e em configurações, `ActionBar sticky` no fim da página; em drawer e modal, o `footer` (que já é fixo). Uma tela nunca tem o botão de salvar num lugar e outra em outro.
 
 ### Cabeçalho de listagem
 
-De cima para baixo: descrição e ação principal (`PageHeader`); **barra de ferramentas dentro do mesmo card da tabela** (busca à esquerda, filtros no meio, ações e colunas à direita); **chips** dos filtros aplicados, com limpar; e então a tabela. Filtros com muitas opções abrem em popover (desktop) ou drawer de tela cheia (mobile), nunca empurrando o conteúdo. Na `Table` isso tudo é a prop `toolbar`.
+O título fica só no header. **Nada solto acima da tabela:** sem descrição, sem contagem de registros (o total já aparece na paginação, no rodapé do card) e sem botão Novo fora do card. De cima para baixo: **barra de ferramentas dentro do mesmo card da tabela**, com a busca à esquerda e, à direita, ações secundárias, Colunas, **Filtros e, por último, a ação principal** (Novo), na prop `toolbar.primaryAction`; no mobile, Filtros (30%) e Novo (70%) ficam lado a lado abaixo da busca. Depois, os **chips** dos filtros aplicados, com limpar, e a tabela. Filtros com muitas opções abrem em popover (desktop) ou drawer de tela cheia (mobile), nunca empurrando o conteúdo. Na `Table` isso tudo é a prop `toolbar`.
 
 ### Card
 
@@ -146,6 +146,8 @@ Conteúdo de página agrupado em `Card`, com borda de 1px e sem sombra pesada. *
 
 Rótulo **sempre acima** do campo; obrigatório marcado no rótulo (`required`); erro **abaixo**, em espaço reservado (o layout não pula); no máximo **2 colunas** no desktop e sempre 1 no mobile; campos agrupados em `FormSection` com título; ações no rodapé (`ActionBar`). Validação com React Hook Form + Zod (`Form`, `FormField`, validadores em `src/lib/validators.ts`: CPF, CNPJ, telefone, CEP, data).
 
+**Espaço entre campos:** sempre `gap="fields"` no `Grid` ou no `Stack` que contém os `Field` (o `FormSection` já usa). São 24px do fim de um campo ao rótulo do próximo, porque o `Field` já reserva a linha de ajuda e erro. Nunca empilhe campos com `gap="4"` ou `gap="6"`: a linha reservada soma ao gap e o formulário fica espaçado demais, como acontecia no drawer.
+
 ### Tabela: sempre `<Table>`
 
 - Texto com no máximo 3 linhas (`lines`), com reticências acima disso.
@@ -153,7 +155,8 @@ Rótulo **sempre acima** do campo; obrigatório marcado no rótulo (`required`);
 - Ações na última coluna, à direita, com largura fixa. Seleção na primeira coluna (`selectable`). **Colunas de situação (`kind: 'badge'`) ficam por padrão logo antes das ações** (`statusLast`).
 - Números e moeda alinhados à direita (`kind: 'number' | 'currency'`); datas em formato curto (`kind: 'date'`).
 - Sempre com estado vazio (`empty`), carregando (`loading`, com skeleton da mesma estrutura) e erro (`error`, `onRetry`).
-- Paginação no rodapé do card, à direita (`pageSize`).
+- **15 registros por página** em todas as tabelas (`TABLE_PAGE_SIZE`), paginação no rodapé do card, à direita.
+- **Dados do servidor, página por página:** a tabela de uma listagem usa a prop `source`, que pede só a página visível (`page`, `pageSize`, `search`, `sort`) e recebe `{ rows, total }`. A **busca e os filtros valem para todos os registros**, feitos no servidor, nunca só na página carregada. Filtros da tela entram na função e mudam o `queryKey`, que volta à página 1. `data` com tudo em memória só para listas pequenas e fixas.
 - Ao marcar linhas, aparecem as ações em massa (`bulkActions`) e o menu com mais ações (`bulkMenu`).
 - Colunas pouco importantes começam ocultas (`hidden`) e ficam disponíveis no menu Colunas.
 
@@ -221,7 +224,7 @@ Teclado em tudo; foco visível (`:focus-visible` global com `--ring`); contraste
 13. Rolagem dentro de card; card dentro de card.
 14. `100vh` (use `100dvh`).
 15. Degradê em botão, input, badge ou atrás de texto corrido; mais de um degradê forte por tela.
-16. Fundo tingido no modo claro (a página e os campos usam #fcfcfc).
+16. Fundo tingido no modo claro (a página e os campos usam #f5f6f7; os cards, branco).
 17. Título da página repetido no corpo quando já está no header.
 
 ## 11. Checklist de revisão

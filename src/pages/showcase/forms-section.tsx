@@ -229,9 +229,9 @@ export function FormsSection() {
         id="input"
         title="Input"
         description="Um único Input. Máscara, ícone, limpar e senha são props; a máscara já abre o teclado certo no celular (numérico, telefone, decimal)."
-        props="mask (cpf, cnpj, cpfCnpj, phone, cep, date, time, currency, percent), icon, suffix, clearable, type=password, size, invalid, disabled"
+        props="mask (cpf, cnpj, cpfCnpj, phone, cep, date, time, currency, percent), ddi, onDdiChange, ddiOptions, hideDdi, icon, suffix, clearable, type=password, size, invalid, disabled"
       >
-        <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="6">
+        <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="fields">
           <Field label="CPF">
             <Input mask="cpf" />
           </Field>
@@ -241,8 +241,11 @@ export function FormsSection() {
           <Field label="CPF ou CNPJ" help="Troca a máscara sozinho.">
             <Input mask="cpfCnpj" />
           </Field>
-          <Field label="Telefone">
+          <Field label="Telefone" help="DDI embutido, +55 por padrão.">
             <Input mask="phone" />
+          </Field>
+          <Field label="Telefone em Portugal" help='ddi="351": máscara internacional.'>
+            <Input mask="phone" ddi="351" />
           </Field>
           <Field label="CEP">
             <Input mask="cep" />
@@ -289,7 +292,7 @@ export function FormsSection() {
         description="Com contador opcional. Cresce com o texto até uma altura máxima."
         props="counter, maxLength, rows, invalid"
       >
-        <Grid cols={{ base: 1, md: 2 }} gap="6">
+        <Grid cols={{ base: 1, md: 2 }} gap="fields">
           <Field label="Observações" help="Até 200 caracteres.">
             <Textarea counter maxLength={200} placeholder="Escreva aqui..." />
           </Field>
@@ -305,7 +308,7 @@ export function FormsSection() {
         description="Um único Select. No celular abre como painel inferior, com busca no topo e confirmação no rodapé."
         props="options, multiple, searchable, selectAll, showCount, maxChips, creatable, onCreate, loadOptions (async), loading, clearable, size, invalid, disabled"
       >
-        <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="6">
+        <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="fields">
           <Field label="Simples">
             <Select
               label="Segmento"
@@ -444,7 +447,7 @@ export function FormsSection() {
         description="Calendário em português. Período mostra dois meses no desktop e um no celular. No celular abre como painel inferior."
         props="range, time, minDate, maxDate, clearable, size, invalid, disabled"
       >
-        <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="6">
+        <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="fields">
           <Field label="Data">
             <DatePicker label="Data" value={date} onChange={setDate} clearable />
           </Field>

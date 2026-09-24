@@ -34,16 +34,17 @@ type SectionId = (typeof sections)[number]['id']
 
 const save = () => toast.success('Configurações salvas')
 
+/** Seções com campos a salvar: mostram o rodapé fixo com Descartar e Salvar alterações. */
+const savable = new Set<SectionId>(['perfil', 'empresa', 'notificacoes', 'seguranca'])
+
 function Panel({
   title,
   description,
   children,
-  footer = true,
 }: {
   title: string
   description: string
   children: ReactNode
-  footer?: boolean
 }) {
   return (
     <Card>
@@ -52,14 +53,6 @@ function Panel({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>{children}</CardContent>
-      {footer && (
-        <div className="border-t p-4 md:px-6">
-          <ActionBar
-            cancel={{ label: 'Descartar' }}
-            primary={{ label: 'Salvar alterações', onClick: save }}
-          />
-        </div>
-      )}
     </Card>
   )
 }
@@ -169,11 +162,7 @@ function Security() {
           </Field>
         </div>
       </Panel>
-      <Panel
-        title="Verificação em duas etapas"
-        description="Pede um código a cada novo acesso."
-        footer={false}
-      >
+      <Panel title="Verificação em duas etapas" description="Pede um código a cada novo acesso.">
         <Switch
           label="Ativar verificação em duas etapas"
           description="Código enviado por e-mail."
@@ -210,11 +199,7 @@ function Security() {
 function Appearance() {
   const { brand, brands, setBrandId, palette, palettes, setPaletteId, mode, setMode } = useBrand()
   return (
-    <Panel
-      title="Aparência"
-      description="Modelo, paleta de cores e tema. Salvo neste navegador."
-      footer={false}
-    >
+    <Panel title="Aparência" description="Modelo, paleta de cores e tema. Salvo neste navegador.">
       <Stack gap="6">
         <Field label="Modelo" help="Define formato, fonte e símbolo." compact>
           <RadioGroup
@@ -270,11 +255,7 @@ function LayoutSettings() {
     </Field>
   )
   return (
-    <Panel
-      title="Layout"
-      description="Todas as opções do AppShell também são props do componente."
-      footer={false}
-    >
+    <Panel title="Layout" description="Todas as opções do AppShell também são props do componente.">
       <Stack gap="6">
         {group('navigation', 'Posição do menu')}
         {layout.navigation === 'sidebar' ? (
@@ -360,6 +341,14 @@ export function SettingsPage() {
             <Current />
           </div>
         </Grid>
+        {/* Botões de salvar sempre no rodapé fixo, como em todo formulário em página. */}
+        {savable.has(active) && (
+          <ActionBar
+            sticky
+            cancel={{ label: 'Descartar' }}
+            primary={{ label: 'Salvar alterações', onClick: save }}
+          />
+        )}
       </Stack>
     </Container>
   )

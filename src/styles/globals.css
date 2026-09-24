@@ -417,3 +417,25 @@
 @utility grid-cols-otp {
   grid-template-columns: repeat(var(--otp, 6), minmax(0, 1fr));
 }
+
+/*
+ * Calendário (visões semana e dia): cada hora da grade tem a altura de --spacing-12 (48px).
+ * O evento recebe --from (horas desde o início da grade) e --span (duração em horas)
+ * como variáveis CSS; a posição e a altura saem daqui, nunca de estilo inline.
+ */
+@utility calendar-event {
+  top: calc(var(--from, 0) * var(--spacing-12));
+  height: max(calc(var(--span, 1) * var(--spacing-12)), var(--spacing-6));
+}
+/* Linha da hora atual, na mesma escala. */
+@utility calendar-now {
+  top: calc(var(--from, 0) * var(--spacing-12));
+}
+/* Grade do mês: 7 colunas iguais. */
+@utility grid-cols-week {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+/* Semana: coluna das horas mais os dias. */
+@utility grid-cols-week-time {
+  grid-template-columns: var(--spacing-16) repeat(var(--days, 7), minmax(0, 1fr));
+}

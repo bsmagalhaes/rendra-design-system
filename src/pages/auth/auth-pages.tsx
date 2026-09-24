@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router'
 import { z } from 'zod'
-import { Stack } from '@/components/layout'
+import { Grid, Stack } from '@/components/layout'
 import { Alert } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -64,7 +64,7 @@ export function LoginPage() {
     >
       <Form form={form} onSubmit={submit} className="gap-4 md:gap-4">
         {erro && <Alert type="error" title="Não foi possível entrar" description={erro} />}
-        <Stack gap="1">
+        <Stack gap="fields">
           <FormField<Login>
             name="email"
             label="E-mail"
@@ -368,7 +368,7 @@ export function SignupPage() {
     >
       <Form form={form} onSubmit={submit} className="gap-2 md:gap-2">
         {/* Duas colunas a partir de 768px; uma no celular */}
-        <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2">
+        <Grid cols={{ base: 1, md: 2 }} gap="fields">
           <FormField<Signup>
             name="nome"
             label="Seu nome"
@@ -424,7 +424,7 @@ export function SignupPage() {
               />
             )}
           />
-        </div>
+        </Grid>
         <Button type="submit" size="lg" fullWidth loading={form.formState.isSubmitting}>
           {form.formState.isSubmitting ? 'Criando conta...' : 'Criar conta'}
         </Button>

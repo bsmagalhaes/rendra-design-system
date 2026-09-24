@@ -39,7 +39,7 @@
 :root[data-palette='equilibrio'] {
   color-scheme: light;
 
-  --background: #fcfcfc;
+  --background: #f5f6f7;
   --background-image: none;
   --foreground: #1d1a2e;
   --card: #ffffff;
@@ -50,7 +50,7 @@
   --muted-foreground: #5e5a72;
   --border: #e3e0ee;
   --input: #8c88a0;
-  --field: #fcfcfc;
+  --field: #f5f6f7;
   --ring: #5b3fd1;
   --overlay: rgb(29 26 46 / 0.5);
 

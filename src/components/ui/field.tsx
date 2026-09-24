@@ -116,7 +116,7 @@ export function Field({
             id={messageId}
             role={invalid ? 'alert' : undefined}
             className={cn(
-              'min-h-4 text-xs',
+              '-mt-1 min-h-4 text-xs',
               invalid ? 'font-medium text-destructive' : 'text-muted-foreground',
             )}
           >
