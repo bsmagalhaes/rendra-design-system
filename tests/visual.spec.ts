@@ -36,7 +36,9 @@ for (const run of runs) {
           await openRoute(page, route)
           await expect(page).toHaveScreenshot(
             `${run.brand}${run.mode === 'dark' ? '-escuro' : ''}-${routeName(route)}-${width}.png`,
-            { animations: 'disabled', caret: 'hide', maxDiffPixelRatio: 0.01 },
+            // threshold 0.05: a tolerância padrão por pixel (0.2) não vê superfícies claras
+            // mudando (cartão branco sobre coluna cinza-clara passou despercebido no Aurora).
+            { animations: 'disabled', caret: 'hide', maxDiffPixelRatio: 0.01, threshold: 0.05 },
           )
         })
       }
