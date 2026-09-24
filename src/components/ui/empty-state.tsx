@@ -40,7 +40,7 @@ export function EmptyState({
           className="relative"
         />
       </span>
-      <div className="flex max-w-md flex-col gap-1">
+      <div className="flex w-full flex-col gap-1">
         <p className="text-base font-semibold">{title}</p>
         {description && <p className="text-sm text-muted-foreground">{description}</p>}
       </div>

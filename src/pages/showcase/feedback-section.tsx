@@ -1,4 +1,4 @@
-import { Info, RotateCw, Save, Trash2, UserPlus } from 'lucide-react'
+import { Filter, Info, Phone, RotateCw, Save, Trash2, UserPlus } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router'
 import type { FeedbackType } from '@/brand'
@@ -6,9 +6,11 @@ import { Grid, Inline, Stack } from '@/components/layout'
 import { Alert } from '@/components/ui/alert'
 import { BrandFeedbackIcon, feedbackLabels } from '@/components/ui/brand-feedback-icon'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { EmptyState } from '@/components/ui/empty-state'
 import { ErrorPage } from '@/components/ui/error-page'
 import { Field } from '@/components/ui/field'
+import { InfoHint } from '@/components/ui/info-hint'
 import { Input } from '@/components/ui/input'
 import { Modal, type ModalType } from '@/components/ui/modal'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -232,23 +234,64 @@ export function FeedbackSection() {
       </Demo>
 
       <Demo
+        id="texto-orientativo"
+        title="Texto orientativo (InfoHint)"
+        description="Instrução de uso nunca fica solta no corpo da tela nem num botão avulso de informação: é um ícone discreto ao lado do título a que se refere, que abre um modal. Ações de um card ficam no canto do cabeçalho dele."
+        props="PageHeader help · CardTitle help · FormSection help · CardHeader actions · InfoHint (title, children)"
+      >
+        <Grid cols={{ base: 1, md: 2 }} gap="4">
+          <Card>
+            <CardHeader
+              actions={
+                <Button variant="outline" icon={<Phone />}>
+                  Ligar
+                </Button>
+              }
+            >
+              <CardTitle help="Soma dos contratos faturados no mês, sem descontos. Atualiza todo dia às 6h.">
+                Receita do mês
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-semibold tabular-nums">R$ 61.300,00</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <span className="flex items-center gap-1 text-sm font-semibold">
+                Direto, quando nenhum título servir
+                <InfoHint title="Como funciona">
+                  <p>O InfoHint abre um modal informativo com o texto, que pode ter parágrafos.</p>
+                </InfoHint>
+              </span>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Prefira sempre o help do título: PageHeader, CardTitle ou FormSection.
+              </p>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Demo>
+
+      <Demo
         id="popover-tooltip"
         title="Popover e Tooltip"
-        description="Popover abre por toque ou clique e serve para informação essencial. Tooltip é só complemento no desktop, nunca a única forma de ver a informação."
+        description="Popover abre por toque ou clique e serve para escolhas rápidas junto de um controle (filtros, emojis). Tooltip é só complemento no desktop, nunca a única forma de ver a informação."
         props="PopoverContent (width sm, md) · Tooltip (content, side)"
       >
         <Row label="Exemplos">
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" icon={<Info />}>
-                Como calculamos
+              <Button variant="outline" icon={<Filter />}>
+                Filtros
               </Button>
             </PopoverTrigger>
             <PopoverContent align="start" className="p-4">
               <Stack gap="2">
-                <span className="text-sm font-semibold">Receita do mês</span>
+                <span className="text-sm font-semibold">Filtrar por status</span>
                 <p className="text-sm text-muted-foreground">
-                  Soma dos contratos faturados no mês, sem descontos.
+                  Os filtros escolhidos aqui valem para a listagem inteira.
                 </p>
               </Stack>
             </PopoverContent>

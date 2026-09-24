@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Container, PageHeader, Stack } from '@/components/layout'
 import { Kanban, moveKanbanCard, type KanbanCard } from '@/components/ui/kanban'
 import { toast } from '@/components/ui/toast'
-import { demoCards, pipelineColumns } from '@/mocks/planning'
+import { demoCards, pipelineColumns, pipelineValues } from '@/mocks/planning'
 
 /**
  * Funil de vendas em kanban. Arraste os cards no computador; no toque ou no teclado,
@@ -20,6 +20,7 @@ export function KanbanPage() {
           aria-label="Funil de vendas"
           columns={pipelineColumns}
           cards={cards}
+          valueFields={pipelineValues}
           onCardMove={(id, to, index) => {
             setCards((list) => moveKanbanCard(list, id, to, index))
             const col = pipelineColumns.find((c) => c.id === to)

@@ -1,4 +1,4 @@
-import { Bell, Building2, LayoutTemplate, Lock, Palette, User } from 'lucide-react'
+import { Bell, Building2, LayoutTemplate, Lock, Palette, RotateCcw, User } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { useBrand } from '@/brand'
 import type { ColorMode } from '@/brand/brand-context'
@@ -40,19 +40,21 @@ const savable = new Set<SectionId>(['perfil', 'empresa', 'notificacoes', 'segura
 function Panel({
   title,
   description,
+  actions,
   children,
 }: {
   title: string
   description: string
-  children: ReactNode
+  actions?: ReactNode
+  children?: ReactNode
 }) {
   return (
     <Card>
-      <CardHeader>
+      <CardHeader actions={actions}>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent>{children}</CardContent>
+      {children && <CardContent>{children}</CardContent>}
     </Card>
   )
 }
@@ -67,7 +69,7 @@ function Profile() {
             Trocar foto
           </Button>
         </div>
-        <Grid cols={{ base: 1, md: 2 }} gap="fields">
+        <Grid form>
           <Field label="Nome" required>
             <Input defaultValue={currentUser.name} autoComplete="name" />
           </Field>
@@ -89,12 +91,12 @@ function Profile() {
 function Company() {
   return (
     <Panel title="Empresa" description="Dados que aparecem em propostas e faturas.">
-      <Grid cols={{ base: 1, md: 2 }} gap="fields">
-        <Field label="Razão social" required span="full">
-          <Input defaultValue="Rendra Serviços Ltda." />
-        </Field>
-        <Field label="CNPJ" required>
+      <Grid form>
+        <Field label="CNPJ" required span="sm">
           <Input mask="cnpj" defaultValue="12.345.678/0001-95" />
+        </Field>
+        <Field label="Razão social" required span="xl" newRow>
+          <Input defaultValue="Rendra Serviços Ltda." />
         </Field>
         <Field label="Fuso horário">
           <Select
@@ -106,10 +108,10 @@ function Company() {
             ]}
           />
         </Field>
-        <Field label="CEP">
+        <Field label="CEP" span="sm" newRow>
           <Input mask="cep" defaultValue="01310-100" />
         </Field>
-        <Field label="Cidade">
+        <Field label="Cidade" newRow>
           <Input defaultValue="São Paulo" />
         </Field>
       </Grid>
@@ -119,7 +121,7 @@ function Company() {
 
 function Notifications() {
   return (
-    <Panel title="Notificações" description="Escolha o que chega até você e por qual canal.">
+    <Panel title="Notificações" description="O que chega até você e por qual canal.">
       <Stack gap="0">
         <Switch
           label="Resumo diário por e-mail"
@@ -150,8 +152,8 @@ function Security() {
   return (
     <Stack gap="6">
       <Panel title="Senha" description="Troque a senha periodicamente.">
-        <Grid cols={{ base: 1, md: 2 }} gap="fields">
-          <Field label="Senha atual" required span="full">
+        <Grid form>
+          <Field label="Senha atual" required>
             <Input type="password" autoComplete="current-password" />
           </Field>
           <Field label="Senha nova" required help="8 ou mais caracteres.">
@@ -169,17 +171,15 @@ function Security() {
           defaultChecked
         />
       </Panel>
-      <Card>
-        <CardHeader>
-          <CardTitle>Encerrar sessões</CardTitle>
-          <CardDescription>Sai de todos os outros aparelhos conectados.</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <Panel
+        title="Encerrar sessões"
+        description="Sai de todos os outros aparelhos conectados."
+        actions={
           <Button variant="destructive" onClick={() => setConfirm(true)}>
             Encerrar outras sessões
           </Button>
-        </CardContent>
-      </Card>
+        }
+      />
       <Modal
         open={confirm}
         onOpenChange={setConfirm}
@@ -255,7 +255,15 @@ function LayoutSettings() {
     </Field>
   )
   return (
-    <Panel title="Layout" description="Todas as opções do AppShell também são props do componente.">
+    <Panel
+      title="Layout"
+      description="Todas as opções do AppShell também são props do componente."
+      actions={
+        <Button variant="outline" icon={<RotateCcw />} onClick={resetLayout}>
+          Voltar ao padrão
+        </Button>
+      }
+    >
       <Stack gap="6">
         {group('navigation', 'Posição do menu')}
         {layout.navigation === 'sidebar' ? (
@@ -278,9 +286,6 @@ function LayoutSettings() {
           checked={layout.bottomNav}
           onCheckedChange={(v) => setLayout('bottomNav', v)}
         />
-        <Button variant="outline" className="self-start" onClick={resetLayout}>
-          Voltar ao padrão do projeto
-        </Button>
       </Stack>
     </Panel>
   )
@@ -304,7 +309,7 @@ export function SettingsPage() {
       <Stack gap="section">
         <PageHeader
           title="Configurações"
-          description="Preferências da conta, da empresa e da aparência."
+          help="Preferências da conta, da empresa e da aparência. Escolha a seção no menu ao lado (no celular, na lista do topo)."
         />
         <Grid cols={{ base: 1, lg: 4 }} gap="8">
           <div className="lg:hidden">

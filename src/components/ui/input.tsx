@@ -150,10 +150,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               setInnerDdi(e.target.value)
               onDdiChange?.(e.target.value)
             }}
-            className="absolute inset-0 cursor-pointer opacity-0 disabled:cursor-not-allowed"
+            className="absolute inset-0 cursor-pointer bg-popover text-popover-foreground opacity-0 disabled:cursor-not-allowed"
           >
             {ddiOptions.map((c) => (
-              <option key={c.ddi} value={c.ddi}>
+              <option key={c.ddi} value={c.ddi} className="bg-popover text-popover-foreground">
                 {c.name} (+{c.ddi})
               </option>
             ))}

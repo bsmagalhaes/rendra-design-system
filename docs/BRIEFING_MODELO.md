@@ -8,7 +8,7 @@ Roteiro usado pela IA (e por pessoas) antes de começar. As respostas vão para 
 - Os blocos 3 (navegação), 4 (tema) e 5 (cores) são um **fluxo guiado**, nesta ordem: uma decisão por mensagem, com as opções numeradas, uma frase de quando usar cada uma e o padrão marcado. A resposta decide a próxima pergunta, e o que não se aplica é pulado (quem escolhe menu superior nunca ouve perguntas de sidebar).
 - Se o usuário responder várias decisões de uma vez, aceite e pule para a próxima em aberto.
 - Aceite "não sei, sugira": recomende com base nos blocos 1 e 2, explique em uma frase e peça confirmação.
-- O usuário pode ver cada opção na galeria do demo (https://bsmagalhaes.github.io/rendra-design-system/galeria): cada captura mostra seu **código de modelo**, e o bloco "Monte seu código" gera o código e abre o demo já aplicado.
+- O usuário pode ver cada opção na galeria do demo (https://bsmagalhaes.github.io/rendra-design-system/galeria/): cada captura mostra seu **código de modelo**, e o bloco "Monte seu código" gera o código e abre o demo já aplicado.
 - **Antes do fluxo guiado, pergunte pelo código (3.0).** Com o código, as perguntas que ele responde são puladas; confirme em uma frase o que o código significa.
 
 ---

@@ -14,12 +14,21 @@ import { OverlayShell } from './overlay-shell'
  * Fecha por Esc e clique fora; com dirty, pede confirmação antes.
  */
 
+/*
+ * Largura no desktop, em porcentagem da tela: 30 (padrão), 40, 50 ou 75. Nunca menos que
+ * 28rem (para caber o formulário em telas médias); no celular, sempre tela inteira.
+ * sm, md, lg e xl são os nomes antigos e valem 30, 30, 50 e 75.
+ */
 const sizes = {
-  sm: 'md:max-w-sm',
-  md: 'md:max-w-lg',
-  lg: 'md:max-w-2xl',
-  xl: 'md:max-w-4xl',
-  full: 'md:max-w-none',
+  '30': 'md:w-sheet-30',
+  '40': 'md:w-sheet-40',
+  '50': 'md:w-sheet-50',
+  '75': 'md:w-sheet-75',
+  full: 'md:w-full',
+  sm: 'md:w-sheet-30',
+  md: 'md:w-sheet-30',
+  lg: 'md:w-sheet-50',
+  xl: 'md:w-sheet-75',
 } as const
 
 export interface DrawerProps {
@@ -45,7 +54,7 @@ export function Drawer({
   title,
   description,
   icon,
-  size = 'md',
+  size = '30',
   children,
   footer,
   dirty,

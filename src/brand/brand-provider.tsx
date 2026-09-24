@@ -88,7 +88,7 @@ export function BrandProvider({
     root.dataset.shape = shape
     root.dataset.palette = palette.id
     root.classList.toggle('dark', resolvedMode === 'dark')
-    document.title = brand.productName
+    // O título da aba vem de useRouteMeta (tela | produto).
     let link = document.querySelector<HTMLLinkElement>('link[rel="icon"]')
     if (!link) {
       link = document.createElement('link')

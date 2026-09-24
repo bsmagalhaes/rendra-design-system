@@ -1,5 +1,7 @@
 import { MoreHorizontal } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { useContext, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
+import { ShellContext } from '@/components/app-shell/shell-context'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -30,8 +32,10 @@ export interface ActionBarProps {
   /** A partir da terceira ação: vão para o menu de três pontinhos. */
   secondary?: ActionBarAction[]
   /**
-   * sticky: rodapé fixo no fim da área rolável (formulário em página), com borda
-   * superior e área segura do aparelho. Em drawer e modal o rodapé já é fixo.
+   * sticky: rodapé fixo das telas de formulário. Fica sempre colado embaixo, na largura
+   * inteira, fora da área rolável (nunca sobe, mesmo com formulário curto). Em drawer e
+   * modal o rodapé já é fixo; no wizard os botões seguem junto do card. Como o botão fica
+   * fora do <form>, use primary.form com o id do formulário para enviar.
    */
   sticky?: boolean
   className?: string
@@ -43,6 +47,7 @@ export interface ActionBarProps {
  * Vale para drawer, modal e formulário em página, em qualquer tamanho de tela.
  */
 export function ActionBar({ primary, cancel, secondary, sticky, className }: ActionBarProps) {
+  const slot = useContext(ShellContext)?.footerSlot
   const hasMenu = Boolean(secondary?.length)
   const layout = cancel
     ? hasMenu
@@ -52,15 +57,16 @@ export function ActionBar({ primary, cancel, secondary, sticky, className }: Act
       ? 'grid-actions-3'
       : ''
 
-  return (
+  const bar = (
     <div
       className={cn(
-        sticky &&
-          'sticky bottom-0 z-20 -mx-4 border-t bg-card px-4 pt-4 pb-safe md:-mx-6 md:px-6 lg:mx-0 lg:rounded-t-surface lg:border-x lg:px-6',
+        sticky && 'border-t bg-card px-4 pt-4 pb-safe md:px-6',
+        // Fora do AppShell (Storybook, telas soltas): fixo no fim da área rolável.
+        sticky && !slot && 'sticky bottom-0 z-20',
         className,
       )}
     >
-      <div className={cn('grid gap-3', layout || 'grid-cols-1')}>
+      <div className={cn('grid gap-3', layout || 'grid-cols-1', sticky && 'w-full')}>
         {hasMenu && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -111,4 +117,5 @@ export function ActionBar({ primary, cancel, secondary, sticky, className }: Act
       </div>
     </div>
   )
+  return sticky && slot ? createPortal(bar, slot) : bar
 }

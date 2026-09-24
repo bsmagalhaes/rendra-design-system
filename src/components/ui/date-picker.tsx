@@ -29,6 +29,11 @@ interface BaseProps {
   time?: boolean
   minDate?: Date
   maxDate?: Date
+  /**
+   * Seletores de mês e ano no topo do calendário (padrão: ligado), para chegar rápido
+   * a datas distantes, como data de nascimento, sem voltar mês a mês.
+   */
+  dropdowns?: boolean
   clearable?: boolean
   id?: string
   className?: string
@@ -73,6 +78,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
       time,
       minDate,
       maxDate,
+      dropdowns = true,
       clearable,
       id,
       className,
@@ -139,8 +145,24 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
     ]
     const immediate = !props.range && !time && !isMobile
 
+    // Faixa dos seletores de ano: de 1900 (ou minDate) até 10 anos à frente (ou maxDate).
+    const navigation = dropdowns
+      ? {
+          captionLayout: 'dropdown' as const,
+          startMonth: minDate ?? new Date(1900, 0, 1),
+          endMonth: maxDate ?? new Date(new Date().getFullYear() + 10, 11, 31),
+        }
+      : {}
+
     const classNames = {
       root: 'relative p-2',
+      dropdowns: 'flex items-center gap-2',
+      dropdown_root:
+        'relative inline-flex h-control-sm items-center rounded-item border border-input bg-field px-2 text-sm font-medium focus-within:ring-2 focus-within:ring-ring',
+      // Fundo e texto explícitos: a lista nativa não herda o fundo transparente do tema escuro.
+      dropdown:
+        'absolute inset-0 w-full cursor-pointer bg-popover text-popover-foreground opacity-0 [&_option]:bg-popover [&_option]:text-popover-foreground',
+      caption_label: 'inline-flex items-center gap-1 capitalize [&>svg]:size-icon-sm',
       months: 'flex flex-col gap-6 md:flex-row',
       month: 'flex flex-col gap-3',
       month_caption:
@@ -181,6 +203,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
         disabled={disabledDays}
         showOutsideDays
         classNames={classNames}
+        {...navigation}
       />
     ) : (
       <DayPicker
@@ -198,6 +221,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
         disabled={disabledDays}
         showOutsideDays
         classNames={classNames}
+        {...navigation}
       />
     )
 

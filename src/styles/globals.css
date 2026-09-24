@@ -439,3 +439,269 @@
 @utility grid-cols-week-time {
   grid-template-columns: var(--spacing-16) repeat(var(--days, 7), minmax(0, 1fr));
 }
+
+/* Gráficos desenhados em HTML/SVG (funil e velocímetro): largura e cor por variável CSS. */
+@utility w-ratio {
+  width: calc(var(--ratio, 1) * 100%);
+}
+@utility bg-fill {
+  background-color: var(--fill);
+}
+@utility gauge-needle {
+  transform: rotate(var(--angle, 0deg));
+  transform-box: view-box;
+  transform-origin: 50% 56.604%; /* centro do eixo: (120, 120) em 240 x 212 */
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Funil: trapézio com a largura do topo (--top) e da base (--bottom), de 0 a 1. */
+@utility clip-trapezoid {
+  clip-path: polygon(
+    calc((1 - var(--top, 1)) * 50%) 0,
+    calc((1 + var(--top, 1)) * 50%) 0,
+    calc((1 + var(--bottom, 1)) * 50%) 100%,
+    calc((1 - var(--bottom, 1)) * 50%) 100%
+  );
+}
+
+/*
+ * Conteúdo do RichTextEditor (.rich-text): tipografia, listas, tabela e imagem com as
+ * alças de redimensionar nos 4 cantos. Mesmos tokens do sistema; nada de cor fixa.
+ */
+@layer components {
+  .rich-text {
+    & > * + * {
+      margin-top: var(--spacing-3);
+    }
+    & h1 {
+      font-size: var(--text-2xl);
+      font-weight: 600;
+    }
+    & h2 {
+      font-size: var(--text-xl);
+      font-weight: 600;
+    }
+    & h3 {
+      font-size: var(--text-lg);
+      font-weight: 600;
+    }
+    & ul {
+      list-style: disc;
+      padding-left: var(--spacing-6);
+    }
+    & ol {
+      list-style: decimal;
+      padding-left: var(--spacing-6);
+    }
+    & blockquote {
+      border-left: 3px solid var(--border);
+      padding-left: var(--spacing-4);
+      color: var(--muted-foreground);
+    }
+    & a {
+      color: var(--primary-text);
+      text-decoration: underline;
+    }
+    & code {
+      border-radius: var(--shape-item);
+      background: var(--muted);
+      padding: 0 var(--spacing-1);
+      font-size: 0.9em;
+    }
+    & pre {
+      border-radius: var(--shape-control);
+      background: var(--muted);
+      padding: var(--spacing-3);
+      overflow-x: auto;
+    }
+    & hr {
+      border-color: var(--border);
+    }
+    & table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    & th,
+    & td {
+      border: 1px solid var(--border);
+      padding: var(--spacing-2);
+      vertical-align: top;
+      text-align: left;
+    }
+    & th {
+      background: var(--muted);
+      font-weight: 600;
+    }
+    & .selectedCell {
+      background: var(--primary-soft);
+    }
+    & img {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--shape-item);
+    }
+    & p.is-editor-empty:first-child::before {
+      content: attr(data-placeholder);
+      float: left;
+      height: 0;
+      pointer-events: none;
+      color: var(--muted-foreground);
+    }
+    & [data-resize-wrapper] {
+      max-width: 100%;
+    }
+    & [data-resize-handle] {
+      z-index: 1;
+      width: var(--spacing-3);
+      height: var(--spacing-3);
+      border: 2px solid var(--card);
+      border-radius: var(--shape-item);
+      background: var(--primary);
+      opacity: 0;
+      transition: opacity 150ms;
+    }
+    & [data-resize-handle='top-left'],
+    & [data-resize-handle='bottom-right'] {
+      cursor: nwse-resize;
+    }
+    & [data-resize-handle='top-right'],
+    & [data-resize-handle='bottom-left'] {
+      cursor: nesw-resize;
+    }
+    & [data-resize-container]:hover [data-resize-handle],
+    & [data-resize-container].ProseMirror-selectednode [data-resize-handle],
+    & [data-resize-state='true'] [data-resize-handle] {
+      opacity: 1;
+    }
+    /* No toque, alças maiores (aparecem ao tocar na imagem, sem depender de hover). */
+    @media (width < 48rem) {
+      & [data-resize-handle] {
+        width: var(--spacing-6);
+        height: var(--spacing-6);
+      }
+    }
+    & [data-resize-container].ProseMirror-selectednode img {
+      outline: 2px solid var(--ring);
+      outline-offset: 2px;
+    }
+  }
+}
+
+/* Kanban: altura medida em JS (o espaço que sobra até o fim da tela), em --board-h. */
+@utility h-board {
+  height: var(--board-h, 32rem);
+}
+
+/* Barra de rolagem discreta para áreas internas (colunas do kanban, listas): fina, sem
+   trilho e na cor da borda; um pouco mais visível ao passar o mouse. */
+@utility scrollbar-subtle {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--border) 70%, transparent) transparent;
+  &:hover {
+    scrollbar-color: var(--input) transparent;
+  }
+}
+
+/* Textarea que cresce com o texto (campo de mensagem do chat), até o max-h da classe. */
+@utility field-sizing-content {
+  field-sizing: content;
+}
+
+/* Altura medida pelo JS onde field-sizing não existe (Safari, Firefox): ver ChatComposer */
+@utility h-autosize {
+  height: var(--autosize-h, auto);
+}
+
+/*
+ * Cores do medidor (velocímetro): vermelho, amarelo e verde de sinal, iguais em todos os
+ * temas. São só do gráfico: o valor e o percentual aparecem em texto ao lado.
+ */
+:root {
+  --meter-low: #dc2626;
+  --meter-mid: #f5b400;
+  --meter-high: #16a34a;
+}
+.dark {
+  --meter-low: #f05252;
+  --meter-mid: #facc15;
+  --meter-high: #34d399;
+}
+
+/* Larguras do Drawer (sheet lateral) no desktop: porcentagem da tela, nunca menos que 28rem. */
+@utility w-sheet-30 {
+  width: min(100vw, max(30vw, 28rem));
+}
+@utility w-sheet-40 {
+  width: min(100vw, max(40vw, 28rem));
+}
+@utility w-sheet-50 {
+  width: min(100vw, max(50vw, 28rem));
+}
+@utility w-sheet-75 {
+  width: min(100vw, max(75vw, 28rem));
+}
+
+/* WidgetGrid em modo de ajuste: contorno tracejado, prévia na cor da marca e canto de redimensionar visível. */
+@layer components {
+  .widget-grid .react-grid-item.react-grid-placeholder {
+    border-radius: var(--shape-surface);
+    background: var(--primary-soft);
+    opacity: 1;
+    outline: 2px dashed var(--primary);
+  }
+  .widget-grid.is-editing .react-grid-item {
+    border-radius: var(--shape-surface);
+    outline: 2px dashed var(--border);
+    outline-offset: 2px;
+  }
+  .widget-grid.is-editing .react-grid-item > .react-resizable-handle {
+    opacity: 1;
+    z-index: 10;
+  }
+  .widget-grid .react-grid-item > .react-resizable-handle::after {
+    border-color: var(--primary);
+  }
+}
+
+/* Atendimento: lista de conversas, conversa e (a partir de xl) dados do contato. */
+@utility grid-chat-2 {
+  grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
+}
+@utility grid-chat-3 {
+  grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
+  @media (width >= 80rem) {
+    grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr) 18rem;
+  }
+}
+
+/* Kanban: 5 etapas visíveis por vez (--kanban-cols); as demais pela rolagem lateral. */
+@utility w-kanban-col {
+  flex: 0 0 calc((100% - (var(--kanban-cols, 5) - 1) * var(--spacing-4)) / var(--kanban-cols, 5));
+  min-width: 16rem;
+}
+
+/* Gravação de áudio no chat: barras que sobem e descem (a partir de --delay) e ponto pulsando. */
+@keyframes rd-wave {
+  0%,
+  100% {
+    transform: scaleY(0.25);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+@utility wave-bar {
+  transform-origin: center;
+  animation: rd-wave 900ms ease-in-out infinite;
+  animation-delay: var(--delay, 0ms);
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    transform: scaleY(0.6);
+  }
+}
+
+/* Altura por variável (ondas do áudio no chat). */
+@utility h-var {
+  height: var(--h, 100%);
+}

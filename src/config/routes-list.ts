@@ -9,6 +9,7 @@ export const publicRoutes = [
   '/clientes/1000',
   '/cadastro',
   '/tarefas',
+  '/atendimento',
   '/agenda',
   '/kanban',
   '/configuracoes',

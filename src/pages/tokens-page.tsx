@@ -68,7 +68,7 @@ function Section({
         <h2 id={`${id}-t`} className="text-xl">
           {title}
         </h2>
-        <p className="max-w-2xl text-sm text-muted-foreground">{description}</p>
+        <p className="text-sm text-muted-foreground">{description}</p>
       </div>
       {children}
     </section>
@@ -333,7 +333,7 @@ export function TokensPage() {
               options={palettes.map((p) => ({ value: p.id, label: p.name }))}
             />
           </Stack>
-          <p className="text-sm text-muted-foreground md:ml-auto md:max-w-sm">
+          <p className="text-sm text-muted-foreground md:ml-auto">
             O modelo define fonte, símbolo e formato; a paleta define as cores. Combine qualquer
             modelo com qualquer paleta. {brand.productName} usa o formato{' '}
             <strong className="font-medium text-foreground">

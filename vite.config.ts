@@ -2,11 +2,18 @@
 import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import svgr from 'vite-plugin-svgr'
 
+// Endereço público do demo, usado no canonical, no Open Graph e no JSON-LD do index.html.
+const SITE_URL = process.env.SITE_URL ?? 'https://bsmagalhaes.github.io/rendra-design-system/'
+const siteUrl = (): Plugin => ({
+  name: 'site-url',
+  transformIndexHtml: (html) => html.replaceAll('__SITE_URL__', SITE_URL),
+})
+
 export default defineConfig({
-  plugins: [react(), tailwindcss(), svgr()],
+  plugins: [react(), tailwindcss(), svgr(), siteUrl()],
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },

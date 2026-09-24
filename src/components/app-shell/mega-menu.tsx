@@ -106,7 +106,7 @@ export function MegaMenu() {
                 />
               </N.Trigger>
               <N.Content className="w-full data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in-0 data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out-0">
-                <div className="mx-auto grid w-full max-w-content gap-6 px-8 py-6 lg:grid-cols-4">
+                <div className="grid w-full gap-6 p-6 lg:grid-cols-4">
                   <div className="flex flex-col gap-2 border-r pr-6">
                     <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
                       Seção

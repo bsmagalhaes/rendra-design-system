@@ -143,18 +143,19 @@ export function ClientDetailPage() {
                     </CardContent>
                   </Card>
                   <Card className="bg-gradient-soft">
-                    <CardHeader>
+                    <CardHeader
+                      actions={
+                        <Button variant="outline" icon={<Phone />}>
+                          Ligar
+                        </Button>
+                      }
+                    >
                       <CardTitle>Receita mensal</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <Stack gap="4">
-                        <p className="text-3xl font-semibold tracking-tight tabular-nums">
-                          {formatCurrency(client.revenue)}
-                        </p>
-                        <Button variant="outline" icon={<Phone />} fullWidth>
-                          Ligar para o cliente
-                        </Button>
-                      </Stack>
+                      <p className="text-3xl font-semibold tracking-tight tabular-nums">
+                        {formatCurrency(client.revenue)}
+                      </p>
                     </CardContent>
                   </Card>
                 </Grid>

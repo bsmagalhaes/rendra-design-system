@@ -74,8 +74,13 @@ Ao fim de **cada etapa**:
 - **Só a escala de espaço** (0, 1, 2, 3, 4, 6, 8, 12, 16, 24) e tokens nomeados. Proibido valor arbitrário (`p-[13px]`), estilo inline, `100vh` e degrau fora da escala.
 - **Contêiner certo:** modal até 3 campos, drawer até cerca de 12, página em seções ou wizard acima disso. Nunca modal dentro de modal.
 - **Botões pela `ActionBar`:** 1 botão com 100%, 2 botões com 30% e 70%, a partir de 3 as extras vão para o menu.
+- **Nunca botão solto:** cada ação tem lugar previsto (rodapé fixo, barra da tabela, `PageHeader actions`, `CardHeader actions`, menu da linha).
+- **Texto orientativo nunca no corpo da tela:** vai em `help` (ícone de informação ao lado do título, no `PageHeader`, `CardTitle` ou `FormSection`), que abre um modal. Subtítulo descreve, não instrui.
 - **Header sempre fixo**, título da página no header com a trilha abaixo, uma única área de rolagem (o `<main>`).
-- **Sidebar sempre colorida**, fundo da tela e dos campos cinza bem claro #f5f6f7 com cards brancos, conteúdo com 95% da largura a partir de 1024px, contraste AA.
+- **Sidebar sempre colorida**, fundo da tela e dos campos cinza bem claro #f5f6f7 com cards brancos, respiro de página de 24px igual em todos os lados, contraste AA.
+- **Formulário:** 3 campos por linha (nunca 2 por padrão), CEP e CNPJ primeiro com 25% e o que eles preenchem abaixo, 16px entre campos, salvar no rodapé fixo (no wizard, junto do card).
+- **Listagem:** Novo na barra da tabela com Filtros à esquerda, nada solto acima da tabela, 15 por página com busca em todos os registros, título da linha abre o cadastro.
+- **Texto em 100% da largura**; limite de largura só quando pedido.
 - **Interface em português do Brasil**, datas em DD/MM/AAAA e valores em R$ 1.250,00.
 
 ## Comandos
