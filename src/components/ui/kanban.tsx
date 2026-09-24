@@ -179,7 +179,7 @@ function CardBody({
         </span>
       )}
       {shown.length > 0 && (
-        <span className="grid grid-cols-2 divide-x rounded-item bg-muted text-xs">
+        <span className="grid grid-cols-2 divide-x rounded-block bg-muted text-xs">
           {shown.map((f) => (
             <span key={f.key} className="flex min-w-0 flex-col px-2 py-1">
               <span className="text-muted-foreground">{f.label}:</span>
@@ -315,7 +315,7 @@ export function Kanban({
         if (over) drop(over.column, over.index)
       }}
       className={cn(
-        'relative flex rounded-item border bg-card p-3 shadow-sm transition-[box-shadow,opacity]',
+        'relative flex rounded-block border bg-card p-3 shadow-sm transition-[box-shadow,opacity]',
         !isMobile && onCardMove && 'cursor-grab active:cursor-grabbing',
         dragging === card.id && 'opacity-50',
         over?.column === card.columnId &&
@@ -328,7 +328,7 @@ export function Kanban({
         <button
           type="button"
           onClick={() => onCardClick(card)}
-          className="flex min-w-0 flex-1 cursor-pointer flex-col gap-2 rounded-item text-left outline-none after:absolute after:inset-0 focus-visible:ring-2 focus-visible:ring-ring"
+          className="flex min-w-0 flex-1 cursor-pointer flex-col gap-2 rounded-block text-left outline-none after:absolute after:inset-0 focus-visible:ring-2 focus-visible:ring-ring"
         >
           {renderCard ? (
             renderCard(card)
@@ -377,7 +377,7 @@ export function Kanban({
         )}
       </div>
       {valueFields && valueFields.length > 0 && (
-        <div className="grid grid-cols-2 divide-x rounded-item bg-card text-xs">
+        <div className="grid grid-cols-2 divide-x rounded-block bg-card text-xs">
           {totals(col).map((t) => (
             <span key={t.key} className="flex min-w-0 flex-col px-2 py-1">
               <span className="text-muted-foreground">Total {t.label}</span>

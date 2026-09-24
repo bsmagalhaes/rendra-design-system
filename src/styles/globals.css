@@ -144,6 +144,8 @@
   --radius-control: var(--shape-control);
   --radius-surface: var(--shape-surface);
   --radius-item: var(--shape-item);
+  /* Bloco dentro de um card (valores, citação, evento): canto pequeno em todos os modelos. */
+  --radius-block: var(--shape-block);
   --radius-avatar: var(--shape-avatar);
 
   --shadow-*: initial;
@@ -225,6 +227,10 @@
  * FORMATO: square, rounded ou pill. O padrão vem do brand.config (atributo no <html>);
  * qualquer componente sobrescreve com a prop shape, que grava data-shape nele mesmo.
  * Em pill, superfícies grandes (card, drawer) ganham raio generoso, não 100%.
+ * Controle e item em pill usam 1,75rem (28px), não 9999px: o navegador limita o raio à
+ * metade da altura, então tudo que tem até 56px (botão, campo, chip, item de menu) fica
+ * 100% redondo, e o que é mais alto (área de texto, cartão, aviso, item de lista com duas
+ * linhas) ganha cantos de 28px em vez de virar círculo.
  */
 @layer base {
   :root,
@@ -232,18 +238,22 @@
     --shape-control: calc(var(--radius) - 2px);
     --shape-surface: var(--radius);
     --shape-item: calc(var(--radius) - 4px);
+    --shape-block: calc(var(--radius) - 4px);
     --shape-avatar: 9999px;
   }
   [data-shape='square'] {
     --shape-control: 0px;
     --shape-surface: 0px;
     --shape-item: 0px;
+    --shape-block: 0px;
     --shape-avatar: 0px;
   }
   [data-shape='pill'] {
-    --shape-control: 9999px;
+    --shape-control: 1.75rem;
     --shape-surface: calc(var(--radius) + 0.75rem);
-    --shape-item: 9999px;
+    --shape-item: 1.75rem;
+    /* Arredondado a 100% vale para controles; cards e blocos de informação têm canto pequeno. */
+    --shape-block: var(--radius);
     --shape-avatar: 9999px;
   }
 }
