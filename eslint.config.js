@@ -6,7 +6,16 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
-  { ignores: ['dist', 'storybook-static', 'playwright-report', 'test-results', 'screenshots'] },
+  {
+    ignores: [
+      'dist',
+      'storybook-static',
+      'playwright-report',
+      'test-results',
+      'screenshots',
+      'coverage',
+    ],
+  },
   {
     extends: [
       js.configs.recommended,

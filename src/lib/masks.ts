@@ -104,6 +104,24 @@ export function parseLocaleNumber(masked: string): number | null {
   return Number.isFinite(n) ? n : null
 }
 
+/**
+ * Moeda em centavos inteiros, sem erro de arredondamento de ponto flutuante:
+ * "R$ 1.250,50" -> 125050. Vazio -> null. Use centavos para guardar e somar dinheiro.
+ */
+export function toCents(masked: string): number | null {
+  const d = masked.replace(/\D/g, '')
+  if (!d) return null
+  const hasDecimals = /,\d{1,2}\s*$/.test(masked.replace(/\s*%$/, ''))
+  if (!hasDecimals) return Number(d) * 100
+  const [int = '', dec = ''] = masked.replace(/[^\d,]/g, '').split(',')
+  return Number(int || '0') * 100 + Number(dec.padEnd(2, '0').slice(0, 2))
+}
+
+/** Centavos para o texto do campo de moeda: 125050 -> "R$ 1.250,50". */
+export function formatCents(cents: number) {
+  return formatCurrency(cents / 100)
+}
+
 /** Formata número como moeda brasileira: 1250 -> "R$ 1.250,00". */
 export function formatCurrency(value: number) {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })

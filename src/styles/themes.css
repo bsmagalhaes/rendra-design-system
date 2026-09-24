@@ -3,10 +3,13 @@
  * ----------------
  * Lista os arquivos de marca carregados. É o único import de marca no CSS: o globals.css
  * é genérico e pode ser atualizado pelo registry sem apagar a marca do projeto.
+ *   theme.css     modelo padrão (fonte e raio), neutros e cores de sistema: fixos
+ *   examples/*    os outros modelos (só fonte e raio)
+ *   palettes.css  as paletas, geradas de src/brand/palettes.ts (npm run palettes:build)
  *
- * Projeto com uma marca só: deixe apenas o theme.css e apague os exemplos.
+ * Projeto com um modelo só: deixe theme.css e palettes.css e apague os exemplos.
  */
 @import './theme.css';
 @import '../brand/examples/aurora/theme.css';
 @import '../brand/examples/equilibrio/theme.css';
-@import '../brand/palettes/ardosia.css';
+@import './palettes.css';

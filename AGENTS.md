@@ -4,6 +4,17 @@ Instruções para qualquer agente de IA de desenvolvimento (Codex, Claude Code, 
 
 Este é o **Rendra Design System**: um design system completo e boilerplate React (tokens, três modelos, quatro paletas, componentes, AppShell, telas base, Storybook e testes de layout). Ele serve para **criar sistemas novos** e para **migrar o layout de sistemas existentes**.
 
+## Em um minuto
+
+- **O que é:** design system e boilerplate React (Vite, TypeScript, Tailwind v4, Radix e shadcn/ui copiados para `src/components/ui`). Serve para três coisas: **começar um sistema novo** a partir deste repositório, **migrar o layout** de um sistema existente, ou **trazer componentes** para outro projeto pelo registry (`npx shadcn@latest add`).
+- **Cor em três camadas** (a parte que mais confunde; leia a seção "Cor: três camadas" do `DESIGN_RULES.md`):
+  1. **Modelo**: formato e fonte. São só três: Safira (quadrado), Equilíbrio (intermediário) e Aurora (arredondado).
+  2. **Paleta**: a cor da marca, que é só **4 cores** (primária, hover da primária, secundária, hover da secundária) e o **degradê da marca**. Todo o resto é gerado com AA por `createPalette`; nunca edite `palettes.css` à mão.
+  3. **Sistema**: neutros e cores de erro, sucesso, alerta e informação. Fixos, iguais em todas as paletas.
+- **Onde mexer:** marca em `src/brand/palettes.ts` (cores), `src/styles/theme.css` (modelo) e `src/brand/brand.config.ts` e `src/brand/assets` (nome, logotipo); menu em `src/config/navigation.ts`; layout do AppShell em `src/config/layout.ts`; rotas em `src/routes.tsx` e `src/config/routes-list.ts`.
+- **O que não se faz:** componente paralelo (`SelectSimples`), valor fora da escala, cor fixa, estilo inline, botão solto, texto de instrução no corpo da tela. O `npm run check:rules` barra tudo isso.
+- **Como saber que terminou:** `npm run typecheck`, `npm run lint`, `npm run check:rules`, `npm test` (unitários e de componente, com cobertura mínima por arquivo), `npm run test:layout` e `npm run test:a11y` passando.
+
 ## Leitura obrigatória
 
 1. Este arquivo, inteiro.
@@ -70,7 +81,7 @@ Ao fim de **cada etapa**:
 
 - **Um componente por finalidade.** Procure em `src/components/ui` e acrescente uma prop em vez de criar um arquivo parecido. Nunca crie `SelectSimples`, `TableMobile`, `ModalGrande` e similares.
 - **Mobile-first real.** Escreva primeiro para 360px. Sem rolagem horizontal no celular, sem ação que dependa de hover, toque mínimo de 44x44px.
-- **Marca isolada** em `theme.css`, `brand.config.ts` e `src/brand/assets`. Nada de cor, fonte ou logotipo fixo em componente. O logotipo é o `<BrandLogo />`.
+- **Marca isolada** em `src/brand/palettes.ts` (4 cores e o degradê), `theme.css` (modelo), `brand.config.ts` e `src/brand/assets`. Nada de cor, fonte ou logotipo fixo em componente. O logotipo é o `<BrandLogo />`. Paleta nova: sementes em `palettes.ts` e `npm run palettes:build`; cliente em tempo de execução: `applyPalette()`.
 - **Só a escala de espaço** (0, 1, 2, 3, 4, 6, 8, 12, 16, 24) e tokens nomeados. Proibido valor arbitrário (`p-[13px]`), estilo inline, `100vh` e degrau fora da escala.
 - **Contêiner certo:** modal até 3 campos, drawer até cerca de 12, página em seções ou wizard acima disso. Nunca modal dentro de modal.
 - **Botões pela `ActionBar`:** 1 botão com 100%, 2 botões com 30% e 70%, a partir de 3 as extras vão para o menu.
@@ -104,4 +115,5 @@ npm run test:visual             # regressão visual (referências do Linux, gera
 - Pergunte antes de apagar arquivos, trocar dependências principais ou publicar qualquer coisa.
 - Nunca desative uma regra, um teste ou uma verificação para fazer passar. Corrija a causa.
 - Toda tela nova entra em `src/routes.tsx` e em `src/config/routes-list.ts`, e ganha story em `src/stories/pages.stories.tsx`.
+- Componente novo ou alterado ganha teste de comportamento ao lado dele (`nome.test.tsx`, com `renderApp` de `src/test/render.tsx`) e um piso de cobertura em `vite.config.ts`.
 - Relate o resultado com fidelidade. Se algo falhou, mostre a saída.

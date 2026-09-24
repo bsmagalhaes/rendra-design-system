@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /*
  * Verificador das regras do DESIGN_RULES.md que o Tailwind não consegue barrar sozinho.
- * Roda em CI e no pré-commit: `npm run check:rules`.
+ * Roda no CI (.github/workflows/ci.yml) em todo Pull Request e localmente com
+ * `npm run check:rules`.
  *
  * Proíbe, fora de src/brand e src/styles:
  *  - cor fixa (hexadecimal, rgb(), hsl(), oklch())
@@ -11,6 +12,8 @@
  *  - importação de SVG de marca fora de src/brand
  *  - arquivo de variante mobile ou paralela de componente (TableMobile, SelectSimples...)
  *  - 100vh (usar 100dvh / h-dvh)
+ *  - classe montada por template string (p-${n}): o Tailwind não gera a classe
+ *  - arquivo .css fora de src/styles e src/brand
  * Nas telas do sistema (src/pages/app), também:
  *  - texto orientativo no corpo (description de texto no PageHeader): vai em help, no ícone
  *    de informação que abre um modal
@@ -53,7 +56,9 @@ const rules = [
   },
   {
     id: 'fonte-fixa',
-    test: /font-family|fontFamily|\b(Poppins|Inter|Roboto|Arial|Helvetica)\b/g,
+    // Só em contexto de fonte (declaração ou nome entre aspas numa pilha de fontes): a
+    // palavra "Inter" num texto da interface não é violação.
+    test: /font-family|fontFamily|['"](?:Poppins|Inter|Roboto|Arial|Helvetica)(?:['",]| sans| serif)/g,
     message: 'Nome de fonte fixo. A fonte vem de --brand-font em theme.css.',
   },
   {
@@ -72,6 +77,14 @@ const rules = [
     test: /from\s+['"][^'"]*brand\/assets[^'"]*['"]/g,
     message:
       'SVG de marca importado fora de src/brand. Leia o logotipo e o símbolo via useBrand().',
+  },
+  {
+    id: 'classe-dinamica',
+    // O Tailwind só gera classes escritas por inteiro no código: `p-${n}` não existe no CSS.
+    test: /(?<![\w-])(?:[a-z]+:)*-?(?:p[xytrbl]?|m[xytrbl]?|gap(?:-[xy])?|w|h|size|min-[wh]|max-[wh]|inset|top|left|right|bottom|z|text|bg|border(?:-[xytrbl])?|rounded(?:-[a-z]+)?|grid-cols|grid-rows|col-span|row-span|space-[xy]|translate-[xy]|opacity|font|leading|tracking|shadow|ring|fill|stroke|line-clamp|basis|order)-\$\{/g,
+    message:
+      'Classe montada por template string não é gerada pelo Tailwind. Escreva a classe inteira (mapa de valores) ou use variável CSS.',
+    skipLine: (line) => /^\s*(\/\/|\*|\/\*)/.test(line),
   },
   {
     id: 'texto-estreito',
@@ -146,7 +159,16 @@ for (const file of files) {
     })
   }
   if (ALLOWED_DIRS.some((d) => file.startsWith(d))) continue
-  if (file.endsWith('.css')) continue
+  if (file.endsWith('.css')) {
+    problems.push({
+      rel,
+      line: 0,
+      id: 'css-fora-do-lugar',
+      message:
+        'CSS fora de src/styles e src/brand. Estilo de componente é classe do Tailwind; token vai em globals.css; marca, em theme.css.',
+    })
+    continue
+  }
   const text = readFileSync(file, 'utf8')
   if (file.startsWith(APP_PAGES))
     for (const rule of fileRules)
