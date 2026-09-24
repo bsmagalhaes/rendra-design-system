@@ -149,6 +149,37 @@ React 19, TypeScript 5.9 (estrito), Vite 8, Tailwind CSS 4 (tema via `@theme`), 
 
 ---
 
+## Começar com IA
+
+O repositório vem preparado para agentes de IA de desenvolvimento. Ao abrir o projeto, a IA lê as instruções sozinha, pergunta se é **projeto novo** ou **migração de layout**, conduz um **briefing** (negócio, usuários, marca, menu, telas e dados), registra tudo em `docs/BRIEFING.md` e só então constrói, em etapas e com as verificações passando.
+
+| Ferramenta                                   | Arquivo lido automaticamente                                         |
+| -------------------------------------------- | -------------------------------------------------------------------- |
+| OpenAI Codex, Jules, Gemini, Cursor e outras | [`AGENTS.md`](AGENTS.md)                                             |
+| Claude Code                                  | [`CLAUDE.md`](CLAUDE.md)                                             |
+| GitHub Copilot                               | [`.github/copilot-instructions.md`](.github/copilot-instructions.md) |
+| Cursor                                       | [`.cursor/rules/rendra.mdc`](.cursor/rules/rendra.mdc)               |
+| Windsurf                                     | [`.windsurfrules`](.windsurfrules)                                   |
+| Gemini CLI                                   | [`GEMINI.md`](GEMINI.md)                                             |
+
+Todos apontam para o mesmo fluxo ([`AGENTS.md`](AGENTS.md)) e as mesmas regras ([`DESIGN_RULES.md`](DESIGN_RULES.md)).
+
+**Para um projeto novo**, cole na sua IA:
+
+```text
+Clone https://github.com/bsmagalhaes/rendra-design-system e use como base do meu novo sistema. Siga o AGENTS.md do repositório.
+```
+
+**Para migrar o layout de um sistema existente**, abra a IA na pasta do seu sistema e cole:
+
+```text
+Aplique neste projeto o design system https://github.com/bsmagalhaes/rendra-design-system. Leia o AGENTS.md e o DESIGN_RULES.md dele e siga o fluxo de migração, começando pelo briefing.
+```
+
+A versão completa do prompt de migração, com todas as regras, está em [docs/PROMPT_MIGRACAO.md](docs/PROMPT_MIGRACAO.md). O roteiro do briefing está em [docs/BRIEFING_MODELO.md](docs/BRIEFING_MODELO.md).
+
+---
+
 ## Como rodar
 
 Pré-requisito: Node.js 20 ou mais recente.
@@ -216,7 +247,9 @@ O passo a passo completo, inclusive como adotar o Equilíbrio ou o Aurora como m
 - [DESIGN_RULES.md](DESIGN_RULES.md): todas as regras de interface, o que é proibido e o checklist de revisão. **Leitura obrigatória antes de alterar qualquer interface.**
 - [docs/COMO_APLICAR.md](docs/COMO_APLICAR.md): projeto novo ou existente, troca de marca, ordem de migração, testes, problemas comuns e checklist de aceite.
 - [docs/PROMPT_MIGRACAO.md](docs/PROMPT_MIGRACAO.md): prompt pronto para a IA do projeto de destino aplicar o design system.
-- [CLAUDE.md](CLAUDE.md): instruções para IAs que trabalham neste repositório.
+- [AGENTS.md](AGENTS.md): fluxo de início para qualquer IA (tipo de trabalho, briefing e etapas).
+- [docs/BRIEFING_MODELO.md](docs/BRIEFING_MODELO.md): roteiro do briefing.
+- [CLAUDE.md](CLAUDE.md): instruções para o Claude Code.
 
 ---
 
