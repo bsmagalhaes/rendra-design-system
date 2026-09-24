@@ -4,6 +4,10 @@ O que mudou em cada versão e o que um projeto derivado precisa fazer para atual
 
 ## Não publicado
 
+### Corrigido
+
+- **Modelo Aurora:** cartões do kanban e blocos de informação viravam círculo ou pílula, porque usavam o raio de controle ou de item (9999px). Agora controle e item usam 1,75rem, que deixa 100% redondo tudo que tem até 56px e dá cantos de 28px ao que é mais alto. Papel novo **`rounded-block`** (canto pequeno em todos os modelos) para o cartão do kanban, os valores dentro dele, as citações do chat, os eventos da agenda e o skeleton.
+
 ### Adicionado
 
 - **Paleta a partir de 4 cores e do degradê** (`src/brand/palette.ts`): `createPalette(sementes)` gera o claro e o escuro de uma paleta (texto sobre cada cor, fundo suave, primária como texto, foco, sidebar, degradês, gráficos, sombra e superfícies do escuro) com contraste AA conferido e ajustado, e registra os ajustes. As paletas prontas são só as sementes em `src/brand/palettes.ts`; `npm run palettes:build` gera `src/styles/palettes.css`, e o CI confere se está em dia.

@@ -104,7 +104,18 @@ Tokens semânticos: `background`, `foreground`, `card`, `popover`, `muted`, `mut
 
 ### Raio, sombra e densidade
 
-- Raio: `--radius`, com os derivados por papel (`rounded-control`, `rounded-surface`, `rounded-item`, `rounded-avatar`) controlados pelo formato do template.
+- Raio: `--radius`, com os derivados por papel, controlados pelo formato do modelo. Escolha pelo papel do elemento, nunca pelo visual que quer:
+
+  | Papel      | Classe            | Onde                                                                                      | No Aurora (arredondado)         |
+  | ---------- | ----------------- | ----------------------------------------------------------------------------------------- | ------------------------------- |
+  | Controle   | `rounded-control` | botão, campo, select                                                                      | 100% redondo até 56px de altura |
+  | Item       | `rounded-item`    | chip, item de menu, aba, badge                                                            | 100% redondo até 56px de altura |
+  | Superfície | `rounded-surface` | card, drawer, painel, coluna do kanban                                                    | raio generoso, não 100%         |
+  | Bloco      | `rounded-block`   | cartão do kanban, bloco de valores dentro de um card, citação, evento da agenda, skeleton | canto pequeno                   |
+  | Avatar     | `rounded-avatar`  | foto e iniciais                                                                           | círculo                         |
+
+  **O arredondado a 100% do Aurora é só para controles de uma linha.** Cartão e bloco de informação nunca viram pílula nem círculo: usam `rounded-surface` ou `rounded-block`. Elemento com mais de uma linha dentro de um card é `rounded-block`.
+
 - Sombra: três níveis (`shadow-sm`, `shadow-md`, `shadow-lg`), sutis. Superfície de página usa **borda de 1px**, e a sombra fica para o que flutua.
 - Densidade: input, botão e select têm a **mesma altura** em cada tamanho (`sm`, `md`, `lg`). No mobile, 44, 48 e 52px. A partir de 768px, 32, 40 e 48px.
 
