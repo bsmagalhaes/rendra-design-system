@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Alert } from '@/components/ui/alert'
 import { BrandFeedbackIcon } from '@/components/ui/brand-feedback-icon'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { EmptyState } from '@/components/ui/empty-state'
 import { ErrorPage } from '@/components/ui/error-page'
 import { Field } from '@/components/ui/field'
@@ -172,13 +173,28 @@ export const DrawerComRodapeFixo: Story = {
 
 /* ------------------------------------------------ Demais */
 
+export const TextoOrientativo: Story = {
+  name: 'Texto orientativo (InfoHint)',
+  render: () => (
+    <Card>
+      <CardHeader actions={<Button variant="outline">Ligar</Button>}>
+        <CardTitle help="Soma dos contratos faturados no mês, sem descontos.">
+          Receita do mês
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-3xl font-semibold">R$ 61.300,00</p>
+      </CardContent>
+    </Card>
+  ),
+}
 export const PopoverETooltip: Story = {
   name: 'Popover e Tooltip',
   render: () => (
     <div className="flex gap-3">
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline">Como calculamos</Button>
+          <Button variant="outline">Filtros</Button>
         </PopoverTrigger>
         <PopoverContent className="p-4">
           <p className="text-sm">Soma dos contratos faturados no mês.</p>

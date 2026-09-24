@@ -11,6 +11,10 @@
  *  - importação de SVG de marca fora de src/brand
  *  - arquivo de variante mobile ou paralela de componente (TableMobile, SelectSimples...)
  *  - 100vh (usar 100dvh / h-dvh)
+ * Nas telas do sistema (src/pages/app), também:
+ *  - texto orientativo no corpo (description de texto no PageHeader): vai em help, no ícone
+ *    de informação que abre um modal
+ *  - botão solto no conteúdo de um card: ação de card vai em CardHeader actions
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative, sep } from 'node:path'
@@ -69,6 +73,18 @@ const rules = [
     message:
       'SVG de marca importado fora de src/brand. Leia o logotipo e o símbolo via useBrand().',
   },
+  {
+    id: 'texto-estreito',
+    test: /<p\s[^>]*className=["'{][^>]*max-w-/g,
+    message:
+      'Texto ocupa 100% da largura disponível. Limite de largura (max-w-*) em parágrafo só quando o layout pedir outra medida.',
+  },
+  {
+    id: 'primaria-como-texto',
+    test: /(?<![\w-])(?:[\w-]+:)*text-primary(?![\w-])/g,
+    message:
+      'Primária como texto usa text-primary-text (tom que passa AA no claro e no escuro). text-primary é só para o preenchimento.',
+  },
 ]
 
 // Degraus fora da escala não geram CSS (o Tailwind ignora em silêncio e o layout quebra).
@@ -95,6 +111,30 @@ const forbiddenFileNamesKebab = /-(mobile|simples|simple|com-busca|grande|pequen
 const files = walk(SRC).filter((f) => /\.(tsx?|jsx?|css)$/.test(f))
 const problems = []
 
+// Regras que olham o arquivo inteiro (JSX em várias linhas), só nas telas do sistema.
+const APP_PAGES = join(SRC, 'pages', 'app')
+const fileRules = [
+  {
+    id: 'texto-orientativo',
+    test: /<PageHeader\b(?:(?!\/>)[\s\S])*?\bdescription=\s*(?:["'`]|\{\s*["'`])/g,
+    message:
+      'Texto orientativo no corpo da tela. Use PageHeader help (ícone de informação ao lado do título, que abre um modal).',
+  },
+  {
+    id: 'texto-orientativo',
+    // Subtítulo que dá instrução (começa com verbo no imperativo) também é texto orientativo.
+    test: /(?:description=\{?\s*["'`]|<CardDescription>\s*)(?:Comece|Clique|Toque|Arraste|Preencha|Use|Escolha|Selecione|Digite|Informe|Veja|Confira)\b/g,
+    message:
+      'Instrução no subtítulo. Use help (PageHeader, CardTitle ou FormSection): ícone de informação que abre um modal.',
+  },
+  {
+    id: 'botao-solto',
+    test: /<CardContent\b[^>]*>\s*(?:<Stack\b[^>]*>\s*)?<Button\b|<Button\b[^>]*\bself-(?:start|end|center)\b/g,
+    message:
+      'Botão solto no conteúdo. Ação de card vai em CardHeader actions; da tela, no PageHeader actions ou na ActionBar.',
+  },
+]
+
 for (const file of files) {
   const rel = relative(ROOT, file).split(sep).join('/')
   if (forbiddenFileNames.test(file) || forbiddenFileNamesKebab.test(file)) {
@@ -107,7 +147,15 @@ for (const file of files) {
   }
   if (ALLOWED_DIRS.some((d) => file.startsWith(d))) continue
   if (file.endsWith('.css')) continue
-  const lines = readFileSync(file, 'utf8').split('\n')
+  const text = readFileSync(file, 'utf8')
+  if (file.startsWith(APP_PAGES))
+    for (const rule of fileRules)
+      for (const m of text.matchAll(rule.test)) {
+        const line = text.slice(0, m.index).split('\n').length
+        const src = m[0].split('\n')[0].trim()
+        problems.push({ rel, line, id: rule.id, message: rule.message, src })
+      }
+  const lines = text.split('\n')
   lines.forEach((line, i) => {
     for (const rule of rules) {
       if (rule.skipLine?.(line)) continue

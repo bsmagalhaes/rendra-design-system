@@ -28,7 +28,7 @@ export function Accordion({ items, multiple, defaultValue, className }: Accordio
       className="border-b last:border-b-0"
     >
       <A.Header>
-        <A.Trigger className="group flex min-h-touch w-full cursor-pointer items-center justify-between gap-4 py-4 text-left text-sm font-medium transition-colors hover:text-primary disabled:cursor-not-allowed disabled:opacity-50 md:min-h-0">
+        <A.Trigger className="group flex min-h-touch w-full cursor-pointer items-center justify-between gap-4 py-4 text-left text-sm font-medium transition-colors hover:text-primary-text disabled:cursor-not-allowed disabled:opacity-50 md:min-h-0">
           {it.title}
           <ChevronDown
             aria-hidden

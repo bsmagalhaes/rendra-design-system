@@ -11,10 +11,20 @@ Obrigado pelo interesse. Este repositório é mantido por [Bruno Magalhaes](http
    npm run typecheck
    npm run lint
    npm run check:rules
+   npm test
    npm run test:layout
+   npm run test:a11y
+   npm run registry:build   # se criou ou renomeou componente; faça commit do registry.json
    ```
 4. Abra o Pull Request explicando o que mudou e por quê, com capturas em 360px e 1280px quando houver mudança visual.
-5. O mantenedor revisa, pode pedir ajustes e decide se a contribuição entra.
+5. O CI roda tudo de novo, mais o build, o Storybook e a regressão visual. O merge só é liberado com tudo verde.
+6. **Mudança visual intencional:** a regressão visual vai falhar, como esperado. O mantenedor aplica no Pull Request o rótulo `atualizar-visual`: o GitHub gera as capturas novas no Linux e faz commit no branch. Quem revisa confere as imagens no próprio PR.
+7. Registre a mudança em `CHANGELOG.md`, na seção "Não publicado".
+8. O mantenedor revisa, pode pedir ajustes e decide se a contribuição entra.
+
+## Versões
+
+O projeto segue [versionamento semântico](https://semver.org/lang/pt-BR/): correção sobe o último número (1.0.1), recurso novo compatível sobe o do meio (1.1.0), e mudança que exige ajuste nos projetos, como prop renomeada ou token novo obrigatório, sobe o primeiro (2.0.0). Cada versão vira uma tag `vX.Y.Z` e um release no GitHub, com o trecho do CHANGELOG.
 
 ## Contato
 

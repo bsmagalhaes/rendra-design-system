@@ -48,7 +48,7 @@
   --radius: 0.625rem;
 
   /* Superfícies e neutros */
-  --background: #fcfcfc;
+  --background: #f5f6f7;
   --background-image: none;
   --foreground: #0b1d37;
   --card: #ffffff;
@@ -59,22 +59,26 @@
   --muted-foreground: #4f5f76;
   --border: #dbe2eb;
   --input: #808fa4;
-  --field: #fcfcfc;
+  --field: #f5f6f7;
   --ring: #0e6cdb;
   --overlay: rgb(7 20 42 / 0.55);
 
   /* Marca */
-  /* Primária #0C78F4 e secundária #A7E90A. No hover, cada uma troca para a outra. */
-  --primary: #0c78f4;
+  /* Primária #0B6FE0 e secundária #98D10A. No hover, cada uma troca para a outra.
+     #0B6FE0 dá 4,8:1 com texto branco (AA); o tom anterior, #0C78F4, dava 4,2:1. */
+  --primary: #0b6fe0;
   --primary-hover: #98d10a;
   --primary-foreground: #ffffff;
   --primary-hover-foreground: #0b1d37;
   --primary-soft: #e7f0fc;
   --primary-soft-foreground: #0b58b5;
+  /* Primária usada como texto ou ícone sobre o fundo (link, destaque). No escuro fica
+     mais clara para manter contraste AA; a primária em si continua sendo o preenchimento. */
+  --primary-text: #0a64cc;
 
   /* Cor secundária da marca: segunda cor de destaque, com hover próprio */
   --secondary: #98d10a;
-  --secondary-hover: #0c78f4;
+  --secondary-hover: #0b6fe0;
   --secondary-foreground: #0b1d37;
   --secondary-hover-foreground: #ffffff;
 
@@ -128,10 +132,10 @@
   --gradient-brand: radial-gradient(120% 120% at 80% 0%, #034889 0%, #0b1d37 45%, #07142a 100%);
   --gradient-brand-foreground: #ffffff;
   --gradient-soft: linear-gradient(135deg, #e7f0fc 0%, #ffffff 65%);
-  --gradient-accent: linear-gradient(90deg, #0c78f4 0%, #98d10a 100%);
+  --gradient-accent: linear-gradient(90deg, #0b6fe0 0%, #98d10a 100%);
 
   /* Gráficos: sequência da marca, depois apoio semântico */
-  --chart-1: #0c78f4;
+  --chart-1: #0b6fe0;
   --chart-2: #98d10a;
   --chart-3: #7fb4ef;
   --chart-4: #0459a9;
@@ -164,15 +168,16 @@
   --ring: #0c78f4;
   --overlay: rgb(2 8 20 / 0.7);
 
-  --primary: #0c78f4;
+  --primary: #0b6fe0;
   --primary-hover: #98d10a;
   --primary-foreground: #ffffff;
   --primary-hover-foreground: #07142a;
   --primary-soft: #11305a;
   --primary-soft-foreground: #7fb4ef;
+  --primary-text: #5b9ff6;
 
   --secondary: #98d10a;
-  --secondary-hover: #0c78f4;
+  --secondary-hover: #0b6fe0;
   --secondary-foreground: #07142a;
   --secondary-hover-foreground: #ffffff;
 
@@ -195,7 +200,7 @@
   --warning-soft: #362612;
   --warning-soft-foreground: #f7c77e;
 
-  --info: #0c78f4;
+  --info: #0b6fe0;
   --info-foreground: #ffffff;
   --info-soft: #11305a;
   --info-soft-foreground: #7fb4ef;

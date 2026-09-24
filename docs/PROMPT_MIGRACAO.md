@@ -15,7 +15,7 @@ Você vai aplicar neste projeto o design system e boilerplate Rendra, disponíve
 
 ANTES DE QUALQUER ALTERAÇÃO
 1. Leia no repositório de referência, nesta ordem: AGENTS.md, DESIGN_RULES.md, docs/COMO_APLICAR.md e docs/BRIEFING_MODELO.md. O DESIGN_RULES.md é obrigatório e vale mais do que qualquer hábito seu.
-2. Siga o fluxo de início do AGENTS.md para migração: conduza o briefing de docs/BRIEFING_MODELO.md (agrupado, no máximo duas rodadas, aceitando "não sei, sugira"), grave em docs/BRIEFING.md deste projeto e peça minha confirmação.
+2. Siga o fluxo de início do AGENTS.md para migração: conduza o briefing de docs/BRIEFING_MODELO.md como ele manda (blocos abertos agrupados; navegação, tema e cores em fluxo guiado, uma decisão por vez; aceitando "não sei, sugira"), grave em docs/BRIEFING.md deste projeto e peça minha confirmação.
 3. Analise este projeto: stack, versão do React e do Tailwind, bundler, estrutura de pastas, telas existentes, componentes de interface existentes e como a marca está aplicada hoje.
 4. Me apresente um plano curto: caminho escolhido (projeto novo ou existente, conforme docs/COMO_APLICAR.md), o que será copiado, o que será substituído, a lista de telas a migrar em ordem e os riscos. Espere minha aprovação.
 
@@ -26,9 +26,11 @@ REGRAS QUE NÃO PODEM SER QUEBRADAS
 - Só a escala de espaço permitida (0, 1, 2, 3, 4, 6, 8, 12, 16, 24) e tokens nomeados. Proibido valor arbitrário (p-[13px]), estilo inline, 100vh e degrau fora da escala.
 - Contêiner certo para o volume: Modal até 3 campos, Drawer até cerca de 12, página inteira (seções ou Wizard) acima disso. Nunca modal dentro de modal.
 - Botões sempre pela ActionBar: 1 botão = 100%; 2 botões = cancelar 30% + principal 70%; 3 ou mais = extras no menu.
+- Nunca botão solto: cada ação vai no rodapé fixo, na barra da tabela, no PageHeader actions, no CardHeader actions ou no menu da linha. Troque todo botão avulso do sistema antigo por um desses lugares.
+- Texto orientativo nunca no corpo: parágrafos de instrução, Alerts informativos e botões "Saiba mais" do sistema antigo viram help (ícone de informação ao lado do título, no PageHeader, CardTitle ou FormSection), que abre um modal.
 - Listagem: barra de ferramentas dentro do mesmo card da Table, chips de filtro, estados vazio, carregando e erro, situação antes das ações.
 - Header sempre fixo; título da página no header, com a trilha abaixo; uma única área de rolagem (o main do AppShell).
-- Fundo claro #fcfcfc; conteúdo com 95% da largura a partir de 1024px; contraste mínimo WCAG AA.
+- Fundo da tela e dos campos #f5f6f7, cards brancos; respiro de página de 24px igual em todos os lados; contraste mínimo WCAG AA.
 - Interface em português do Brasil; datas DD/MM/AAAA; valores R$ 1.250,00.
 
 MARCA DESTE PROJETO

@@ -43,7 +43,6 @@ export function ClientDrawer({
         onOpenChange(o)
       }}
       dirty={dirty}
-      size="md"
       icon={<UserPlus />}
       title={mode === 'create' ? 'Novo cliente' : 'Editar cliente'}
       description="Header e rodapé fixos; só o conteúdo rola."
@@ -61,17 +60,17 @@ export function ClientDrawer({
       <Stack gap="6">
         <Stack gap="2">
           <p className="text-sm font-semibold">Dados principais</p>
-          <Grid cols={{ base: 1, md: 2 }} gap="4" responsive="container">
-            <Field label="Nome" required span="full">
-              <Input onChange={touch} defaultValue={mode === 'edit' ? 'Padaria Bom Grão' : ''} />
-            </Field>
-            <Field label="CPF ou CNPJ" required>
+          <Grid form>
+            <Field label="CPF ou CNPJ" required span="sm">
               <Input mask="cpfCnpj" onChange={touch} />
+            </Field>
+            <Field label="Nome" required span="xl" newRow>
+              <Input onChange={touch} defaultValue={mode === 'edit' ? 'Padaria Bom Grão' : ''} />
             </Field>
             <Field label="Telefone">
               <Input mask="phone" onChange={touch} />
             </Field>
-            <Field label="E-mail" span="full">
+            <Field label="E-mail">
               <Input type="email" inputMode="email" onChange={touch} />
             </Field>
           </Grid>
@@ -79,7 +78,7 @@ export function ClientDrawer({
         <Separator />
         <Stack gap="2">
           <p className="text-sm font-semibold">Contrato</p>
-          <Grid cols={{ base: 1, md: 2 }} gap="4" responsive="container">
+          <Grid form>
             <Field label="Segmento">
               <Select
                 label="Segmento"
@@ -92,9 +91,6 @@ export function ClientDrawer({
             </Field>
             <Field label="Valor mensal">
               <Input mask="currency" onChange={touch} />
-            </Field>
-            <Field label="CEP">
-              <Input mask="cep" onChange={touch} />
             </Field>
             <Field label="Observações" span="full">
               <Textarea counter maxLength={200} onChange={touch} />

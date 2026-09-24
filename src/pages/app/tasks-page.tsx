@@ -4,6 +4,7 @@ import { Container, PageHeader, Stack } from '@/components/layout'
 import { Button } from '@/components/ui/button'
 import { Table } from '@/components/ui/table'
 import { toast } from '@/components/ui/toast'
+import { mockSource } from '@/mocks/api'
 
 interface Task {
   id: string
@@ -14,7 +15,7 @@ interface Task {
   prioridade: 'Alta' | 'Média' | 'Baixa'
 }
 
-const tasks: Task[] = Array.from({ length: 18 }, (_, i) => ({
+const tasks: Task[] = Array.from({ length: 42 }, (_, i) => ({
   id: String(i + 1),
   titulo:
     [
@@ -34,28 +35,31 @@ const tasks: Task[] = Array.from({ length: 18 }, (_, i) => ({
 
 const tone = { Alta: 'error', Média: 'warning', Baixa: 'neutral' } as const
 
+// API de demonstração: 15 por página, busca e ordenação em todos os registros.
+const tasksSource = mockSource(tasks, {
+  searchIn: (t) => [t.titulo, t.cliente, t.responsavel, t.prioridade],
+  sortBy: {
+    titulo: (t) => t.titulo,
+    prioridade: (t) => ['Alta', 'Média', 'Baixa'].indexOf(t.prioridade),
+    prazo: (t) => t.prazo,
+    cliente: (t) => t.cliente,
+    responsavel: (t) => t.responsavel,
+  },
+})()
+
 /** Listagem simples de pendências da equipe. */
 export function TasksPage() {
   const [search, setSearch] = useState('')
   return (
     <Container padded>
       <Stack gap="section">
-        <PageHeader
-          title="Tarefas"
-          description="Pendências da equipe, por prazo."
-          actions={
-            <Button icon={<Plus />} onClick={() => toast.info('Nova tarefa')}>
-              Nova tarefa
-            </Button>
-          }
-        />
+        <PageHeader title="Tarefas" />
         <Table<Task>
           aria-label="Tarefas"
-          data={tasks}
+          source={tasksSource}
           getRowId={(t) => t.id}
           selectable
           globalFilter={search}
-          pageSize={10}
           density="compact"
           columns={[
             {
@@ -104,7 +108,6 @@ export function TasksPage() {
           ]}
           bulkActions={(sel, clear) => (
             <Button
-              size="sm"
               variant="outline"
               icon={<Check />}
               onClick={() => {
@@ -115,7 +118,14 @@ export function TasksPage() {
               Concluir
             </Button>
           )}
-          toolbar={{ search: { value: search, onChange: setSearch, placeholder: 'Buscar tarefa' } }}
+          toolbar={{
+            search: { value: search, onChange: setSearch, placeholder: 'Buscar tarefa' },
+            primaryAction: (
+              <Button icon={<Plus />} onClick={() => toast.info('Nova tarefa')}>
+                Nova tarefa
+              </Button>
+            ),
+          }}
         />
       </Stack>
     </Container>

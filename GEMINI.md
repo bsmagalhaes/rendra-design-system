@@ -7,7 +7,7 @@ Antes de qualquer alteração:
 1. Leia e siga o AGENTS.md na raiz. Se docs/BRIEFING.md não existir, comece perguntando se o trabalho é projeto novo, migração de layout ou contribuição, e conduza o briefing de docs/BRIEFING_MODELO.md antes de construir qualquer coisa.
 2. Leia o DESIGN_RULES.md: as regras de interface valem mais do que qualquer hábito.
 
-Regras essenciais: um componente por finalidade (props, nunca arquivos paralelos); mobile-first real (360px primeiro, sem rolagem horizontal, sem hover obrigatório, toque de 44px); marca só em src/styles/theme.css, src/brand/brand.config.ts e src/brand/assets; só a escala de espaço 0, 1, 2, 3, 4, 6, 8, 12, 16, 24; botões pela ActionBar (100%, 30/70, menu); interface em português do Brasil.
+Regras essenciais: um componente por finalidade (props, nunca arquivos paralelos); mobile-first real (360px primeiro, sem rolagem horizontal, sem hover obrigatório, toque de 44px); marca só em src/styles/theme.css, src/brand/brand.config.ts e src/brand/assets; só a escala de espaço 0, 1, 2, 3, 4, 6, 8, 12, 16, 24; botões pela ActionBar (100%, 30/70, menu); nunca botão solto (rodapé, barra da tabela, PageHeader actions, CardHeader actions ou menu da linha); texto orientativo só em help, ícone de informação ao lado do título que abre um modal; interface em português do Brasil.
 
 Ao fim de cada etapa rode npm run typecheck, npm run lint, npm run check:rules e npm run test:layout, e só diga que terminou com tudo passando.
 

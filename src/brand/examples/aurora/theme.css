@@ -38,7 +38,7 @@
 :root[data-palette='aurora'] {
   color-scheme: light;
 
-  --background: #fcfcfc;
+  --background: #f5f6f7;
   --background-image: none;
   --foreground: #1c1f1e;
   --card: #ffffff;
@@ -49,7 +49,7 @@
   --muted-foreground: #58615c;
   --border: #dfe4e0;
   --input: #838d87;
-  --field: #fcfcfc;
+  --field: #f5f6f7;
   --ring: #0f766e;
   --overlay: rgb(20 24 22 / 0.5);
 
@@ -59,6 +59,7 @@
   --primary-hover-foreground: #ffffff;
   --primary-soft: #e3f3f0;
   --primary-soft-foreground: #0c5f59;
+  --primary-text: #0f766e;
   --secondary: #b4461f;
   --secondary-hover: #963a19;
   --secondary-foreground: #ffffff;
@@ -137,6 +138,7 @@
   --primary-hover-foreground: #042f2b;
   --primary-soft: #0e2f2b;
   --primary-soft-foreground: #7fe3d4;
+  --primary-text: #2dd4bf;
   --secondary: #f59e6b;
   --secondary-hover: #f7b38a;
   --secondary-foreground: #2a1206;

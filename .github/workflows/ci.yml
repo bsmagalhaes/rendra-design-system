@@ -1,0 +1,70 @@
+# Verificação de todo Pull Request e de todo push na main.
+# A proteção da main exige os dois jobs verdes antes do merge.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  qualidade:
+    name: Qualidade (tipos, lint, regras, unitários, build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run check:rules
+      - run: npm test
+      - run: npm run build
+      - name: Registry em dia (rode npm run registry:build e faça commit do registry.json)
+        run: |
+          npm run registry:build
+          git diff --exit-code registry.json
+      - run: npm run build-storybook -- --quiet
+
+  navegador:
+    name: Navegador (layout, acessibilidade, visual)
+    runs-on: ubuntu-latest
+    # Mesma imagem usada para gerar as referências visuais: fontes e renderização idênticas.
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
+    env:
+      HOME: /root
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Layout (rotas x larguras x modelos, claro e escuro)
+        run: npm run test:layout
+      - name: Acessibilidade (axe-core, WCAG 2.1 AA)
+        if: ${{ !cancelled() }}
+        run: npm run test:a11y
+      - name: Regressão visual
+        if: ${{ !cancelled() }}
+        run: npm run test:visual
+      - name: Relatório do Playwright
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report
+            test-results
+          retention-days: 7

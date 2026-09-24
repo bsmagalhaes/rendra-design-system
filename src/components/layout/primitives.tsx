@@ -1,7 +1,15 @@
 import { Slot } from 'radix-ui'
 import type { ElementType, HTMLAttributes, ReactNode } from 'react'
 import { cn } from '@/lib/cn'
-import { alignClass, gapClass, justifyClass, type Align, type Justify, type Space } from './tokens'
+import {
+  alignClass,
+  fieldGridClass,
+  gapClass,
+  justifyClass,
+  type Align,
+  type Justify,
+  type Space,
+} from './tokens'
 
 /*
  * Primitivas de layout. Toda tela é composta por elas; classes de layout soltas
@@ -22,8 +30,8 @@ function Box({ as: As = 'div', asChild, ...props }: BaseProps) {
 
 const containerSize = {
   narrow: 'max-w-3xl',
-  // A partir de lg: 95% da área de conteúdo, sem recuo interno (as margens de 2,5% são o respiro).
-  default: 'max-w-none lg:max-w-content lg:px-0',
+  // Largura toda da área de conteúdo, com o mesmo respiro em todos os lados (16px/24px).
+  default: 'max-w-none',
   full: 'max-w-none',
 } as const
 
@@ -44,8 +52,9 @@ export function Container({
   return (
     <Box
       className={cn(
-        'mx-auto w-full min-w-0 px-4 md:px-6 lg:px-8',
-        padded && 'pt-4 pb-8 md:pt-6 md:pb-12',
+        'mx-auto w-full min-w-0 px-4 md:px-6',
+        // Respiro igual em todos os lados: 16px no celular e 24px a partir do tablet.
+        padded && 'py-4 md:py-6',
         containerSize[size],
         className,
       )}
@@ -194,16 +203,29 @@ export interface GridProps extends BaseProps {
    * útil dentro de drawers, cards laterais e colunas estreitas.
    */
   responsive?: 'screen' | 'container'
+  /**
+   * Grade de formulário: 12 colunas pela largura do bloco, com a largura de cada Field no
+   * span (padrão 3 por linha). Ignora cols e responsive; o gap padrão vira "fields".
+   */
+  form?: boolean
 }
 
 export function Grid({
   cols = { base: 1 },
   gap = '4',
   responsive = 'screen',
+  form,
   className,
   children,
   ...props
 }: GridProps) {
+  if (form) {
+    return (
+      <Box className={cn('@container min-w-0', className)} {...props}>
+        <div className={cn(fieldGridClass, gapClass[gap === '4' ? 'fields' : gap])}>{children}</div>
+      </Box>
+    )
+  }
   const cq = responsive === 'container'
   const grid = cn(
     'grid min-w-0',
@@ -270,9 +292,7 @@ export function Section({
                 {title}
               </H>
             )}
-            {description && (
-              <p className="max-w-3xl text-sm text-muted-foreground">{description}</p>
-            )}
+            {description && <p className="text-sm text-muted-foreground">{description}</p>}
           </div>
           {actions && <div className="flex shrink-0 flex-wrap gap-2">{actions}</div>}
         </div>

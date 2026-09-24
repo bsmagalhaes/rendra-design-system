@@ -6,8 +6,118 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
     />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Boilerplate</title>
+    <link rel="icon" type="image/svg+xml" href="/src/brand/assets/favicon.svg" />
+    <!--
+      SEO e AEO. Os textos vêm de src/config/seo.ts; o build (scripts/seo-build.mjs) gera uma
+      página por rota com título, descrição e endereço próprios. __SITE_URL__ é o endereço
+      público do demo (vite.config.ts).
+    -->
+    <title>
+      Rendra Design System | Template de sistema e layout de sistema administrativo em React
+    </title>
+    <meta
+      name="description"
+      content="Template de sistema gratuito e open source em React, TypeScript e Tailwind CSS: layout de sistema administrativo com dashboard, tabelas, formulários, CRM kanban, agenda, chat omnichannel e mais de 50 componentes. Mobile-first, acessível (WCAG 2.1 AA), em português do Brasil e pronto para white label."
+    />
+    <meta
+      name="keywords"
+      content="template de sistema, layout de sistema, template de sistema administrativo, template admin React, dashboard React, painel administrativo, design system, boilerplate React, Tailwind CSS, shadcn/ui, template CRM, kanban React, chat omnichannel, white label, mobile-first"
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#0b6fe0" />
+    <link rel="canonical" href="__SITE_URL__" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Rendra Design System" />
+    <meta
+      property="og:title"
+      content="Rendra Design System | Template de sistema e layout de sistema administrativo em React"
+    />
+    <meta
+      property="og:description"
+      content="Template de sistema gratuito e open source em React, TypeScript e Tailwind CSS: layout de sistema administrativo com dashboard, tabelas, formulários, CRM kanban, agenda, chat omnichannel e mais de 50 componentes. Mobile-first, acessível (WCAG 2.1 AA), em português do Brasil e pronto para white label."
+    />
+    <meta property="og:url" content="__SITE_URL__" />
+    <meta property="og:image" content="__SITE_URL__og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Painel administrativo do Rendra Design System com menu lateral, indicadores e gráficos"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="__SITE_URL__og-image.png" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "name": "Rendra Design System",
+            "url": "__SITE_URL__",
+            "inLanguage": "pt-BR"
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "name": "Rendra Design System",
+            "description": "Template de sistema e layout de sistema administrativo em React, TypeScript e Tailwind CSS, com dashboard, tabelas, formulários, CRM kanban, agenda, chat omnichannel, componentes acessíveis e três modelos de layout com quatro paletas.",
+            "codeRepository": "https://github.com/bsmagalhaes/rendra-design-system",
+            "url": "__SITE_URL__",
+            "programmingLanguage": ["TypeScript", "React"],
+            "runtimePlatform": "Navegador web",
+            "license": "https://opensource.org/licenses/MIT",
+            "isAccessibleForFree": true,
+            "inLanguage": "pt-BR",
+            "keywords": "template de sistema, layout de sistema, template admin React, dashboard React, painel administrativo, design system, boilerplate React, Tailwind CSS, shadcn/ui, CRM kanban, chat omnichannel, white label"
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "O que é o Rendra Design System?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "É um template de sistema e design system open source em React, TypeScript e Tailwind CSS. Traz o layout de sistema administrativo pronto (menu, cabeçalho, rodapé de ações), telas base como dashboard, listagem, cadastro, CRM kanban, agenda e chat, e componentes acessíveis para criar sistemas novos ou migrar o layout de sistemas existentes."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "O template de sistema é gratuito?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Sim. O código é aberto sob a licença MIT e usa só bibliotecas gratuitas: React, Tailwind CSS, Radix, shadcn/ui, TanStack Table, Recharts e Tiptap."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Funciona no celular?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Sim. Tudo é escrito primeiro para 360 px: tabelas viram cartões, o menu vai para a barra inferior, não há rolagem horizontal e os alvos de toque têm pelo menos 44 px. Testes automáticos conferem cada tela em cinco larguras, no modo claro e no escuro."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Dá para trocar as cores e a marca (white label)?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Sim. A marca fica isolada em theme.css, brand.config.ts e na pasta de logotipos. Há três modelos de layout e quatro paletas prontas, e cada combinação tem um código para aplicar no seu sistema."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Posso usar o template com IA para migrar o layout do meu sistema?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Sim. O repositório traz instruções para agentes de IA (AGENTS.md, CLAUDE.md, GEMINI.md) com briefing guiado, regras de design e a ordem de migração, além de um registry compatível com o shadcn para instalar componentes."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
     <script>
       // Aplica modo e marca antes da pintura para evitar flash de tema errado.
       try {
@@ -24,6 +134,32 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Conteúdo para quem não executa JavaScript (buscadores e assistentes de IA). -->
+    <noscript>
+      <main>
+        <h1>Rendra Design System: template de sistema e layout de sistema em React</h1>
+        <p>
+          Template de sistema gratuito e open source em React, TypeScript e Tailwind CSS, com o
+          layout de sistema administrativo pronto e mais de 50 componentes acessíveis, mobile-first
+          e em português do Brasil.
+        </p>
+        <h2>O que vem pronto</h2>
+        <ul>
+          <li>Dashboard administrativo com widgets ajustáveis, velocímetro e funil de vendas.</li>
+          <li>Listagem com tabela paginada no servidor, filtros e versão em cartões no celular.</li>
+          <li>Formulário de cadastro com busca de CNPJ e CEP e rodapé fixo de ações.</li>
+          <li>CRM kanban, agenda e calendário, e chat de atendimento omnichannel.</li>
+          <li>Três modelos de layout, quatro paletas e seis tipos de menu.</li>
+          <li>Testes automáticos de layout e de acessibilidade (WCAG 2.1 AA).</li>
+        </ul>
+        <p>
+          <a href="https://github.com/bsmagalhaes/rendra-design-system">Código no GitHub</a> ·
+          <a href="__SITE_URL__componentes/">Componentes</a> ·
+          <a href="__SITE_URL__galeria/">Galeria de modelos</a> ·
+          <a href="__SITE_URL__storybook/">Storybook</a>
+        </p>
+      </main>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

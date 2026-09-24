@@ -57,7 +57,7 @@ São três modelos, cada um com formato, fonte e símbolo fixos:
 
 | Modelo                | Formato                  | Paleta padrão                                   |
 | --------------------- | ------------------------ | ----------------------------------------------- |
-| Rendra Safira (ativo) | `square`, quadrado       | azul #0C78F4, verde #98D10A, destrutivo #B72C05 |
+| Rendra Safira (ativo) | `square`, quadrado       | azul #0B6FE0, verde #98D10A, destrutivo #B72C05 |
 | Rendra Equilíbrio     | `rounded`, meio-termo    | violeta + ciano                                 |
 | Rendra Aurora         | `pill`, 100% arredondado | verde-petróleo + laranja                        |
 
@@ -66,6 +66,7 @@ São três modelos, cada um com formato, fonte e símbolo fixos:
 - **O logotipo acompanha o tema.** Use sempre `<BrandLogo on="sidebar" | "surface" | "brand" />`: ele monta o selo com o símbolo do modelo e as cores da paleta ativa. Só use os SVGs de logo como estão (`logoMode: 'image'` no `brand.config.ts`) quando a arte oficial não puder ser recolorida.
 - **A paleta pode ser trocada.** Qualquer modelo pode usar a paleta de outro: no `<html>`, `data-brand` define o modelo e `data-palette` define as cores.
 - Todo template define `primary`, `primary-hover`, `secondary`, `secondary-hover`, os `*-foreground` correspondentes e os `*-hover-foreground`. A cor de hover pode ser outra cor da marca: o texto sobre ela usa o `*-hover-foreground`.
+- **Primária como preenchimento e como texto são tokens diferentes.** `bg-primary` é o preenchimento (botão, selo). Para link, ícone ou destaque em texto sobre o fundo, use `text-primary-text`, nunca `text-primary`: no modo escuro a primária costuma ficar escura demais para texto, e o `--primary-text` é o tom que passa AA. Todo tema define `--primary-text` no claro e no escuro, e a página `/tokens` mostra o contraste dele.
 
 ## 4. Tokens
 
@@ -75,7 +76,7 @@ Base de 4px. **Só estes degraus existem:** `0, 1, 2, 3, 4, 6, 8, 12, 16, 24` (0
 
 - Espaço interno de componentes: de 2 a 6.
 - Espaço entre seções: de 8 a 16. Use `<Stack gap="section">`, que é menor no mobile.
-- Padding lateral de página: 4 no mobile (16px). A partir de 1024px o conteúdo ocupa **95% da área**, sem recuo interno.
+- **Respiro de página igual em todos os lados:** 16px no celular e 24px a partir do tablet, em cima, embaixo e nas laterais. O conteúdo ocupa toda a largura restante (sem largura máxima).
 - Tamanhos de peça têm token nomeado: `h-control-sm|md|lg`, `size-touch`, `size-icon-sm|md|lg`, `h-header`, `h-chart-sm|md`, `w-sidebar`. Se precisar de um tamanho novo, **crie o token** em `src/styles/globals.css`. Nunca use valor arbitrário.
 
 ### Tipografia
@@ -84,7 +85,7 @@ Sete tamanhos (`text-xs` a `text-3xl`), com line-height e letter-spacing definid
 
 ### Cores
 
-Tokens semânticos: `background`, `foreground`, `card`, `popover`, `muted`, `muted-foreground`, `border`, `input`, `field`, `ring`, `primary`, `secondary`, `accent`, `destructive`, `success`, `warning`, `info`. Cada semântica tem fundo forte, texto sobre o forte, fundo suave (`*-soft`) e texto sobre o suave (`*-soft-foreground`). **Contraste mínimo WCAG AA:** 4,5:1 para texto e 3:1 para bordas de campo e foco. A página `/tokens` mede os pares ao vivo. No modo claro, o fundo da página e dos campos é **#fcfcfc** em todos os templates: nada de fundo tingido.
+Tokens semânticos: `background`, `foreground`, `card`, `popover`, `muted`, `muted-foreground`, `border`, `input`, `field`, `ring`, `primary`, `secondary`, `accent`, `destructive`, `success`, `warning`, `info`. Cada semântica tem fundo forte, texto sobre o forte, fundo suave (`*-soft`) e texto sobre o suave (`*-soft-foreground`). **Contraste mínimo WCAG AA:** 4,5:1 para texto e 3:1 para bordas de campo e foco. A página `/tokens` mede os pares ao vivo. No modo claro, o fundo da página e dos campos é o cinza bem claro **#f5f6f7** em todos os templates, e os cards são brancos: o campo se destaca do card sem precisar de cor. Nada de fundo tingido.
 
 ### Raio, sombra e densidade
 
@@ -109,6 +110,10 @@ Três por template, cada um com lugar certo:
 - Primeiro bloco de toda tela: `<Container padded><Stack gap="section"><PageHeader ... />`.
 - **O título da página fica no header do AppShell**, com a trilha (breadcrumb) logo abaixo. O `PageHeader` mostra só a descrição e as ações, e mantém o `h1` para leitores de tela. Use `showTitle` apenas quando o título do corpo for outro, como o nome do cliente no detalhe.
 - **O header é sempre fixo**, em todas as páginas. A única área de rolagem da tela é o `<main>` do AppShell.
+- **Telas de segundo nível têm seta de voltar** à esquerda do título e da trilha (automática: aparece quando a trilha tem tela-pai, como Clientes em Novo cliente). Ela leva à tela-pai, não ao histórico. No celular, a seta ocupa o lugar do botão de menu. Título e trilha ficam em uma linha cada e, se não couberem, encurtam com reticências; nunca quebram linha.
+- **Texto ocupa 100% da largura disponível.** Descrição de página, de seção e texto de orientação nunca ganham largura máxima por padrão (nada de meia largura "para ficar elegante"). Outra medida só quando o layout pedir; o `check:rules` barra `max-w-*` em parágrafo.
+- **No celular, o menu fica no botão redondo central da barra inferior**, meio acima da linha, ao alcance do polegar. O header não tem botão de menu quando há barra inferior, e o espaço fica para a seta de voltar e o título.
+- **Tamanho médio (`md`) é o padrão** de campos e botões em formulários, barras de tabela e do calendário. O pequeno (`sm`) fica para ações dentro de linhas, cards e menus.
 
 ### Qual contêiner usar
 
@@ -122,7 +127,7 @@ Se o conteúdo rola muito ou tem muitos campos, não cabe em modal. **Nunca moda
 
 ### Drawer
 
-Único, desliza da direita. **Header fixo** (ícone, título, descrição, fechar), **body** como única área rolável e **footer fixo** com borda superior e as ações. Props: `size` (`sm`, `md`, `lg`, `xl`, `full`) e `dirty`. Fecha por Esc e por clique fora, e com `dirty` pede confirmação antes. No mobile ocupa a tela inteira (100dvh), e o footer respeita `env(safe-area-inset-bottom)`.
+Único, desliza da direita. **Header fixo** (ícone, título, descrição, fechar), **body** como única área rolável e **footer fixo** com borda superior e as ações. Props: `size` e `dirty`. **Largura padrão: 30% da tela**; também 40%, 50% e 75% (`size="30" | "40" | "50" | "75"`), nunca menos que 28rem; no celular, sempre tela inteira. Fecha por Esc e por clique fora, e com `dirty` pede confirmação antes. No mobile ocupa a tela inteira (100dvh), e o footer respeita `env(safe-area-inset-bottom)`.
 
 ### Botões de ação: use sempre `<ActionBar>`
 
@@ -131,11 +136,33 @@ Se o conteúdo rola muito ou tem muitos campos, não cabe em modal. **Nunca moda
 - **Três ou mais:** as secundárias vão para o menu de três pontinhos.
 - Vale para drawer, modal e formulário em página, em qualquer largura. Só as barras de ferramentas acima de tabelas usam botões de largura automática.
 - O envio mostra carregamento e fica desabilitado enquanto processa (`loading`).
-- Em formulário de página, use `sticky`: o rodapé fica fixo no fim da área rolável.
+- **Salvar, cadastrar e criar ficam sempre no rodapé fixo**, desenhado pelo AppShell abaixo da área rolável: sempre colado embaixo, na largura inteira, e **nunca sobe**, mesmo com formulário curto. Como o botão fica fora do `<form>`, use `primary.form` com o id do formulário. No **wizard**, os botões seguem junto do card (sem rodapé fixo).
+- Nunca ficam soltos no body nem dentro de um card: em formulário de página e em configurações, `ActionBar sticky` no fim da página; em drawer e modal, o `footer` (que já é fixo). Uma tela nunca tem o botão de salvar num lugar e outra em outro.
+
+### Nunca botão solto; texto orientativo em modal
+
+Toda ação tem um lugar previsto. Botão fora desses lugares é erro de revisão, mesmo que funcione.
+
+| Ação                                                        | Lugar                                                                    |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Salvar, cadastrar, criar, cancelar                          | `ActionBar` no rodapé fixo (página) ou no footer (drawer, modal)         |
+| Novo, Filtros, Colunas de uma listagem                      | barra da tabela (`toolbar` da `Table`)                                   |
+| Ação da tela (Editar, Exportar, Ajustar dashboard)          | `PageHeader actions` (no máximo duas; o resto no menu de três pontinhos) |
+| Ação de um card (Ligar, Restaurar padrão, Encerrar sessões) | `CardHeader actions`, no canto do cabeçalho do card                      |
+| Ação de uma linha ou de um cartão                           | menu de ações da linha (`rowActions`) ou do cartão                       |
+| Ação de um campo (trocar foto, gerar senha)                 | junto do próprio campo, dentro do `Field`                                |
+
+**Texto orientativo** (como usar a tela, de onde vem um número, o que uma seção faz) **nunca fica no corpo da tela**: nem como parágrafo, nem como `Alert` informativo, nem num botão avulso "Saiba mais" ou "Como funciona". Ele vira um **ícone de informação discreto ao lado do título** a que se refere, que abre um `Modal` informativo:
+
+- da tela: `PageHeader help` (o ícone aparece ao lado do título, no header fixo);
+- de uma seção: `CardTitle help` ou `FormSection help`;
+- em outro ponto, só quando nenhum título servir: `<InfoHint title>`.
+
+O `description` do `PageHeader` e os subtítulos de card descrevem **o que é** (status, segmento, "Plano, valor e início"), nunca **o que fazer**. A ajuda de um campo (`Field help`) continua abaixo dele, curta. O `npm run check:rules` barra, nas telas do sistema, `description` de texto no `PageHeader`, subtítulo que começa com verbo de instrução ("Comece", "Clique", "Arraste", "Preencha"...) e botão solto no conteúdo de um card.
 
 ### Cabeçalho de listagem
 
-De cima para baixo: descrição e ação principal (`PageHeader`); **barra de ferramentas dentro do mesmo card da tabela** (busca à esquerda, filtros no meio, ações e colunas à direita); **chips** dos filtros aplicados, com limpar; e então a tabela. Filtros com muitas opções abrem em popover (desktop) ou drawer de tela cheia (mobile), nunca empurrando o conteúdo. Na `Table` isso tudo é a prop `toolbar`.
+O título fica só no header. **Nada solto acima da tabela:** sem descrição, sem contagem de registros (o total já aparece na paginação, no rodapé do card) e sem botão Novo fora do card. De cima para baixo: **barra de ferramentas dentro do mesmo card da tabela**, com a busca à esquerda e, à direita, ações secundárias, Colunas, **Filtros e, por último, a ação principal** (Novo), na prop `toolbar.primaryAction`; no mobile, Filtros (30%) e Novo (70%) ficam lado a lado abaixo da busca. Depois, os **chips** dos filtros aplicados, com limpar, e a tabela. Filtros com muitas opções abrem em popover (desktop) ou drawer de tela cheia (mobile), nunca empurrando o conteúdo. Na `Table` isso tudo é a prop `toolbar`.
 
 ### Card
 
@@ -143,7 +170,13 @@ Conteúdo de página agrupado em `Card`, com borda de 1px e sem sombra pesada. *
 
 ### Formulário
 
-Rótulo **sempre acima** do campo; obrigatório marcado no rótulo (`required`); erro **abaixo**, em espaço reservado (o layout não pula); no máximo **2 colunas** no desktop e sempre 1 no mobile; campos agrupados em `FormSection` com título; ações no rodapé (`ActionBar`). Validação com React Hook Form + Zod (`Form`, `FormField`, validadores em `src/lib/validators.ts`: CPF, CNPJ, telefone, CEP, data).
+Rótulo **sempre acima** do campo; obrigatório marcado no rótulo (`required`); erro **abaixo** do campo, no lugar da ajuda (sem linha vazia reservada; em grid de 2 colunas com validação ao digitar, use `reserveMessage` para o erro não empurrar a linha); grade de 12 colunas no desktop (3 campos por linha, veja abaixo) e sempre 1 no mobile; campos agrupados em `FormSection` com título; ações no rodapé (`ActionBar`). Validação com React Hook Form + Zod (`Form`, `FormField`, validadores em `src/lib/validators.ts`: CPF, CNPJ, telefone, CEP, data).
+
+**Campos por linha:** a grade de formulário (`FormSection` ou `<Grid form>`) tem 12 colunas no largo, e o padrão é **3 campos por linha** (`span="md"`). Um quarto campo entra na linha só se for pequeno (20% ou menos: `span="xs"`, como UF e número). **Nunca 2 campos por linha por padrão**; meia linha (`span="lg"`) só quando o conteúdo pedir. Larguras: `xs` 17%, `sm` 25%, `md` 33%, `lg` 50%, `xl` 67%, `full`. A grade reage à largura do próprio bloco: em drawer e tablet fica com 2 por linha, e no celular, 1.
+
+**CEP e CNPJ sempre primeiro:** o campo que faz busca vem antes dos campos que ele preenche, com 25% da linha (`span="sm"`), sozinho na linha, e o que ele preenche começa abaixo (`newRow`). CEP preenche logradouro, bairro, cidade e UF (`lookupCep`, ViaCEP); CNPJ preenche razão social, contato e endereço (`lookupCnpj`, BrasilAPI). Assim a pessoa sabe da busca antes de digitar o resto. A ajuda do campo diz o que a busca preenche e o resultado.
+
+**Espaço entre campos:** sempre `gap="fields"` no `Grid` ou no `Stack` que contém os `Field` (o `FormSection` já usa): 16px do fim de um campo ao rótulo do próximo, e 8px do rótulo ao controle. Nunca empilhe campos com outro gap.
 
 ### Tabela: sempre `<Table>`
 
@@ -152,9 +185,20 @@ Rótulo **sempre acima** do campo; obrigatório marcado no rótulo (`required`);
 - Ações na última coluna, à direita, com largura fixa. Seleção na primeira coluna (`selectable`). **Colunas de situação (`kind: 'badge'`) ficam por padrão logo antes das ações** (`statusLast`).
 - Números e moeda alinhados à direita (`kind: 'number' | 'currency'`); datas em formato curto (`kind: 'date'`).
 - Sempre com estado vazio (`empty`), carregando (`loading`, com skeleton da mesma estrutura) e erro (`error`, `onRetry`).
-- Paginação no rodapé do card, à direita (`pageSize`).
+- **Mais de uma informação por coluna** quando elas andam juntas: `details` põe linhas menores abaixo do valor. Cliente: nome e CPF, ou nome fantasia, razão social e CNPJ. Contato: telefone e e-mail.
+- **O título abre o cadastro:** `href` na coluna principal vira link, com hover de clicável (cor e sublinhado).
+- **15 registros por página** em todas as tabelas (`TABLE_PAGE_SIZE`), paginação no rodapé do card, à direita.
+- **Dados do servidor, página por página:** a tabela de uma listagem usa a prop `source`, que pede só a página visível (`page`, `pageSize`, `search`, `sort`) e recebe `{ rows, total }`. A **busca e os filtros valem para todos os registros**, feitos no servidor, nunca só na página carregada. Filtros da tela entram na função e mudam o `queryKey`, que volta à página 1. `data` com tudo em memória só para listas pequenas e fixas.
 - Ao marcar linhas, aparecem as ações em massa (`bulkActions`) e o menu com mais ações (`bulkMenu`).
 - Colunas pouco importantes começam ocultas (`hidden`) e ficam disponíveis no menu Colunas.
+
+### Kanban, painel e atendimento
+
+- **Kanban:** o quadro ocupa a altura que sobra na tela e nunca passa dela; cada etapa rola por dentro e mostra mais cards ao chegar no fim (rolagem infinita, `pageSize` e `onLoadMore`). O **(+) de adicionar fica no título da etapa**. Com `valueFields`, o card mostra os valores (ex.: P&S e MRR) e a etapa mostra o total de cada um; no card, a data fica à esquerda e o avatar do responsável à direita, abaixo de uma divisória. Muitas etapas rolam na horizontal dentro do quadro.
+- **Painel em widgets (`WidgetGrid`):** "Ajustar dashboard" libera arrastar e redimensionar; os outros widgets se encaixam sozinhos e a arrumação fica salva no navegador. No celular, os widgets empilham e não se editam.
+- **Gráficos:** velocímetro de meta em meio círculo com degradê vermelho, amarelo e verde (`--meter-*`), percentual grande e meta e realizado em texto. Funil com etapas que afunilam, o valor e o nome dentro de cada faixa e a conversão entre elas, com a maior queda destacada.
+- **Atendimento (chat):** lista, conversa e dados do contato lado a lado na altura da tela; no celular, a lista e a conversa em tela cheia. O campo de mensagem tem 2 linhas, cresce com o texto, e aceita anexos por botão, arrastar e soltar ou colar (Ctrl+V de arquivo, print ou imagem).
+- **Barras de rolagem internas** usam `scrollbar-subtle`: finas, sem trilho, na cor da borda.
 
 ### Rolagem
 
@@ -173,7 +217,7 @@ Cada componente se reconstrói sozinho, com a mesma API:
 | Tabs                 | Se as abas não couberem na largura do bloco, viram um Select. Nunca rolagem lateral.                                                                                                                                                                                                                                                                           |
 | Wizard               | "Etapa 2 de 5", com barra de progresso e nome da etapa; Voltar e Avançar no rodapé fixo.                                                                                                                                                                                                                                                                       |
 | Sidebar              | Gaveta aberta pelo botão de menu, com barra inferior de até 4 itens (`bottomNav` em `navigation.ts`).                                                                                                                                                                                                                                                          |
-| Header               | Compacto: menu, título com trilha em texto e ícones. A busca global vira ícone que abre em tela cheia.                                                                                                                                                                                                                                                         |
+| Header               | Compacto: seta de voltar (nas telas de segundo nível), título com trilha em texto e ícones. O menu fica no botão central da barra inferior (sem barra inferior, volta para o header). A busca global vira ícone que abre em tela cheia.                                                                                                                        |
 | Breadcrumb           | Dentro das páginas, vira botão voltar com o nome da tela atual. No header, trilha só em texto.                                                                                                                                                                                                                                                                 |
 | Tooltip              | Não existe hover: informação essencial vai em texto de ajuda visível ou em Popover por toque.                                                                                                                                                                                                                                                                  |
 | Chart                | Legenda abaixo, eixos simplificados e "Ver como lista" quando há muitos pontos.                                                                                                                                                                                                                                                                                |
@@ -220,8 +264,10 @@ Teclado em tudo; foco visível (`:focus-visible` global com `--ring`); contraste
 13. Rolagem dentro de card; card dentro de card.
 14. `100vh` (use `100dvh`).
 15. Degradê em botão, input, badge ou atrás de texto corrido; mais de um degradê forte por tela.
-16. Fundo tingido no modo claro (a página e os campos usam #fcfcfc).
+16. Fundo tingido no modo claro (a página e os campos usam #f5f6f7; os cards, branco).
 17. Título da página repetido no corpo quando já está no header.
+18. Botão solto: toda ação fica no rodapé fixo, na barra da tabela, no `PageHeader`, no cabeçalho do card ou no menu da linha.
+19. Texto orientativo no corpo da tela (parágrafo, `Alert` informativo, botão "Saiba mais"): use `help` ao lado do título, que abre um modal.
 
 ## 11. Checklist de revisão
 
@@ -234,7 +280,9 @@ Antes de entregar qualquer mudança de interface:
 - [ ] O componente se reconstrói no mobile sem arquivo separado.
 - [ ] Contêiner certo para o volume: modal até 3 campos, drawer até cerca de 12, página acima disso.
 - [ ] Botões pela `ActionBar` (100%, 30/70, menu), com carregamento no envio.
-- [ ] Formulário: rótulo acima, obrigatório marcado, erro abaixo em espaço reservado, no máximo 2 colunas.
+- [ ] Nenhum botão solto: cada ação está no rodapé, na barra da tabela, no `PageHeader`, no `CardHeader actions` ou no menu da linha.
+- [ ] Texto orientativo só em `help` (ícone de informação ao lado do título, que abre modal); subtítulos descrevem, não instruem.
+- [ ] Formulário: rótulo acima, obrigatório marcado, erro abaixo do campo, `gap="fields"` entre campos, 3 campos por linha (CEP e CNPJ primeiro).
 - [ ] Tabela: seleção primeiro, situação antes das ações, ações por último, números à direita, vazio, carregando e erro.
 - [ ] Cores só por token semântico; contraste AA conferido em `/tokens`, nos modos claro e escuro.
 - [ ] Ícone de feedback da marca em toast, alert, confirmação, vazio e erro.

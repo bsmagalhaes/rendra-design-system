@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router'
 import { z } from 'zod'
-import { Stack } from '@/components/layout'
+import { Grid, Stack } from '@/components/layout'
 import { Alert } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -21,7 +21,7 @@ import { AuthLayout } from './auth-layout'
 const wait = (ms: number) => new Promise((r) => window.setTimeout(r, ms))
 // Links de texto com 44px de toque no celular
 const link =
-  'inline-flex min-h-touch items-center font-medium text-primary underline-offset-4 hover:text-primary-hover hover:underline md:min-h-0'
+  'inline-flex min-h-touch items-center font-medium text-primary-text underline-offset-4 hover:text-primary-hover hover:underline md:min-h-0'
 
 /* ---------------------------------------------------------------- Login */
 
@@ -63,8 +63,13 @@ export function LoginPage() {
       }
     >
       <Form form={form} onSubmit={submit} className="gap-4 md:gap-4">
+        <Alert
+          type="info"
+          title="Demonstração"
+          description="Use qualquer e-mail válido e qualquer senha com 6 caracteres ou mais. Uma senha menor mostra a mensagem de erro."
+        />
         {erro && <Alert type="error" title="Não foi possível entrar" description={erro} />}
-        <Stack gap="1">
+        <Stack gap="fields">
           <FormField<Login>
             name="email"
             label="E-mail"
@@ -82,10 +87,9 @@ export function LoginPage() {
             )}
           />
         </Stack>
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
           <FormField<Login>
             name="lembrar"
-            compact
             render={(f) => (
               <Checkbox
                 checked={f.value === true}
@@ -203,6 +207,11 @@ export function VerifyCodePage() {
         }}
         className="flex flex-col gap-6"
       >
+        <Alert
+          type="info"
+          title="Demonstração"
+          description="Digite qualquer código de 6 dígitos. O código 000000 mostra a mensagem de código incorreto."
+        />
         <Field
           label="Código de verificação"
           error={erro}
@@ -368,7 +377,7 @@ export function SignupPage() {
     >
       <Form form={form} onSubmit={submit} className="gap-2 md:gap-2">
         {/* Duas colunas a partir de 768px; uma no celular */}
-        <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2">
+        <Grid form>
           <FormField<Signup>
             name="nome"
             label="Seu nome"
@@ -424,7 +433,7 @@ export function SignupPage() {
               />
             )}
           />
-        </div>
+        </Grid>
         <Button type="submit" size="lg" fullWidth loading={form.formState.isSubmitting}>
           {form.formState.isSubmitting ? 'Criando conta...' : 'Criar conta'}
         </Button>

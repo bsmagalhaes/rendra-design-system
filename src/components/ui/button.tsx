@@ -26,7 +26,7 @@ export const buttonVariants = cva(
           'text-foreground hover:bg-primary-soft hover:text-primary-soft-foreground active:bg-primary-soft',
         destructive:
           'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive-hover hover:shadow-md active:bg-destructive-hover active:shadow-sm',
-        link: 'min-h-touch min-w-touch text-primary underline-offset-4 hover:text-primary-hover hover:underline md:min-h-0 md:min-w-0',
+        link: 'min-h-touch min-w-touch text-primary-text underline-offset-4 hover:text-primary-hover hover:underline md:min-h-0 md:min-w-0',
       },
       size: {
         sm: 'h-control-sm px-3 text-sm [&_svg]:size-icon-sm',

@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority'
-import type { HTMLAttributes } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 
 const badgeVariants = cva(
@@ -30,15 +30,22 @@ const badgeVariants = cva(
 
 export interface BadgeProps
   extends HTMLAttributes<HTMLSpanElement>, VariantProps<typeof badgeVariants> {
+  /** Ícone antes do texto (fica fora do corte com reticências). */
+  icon?: ReactNode
   /** Bolinha de status à esquerda. */
   dot?: boolean
 }
 
 /** Badge único: tom semântico, suave ou sólido, com bolinha opcional. */
-export function Badge({ tone, solid, dot, className, children, ...props }: BadgeProps) {
+export function Badge({ tone, solid, dot, icon, className, children, ...props }: BadgeProps) {
   return (
     <span className={cn(badgeVariants({ tone, solid }), className)} {...props}>
       {dot && <span aria-hidden className="size-2 shrink-0 rounded-full bg-current" />}
+      {icon && (
+        <span aria-hidden className="flex shrink-0">
+          {icon}
+        </span>
+      )}
       <span className="truncate">{children}</span>
     </span>
   )

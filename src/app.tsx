@@ -3,7 +3,10 @@ import { activeBrand, availableBrands, availablePalettes, BrandProvider } from '
 import { Toaster } from '@/components/ui/toast'
 import { routes } from '@/routes'
 
-const router = createBrowserRouter(routes)
+// basename acompanha o base do Vite: "/" no desenvolvimento, "/rendra-design-system/" no demo.
+const router = createBrowserRouter(routes, {
+  basename: import.meta.env.BASE_URL.replace(/\/$/, '') || '/',
+})
 
 export function App() {
   return (
