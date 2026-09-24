@@ -132,7 +132,7 @@ export function Upload({
         </span>
         <span className="flex flex-col gap-1">
           <span className="text-sm font-medium">
-            <span className="text-primary">Toque para escolher</span>
+            <span className="text-primary-text">Toque para escolher</span>
             <span className="hidden md:inline"> ou arraste arquivos até aqui</span>
           </span>
           <span className="text-xs text-muted-foreground">

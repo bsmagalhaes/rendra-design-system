@@ -34,7 +34,9 @@ Para **contribuição**, pule o briefing: leia o [`CONTRIBUTING.md`](CONTRIBUTIN
 
 Use o roteiro de [`docs/BRIEFING_MODELO.md`](docs/BRIEFING_MODELO.md).
 
-- Faça as perguntas **agrupadas por bloco**, em no máximo duas rodadas. Não faça uma pergunta por mensagem.
+- Siga o **"Como conduzir"** do modelo. Blocos abertos (negócio, usuários, telas, dados, acesso, prazo) vão agrupados, o bloco inteiro de uma vez.
+- **Navegação, tema e cores são um fluxo guiado, nesta ordem**: primeiro pergunte se o usuário tem um **código de modelo** da galeria (`T1-C4-M5`: tema, cores e menu; tabela no item 3.0 do modelo e em `src/config/presets.ts`) e pule o que o código já responde; depois, posição do menu; depois só as opções do caminho escolhido (sidebar: estado, abrir no hover, submenu; menu superior: lista suspensa ou mega menu); barra inferior; tema (modelo e fonte); cores (as do tema, outra paleta pronta ou a identidade do cliente); logotipo; modo de cor. Uma decisão por mensagem, opções numeradas com o padrão marcado, pulando o que não se aplica.
+- Nunca decida sozinho o modelo, a paleta, a posição do menu, o tipo de sidebar ou de submenu. Se o usuário pedir sugestão, recomende, explique em uma frase e peça confirmação.
 - Aceite "não sei" e ofereça uma sugestão fundamentada. Por exemplo: "sugiro o modelo Equilíbrio e menu lateral recolhido, porque...".
 - Não invente dados do negócio, números ou metas. O que o usuário não souber fica marcado como pendente.
 - Na **migração**, antes de perguntar, analise o projeto de destino (stack, versões, telas, componentes, marca atual) e só pergunte o que não conseguir descobrir sozinho.
@@ -51,8 +53,8 @@ Proponha um plano em etapas e espere a aprovação. A ordem de referência:
 
 **Projeto novo**
 
-1. Marca: `src/styles/theme.css`, `src/brand/brand.config.ts` e `src/brand/assets`, conforme o briefing. Confira `/tokens`: nenhum selo de contraste pode marcar "falha".
-2. Menu (`src/config/navigation.ts`), layout do AppShell (`src/config/layout.ts`) e rotas (`src/routes.tsx` e `src/config/routes-list.ts`).
+1. Marca: `src/styles/theme.css`, `src/styles/themes.css`, `src/brand/brand.config.ts` e `src/brand/assets`, conforme o briefing (modelo, paleta, modo de cor). Confira `/tokens`: nenhum selo de contraste pode marcar "falha".
+2. Menu (`src/config/navigation.ts`), layout do AppShell (`src/config/layout.ts`, com cada valor escolhido no bloco 4 do briefing) e rotas (`src/routes.tsx` e `src/config/routes-list.ts`).
 3. Telas, em ordem de prioridade, partindo das telas base de `src/pages`.
 4. Limpeza do que é só demonstração (`src/mocks`, telas de exemplo sem uso, templates alternativos não usados).
 
@@ -60,7 +62,7 @@ Proponha um plano em etapas e espere a aprovação. A ordem de referência:
 
 Ao fim de **cada etapa**:
 
-- rode `npm run typecheck`, `npm run lint`, `npm run check:rules` e `npm run test:layout`, e só diga que terminou com tudo passando;
+- rode `npm run typecheck`, `npm run lint`, `npm run check:rules`, `npm test`, `npm run test:layout` e `npm run test:a11y`, e só diga que terminou com tudo passando;
 - mostre o resultado em 360px e 1280px (capturas em `screenshots/`);
 - espere a aprovação antes de seguir.
 
@@ -72,8 +74,13 @@ Ao fim de **cada etapa**:
 - **Só a escala de espaço** (0, 1, 2, 3, 4, 6, 8, 12, 16, 24) e tokens nomeados. Proibido valor arbitrário (`p-[13px]`), estilo inline, `100vh` e degrau fora da escala.
 - **Contêiner certo:** modal até 3 campos, drawer até cerca de 12, página em seções ou wizard acima disso. Nunca modal dentro de modal.
 - **Botões pela `ActionBar`:** 1 botão com 100%, 2 botões com 30% e 70%, a partir de 3 as extras vão para o menu.
+- **Nunca botão solto:** cada ação tem lugar previsto (rodapé fixo, barra da tabela, `PageHeader actions`, `CardHeader actions`, menu da linha).
+- **Texto orientativo nunca no corpo da tela:** vai em `help` (ícone de informação ao lado do título, no `PageHeader`, `CardTitle` ou `FormSection`), que abre um modal. Subtítulo descreve, não instrui.
 - **Header sempre fixo**, título da página no header com a trilha abaixo, uma única área de rolagem (o `<main>`).
-- **Sidebar sempre colorida**, fundo claro #fcfcfc, conteúdo com 95% da largura a partir de 1024px, contraste AA.
+- **Sidebar sempre colorida**, fundo da tela e dos campos cinza bem claro #f5f6f7 com cards brancos, respiro de página de 24px igual em todos os lados, contraste AA.
+- **Formulário:** 3 campos por linha (nunca 2 por padrão), CEP e CNPJ primeiro com 25% e o que eles preenchem abaixo, 16px entre campos, salvar no rodapé fixo (no wizard, junto do card).
+- **Listagem:** Novo na barra da tabela com Filtros à esquerda, nada solto acima da tabela, 15 por página com busca em todos os registros, título da linha abre o cadastro.
+- **Texto em 100% da largura**; limite de largura só quando pedido.
 - **Interface em português do Brasil**, datas em DD/MM/AAAA e valores em R$ 1.250,00.
 
 ## Comandos
@@ -86,7 +93,10 @@ npm run storybook               # Storybook em http://localhost:6006
 npm run typecheck               # TypeScript
 npm run lint                    # ESLint (TS, hooks, acessibilidade)
 npm run check:rules             # regras de design
-npm run test:layout             # Playwright: rotas x larguras x modelos
+npm test                        # unitários (Vitest)
+npm run test:layout             # Playwright: rotas x larguras x modelos, claro e escuro
+npm run test:a11y               # acessibilidade (axe-core, WCAG 2.1 AA)
+npm run test:visual             # regressão visual (referências do Linux, geradas no CI)
 ```
 
 ## Conduta

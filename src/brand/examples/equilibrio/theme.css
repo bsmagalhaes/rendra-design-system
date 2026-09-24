@@ -39,7 +39,7 @@
 :root[data-palette='equilibrio'] {
   color-scheme: light;
 
-  --background: #fcfcfc;
+  --background: #f5f6f7;
   --background-image: none;
   --foreground: #1d1a2e;
   --card: #ffffff;
@@ -50,7 +50,7 @@
   --muted-foreground: #5e5a72;
   --border: #e3e0ee;
   --input: #8c88a0;
-  --field: #fcfcfc;
+  --field: #f5f6f7;
   --ring: #5b3fd1;
   --overlay: rgb(29 26 46 / 0.5);
 
@@ -60,6 +60,7 @@
   --primary-hover-foreground: #ffffff;
   --primary-soft: #efebfc;
   --primary-soft-foreground: #4a31b3;
+  --primary-text: #5b3fd1;
   --secondary: #0e7490;
   --secondary-hover: #0b5f76;
   --secondary-foreground: #ffffff;
@@ -124,6 +125,7 @@
   --primary-hover-foreground: #1a1235;
   --primary-soft: #2a2350;
   --primary-soft-foreground: #c9befd;
+  --primary-text: #a594f9;
   --secondary: #67c7de;
   --secondary-hover: #88d4e6;
   --secondary-foreground: #04222b;

@@ -87,7 +87,7 @@ export function Stepper({
               className={cn(
                 'flex size-8 shrink-0 items-center justify-center rounded-full border-2 text-sm font-semibold tabular-nums transition-colors',
                 st === 'complete' && 'border-primary bg-primary text-primary-foreground',
-                st === 'current' && 'border-primary bg-card text-primary',
+                st === 'current' && 'border-primary bg-card text-primary-text',
                 st === 'pending' && 'border-border bg-card text-muted-foreground',
                 st === 'error' && 'border-destructive bg-destructive text-destructive-foreground',
               )}
@@ -181,7 +181,7 @@ export interface WizardProps {
   onCancel?: () => void
   finishLabel?: string
   orientation?: 'horizontal' | 'vertical'
-  /** Rodapé fixo no fim da área rolável (padrão em página). */
+  /** Botões no rodapé fixo da tela. Padrão: não, seguem junto do card do wizard. */
   stickyFooter?: boolean
 }
 
@@ -194,7 +194,7 @@ export function Wizard({
   onCancel,
   finishLabel = 'Concluir',
   orientation = 'horizontal',
-  stickyFooter = true,
+  stickyFooter = false,
 }: WizardProps) {
   const [current, setCurrent] = useState(0)
   const [errors, setErrors] = useState<number[]>([])

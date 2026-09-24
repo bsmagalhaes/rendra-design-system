@@ -42,7 +42,7 @@ export function Breadcrumb({ items, variant = 'responsive', className }: Breadcr
                     {/* Links só a partir de md; no celular a trilha é informativa (toque de 44px) */}
                     <Link
                       to={item.to}
-                      className="hidden truncate rounded-item transition-colors hover:text-primary md:inline"
+                      className="hidden truncate rounded-item transition-colors hover:text-primary-text md:inline"
                     >
                       {item.label}
                     </Link>

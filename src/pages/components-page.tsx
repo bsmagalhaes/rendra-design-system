@@ -14,6 +14,7 @@ import { Demo, Row } from './showcase/demo'
 import { FeedbackSection } from './showcase/feedback-section'
 import { FormsSection } from './showcase/forms-section'
 import { NavigationSection } from './showcase/navigation-section'
+import { PlanningSection } from './showcase/planning-section'
 
 /*
  * VITRINE /componentes: cada componente com variantes, tamanhos e estados,
@@ -35,6 +36,7 @@ const groups = [
     items: [
       ['input', 'Input'],
       ['textarea', 'Textarea'],
+      ['editor', 'RichTextEditor'],
       ['select', 'Select'],
       ['checkbox-radio', 'Checkbox, Radio, Switch'],
       ['datepicker', 'DatePicker'],
@@ -67,12 +69,21 @@ const groups = [
     ],
   },
   {
+    title: 'Planejamento',
+    items: [
+      ['calendario', 'Calendar (agenda)'],
+      ['kanban', 'Kanban'],
+      ['visualizador', 'ImageViewer'],
+    ],
+  },
+  {
     title: 'Feedback',
     items: [
       ['icone-feedback', 'Ícone de feedback'],
       ['alert', 'Alert'],
       ['toast', 'Toast'],
       ['modal', 'Modal'],
+      ['texto-orientativo', 'Texto orientativo (InfoHint)'],
       ['popover-tooltip', 'Popover e Tooltip'],
       ['empty-state', 'EmptyState'],
       ['progress-skeleton', 'Progress e Skeleton'],
@@ -122,7 +133,7 @@ function SectionNav({ active, onNavigate }: { active: string; onNavigate?: () =>
     <div className="flex flex-col gap-4">
       {groups.map((g) => (
         <div key={g.title} className="flex flex-col gap-1">
-          <span className="px-3 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+          <span className="px-3 text-xs font-semibold tracking-wide text-foreground uppercase">
             {g.title}
           </span>
           <ul className="flex flex-col">
@@ -189,13 +200,14 @@ export function ComponentsPage() {
             <FormsSection />
             <NavigationSection />
             <DataSection />
+            <PlanningSection />
             <FeedbackSection />
             <CompositionSection />
 
             <Demo
               id="primitivas"
               title="Primitivas de layout"
-              description="Toda tela é composta por Container, Stack, Inline, Grid, Section e PageHeader. O conteúdo ocupa 95% da largura a partir de 1024px."
+              description="Toda tela é composta por Container, Stack, Inline, Grid, Section e PageHeader. O respiro da página é igual em todos os lados: 16px no celular e 24px a partir do tablet."
               props="Container (size, padded) · Stack (gap, align) · Inline (gap, justify, wrap, stackOnMobile) · Grid (cols por faixa, responsive: screen | container) · Section · PageHeader"
             >
               <Row label="Grid 1, 2 e 4 colunas">

@@ -7,10 +7,20 @@ export const clientColumns: TableColumn<Client>[] = [
     id: 'name',
     header: 'Cliente',
     accessor: (c) => c.name,
+    // Pessoa: nome e CPF. Empresa: nome fantasia, razão social e CNPJ.
+    details: (c) => [c.legalName, c.document],
+    href: (c) => `/clientes/${c.id}`,
     mobile: 'primary',
     hideable: false,
     width: 'md',
     lines: 2,
+  },
+  {
+    id: 'contact',
+    header: 'Contato',
+    accessor: (c) => c.phone,
+    details: (c) => [c.email],
+    mobile: 'secondary',
   },
   {
     id: 'status',
@@ -20,16 +30,8 @@ export const clientColumns: TableColumn<Client>[] = [
     badgeTone: (c) => statusTone[c.status],
     mobile: 'primary',
   },
-  { id: 'city', header: 'Cidade', accessor: (c) => c.city, mobile: 'primary' },
+  { id: 'city', header: 'Cidade', accessor: (c) => c.city, mobile: 'primary', lines: 1 },
   { id: 'segment', header: 'Segmento', accessor: (c) => c.segment, mobile: 'secondary' },
-  {
-    id: 'email',
-    hidden: true,
-    header: 'E-mail',
-    accessor: (c) => c.email,
-    mobile: 'secondary',
-    lines: 1,
-  },
   {
     id: 'revenue',
     header: 'Receita mensal',

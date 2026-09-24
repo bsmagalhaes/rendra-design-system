@@ -126,4 +126,84 @@ await shot(browser, {
   width: 390,
   height: 844,
 })
+// Os 6 tipos de menu (códigos M1 a M6 de src/config/presets.ts), com o submenu aberto
+const menus = [
+  {
+    code: 'm1',
+    layout: { navigation: 'sidebar', sidebar: 'collapsed', expandOnHover: true, submenu: 'panel' },
+  },
+  {
+    code: 'm2',
+    layout: { navigation: 'sidebar', sidebar: 'collapsed', expandOnHover: true, submenu: 'inline' },
+    hover: true,
+  },
+  { code: 'm3', layout: { navigation: 'sidebar', sidebar: 'expanded', submenu: 'panel' } },
+  { code: 'm4', layout: { navigation: 'sidebar', sidebar: 'expanded', submenu: 'inline' } },
+  { code: 'm5', layout: { navigation: 'topbar', topbarSubmenu: 'dropdown' }, top: true },
+  { code: 'm6', layout: { navigation: 'topbar', topbarSubmenu: 'mega' }, top: true },
+]
+for (const m of menus) {
+  await shot(browser, {
+    name: `menu-${m.code}`,
+    route: '/',
+    brand: 'safira',
+    layout: m.layout,
+    act: async (p) => {
+      try {
+        if (m.top) return await p.getByRole('button', { name: 'Operação' }).first().click()
+        if (m.hover) await p.locator('aside').first().hover()
+        await p
+          .getByRole('button', { name: /Cadastros/ })
+          .first()
+          .click({ timeout: 3000 })
+      } catch {
+        // sem submenu para abrir: fica a navegação como está
+      }
+    },
+  })
+}
+
+// Atendimento, painel em modo de ajuste, calendário, agenda e kanban
+await shot(browser, {
+  name: 'safira-atendimento',
+  route: '/atendimento',
+  brand: 'safira',
+  width: 1440,
+  height: 900,
+  act: async (p) => {
+    await p.getByRole('button', { name: /Clínica Vida Plena/ }).click()
+  },
+})
+await shot(browser, {
+  name: 'aurora-atendimento-mobile',
+  route: '/atendimento',
+  brand: 'aurora',
+  width: 390,
+  height: 844,
+  act: async (p) => {
+    await p.getByRole('button', { name: /Clínica Vida Plena/ }).click()
+  },
+})
+await shot(browser, {
+  name: 'safira-dashboard-ajuste',
+  route: '/',
+  brand: 'safira',
+  act: (p) => p.getByRole('button', { name: 'Ajustar dashboard' }).click(),
+})
+
+await shot(browser, { name: 'safira-calendario', route: '/agenda', brand: 'safira' })
+await shot(browser, {
+  name: 'equilibrio-agenda',
+  route: '/agenda',
+  brand: 'equilibrio',
+  act: (p) => p.getByRole('radio', { name: 'Semana', exact: true }).click(),
+})
+await shot(browser, { name: 'aurora-kanban', route: '/kanban', brand: 'aurora' })
+await shot(browser, {
+  name: 'safira-kanban-mobile',
+  route: '/kanban',
+  brand: 'safira',
+  width: 390,
+  height: 844,
+})
 await browser.close()

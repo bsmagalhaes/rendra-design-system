@@ -1,10 +1,14 @@
 import {
   Blocks,
+  CalendarDays,
   ClipboardList,
+  Headset,
+  Images,
   LayoutDashboard,
   ListChecks,
   Palette,
   Settings,
+  SquareKanban,
   Users,
   type LucideIcon,
 } from 'lucide-react'
@@ -89,6 +93,26 @@ export const navigation: NavGroup[] = [
         icon: ListChecks,
         description: 'Pendências e prazos da equipe.',
       },
+      {
+        title: 'Atendimento',
+        to: '/atendimento',
+        icon: Headset,
+        badge: 3,
+        description: 'WhatsApp, redes sociais, site e e-mail em um lugar só.',
+      },
+      {
+        title: 'Agenda',
+        to: '/agenda',
+        icon: CalendarDays,
+        description: 'Compromissos por mês, semana, dia ou lista.',
+      },
+      {
+        title: 'Funil de vendas',
+        shortTitle: 'Funil',
+        to: '/kanban',
+        icon: SquareKanban,
+        description: 'Negócios em kanban, de contato a fechado.',
+      },
     ],
   },
   {
@@ -106,6 +130,12 @@ export const navigation: NavGroup[] = [
         to: '/tokens',
         icon: Palette,
         description: 'Cores, tipografia e formato.',
+      },
+      {
+        title: 'Galeria',
+        to: '/galeria',
+        icon: Images,
+        description: 'Capturas de todos os templates e paletas.',
       },
       {
         title: 'Configurações',

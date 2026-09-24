@@ -8,6 +8,7 @@ import { Modal } from '@/components/ui/modal'
 import { Select } from '@/components/ui/select'
 import { Table } from '@/components/ui/table'
 import { toast } from '@/components/ui/toast'
+import { mockSource } from '@/mocks/api'
 import { clients as all, type Client } from '@/mocks/clients'
 import { clientColumns } from './client-columns'
 import { ClientDrawer } from './client-drawer'
@@ -15,9 +16,24 @@ import { ClientDrawer } from './client-drawer'
 const statuses = ['Ativo', 'Em análise', 'Inadimplente', 'Inativo']
 const segments = [...new Set(all.map((c) => c.segment))].sort()
 
+// API de demonstração: pagina, busca em todos os registros e ordena no "servidor".
+const clientsApi = mockSource(all, {
+  searchIn: (c) => [c.name, c.legalName, c.city, c.email, c.phone, c.document],
+  sortBy: {
+    name: (c) => c.name,
+    status: (c) => c.status,
+    city: (c) => c.city,
+    segment: (c) => c.segment,
+    contact: (c) => c.phone,
+    revenue: (c) => c.revenue,
+    createdAt: (c) => c.createdAt,
+  },
+})
+
 /**
- * Listagem padrão: título com ação principal; barra de ferramentas (busca, filtros, ações)
- * no mesmo card da tabela; chips dos filtros aplicados; tabela; paginação no rodapé do card.
+ * Listagem padrão: título só no header; barra de ferramentas no mesmo card da tabela
+ * (busca, ações, Filtros e a ação principal Novo); chips dos filtros; tabela carregada
+ * página por página (15 por vez) com busca em todos os registros; paginação no rodapé.
  */
 export function ClientsListPage() {
   const navigate = useNavigate()
@@ -27,9 +43,10 @@ export function ClientsListPage() {
   const [drawer, setDrawer] = useState<'create' | 'edit' | null>(null)
   const [toDelete, setToDelete] = useState<Client | null>(null)
 
-  const data = useMemo(
+  // Filtros da tela vão junto na requisição; queryKey avisa a Table para voltar à página 1.
+  const source = useMemo(
     () =>
-      all.filter(
+      clientsApi(
         (c) => (!status.length || status.includes(c.status)) && (!segment || c.segment === segment),
       ),
     [status, segment],
@@ -43,24 +60,16 @@ export function ClientsListPage() {
   return (
     <Container padded>
       <Stack gap="section">
-        <PageHeader
-          title="Clientes"
-          description={`${all.length} clientes na carteira.`}
-          actions={
-            <Button icon={<Plus />} onClick={() => setDrawer('create')}>
-              Novo cliente
-            </Button>
-          }
-        />
+        <PageHeader title="Clientes" />
         <Table<Client>
           aria-label="Clientes"
-          data={data}
+          source={source}
+          queryKey={`${status.join(',')}|${segment ?? ''}`}
           columns={clientColumns}
           getRowId={(c) => c.id}
           selectable
           columnVisibility
           globalFilter={search}
-          pageSize={10}
           empty={{
             title: 'Nenhum cliente ainda',
             description: 'Cadastre o primeiro cliente para começar.',
@@ -87,7 +96,6 @@ export function ClientsListPage() {
           ]}
           bulkActions={(sel) => (
             <Button
-              size="sm"
               variant="outline"
               icon={<Download />}
               onClick={() => toast.success(`${sel.length} clientes exportados`)}
@@ -125,6 +133,11 @@ export function ClientsListPage() {
               onChange: setSearch,
               placeholder: 'Buscar por nome, cidade ou e-mail',
             },
+            primaryAction: (
+              <Button icon={<Plus />} onClick={() => setDrawer('create')}>
+                Novo cliente
+              </Button>
+            ),
             filterCount,
             onClearFilters: filterCount ? clear : undefined,
             chips: [
@@ -139,7 +152,7 @@ export function ClientsListPage() {
             ],
             filters: (
               <Stack gap="4">
-                <Field label="Situação" compact>
+                <Field label="Situação">
                   <Select
                     multiple
                     label="Situação"
@@ -148,7 +161,7 @@ export function ClientsListPage() {
                     options={statuses.map((s) => ({ value: s, label: s }))}
                   />
                 </Field>
-                <Field label="Segmento" compact>
+                <Field label="Segmento">
                   <Select
                     label="Segmento"
                     clearable
@@ -162,7 +175,6 @@ export function ClientsListPage() {
             actions: (
               <Button
                 variant="outline"
-                size="sm"
                 icon={<Download />}
                 onClick={() => toast.info('Exportação iniciada')}
               >

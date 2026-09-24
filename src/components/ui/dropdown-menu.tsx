@@ -61,7 +61,7 @@ export function DropdownMenuCheckboxItem({
     <D.CheckboxItem className={cn(item, 'pl-8', className)} {...props}>
       <span className="absolute left-2 flex size-icon-sm items-center justify-center">
         <D.ItemIndicator>
-          <Check className="text-primary" />
+          <Check className="text-primary-text" />
         </D.ItemIndicator>
       </span>
       {children}
@@ -78,7 +78,7 @@ export function DropdownMenuRadioItem({
     <D.RadioItem className={cn(item, 'pl-8', className)} {...props}>
       <span className="absolute left-2 flex size-icon-sm items-center justify-center">
         <D.ItemIndicator>
-          <Check className="text-primary" />
+          <Check className="text-primary-text" />
         </D.ItemIndicator>
       </span>
       {children}

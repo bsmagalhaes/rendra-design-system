@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Building2, Mail, Rocket, Star, User } from 'lucide-react'
-import { useForm } from 'react-hook-form'
+import { Building2, Loader2, Mail, Rocket, Star, User } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useForm, type UseFormReturn } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { z } from 'zod'
 import { Container, PageHeader, Stack } from '@/components/layout'
@@ -15,6 +16,7 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from '@/components/ui/toast'
 import { Upload } from '@/components/ui/upload'
+import { lookupCep, lookupCnpj } from '@/lib/lookup'
 import { zBR } from '@/lib/validators'
 import { fakeUpload } from '@/pages/showcase/demo'
 
@@ -66,6 +68,7 @@ const schema = z.object({
   plano: z.string({ error: 'Escolha um plano.' }),
   valor: z.string().refine((v) => /[1-9]/.test(v), 'Informe o valor mensal.'),
   inicio: z.date({ error: 'Informe a data de início.' }),
+  vencimento: z.string().optional(),
   boasVindas: z.boolean(),
   observacoes: z.string().max(300, 'Máximo de 300 caracteres.').optional(),
   aceite: z.literal(true, { error: 'Confirme que os dados foram conferidos.' }),
@@ -78,9 +81,79 @@ const plans = [
   { value: 'empresa', label: 'Empresa', description: 'Várias unidades.', icon: <Building2 /> },
 ]
 
+const Spinner = () => <Loader2 className="size-icon-sm animate-spin" aria-label="Buscando" />
+
 /**
- * Formulário longo em página: seções com título, grid de 2 colunas no desktop e 1 no mobile,
- * rótulo acima, erro abaixo em espaço reservado e rodapé fixo com as ações.
+ * Busca o CNPJ e o CEP assim que estão completos e preenche o que vem abaixo deles.
+ * CNPJ: nome, e-mail e telefone (só se vazios) e o endereço. CEP: o endereço.
+ */
+function useLookups(form: UseFormReturn<Values>) {
+  const [searching, setSearching] = useState({ doc: false, cep: false })
+  const [docStatus, setDocStatus] = useState<string>('CNPJ preenche os dados da empresa.')
+  const [cepStatus, setCepStatus] = useState<string>('Preenche o endereço.')
+  const doc = form.watch('documento')
+  const cep = form.watch('cep')
+  const fill = (k: keyof Values, v: string, onlyIfEmpty = false) => {
+    if (!v || (onlyIfEmpty && form.getValues(k))) return
+    form.setValue(k, v as never, { shouldValidate: true, shouldDirty: true })
+  }
+
+  useEffect(() => {
+    if (doc.replace(/\D/g, '').length !== 14) return
+    const ctrl = new AbortController()
+    setSearching((x) => ({ ...x, doc: true }))
+    lookupCnpj(doc, ctrl.signal)
+      .then((c) => {
+        if (!c) return setDocStatus('CNPJ não encontrado. Preencha os dados abaixo.')
+        fill('nome', c.razaoSocial, true)
+        fill('email', c.email, true)
+        fill('telefone', c.telefone, true)
+        fill('cep', c.endereco.cep.replace(/^(\d{5})(\d{3})$/, '$1-$2'))
+        fill('logradouro', c.endereco.logradouro)
+        fill('numero', c.endereco.numero)
+        fill('complemento', c.endereco.complemento)
+        fill('bairro', c.endereco.bairro)
+        fill('cidade', c.endereco.cidade)
+        fill('uf', c.endereco.uf)
+        setDocStatus(`${c.situacao ? `Situação: ${c.situacao}. ` : ''}Dados preenchidos pelo CNPJ.`)
+      })
+      .catch((e: unknown) => {
+        if (!ctrl.signal.aborted) setDocStatus(e instanceof Error ? e.message : 'Falha na busca.')
+      })
+      .finally(() => setSearching((x) => ({ ...x, doc: false })))
+    return () => ctrl.abort()
+    // fill só usa o form, que é estável.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doc])
+
+  useEffect(() => {
+    if (cep.replace(/\D/g, '').length !== 8) return
+    const ctrl = new AbortController()
+    setSearching((x) => ({ ...x, cep: true }))
+    lookupCep(cep, ctrl.signal)
+      .then((a) => {
+        if (!a) return setCepStatus('CEP não encontrado. Preencha o endereço.')
+        fill('logradouro', a.logradouro)
+        fill('bairro', a.bairro)
+        fill('cidade', a.cidade)
+        fill('uf', a.uf)
+        if (a.complemento) fill('complemento', a.complemento, true)
+        setCepStatus('Endereço preenchido pelo CEP. Falta o número.')
+      })
+      .catch((e: unknown) => {
+        if (!ctrl.signal.aborted) setCepStatus(e instanceof Error ? e.message : 'Falha na busca.')
+      })
+      .finally(() => setSearching((x) => ({ ...x, cep: false })))
+    return () => ctrl.abort()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cep])
+
+  return { searching, docStatus, cepStatus }
+}
+
+/**
+ * Formulário longo em página: seções com título, grade de 3 campos por linha no desktop e 1
+ * no mobile, CNPJ e CEP primeiro (as buscas preenchem o que vem abaixo) e rodapé fixo.
  */
 export function ClientFormPage() {
   const navigate = useNavigate()
@@ -104,6 +177,7 @@ export function ClientFormPage() {
     },
   })
   const { isSubmitting } = form.formState
+  const { searching, docStatus, cepStatus } = useLookups(form)
 
   const submit = async (v: Values) => {
     await new Promise((r) => window.setTimeout(r, 1200))
@@ -114,21 +188,40 @@ export function ClientFormPage() {
   return (
     <Container padded>
       <Stack gap="section">
-        <PageHeader title="Novo cliente" description="Campos com * são obrigatórios." />
-        <Form form={form} onSubmit={submit}>
-          <FormSection title="Dados principais" description="Quem é o cliente.">
-            <FormField<Values>
-              name="nome"
-              label="Nome ou razão social"
-              required
-              span="full"
-              render={(f) => <Input {...f} icon={<User />} autoComplete="name" />}
-            />
+        <PageHeader
+          title="Novo cliente"
+          help={
+            <>
+              <p>Campos com * são obrigatórios.</p>
+              <p>
+                Comece pelo documento: com CNPJ, os dados da empresa são preenchidos; com CEP, o
+                endereço.
+              </p>
+            </>
+          }
+        />
+        <Form id="form-cliente" form={form} onSubmit={submit}>
+          <FormSection
+            title="Dados principais"
+            help="Comece pelo documento: com CNPJ, os dados da empresa são preenchidos."
+          >
             <FormField<Values>
               name="documento"
               label="CPF ou CNPJ"
               required
-              render={(f) => <Input {...f} mask="cpfCnpj" />}
+              span="sm"
+              help={docStatus}
+              render={(f) => (
+                <Input {...f} mask="cpfCnpj" suffix={searching.doc ? <Spinner /> : undefined} />
+              )}
+            />
+            <FormField<Values>
+              name="nome"
+              label="Nome ou razão social"
+              required
+              span="xl"
+              newRow
+              render={(f) => <Input {...f} icon={<User />} autoComplete="name" />}
             />
             <FormField<Values>
               name="segmento"
@@ -158,28 +251,43 @@ export function ClientFormPage() {
             />
             <FormField<Values>
               name="nascimento"
-              label="Data de nascimento ou fundação"
+              label="Nascimento ou fundação"
               render={(f) => <DatePicker {...f} label="Data" maxDate={new Date()} clearable />}
             />
           </FormSection>
 
-          <FormSection title="Endereço" description="Onde o cliente é atendido.">
+          <FormSection
+            title="Endereço"
+            help="Comece pelo CEP: rua, bairro, cidade e UF são preenchidos."
+          >
             <FormField<Values>
               name="cep"
               label="CEP"
               required
-              render={(f) => <Input {...f} mask="cep" autoComplete="postal-code" />}
+              span="sm"
+              help={cepStatus}
+              render={(f) => (
+                <Input
+                  {...f}
+                  mask="cep"
+                  autoComplete="postal-code"
+                  suffix={searching.cep ? <Spinner /> : undefined}
+                />
+              )}
             />
             <FormField<Values>
               name="logradouro"
               label="Logradouro"
               required
+              span="lg"
+              newRow
               render={(f) => <Input {...f} autoComplete="address-line1" />}
             />
             <FormField<Values>
               name="numero"
               label="Número"
               required
+              span="xs"
               render={(f) => <Input {...f} inputMode="numeric" />}
             />
             <FormField<Values>
@@ -197,12 +305,14 @@ export function ClientFormPage() {
               name="cidade"
               label="Cidade"
               required
+              span="lg"
               render={(f) => <Input {...f} autoComplete="address-level2" />}
             />
             <FormField<Values>
               name="uf"
               label="UF"
               required
+              span="xs"
               render={(f) => (
                 <Select
                   {...f}
@@ -235,8 +345,21 @@ export function ClientFormPage() {
               render={(f) => <DatePicker {...f} label="Início" minDate={new Date()} />}
             />
             <FormField<Values>
+              name="vencimento"
+              label="Dia de vencimento"
+              render={(f) => (
+                <Select
+                  {...f}
+                  label="Dia de vencimento"
+                  options={['5', '10', '15', '20', '25'].map((d) => ({
+                    value: d,
+                    label: `Dia ${d}`,
+                  }))}
+                />
+              )}
+            />
+            <FormField<Values>
               name="boasVindas"
-              compact
               span="full"
               render={(f) => (
                 <Switch
@@ -279,6 +402,7 @@ export function ClientFormPage() {
             primary={{
               label: 'Cadastrar cliente',
               type: 'submit',
+              form: 'form-cliente',
               loading: isSubmitting,
               loadingLabel: 'Cadastrando...',
             }}

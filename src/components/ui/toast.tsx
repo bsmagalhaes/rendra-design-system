@@ -46,7 +46,7 @@ function show(type: FeedbackType, title: string, opts: ToastOptions = {}) {
               opts.action?.onClick()
               sonner.dismiss(id)
             }}
-            className="-my-1 flex min-h-touch shrink-0 cursor-pointer items-center rounded-item px-2 text-sm font-semibold text-primary hover:bg-accent md:min-h-0 md:py-1"
+            className="-my-1 flex min-h-touch shrink-0 cursor-pointer items-center rounded-item px-2 text-sm font-semibold text-primary-text hover:bg-accent md:min-h-0 md:py-1"
           >
             {opts.action.label}
           </button>

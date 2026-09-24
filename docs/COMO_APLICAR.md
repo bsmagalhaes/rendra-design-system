@@ -16,7 +16,7 @@ Guia para levar o design system Rendra a um sistema novo ou a um sistema que já
 3. Troque a marca (seção "Troca de marca").
 4. Apague o que é só demonstração:
    - `src/mocks` e as telas de exemplo em `src/pages/app` que não servirem (mantenha as que forem ponto de partida).
-   - Os templates alternativos, se não forem usados: a pasta `src/brand/examples`, os dois `@import` correspondentes no início de `src/styles/globals.css` e as importações em `src/brand/index.ts`.
+   - Os templates alternativos, se não forem usados: a pasta `src/brand/examples`, os `@import` correspondentes em `src/styles/themes.css` e as importações em `src/brand/index.ts`.
    - Se o layout do projeto for fixo: `<AppShell userConfigurable={false} />` em `src/routes.tsx`.
 5. Ajuste o menu em `src/config/navigation.ts` e as rotas em `src/routes.tsx` e `src/config/routes-list.ts`.
 6. Rode `npm run check:rules`, `npm run lint`, `npm run typecheck` e `npm run test:layout`.
@@ -49,7 +49,7 @@ Migre de fora para dentro, com uma verificação ao fim de cada passo:
 
 1. **Tokens e tema.** O projeto passa a ter `theme.css` e `globals.css`. Confira `/tokens`.
 2. **AppShell.** Troque o layout antigo pelo `AppShell` com o menu em `navigation.ts`. O header fixo e a rolagem única do `<main>` já resolvem boa parte dos problemas de layout.
-3. **Formulários e ações.** Troque inputs, selects e botões pelos componentes únicos. Use `Form`, `FormField` e `ActionBar`.
+3. **Formulários e ações.** Troque inputs, selects e botões pelos componentes únicos. Use `Form`, `FormField` e `ActionBar`. Nenhum botão fica solto: cada ação vai para o rodapé fixo, a barra da tabela, o `PageHeader actions`, o `CardHeader actions` ou o menu da linha. Textos de instrução soltos na tela e botões de "informações" viram `help` ao lado do título (ícone que abre um modal).
 4. **Listagens.** Troque as tabelas pela `Table`, com `toolbar`, colunas com `mobile` e estados.
 5. **Feedback.** Troque alertas, toasts e modais antigos por `Alert`, `toast`, `Modal` e `Drawer`, e use o ícone de feedback da marca.
 6. **Telas.** Refaça cada tela com as primitivas (`Container`, `Stack`, `Grid`, `Section`, `PageHeader`), começando pelas mais usadas.
@@ -60,7 +60,8 @@ Cada tela migrada entra em `src/routes.tsx` e em `src/config/routes-list.ts` e p
 ## Testes de layout
 
 ```bash
-npm run test:layout                         # todas as rotas, 5 larguras, 3 templates
+npm run test:layout                         # todas as rotas, 5 larguras, 3 templates, claro e escuro
+npm run test:a11y                           # acessibilidade (axe-core) em todas as rotas
 TEMPLATES=safira npm run test:layout        # só um template (mais rápido)
 npx playwright test -g "safira @ 360px"     # só uma largura
 npm run test:layout:report                  # relatório com as falhas
@@ -85,7 +86,7 @@ O teste falha se a página tiver rolagem horizontal, se algum elemento passar da
 ## Checklist de aceite
 
 - [ ] `npm run typecheck`, `npm run lint` e `npm run check:rules` sem erro.
-- [ ] `npm run test:layout` com 100% dos testes passando.
+- [ ] `npm run test:layout` e `npm run test:a11y` com 100% dos testes passando.
 - [ ] `/tokens` sem nenhum selo "falha" nos modos claro e escuro.
 - [ ] Marca trocada só em `theme.css`, `brand.config.ts` e `src/brand/assets`.
 - [ ] Nenhum componente duplicado nem versão mobile separada.

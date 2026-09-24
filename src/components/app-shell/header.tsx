@@ -1,9 +1,11 @@
 import {
+  ArrowLeft,
   ChevronDown,
   LayoutTemplate,
   LogOut,
   Menu,
   Monitor,
+  MoreHorizontal,
   Moon,
   PanelLeft,
   Palette,
@@ -12,6 +14,7 @@ import {
   Sun,
   User,
 } from 'lucide-react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation, useMatches, useNavigate, type UIMatch } from 'react-router'
 import { useBrand } from '@/brand'
 import type { ColorMode } from '@/brand/brand-context'
@@ -33,6 +36,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { InfoHint } from '@/components/ui/info-hint'
 import { Tooltip } from '@/components/ui/tooltip'
 import { layoutOptions, type ShellLayout } from '@/config/layout'
 import { currentUser, navigation } from '@/config/navigation'
@@ -58,6 +62,24 @@ function useCrumbs(): BreadcrumbItem[] {
         to: i < all.length - 1 ? m.pathname : undefined,
       }
     })
+}
+
+/**
+ * Voltar das telas de segundo nível (ex.: Novo cliente, Detalhe do cliente): leva à tela-pai
+ * da trilha, não ao histórico, para ser previsível mesmo quando a pessoa chegou por um link.
+ */
+function BackButton({ crumbs }: { crumbs: BreadcrumbItem[] }) {
+  const parent = crumbs.length >= 2 ? crumbs[crumbs.length - 2] : undefined
+  if (!parent?.to) return null
+  return (
+    <Tooltip content={`Voltar para ${parent.label}`} side="bottom">
+      <Button variant="ghost" iconOnly asChild className="shrink-0">
+        <Link to={parent.to} aria-label={`Voltar para ${parent.label}`}>
+          <ArrowLeft aria-hidden />
+        </Link>
+      </Button>
+    </Tooltip>
+  )
 }
 
 const modes: { value: ColorMode; label: string; icon: typeof Sun }[] = [
@@ -232,61 +254,142 @@ function UserMenu() {
 }
 
 /** Menu superior (layout topbar), a partir de 1024px. */
+/**
+ * Menu superior. Os itens que não cabem na largura vão para o botão "Mais", no fim da
+ * barra: o menu nunca passa por cima da busca e dos ícones, com qualquer número de itens.
+ */
 function TopNav() {
   const { pathname } = useLocation()
+  const items = navigation.flatMap((g) => g.items)
+  const navRef = useRef<HTMLElement>(null)
+  const widths = useRef<number[]>([])
+  const [count, setCount] = useState(items.length)
+
+  useLayoutEffect(() => {
+    const nav = navRef.current
+    if (!nav) return
+    const measure = () => {
+      const lis = [...nav.querySelectorAll<HTMLLIElement>('li[data-item]')]
+      // Mede só quando todos estão visíveis (primeira pintura e depois da fonte carregar).
+      if (lis.length === items.length && lis.every((li) => li.offsetWidth > 0))
+        widths.current = lis.map((li) => li.offsetWidth + 4)
+      const avail = nav.clientWidth
+      const total = widths.current.reduce((a, b) => a + b, 0)
+      if (total <= avail) return setCount(items.length)
+      const more = 104 // largura reservada para o botão Mais
+      let used = 0
+      let n = 0
+      for (const w of widths.current) {
+        if (used + w > avail - more) break
+        used += w
+        n++
+      }
+      setCount(n)
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(nav)
+    void document.fonts?.ready.then(() => {
+      setCount(items.length)
+      requestAnimationFrame(measure)
+    })
+    return () => ro.disconnect()
+  }, [items.length])
+
   const link =
     'inline-flex h-control-md items-center gap-2 rounded-item px-3 text-sm font-medium whitespace-nowrap transition-colors [&_svg]:size-icon-sm'
   const idle = 'text-muted-foreground hover:bg-accent hover:text-foreground'
   const active = 'bg-primary-soft text-primary-soft-foreground'
+  const isActive = (item: (typeof items)[number]) =>
+    item.children
+      ? item.children.some((c) => pathname.startsWith(c.to))
+      : item.to === '/'
+        ? pathname === '/'
+        : pathname.startsWith(item.to ?? '/')
+  const overflow = items.slice(count)
+
   return (
-    <nav aria-label="Navegação principal" className="hidden min-w-0 lg:block">
-      <ul className="flex items-center gap-1">
-        {navigation
-          .flatMap((g) => g.items)
-          .map((item) => {
-            const Icon = item.icon
-            if (item.children) {
-              const childActive = item.children.some((c) => pathname.startsWith(c.to))
-              return (
-                <li key={item.title}>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className={cn(link, childActive ? active : idle)}>
-                      <Icon aria-hidden />
-                      {item.title}
-                      <ChevronDown aria-hidden />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start">
-                      {item.children.map((c) => (
-                        <DropdownMenuItem key={c.to} asChild>
-                          <Link to={c.to}>{c.title}</Link>
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </li>
-              )
-            }
-            const to = item.to ?? '/'
+    <nav ref={navRef} aria-label="Navegação principal" className="hidden w-full min-w-0 lg:block">
+      <ul className="flex items-center justify-center gap-1">
+        {items.map((item, i) => {
+          const Icon = item.icon
+          const hidden = i >= count
+          if (item.children) {
             return (
-              <li key={item.title}>
-                <NavLink
-                  to={to}
-                  end={to === '/'}
-                  className={({ isActive }) => cn(link, isActive ? active : idle)}
-                >
-                  <Icon aria-hidden />
-                  {item.title}
-                </NavLink>
+              <li key={item.title} data-item className={cn(hidden && 'hidden')}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger className={cn(link, isActive(item) ? active : idle)}>
+                    <Icon aria-hidden />
+                    {item.title}
+                    <ChevronDown aria-hidden />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start">
+                    {item.children.map((c) => (
+                      <DropdownMenuItem key={c.to} asChild>
+                        <Link to={c.to}>{c.title}</Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </li>
             )
-          })}
+          }
+          const to = item.to ?? '/'
+          return (
+            <li key={item.title} data-item className={cn(hidden && 'hidden')}>
+              <NavLink
+                to={to}
+                end={to === '/'}
+                className={({ isActive: on }) => cn(link, on ? active : idle)}
+              >
+                <Icon aria-hidden />
+                {item.title}
+              </NavLink>
+            </li>
+          )
+        })}
+        {overflow.length > 0 && (
+          <li>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className={cn(link, overflow.some(isActive) ? active : idle)}
+                aria-label={`Mais ${overflow.length} itens do menu`}
+              >
+                <MoreHorizontal aria-hidden />
+                Mais
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {overflow.flatMap((item) => {
+                  const Icon = item.icon
+                  return item.children
+                    ? item.children.map((c) => (
+                        <DropdownMenuItem key={c.to} asChild>
+                          <Link to={c.to}>
+                            <Icon aria-hidden />
+                            {c.title}
+                          </Link>
+                        </DropdownMenuItem>
+                      ))
+                    : [
+                        <DropdownMenuItem key={item.title} asChild>
+                          <Link to={item.to ?? '/'}>
+                            <Icon aria-hidden />
+                            {item.title}
+                          </Link>
+                        </DropdownMenuItem>,
+                      ]
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </li>
+        )}
       </ul>
     </nav>
   )
 }
 
 export function Header() {
-  const { layout, setLayout, setMobileNavOpen, setSearchOpen } = useShell()
+  const { layout, setLayout, setMobileNavOpen, setSearchOpen, pageHelp } = useShell()
   const { brand, resolvedMode } = useBrand()
   const crumbs = useCrumbs()
   // Trilha do header: sempre começa em Início.
@@ -296,6 +399,25 @@ export function Header() {
       : [{ label: 'Início', to: '/' }, ...crumbs]
   const ModeIcon = resolvedMode === 'dark' ? Moon : Sun
   const topbar = layout.navigation === 'topbar'
+  const hasParent = Boolean(crumbs.length >= 2 && crumbs[crumbs.length - 2]?.to)
+  // No celular, o menu fica no botão central da barra inferior (ou dá lugar à seta de voltar).
+  const menuInFooter = layout.bottomNav || hasParent
+  // Título e trilha em uma linha cada; se não couber, reticências (nunca quebra linha).
+  const pageTitle = (
+    <div className="flex min-w-0 flex-1 flex-col justify-center">
+      <span className="flex min-w-0 items-center gap-1">
+        <p className="truncate text-sm leading-tight font-semibold md:text-base">
+          {crumbs[crumbs.length - 1]?.label ?? brand.productName}
+        </p>
+        {pageHelp && (
+          <InfoHint title={crumbs[crumbs.length - 1]?.label ?? brand.productName} className="-my-2">
+            {pageHelp}
+          </InfoHint>
+        )}
+      </span>
+      <Breadcrumb items={trail} variant="trail" />
+    </div>
+  )
   const collapsed = layout.sidebar === 'collapsed'
 
   return (
@@ -304,7 +426,7 @@ export function Header() {
         variant="ghost"
         iconOnly
         aria-label="Abrir menu"
-        className={topbar ? 'lg:hidden' : 'md:hidden'}
+        className={cn(topbar ? 'lg:hidden' : 'md:hidden', menuInFooter && 'max-md:hidden')}
         onClick={() => setMobileNavOpen(true)}
       >
         <Menu aria-hidden />
@@ -319,7 +441,10 @@ export function Header() {
           >
             <BrandLogo on="surface" />
           </Link>
-          <Breadcrumb items={crumbs} className="flex-1 px-2 md:px-0 lg:hidden" />
+          <span className="flex min-w-0 flex-1 items-center gap-1 lg:hidden">
+            <BackButton crumbs={crumbs} />
+            {pageTitle}
+          </span>
           <div className="hidden min-w-0 flex-1 lg:flex lg:justify-center">
             {layout.topbarSubmenu === 'mega' ? <MegaMenu /> : <TopNav />}
           </div>
@@ -338,13 +463,15 @@ export function Header() {
               <PanelLeft aria-hidden />
             </Button>
           </Tooltip>
-          <span aria-hidden className="mx-1 h-8 w-px shrink-0 bg-border md:mx-2" />
-          <div className="flex min-w-0 flex-1 flex-col justify-center">
-            <p className="truncate text-sm leading-tight font-semibold md:text-base">
-              {crumbs[crumbs.length - 1]?.label ?? brand.productName}
-            </p>
-            <Breadcrumb items={trail} variant="trail" />
-          </div>
+          <span
+            aria-hidden
+            className={cn(
+              'mx-1 h-8 w-px shrink-0 bg-border md:mx-2',
+              menuInFooter && 'max-md:hidden',
+            )}
+          />
+          <BackButton crumbs={crumbs} />
+          {pageTitle}
         </>
       )}
 

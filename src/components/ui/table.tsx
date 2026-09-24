@@ -20,7 +20,8 @@ import {
   RotateCw,
 } from 'lucide-react'
 import { Collapsible } from 'radix-ui'
-import { Fragment, useMemo, useState, type ReactNode } from 'react'
+import { Link } from 'react-router'
+import { Fragment, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { Badge, type BadgeProps } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -38,6 +39,7 @@ import { Select } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip } from '@/components/ui/tooltip'
 import { useBreakpoint } from '@/hooks/use-breakpoint'
+import { useDebouncedValue } from '@/hooks/use-debounced-value'
 import { cn } from '@/lib/cn'
 import { formatCurrency } from '@/lib/masks'
 
@@ -50,6 +52,13 @@ export interface TableColumn<T> {
   accessor: (row: T) => unknown
   /** Renderização própria da célula. */
   cell?: (row: T) => ReactNode
+  /**
+   * Linhas extras abaixo do valor, em texto menor (ex.: razão social e CNPJ abaixo do nome;
+   * e-mail abaixo do telefone). Valores vazios são ignorados.
+   */
+  details?: (row: T) => (ReactNode | null | undefined)[]
+  /** O valor vira link para esta rota (ex.: abrir o cadastro), com hover de clicável. */
+  href?: (row: T) => string
   /**
    * Formato automático: number e currency alinham à direita; date vira DD/MM/AAAA;
    * badge usa badgeTone para escolher a cor.
@@ -83,8 +92,38 @@ export interface RowAction<T> {
   hidden?: (row: T) => boolean
 }
 
+/** O que a Table pede ao servidor em cada carregamento (modo remoto, prop source). */
+export interface TableQuery {
+  /** Página, começando em 1. */
+  page: number
+  pageSize: number
+  /** Texto da busca, aplicado pelo servidor a todos os registros (não só à página). */
+  search: string
+  sort: { id: string; desc: boolean } | null
+  /** Cancela a requisição quando o usuário muda de página ou digita de novo. */
+  signal: AbortSignal
+}
+
+/** Resposta do servidor: os registros da página e o total que atende à busca e aos filtros. */
+export interface TablePage<T> {
+  rows: T[]
+  total: number
+}
+
+/** Registros por página em todas as tabelas do sistema. */
+export const TABLE_PAGE_SIZE = 15
+
 export interface TableProps<T> {
-  data: T[]
+  /** Dados já carregados (modo local). Com source, é ignorado. */
+  data?: T[]
+  /**
+   * Modo remoto: a Table pede ao servidor só a página visível. Busca, ordenação e
+   * filtros são enviados na requisição e valem para todos os registros. A função precisa
+   * ser estável (definida fora do componente ou com useCallback).
+   */
+  source?: (query: TableQuery) => Promise<TablePage<T>>
+  /** Mude este valor quando filtros externos mudarem: a Table recarrega a partir da página 1. */
+  queryKey?: string
   columns: TableColumn<T>[]
   getRowId: (row: T) => string
   /** Seleção por checkbox (primeira coluna; no mobile, no topo do card). */
@@ -114,7 +153,7 @@ export interface TableProps<T> {
   onRetry?: () => void
   /** Estado vazio. */
   empty?: { title: string; description?: string; action?: ReactNode }
-  /** Paginação no cliente (itens por página). */
+  /** Itens por página. Padrão: 15 (TABLE_PAGE_SIZE). Use 0 para mostrar tudo sem paginação. */
   pageSize?: number
   /** No mobile: "anterior e próxima" ou "carregar mais". */
   mobilePagination?: 'pages' | 'loadMore'
@@ -151,6 +190,36 @@ function formatValue<T>(col: TableColumn<T>, row: T): ReactNode {
     default:
       return String(v)
   }
+}
+
+/** Valor da célula com link (href) e linhas extras (details), igual no desktop e no card. */
+function CellContent<T>({ col, row, title }: { col: TableColumn<T>; row: T; title?: boolean }) {
+  const main = formatValue(col, row)
+  const extra = (col.details?.(row) ?? []).filter((d) => d != null && d !== '')
+  const value = col.href ? (
+    <Link
+      to={col.href(row)}
+      className={cn(
+        'rounded-item font-medium text-foreground underline-offset-4 transition-colors outline-none hover:text-primary-text hover:underline focus-visible:ring-2 focus-visible:ring-ring',
+        title && 'inline-flex min-h-touch items-center md:min-h-0',
+      )}
+    >
+      {main}
+    </Link>
+  ) : (
+    main
+  )
+  if (!extra.length) return <>{value}</>
+  return (
+    <span className="flex min-w-0 flex-col">
+      <span className="min-w-0">{value}</span>
+      {extra.map((d, i) => (
+        <span key={i} className="truncate text-xs font-normal text-muted-foreground">
+          {d}
+        </span>
+      ))}
+    </span>
+  )
 }
 
 const alignOf = <T,>(c: TableColumn<T>) =>
@@ -236,7 +305,9 @@ function RowActions<T>({
  * Desktop: tabela larga rola na horizontal só dentro do próprio contêiner.
  */
 export function Table<T>({
-  data,
+  data: dataProp,
+  source,
+  queryKey = '',
   columns: columnsProp,
   statusLast = true,
   getRowId,
@@ -253,7 +324,7 @@ export function Table<T>({
   error,
   onRetry,
   empty,
-  pageSize,
+  pageSize: pageSizeProp = TABLE_PAGE_SIZE,
   mobilePagination = 'pages',
   toolbar,
   ...aria
@@ -275,8 +346,68 @@ export function Table<T>({
     Object.fromEntries(columnsProp.filter((c) => c.hidden).map((c) => [c.id, false])),
   )
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
-  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: pageSize ?? 10 })
+  const pageSize = pageSizeProp || undefined
+  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: pageSize ?? 0 })
   const [mobilePage, setMobilePage] = useState(1)
+
+  /* ---------------- modo remoto: uma requisição por página */
+  const remote = Boolean(source)
+  const search = useDebouncedValue(globalFilter?.trim() ?? '', 300)
+  const sortKey = sorting[0] ? `${sorting[0].id}:${sorting[0].desc ? 'desc' : 'asc'}` : ''
+  // Busca, ordenação ou filtros novos voltam para a página 1 no mesmo render (sem pedir a
+  // página antiga com a busca nova).
+  const resetKey = `${search}|${sortKey}|${queryKey}`
+  const [lastResetKey, setLastResetKey] = useState(resetKey)
+  if (remote && resetKey !== lastResetKey) {
+    setLastResetKey(resetKey)
+    setPagination((p) => ({ ...p, pageIndex: 0 }))
+    setMobilePage(1)
+  }
+  const [reload, setReload] = useState(0)
+  const [server, setServer] = useState<{
+    rows: T[]
+    total: number
+    loading: boolean
+    error: string | null
+  }>({ rows: [], total: 0, loading: remote, error: null })
+  const page = isMobile ? mobilePage : pagination.pageIndex + 1
+  const size = (isMobile ? pageSize : pagination.pageSize) || TABLE_PAGE_SIZE
+  // No mobile com "carregar mais", cada página nova soma às anteriores.
+  const append = isMobile && mobilePagination === 'loadMore' && page > 1
+
+  useEffect(() => {
+    if (!source) return
+    const controller = new AbortController()
+    setServer((s) => ({ ...s, loading: true, error: null }))
+    const [sortId, sortDir] = sortKey.split(':')
+    source({
+      page,
+      pageSize: size,
+      search,
+      sort: sortId ? { id: sortId, desc: sortDir === 'desc' } : null,
+      signal: controller.signal,
+    })
+      .then((res) => {
+        if (controller.signal.aborted) return
+        setServer((s) => ({
+          rows: append ? [...s.rows, ...res.rows] : res.rows,
+          total: res.total,
+          loading: false,
+          error: null,
+        }))
+      })
+      .catch((e: unknown) => {
+        if (controller.signal.aborted) return
+        setServer((s) => ({
+          ...s,
+          loading: false,
+          error: e instanceof Error ? e.message : 'Erro ao carregar os dados.',
+        }))
+      })
+    return () => controller.abort()
+  }, [source, page, size, search, sortKey, queryKey, reload, append])
+
+  const data = remote ? server.rows : (dataProp ?? [])
 
   const defs = useMemo<ColumnDef<T>[]>(
     () =>
@@ -323,11 +454,21 @@ export function Table<T>({
     getRowCanExpand: () => Boolean(expandable),
     globalFilterFn: 'includesString',
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-    ...(pageSize && !isMobile ? { getPaginationRowModel: getPaginationRowModel() } : {}),
-    autoResetPageIndex: true,
+    // Remoto: o servidor já devolve a página buscada, ordenada e filtrada.
+    ...(remote
+      ? {
+          manualPagination: true,
+          manualSorting: true,
+          manualFiltering: true,
+          rowCount: server.total,
+        }
+      : {
+          getSortedRowModel: getSortedRowModel(),
+          getFilteredRowModel: getFilteredRowModel(),
+          ...(pageSize && !isMobile ? { getPaginationRowModel: getPaginationRowModel() } : {}),
+          autoResetPageIndex: true,
+        }),
   })
 
   const colById = (id: string) => columns.find((c) => c.id === id)!
@@ -338,7 +479,7 @@ export function Table<T>({
     bulkMenu && bulkMenu.length > 0 ? (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" iconOnly aria-label="Mais ações para os selecionados">
+          <Button variant="outline" iconOnly aria-label="Mais ações para os selecionados">
             <MoreHorizontal />
           </Button>
         </DropdownMenuTrigger>
@@ -356,10 +497,13 @@ export function Table<T>({
         </DropdownMenuContent>
       </DropdownMenu>
     ) : null
-  const filteredCount = table.getFilteredRowModel().rows.length
+  const filteredCount = remote ? server.total : table.getFilteredRowModel().rows.length
   const allRows = table.getRowModel().rows
+  const isLoading = Boolean(loading) || (remote && server.loading && !append)
+  const loadError = error ?? (remote ? server.error : null)
+  const retry = onRetry ?? (remote ? () => setReload((n) => n + 1) : undefined)
   const rows =
-    !isMobile || !pageSize
+    !isMobile || !pageSize || remote
       ? allRows
       : mobilePagination === 'loadMore'
         ? allRows.slice(0, mobilePage * pageSize)
@@ -399,7 +543,7 @@ export function Table<T>({
           {bulkActions?.(selectedRows, clearSelection)}
           {bulkMenuButton}
         </div>
-        <Button variant="ghost" size="sm" className="ml-auto" onClick={clearSelection}>
+        <Button variant="ghost" className="ml-auto" onClick={clearSelection}>
           Limpar seleção
         </Button>
       </>
@@ -409,23 +553,23 @@ export function Table<T>({
 
   /* ---------------- estados */
   const state = (() => {
-    if (error)
+    if (loadError)
       return (
         <EmptyState
           type="error"
           size="compact"
           title="Não foi possível carregar"
-          description={error}
+          description={loadError}
           actions={
-            onRetry && (
-              <Button variant="outline" icon={<RotateCw />} onClick={onRetry}>
+            retry && (
+              <Button variant="outline" icon={<RotateCw />} onClick={retry}>
                 Tentar de novo
               </Button>
             )
           }
         />
       )
-    if (!loading && filteredCount === 0)
+    if (!isLoading && filteredCount === 0)
       return (
         <EmptyState
           size="compact"
@@ -443,7 +587,7 @@ export function Table<T>({
   const mobileBody = () => {
     const primary = visibleCols.filter((c) => (c.mobile ?? 'secondary') === 'primary').slice(0, 3)
     const secondary = visibleCols.filter((c) => (c.mobile ?? 'secondary') === 'secondary')
-    if (loading)
+    if (isLoading)
       return (
         <ul className="flex flex-col divide-y">
           {Array.from({ length: 4 }, (_, i) => (
@@ -476,7 +620,7 @@ export function Table<T>({
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   {title && (
                     <span className="line-clamp-2 text-base font-semibold">
-                      {formatValue(title, row)}
+                      <CellContent col={title} row={row} title />
                     </span>
                   )}
                   {others.map((c) => (
@@ -485,14 +629,14 @@ export function Table<T>({
                       className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground"
                     >
                       <span className="sr-only">{c.header}: </span>
-                      {formatValue(c, row)}
+                      <CellContent col={c} row={row} />
                     </span>
                   ))}
                 </div>
               </div>
               {(secondary.length > 0 || expandable) && (
                 <Collapsible.Root>
-                  <Collapsible.Trigger className="group flex min-h-touch cursor-pointer items-center gap-1 text-sm font-medium text-primary">
+                  <Collapsible.Trigger className="group flex min-h-touch cursor-pointer items-center gap-1 text-sm font-medium text-primary-text">
                     <span className="group-data-[state=open]:hidden">Ver detalhes</span>
                     <span className="hidden group-data-[state=open]:inline">Ocultar detalhes</span>
                     <ChevronDown
@@ -505,7 +649,9 @@ export function Table<T>({
                       {secondary.map((c) => (
                         <div key={c.id} className="flex flex-col gap-1">
                           <dt className="text-xs text-muted-foreground">{c.header}</dt>
-                          <dd className="text-sm">{formatValue(c, row)}</dd>
+                          <dd className="text-sm">
+                            <CellContent col={c} row={row} />
+                          </dd>
                         </div>
                       ))}
                     </dl>
@@ -527,7 +673,7 @@ export function Table<T>({
 
   /* ---------------- desktop: tabela */
   const desktopBody = () => (
-    <div className="overflow-x-auto" data-allow-overflow>
+    <div className="scrollbar-subtle overflow-x-auto" data-allow-overflow>
       <table className="w-full border-collapse text-sm" aria-label={aria['aria-label']}>
         <thead className="border-b bg-muted/50">
           <tr>
@@ -604,7 +750,7 @@ export function Table<T>({
           </tr>
         </thead>
         <tbody className="divide-y">
-          {loading
+          {isLoading
             ? Array.from({ length: 5 }, (_, i) => (
                 <tr key={i}>
                   {selectable && (
@@ -682,7 +828,7 @@ export function Table<T>({
                             <div
                               className={cn(clamp[c.lines ?? 2], align === 'right' && 'ml-auto')}
                             >
-                              {formatValue(c, row)}
+                              <CellContent col={c} row={row} />
                             </div>
                           </td>
                         )
@@ -715,7 +861,12 @@ export function Table<T>({
 
   const total = filteredCount
   return (
-    <Card className="overflow-hidden">
+    <Card
+      className="overflow-hidden"
+      aria-busy={isLoading || server.loading || undefined}
+      // Marca a carga remota (os testes esperam a primeira página chegar).
+      data-remote-loading={(remote && server.loading) || undefined}
+    >
       {showToolbar && (
         <DataToolbar
           {...toolbar}
@@ -736,7 +887,7 @@ export function Table<T>({
 
       {state ?? (isMobile ? mobileBody() : desktopBody())}
 
-      {pageSize && !state && !loading && total > 0 && (
+      {pageSize && !state && (!isLoading || remote) && total > 0 && (
         <div className="flex justify-end border-t p-4">
           <Pagination
             className="w-full"
@@ -744,6 +895,7 @@ export function Table<T>({
             pageSize={isMobile ? pageSize : pagination.pageSize}
             total={total}
             mobileMode={mobilePagination}
+            loading={remote && server.loading}
             onPageChange={(p) =>
               isMobile ? setMobilePage(p) : setPagination((s) => ({ ...s, pageIndex: p - 1 }))
             }

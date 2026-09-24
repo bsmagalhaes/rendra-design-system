@@ -8,7 +8,12 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/field'
 import { useBreakpoint } from '@/hooks/use-breakpoint'
 import { cn } from '@/lib/cn'
-import { controlAdornmentButton, controlFrame, type ControlSize } from '@/lib/control'
+import {
+  controlAdornmentButton,
+  controlAdornmentSpace,
+  controlFrame,
+  type ControlSize,
+} from '@/lib/control'
 import { PickerPanel } from './picker-panel'
 
 export type { DateRange }
@@ -24,6 +29,11 @@ interface BaseProps {
   time?: boolean
   minDate?: Date
   maxDate?: Date
+  /**
+   * Seletores de mês e ano no topo do calendário (padrão: ligado), para chegar rápido
+   * a datas distantes, como data de nascimento, sem voltar mês a mês.
+   */
+  dropdowns?: boolean
   clearable?: boolean
   id?: string
   className?: string
@@ -68,6 +78,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
       time,
       minDate,
       maxDate,
+      dropdowns = true,
       clearable,
       id,
       className,
@@ -134,8 +145,24 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
     ]
     const immediate = !props.range && !time && !isMobile
 
+    // Faixa dos seletores de ano: de 1900 (ou minDate) até 10 anos à frente (ou maxDate).
+    const navigation = dropdowns
+      ? {
+          captionLayout: 'dropdown' as const,
+          startMonth: minDate ?? new Date(1900, 0, 1),
+          endMonth: maxDate ?? new Date(new Date().getFullYear() + 10, 11, 31),
+        }
+      : {}
+
     const classNames = {
       root: 'relative p-2',
+      dropdowns: 'flex items-center gap-2',
+      dropdown_root:
+        'relative inline-flex h-control-sm items-center rounded-item border border-input bg-field px-2 text-sm font-medium focus-within:ring-2 focus-within:ring-ring',
+      // Fundo e texto explícitos: a lista nativa não herda o fundo transparente do tema escuro.
+      dropdown:
+        'absolute inset-0 w-full cursor-pointer bg-popover text-popover-foreground opacity-0 [&_option]:bg-popover [&_option]:text-popover-foreground',
+      caption_label: 'inline-flex items-center gap-1 capitalize [&>svg]:size-icon-sm',
       months: 'flex flex-col gap-6 md:flex-row',
       month: 'flex flex-col gap-3',
       month_caption:
@@ -160,7 +187,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
       range_end: '[&>button]:bg-primary [&>button]:text-primary-foreground',
       range_middle:
         '[&>button]:rounded-none [&>button]:bg-primary-soft [&>button]:text-primary-soft-foreground [&>button]:hover:bg-primary-soft',
-      today: '[&>button]:font-semibold [&>button]:text-primary',
+      today: '[&>button]:font-semibold [&>button]:text-primary-text',
       outside: 'opacity-40',
       disabled: 'opacity-30',
     }
@@ -176,6 +203,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
         disabled={disabledDays}
         showOutsideDays
         classNames={classNames}
+        {...navigation}
       />
     ) : (
       <DayPicker
@@ -193,8 +221,24 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
         disabled={disabledDays}
         showOutsideDays
         classNames={classNames}
+        {...navigation}
       />
     )
+
+    const showClear = clearable && !!text && !disabled
+    const clear = showClear ? (
+      <button
+        type="button"
+        aria-label="Limpar data"
+        className={cn(
+          controlAdornmentButton,
+          'absolute top-1/2 right-1 mr-0 -translate-y-1/2 md:right-2 md:mr-0',
+        )}
+        onClick={() => commit(null)}
+      >
+        <X aria-hidden />
+      </button>
+    ) : undefined
 
     const trigger = (
       <button
@@ -217,28 +261,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
         >
           {text ?? placeholder}
         </span>
-        {clearable && text && !disabled && (
-          <span
-            role="button"
-            tabIndex={0}
-            aria-label="Limpar data"
-            className={controlAdornmentButton}
-            onPointerDown={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              commit(null)
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                e.stopPropagation()
-                commit(null)
-              }
-            }}
-          >
-            <X aria-hidden />
-          </span>
-        )}
+        {showClear && <span aria-hidden className={cn(controlAdornmentSpace, '-mr-2 md:-mr-1')} />}
       </button>
     )
 
@@ -286,6 +309,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
         open={open}
         onOpenChange={onOpenChange}
         trigger={trigger}
+        adornment={clear}
         title={label ?? placeholder}
         footer={footer}
         width="auto"

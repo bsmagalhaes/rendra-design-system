@@ -1,4 +1,4 @@
-import { Bell, Building2, LayoutTemplate, Lock, Palette, User } from 'lucide-react'
+import { Bell, Building2, LayoutTemplate, Lock, Palette, RotateCcw, User } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { useBrand } from '@/brand'
 import type { ColorMode } from '@/brand/brand-context'
@@ -34,32 +34,27 @@ type SectionId = (typeof sections)[number]['id']
 
 const save = () => toast.success('Configurações salvas')
 
+/** Seções com campos a salvar: mostram o rodapé fixo com Descartar e Salvar alterações. */
+const savable = new Set<SectionId>(['perfil', 'empresa', 'notificacoes', 'seguranca'])
+
 function Panel({
   title,
   description,
+  actions,
   children,
-  footer = true,
 }: {
   title: string
   description: string
-  children: ReactNode
-  footer?: boolean
+  actions?: ReactNode
+  children?: ReactNode
 }) {
   return (
     <Card>
-      <CardHeader>
+      <CardHeader actions={actions}>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent>{children}</CardContent>
-      {footer && (
-        <div className="border-t p-4 md:px-6">
-          <ActionBar
-            cancel={{ label: 'Descartar' }}
-            primary={{ label: 'Salvar alterações', onClick: save }}
-          />
-        </div>
-      )}
+      {children && <CardContent>{children}</CardContent>}
     </Card>
   )
 }
@@ -74,7 +69,7 @@ function Profile() {
             Trocar foto
           </Button>
         </div>
-        <div className="grid grid-cols-1 gap-x-6 gap-y-2 md:grid-cols-2">
+        <Grid form>
           <Field label="Nome" required>
             <Input defaultValue={currentUser.name} autoComplete="name" />
           </Field>
@@ -87,7 +82,7 @@ function Profile() {
           <Field label="Celular">
             <Input mask="phone" defaultValue="(11) 98765-4321" />
           </Field>
-        </div>
+        </Grid>
       </Stack>
     </Panel>
   )
@@ -96,12 +91,12 @@ function Profile() {
 function Company() {
   return (
     <Panel title="Empresa" description="Dados que aparecem em propostas e faturas.">
-      <div className="grid grid-cols-1 gap-x-6 gap-y-2 md:grid-cols-2">
-        <Field label="Razão social" required span="full">
-          <Input defaultValue="Rendra Serviços Ltda." />
-        </Field>
-        <Field label="CNPJ" required>
+      <Grid form>
+        <Field label="CNPJ" required span="sm">
           <Input mask="cnpj" defaultValue="12.345.678/0001-95" />
+        </Field>
+        <Field label="Razão social" required span="xl" newRow>
+          <Input defaultValue="Rendra Serviços Ltda." />
         </Field>
         <Field label="Fuso horário">
           <Select
@@ -113,20 +108,20 @@ function Company() {
             ]}
           />
         </Field>
-        <Field label="CEP">
+        <Field label="CEP" span="sm" newRow>
           <Input mask="cep" defaultValue="01310-100" />
         </Field>
-        <Field label="Cidade">
+        <Field label="Cidade" newRow>
           <Input defaultValue="São Paulo" />
         </Field>
-      </div>
+      </Grid>
     </Panel>
   )
 }
 
 function Notifications() {
   return (
-    <Panel title="Notificações" description="Escolha o que chega até você e por qual canal.">
+    <Panel title="Notificações" description="O que chega até você e por qual canal.">
       <Stack gap="0">
         <Switch
           label="Resumo diário por e-mail"
@@ -157,8 +152,8 @@ function Security() {
   return (
     <Stack gap="6">
       <Panel title="Senha" description="Troque a senha periodicamente.">
-        <div className="grid grid-cols-1 gap-x-6 gap-y-2 md:grid-cols-2">
-          <Field label="Senha atual" required span="full">
+        <Grid form>
+          <Field label="Senha atual" required>
             <Input type="password" autoComplete="current-password" />
           </Field>
           <Field label="Senha nova" required help="8 ou mais caracteres.">
@@ -167,30 +162,24 @@ function Security() {
           <Field label="Confirmar senha nova" required>
             <Input type="password" autoComplete="new-password" />
           </Field>
-        </div>
+        </Grid>
       </Panel>
-      <Panel
-        title="Verificação em duas etapas"
-        description="Pede um código a cada novo acesso."
-        footer={false}
-      >
+      <Panel title="Verificação em duas etapas" description="Pede um código a cada novo acesso.">
         <Switch
           label="Ativar verificação em duas etapas"
           description="Código enviado por e-mail."
           defaultChecked
         />
       </Panel>
-      <Card>
-        <CardHeader>
-          <CardTitle>Encerrar sessões</CardTitle>
-          <CardDescription>Sai de todos os outros aparelhos conectados.</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <Panel
+        title="Encerrar sessões"
+        description="Sai de todos os outros aparelhos conectados."
+        actions={
           <Button variant="destructive" onClick={() => setConfirm(true)}>
             Encerrar outras sessões
           </Button>
-        </CardContent>
-      </Card>
+        }
+      />
       <Modal
         open={confirm}
         onOpenChange={setConfirm}
@@ -210,13 +199,9 @@ function Security() {
 function Appearance() {
   const { brand, brands, setBrandId, palette, palettes, setPaletteId, mode, setMode } = useBrand()
   return (
-    <Panel
-      title="Aparência"
-      description="Modelo, paleta de cores e tema. Salvo neste navegador."
-      footer={false}
-    >
+    <Panel title="Aparência" description="Modelo, paleta de cores e tema. Salvo neste navegador.">
       <Stack gap="6">
-        <Field label="Modelo" help="Define formato, fonte e símbolo." compact>
+        <Field label="Modelo" help="Define formato, fonte e símbolo.">
           <RadioGroup
             variant="cards"
             columns={3}
@@ -229,7 +214,7 @@ function Appearance() {
             }))}
           />
         </Field>
-        <Field label="Paleta de cores" help="Combine qualquer modelo com qualquer paleta." compact>
+        <Field label="Paleta de cores" help="Combine qualquer modelo com qualquer paleta.">
           <ButtonGroup
             aria-label="Paleta de cores"
             value={palette.id}
@@ -237,7 +222,7 @@ function Appearance() {
             options={palettes.map((p) => ({ value: p.id, label: p.name }))}
           />
         </Field>
-        <Field label="Tema" compact>
+        <Field label="Tema">
           <ButtonGroup
             aria-label="Tema"
             value={mode}
@@ -260,7 +245,7 @@ function LayoutSettings() {
     key: K,
     label: string,
   ) => (
-    <Field label={label} compact>
+    <Field label={label}>
       <ButtonGroup
         aria-label={label}
         value={layout[key]}
@@ -273,7 +258,11 @@ function LayoutSettings() {
     <Panel
       title="Layout"
       description="Todas as opções do AppShell também são props do componente."
-      footer={false}
+      actions={
+        <Button variant="outline" icon={<RotateCcw />} onClick={resetLayout}>
+          Voltar ao padrão
+        </Button>
+      }
     >
       <Stack gap="6">
         {group('navigation', 'Posição do menu')}
@@ -297,9 +286,6 @@ function LayoutSettings() {
           checked={layout.bottomNav}
           onCheckedChange={(v) => setLayout('bottomNav', v)}
         />
-        <Button variant="outline" className="self-start" onClick={resetLayout}>
-          Voltar ao padrão do projeto
-        </Button>
       </Stack>
     </Panel>
   )
@@ -323,7 +309,7 @@ export function SettingsPage() {
       <Stack gap="section">
         <PageHeader
           title="Configurações"
-          description="Preferências da conta, da empresa e da aparência."
+          help="Preferências da conta, da empresa e da aparência. Escolha a seção no menu ao lado (no celular, na lista do topo)."
         />
         <Grid cols={{ base: 1, lg: 4 }} gap="8">
           <div className="lg:hidden">
@@ -360,6 +346,14 @@ export function SettingsPage() {
             <Current />
           </div>
         </Grid>
+        {/* Botões de salvar sempre no rodapé fixo, como em todo formulário em página. */}
+        {savable.has(active) && (
+          <ActionBar
+            sticky
+            cancel={{ label: 'Descartar' }}
+            primary={{ label: 'Salvar alterações', onClick: save }}
+          />
+        )}
       </Stack>
     </Container>
   )

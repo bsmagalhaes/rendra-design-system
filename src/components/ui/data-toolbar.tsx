@@ -18,9 +18,11 @@ import { cn } from '@/lib/cn'
 
 /*
  * Barra de ferramentas de listagem. Fica dentro do mesmo card do conteúdo, acima dele.
- * Ordem: busca à esquerda, filtros no meio, ações à direita; abaixo, chips dos filtros.
- * Mobile: busca na largura total; filtros, ordenação e colunas viram um único botão
- * "Filtros" com contador, que abre um drawer de tela cheia.
+ * Ordem: busca à esquerda; à direita, ações secundárias, Colunas, Filtros e, por último,
+ * a ação principal (Novo). Abaixo, chips dos filtros. A ação principal da listagem mora
+ * aqui, nunca solta acima do card.
+ * Mobile: busca na largura total; embaixo, Filtros (30%) e a ação principal (70%).
+ * Filtros, ordenação e colunas viram um único botão com contador, que abre um drawer.
  */
 
 export interface FilterChip {
@@ -49,8 +51,10 @@ export interface DataToolbarProps {
   sort?: ReactNode
   /** Colunas que o usuário pode mostrar ou ocultar. */
   columns?: ToolbarColumn[]
-  /** Ações à direita (exportar etc.). No mobile ficam ao lado do botão Filtros. */
+  /** Ações secundárias à direita (exportar etc.). No mobile, numa linha abaixo. */
   actions?: ReactNode
+  /** Ação principal da listagem (ex.: Novo cliente). Sempre a última à direita. */
+  primaryAction?: ReactNode
   /** Substitui a barra quando há itens selecionados (ações em massa, só desktop). */
   selectionBar?: ReactNode
 }
@@ -64,6 +68,7 @@ export function DataToolbar({
   sort,
   columns,
   actions,
+  primaryAction,
   selectionBar,
 }: DataToolbarProps) {
   const { isMobile } = useBreakpoint()
@@ -73,7 +78,7 @@ export function DataToolbar({
   const columnsMenu = columns?.length ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" icon={<Columns3 />}>
+        <Button variant="outline" icon={<Columns3 />}>
           Colunas
         </Button>
       </DropdownMenuTrigger>
@@ -94,7 +99,7 @@ export function DataToolbar({
   ) : null
 
   const filterButton = (onClick?: () => void) => (
-    <Button variant="outline" size="sm" icon={<Filter />} onClick={onClick}>
+    <Button variant="outline" icon={<Filter />} onClick={onClick}>
       Filtros
       {filterCount > 0 && (
         <span className="rounded-full bg-primary px-2 text-xs text-primary-foreground tabular-nums">
@@ -107,12 +112,11 @@ export function DataToolbar({
   return (
     <div className="flex flex-col gap-3 border-b p-4">
       {selectionBar && !isMobile ? (
-        <div className="flex min-h-control-sm flex-wrap items-center gap-3">{selectionBar}</div>
+        <div className="flex min-h-control-md flex-wrap items-center gap-3">{selectionBar}</div>
       ) : (
         <div className="flex flex-col gap-3 md:flex-row md:items-center">
           {search && (
             <Input
-              size="sm"
               icon={<Search />}
               clearable
               value={search.value}
@@ -125,16 +129,29 @@ export function DataToolbar({
           )}
 
           {isMobile ? (
-            <div className={cn('grid gap-3', actions ? 'grid-cols-2' : 'grid-cols-1')}>
-              {hasPanel && filterButton(() => setDrawer(true))}
-              {actions}
-            </div>
-          ) : (
             <>
+              {(hasPanel || primaryAction) && (
+                <div
+                  className={cn(
+                    'grid gap-3',
+                    hasPanel && primaryAction ? 'grid-actions-2' : 'grid-cols-1',
+                  )}
+                >
+                  {hasPanel && filterButton(() => setDrawer(true))}
+                  {primaryAction}
+                </div>
+              )}
+              {actions && <div className="flex flex-wrap gap-3 *:flex-1">{actions}</div>}
+            </>
+          ) : (
+            <div className="flex flex-wrap items-center gap-2 md:ml-auto">
+              {actions}
+              {columnsMenu}
+              {sort}
               {filters && (
                 <Popover>
                   <PopoverTrigger asChild>{filterButton()}</PopoverTrigger>
-                  <PopoverContent align="start" className="flex flex-col">
+                  <PopoverContent align="end" className="flex flex-col">
                     <div className="max-h-command overflow-y-auto p-4">{filters}</div>
                     {onClearFilters && filterCount > 0 && (
                       <div className="border-t p-2">
@@ -146,12 +163,8 @@ export function DataToolbar({
                   </PopoverContent>
                 </Popover>
               )}
-              {sort}
-              <div className="flex flex-wrap items-center gap-2 md:ml-auto">
-                {actions}
-                {columnsMenu}
-              </div>
-            </>
+              {primaryAction}
+            </div>
           )}
         </div>
       )}

@@ -1,7 +1,7 @@
 {
-  "name": "boilerplate-layout",
+  "name": "rendra-design-system",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,17 +12,30 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check:rules": "node scripts/check-design-rules.mjs",
-    "test:layout": "playwright test",
+    "test:layout": "playwright test --project=layout",
     "shots": "node scripts/screenshots.mjs",
     "test:layout:report": "playwright show-report",
     "audit:layout": "node scripts/audit-layout.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "docs:images": "node scripts/readme-images.mjs"
+    "docs:images": "node scripts/readme-images.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:a11y": "playwright test --project=a11y",
+    "test:visual": "playwright test --project=visual",
+    "test:visual:update": "playwright test --project=visual --update-snapshots",
+    "registry:build": "node scripts/build-registry.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
     "@tanstack/react-table": "^8.21.3",
+    "@tiptap/extension-image": "^3.31.3",
+    "@tiptap/extension-placeholder": "^3.31.3",
+    "@tiptap/extension-table": "^3.31.3",
+    "@tiptap/extension-text-align": "^3.31.3",
+    "@tiptap/pm": "^3.31.3",
+    "@tiptap/react": "^3.31.3",
+    "@tiptap/starter-kit": "^3.31.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -33,6 +46,7 @@
     "react": "^19.3.0",
     "react-day-picker": "^10.0.1",
     "react-dom": "^19.3.0",
+    "react-grid-layout": "^2.2.4",
     "react-hook-form": "^7.88.0",
     "react-router": "^8.4.0",
     "recharts": "^3.10.1",
@@ -41,6 +55,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^9.39.5",
     "@fontsource/dm-sans": "^5.3.0",
     "@fontsource/inter": "^5.3.0",
@@ -67,6 +82,7 @@
     "typescript": "5.9",
     "typescript-eslint": "^8.70.1",
     "vite": "^8.3.0",
-    "vite-plugin-svgr": "^5.2.0"
+    "vite-plugin-svgr": "^5.2.0",
+    "vitest": "^5.0.1"
   }
 }

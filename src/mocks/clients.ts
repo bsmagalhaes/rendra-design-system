@@ -4,7 +4,10 @@ export type ClientStatus = 'Ativo' | 'Em análise' | 'Inadimplente' | 'Inativo'
 
 export interface Client {
   id: string
+  /** Nome (pessoa) ou nome fantasia (empresa). */
   name: string
+  /** Razão social, só para empresas. */
+  legalName?: string
   document: string
   email: string
   phone: string
@@ -100,6 +103,7 @@ export const clients: Client[] = Array.from({ length: 48 }, (_, i) => {
   return {
     id: String(1000 + i),
     name,
+    legalName: isCompany ? `${name} Comércio e Serviços Ltda.` : undefined,
     document: isCompany ? '12.345.678/0001-95' : '123.456.789-09',
     email: `${person
       .toLowerCase()
@@ -141,3 +145,19 @@ export const monthly = [
 ]
 
 export const bySegment = segments.map((s, i) => ({ segmento: s, clientes: 18 - i * 2 }))
+
+/** Contratos novos e renovados por mês, com a meta de contratos (demonstração). */
+export const contractsMix = monthly.map((m, i) => ({
+  mes: m.mes,
+  novos: 18 + ((i * 7) % 11),
+  renovacoes: 12 + ((i * 5) % 9),
+  meta: 34 + Math.floor(i / 3) * 2,
+}))
+
+/** Funil comercial do mês, nas mesmas etapas do kanban (demonstração). */
+export const salesFunnel = [
+  { label: 'Novo contato', value: 240 },
+  { label: 'Qualificado', value: 132 },
+  { label: 'Proposta', value: 61 },
+  { label: 'Fechado', value: 27 },
+]
