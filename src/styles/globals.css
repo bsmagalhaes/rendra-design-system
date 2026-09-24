@@ -650,6 +650,12 @@
     opacity: 1;
     outline: 2px dashed var(--primary);
   }
+  /* Fora do modo de ajuste os widgets não animam: quando a largura muda (barra de rolagem que
+     aparece, janela redimensionada), eles vão direto ao lugar, sem passar por fora da tela. */
+  .widget-grid:not(.is-editing) .react-grid-layout,
+  .widget-grid:not(.is-editing) .react-grid-item {
+    transition: none;
+  }
   .widget-grid.is-editing .react-grid-item {
     border-radius: var(--shape-surface);
     outline: 2px dashed var(--border);
