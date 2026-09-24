@@ -5,3 +5,5 @@ test-results
 screenshots
 node_modules
 coverage
+# Verificação do Google Search Console: o conteúdo precisa ficar exatamente como veio
+public/google*.html
