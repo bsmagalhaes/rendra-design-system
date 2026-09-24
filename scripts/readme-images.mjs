@@ -21,8 +21,10 @@ async function shot(
     brand,
     palette = brand,
     mode = 'light',
-    width = 1280,
-    height = 800,
+    // Desktop em 1920x1080 (Full HD): mostra melhor a qualidade no README e na galeria.
+    // Celular em 390px com densidade 2x, nítido em tela retina.
+    width = 1920,
+    height = 1080,
     layout = {},
     act,
   },
@@ -168,8 +170,8 @@ await shot(browser, {
   name: 'safira-atendimento',
   route: '/atendimento',
   brand: 'safira',
-  width: 1440,
-  height: 900,
+  width: 1920,
+  height: 1080,
   act: async (p) => {
     await p.getByRole('button', { name: /Clínica Vida Plena/ }).click()
   },
