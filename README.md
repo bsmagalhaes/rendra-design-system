@@ -2,7 +2,7 @@
 
 **Template de sistema e layout de sistema administrativo em React, gratuito e open source: design system completo e boilerplate com tokens, três templates, componentes, AppShell, telas prontas (dashboard, listagem, cadastro, CRM kanban, agenda e chat omnichannel), Storybook e testes de layout.** Feito para ser o ponto de partida de todos os projetos: layouts previsíveis, espaçamento equilibrado e funcionamento completo no celular. Para aplicar a outro sistema, você troca cores, fonte e ícones da marca, e nenhum componente muda.
 
-![React 19](https://img.shields.io/badge/React-19-149eca) ![TypeScript 5.9](https://img.shields.io/badge/TypeScript-5.9-3178c6) ![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8) ![Vite 8](https://img.shields.io/badge/Vite-8-646cff) ![Storybook 10](https://img.shields.io/badge/Storybook-10-ff4785) ![Playwright](https://img.shields.io/badge/Playwright-722_testes-2ead33) [![CI](https://github.com/bsmagalhaes/rendra-design-system/actions/workflows/ci.yml/badge.svg)](https://github.com/bsmagalhaes/rendra-design-system/actions/workflows/ci.yml)
+![React 19](https://img.shields.io/badge/React-19-149eca) ![TypeScript 5.9](https://img.shields.io/badge/TypeScript-5.9-3178c6) ![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8) ![Vite 8](https://img.shields.io/badge/Vite-8-646cff) ![Storybook 10](https://img.shields.io/badge/Storybook-10-ff4785) ![Playwright](https://img.shields.io/badge/testes-Vitest_e_Playwright-2ead33) [![CI](https://github.com/bsmagalhaes/rendra-design-system/actions/workflows/ci.yml/badge.svg)](https://github.com/bsmagalhaes/rendra-design-system/actions/workflows/ci.yml)
 
 **Veja funcionando, sem instalar nada:** [demo do app](https://bsmagalhaes.github.io/rendra-design-system/) · [galeria com códigos de modelo](https://bsmagalhaes.github.io/rendra-design-system/galeria/) · [Storybook](https://bsmagalhaes.github.io/rendra-design-system/storybook/) · [vitrine de componentes](https://bsmagalhaes.github.io/rendra-design-system/componentes/) · [atendimento](https://bsmagalhaes.github.io/rendra-design-system/atendimento/) · [agenda](https://bsmagalhaes.github.io/rendra-design-system/agenda/) · [kanban](https://bsmagalhaes.github.io/rendra-design-system/kanban/). No demo, o menu do avatar troca modelo, paleta, modo e layout ao vivo.
 
@@ -21,12 +21,12 @@
 O Rendra reúne, num único repositório, tudo o que uma equipe precisa para construir interfaces consistentes:
 
 - um **sistema de tokens** travado (espaço, tipografia, cores, raio, sombra, degradê e densidade), em que o que está fora da escala simplesmente não existe;
-- **três templates** com identidade própria e **quatro paletas** de cores combináveis entre si, com sidebar sempre colorida e logotipo que acompanha o tema;
+- **três modelos** de formato e fonte (quadrado, intermediário e arredondado) e **quatro paletas**, combináveis entre si. Uma paleta é só **4 cores e o degradê da marca**: o resto (texto sobre cada cor, fundos suaves, sidebar, gráficos e o modo escuro) é gerado com contraste AA conferido, e as cores de sistema (erro, sucesso, alerta e informação) são as mesmas em todas;
 - **mais de 50 componentes**, um por finalidade, todos reconstruídos para o celular sem versões paralelas;
 - um **AppShell** configurável por props (menu lateral ou superior, sidebar recolhida, submenu em segunda barra, mega menu);
 - **telas base** prontas (autenticação completa, painel, listagem, detalhe, formulário longo, wizard, configurações);
 - uma **vitrine** navegável e um **Storybook** com mais de 100 stories;
-- **regras escritas e verificadas por máquina**: verificador de regras de design, ESLint com acessibilidade, testes unitários, e testes no navegador de layout, acessibilidade (axe-core) e regressão visual, rodando no CI a cada Pull Request;
+- **regras escritas e verificadas por máquina**: verificador de regras de design, ESLint com acessibilidade, testes unitários e de componente (com cobertura mínima por arquivo), e testes no navegador de layout, acessibilidade (axe-core) e regressão visual, rodando no CI a cada Pull Request;
 - um **registry do shadcn**: projetos criados a partir do Rendra recebem as melhorias dos componentes com um comando;
 - **SEO e AEO prontos** no demo: título e descrição por tela (`src/config/seo.ts`), página estática por rota, `sitemap.xml`, `robots.txt`, `llms.txt`, Open Graph e dados estruturados (JSON-LD com perguntas frequentes).
 
@@ -80,7 +80,7 @@ Cada template tem formato, fonte, símbolo e paleta próprios.
 | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | [![Aurora: painel](docs/images/aurora-painel.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=aurora-painel) | [![Aurora: clientes](docs/images/aurora-clientes.png)](https://bsmagalhaes.github.io/rendra-design-system/galeria/?imagem=aurora-clientes) |
 
-**Paleta Ardósia**: paleta avulsa, combinável com qualquer modelo. Azul-ardósia #2E414D e laranja #EA600D, com botão laranja #C94F0A e texto branco para passar AA (aqui no modelo Equilíbrio).
+**Paleta Ardósia**: combinável com qualquer modelo. Azul-ardósia #2E414D e laranja #EA600D; com texto branco pedido, o gerador escurece o botão laranja para #C5510B, o tom mais próximo que passa AA (aqui no modelo Equilíbrio).
 
 | Painel                                                                                                                                  | Listagem de clientes                                                                                                                          |
 | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -164,7 +164,7 @@ Mesmo componente, mesma API: no celular a tabela vira cards, a sidebar vira gave
 | **Degradê**     | Três por template (forte, suave e detalhe), com regra de uso: nunca em botão ou atrás de texto corrido, e no máximo um forte por tela.                                                                                                         |
 | **Densidade**   | Input, botão e select com a mesma altura: 44 a 52px no celular e 32 a 48px no desktop.                                                                                                                                                         |
 
-A marca fica isolada em `src/styles/theme.css`, `src/brand/brand.config.ts` e `src/brand/assets`. Nenhum componente tem cor, fonte ou logotipo fixo.
+A marca fica isolada: as 4 cores e o degradê em `src/brand/palettes.ts`, o modelo (fonte e raio) em `src/styles/theme.css`, e o nome e o logotipo em `src/brand/brand.config.ts` e `src/brand/assets`. Nenhum componente tem cor, fonte ou logotipo fixo.
 
 ### Componentes
 
@@ -204,7 +204,7 @@ Login, esqueci a senha, verificação em duas etapas (2FA), nova senha, cadastro
 - **Testes de layout com Playwright** (`npm run test:layout`): 16 rotas × 5 larguras (360, 390, 768, 1280 e 1920) × 3 templates no modo claro, mais 360 e 1280 no escuro, somando 336 testes. Falham se houver rolagem horizontal, elemento maior que a tela, toque menor que 44px no celular ou erro de JavaScript, e geram capturas de todas as telas.
 - **Testes de acessibilidade com axe-core** (`npm run test:a11y`): 144 testes, todas as rotas nos três templates, claro e escuro, mais a paleta Ardósia e o celular. Falham em qualquer violação WCAG 2.1 A ou AA, inclusive contraste.
 - **Regressão visual** (`npm run test:visual`): 128 capturas comparadas com a referência aprovada. Pegam cor que mudou, espaçamento que quebrou e ícone que sumiu. As referências são geradas no Linux do CI; depois de uma mudança visual intencional, aplique o rótulo `atualizar-visual` no Pull Request.
-- **Testes unitários com Vitest** (`npm test`): validadores de CPF, CNPJ e data, esquemas Zod, máscaras e navegação.
+- **Testes unitários e de componente com Vitest e Testing Library** (`npm test`; `npm run test:coverage` com o piso por arquivo): comportamento de Table (ordenação, busca, paginação, seleção, ações em massa, modo remoto e cartões no celular), Select, Input (máscaras, centavos e busca de CEP e CNPJ), Modal, Drawer, campos de formulário e navegação, além de validadores, máscaras, buscas e o gerador de paletas (AA garantido em todas). Cada componente tem o teste ao lado, e ele vai junto quando você copia o componente para outro projeto.
 - **CI no GitHub Actions**: todo Pull Request passa por tipos, lint, formatação, regras, unitários, build, Storybook e os três testes no navegador. A `main` só aceita merge com tudo verde. O Dependabot abre PR semanal quando uma dependência ganha versão nova.
 - **Verificador de regras** (`npm run check:rules`): barra cor fixa, valor arbitrário, degrau fora da escala, estilo inline, fonte fixa, `100vh` e arquivos duplicados ou mobile.
 
@@ -265,7 +265,7 @@ npm run storybook                 # Storybook em http://localhost:6006
 | `npm run typecheck`          | Checagem de tipos                                     |
 | `npm run lint`               | ESLint com TypeScript, React Hooks e acessibilidade   |
 | `npm run check:rules`        | Verificador de regras de design                       |
-| `npm test`                   | Testes unitários (Vitest)                             |
+| `npm test`                   | Testes unitários e de componente (Vitest)             |
 | `npm run test:layout`        | Testes de layout (capturas em `screenshots/`)         |
 | `npm run test:a11y`          | Testes de acessibilidade (axe-core)                   |
 | `npm run test:visual`        | Regressão visual (referências do Linux, ver acima)    |
@@ -303,11 +303,13 @@ docs/            guia de aplicação, prompt de migração e imagens
 
 ## Como trocar a marca em 5 passos
 
-1. **Cores, fonte e raio:** edite os valores de `src/styles/theme.css` (os nomes das variáveis não mudam) e troque as fontes em `src/brand/assets/fonts`.
-2. **Identidade:** edite `src/brand/brand.config.ts` (nome, empresa, frase, formato `square`, `rounded` ou `pill`, e logotipo na sidebar).
+1. **Cores:** em `src/brand/palettes.ts`, só as 4 cores (primária, hover, secundária, hover) e o degradê da marca; depois `npm run palettes:build`, que gera o resto com AA conferido. Erro, sucesso, alerta, informação e neutros não mudam.
+2. **Modelo e identidade:** fonte e raio em `src/styles/theme.css` (se o modelo mudar); nome, empresa, frase, formato (`square`, `rounded` ou `pill`) e logotipo na sidebar em `src/brand/brand.config.ts`.
 3. **Arte:** substitua os SVGs de `src/brand/assets`. O símbolo usa `fill="currentColor"`, porque os ícones de feedback o tingem.
 4. **Contraste:** abra `/tokens` nos modos claro e escuro. Nenhum selo pode marcar "falha".
-5. **Verificação:** rode `npm run check:rules && npm run test:layout`.
+5. **Verificação:** rode `npm run check:rules && npm test && npm run test:layout`.
+
+Marca de cada cliente em tempo de execução (white label, sem build): `applyPalette(sementes)`. Exemplo em [docs/COMO_APLICAR.md](docs/COMO_APLICAR.md).
 
 O passo a passo completo, inclusive como adotar o Equilíbrio ou o Aurora como marca principal, está em [docs/COMO_APLICAR.md](docs/COMO_APLICAR.md).
 
@@ -323,9 +325,11 @@ npx shadcn@latest add https://bsmagalhaes.github.io/rendra-design-system/r/selec
 npx shadcn@latest add @rendra/select
 ```
 
-Itens disponíveis: cada componente de `src/components/ui` pelo nome do arquivo (`button`, `table`, `select`...), mais `core` (funções, hooks e provedor de marca), `tokens` (`globals.css`), `layout` e `app-shell`. A lista completa está em [`registry.json`](registry.json).
+Itens disponíveis: cada componente de `src/components/ui` pelo nome do arquivo (`button`, `table`, `select`...), mais `core` (funções, hooks, provedor de marca e o gerador de paleta), `tokens` (`globals.css`), `layout` e `app-shell`. A lista completa está em [`registry.json`](registry.json).
 
-O registry nunca traz marca nem configuração: `theme.css`, `themes.css`, `brand.config.ts`, `src/brand/index.ts`, os assets e `src/config` são do seu projeto e não são tocados. Arquivos iguais são pulados, e o shadcn pergunta antes de sobrescrever um arquivo que você alterou. Quando uma versão pedir um token de cor novo no tema, o [CHANGELOG](CHANGELOG.md) diz qual e com que valor.
+**Testes junto com o componente (opcional):** cada componente testado tem um item `<nome>-test` (por exemplo `npx shadcn@latest add @rendra/table-test`), que traz o teste de comportamento e instala as dependências de teste só como desenvolvimento. O `test-utils` traz a preparação do Vitest (`src/test/setup.ts`) e o `renderApp`. Útil quando o seu projeto exige cobertura mínima de cada componente copiado.
+
+O registry nunca traz marca nem configuração: `theme.css`, `themes.css`, `palettes.ts`, `palettes.css`, `brand.config.ts`, `src/brand/index.ts`, os assets e `src/config` são do seu projeto e não são tocados. Arquivos iguais são pulados, e o shadcn pergunta antes de sobrescrever um arquivo que você alterou. Quando uma versão pedir um token de cor novo no tema, o [CHANGELOG](CHANGELOG.md) diz qual e com que valor.
 
 ---
 
@@ -354,7 +358,7 @@ Sim. Licença MIT, só com bibliotecas gratuitas: React, Tailwind CSS, Radix, sh
 Sim, de verdade: tudo é escrito primeiro para 360px, tabelas viram cartões, o menu vai para a barra inferior, não há rolagem horizontal e os alvos de toque têm pelo menos 44px. Os testes abrem cada tela em cinco larguras, nos três modelos, no modo claro e no escuro.
 
 **Dá para usar como white label, com a marca de cada cliente?**
-Sim. A marca fica isolada em `src/styles/theme.css`, `src/brand/brand.config.ts` e `src/brand/assets`. Há três modelos e quatro paletas prontas, cada combinação tem um código (por exemplo `T1-C2-M3`) e o contraste AA é conferido em `/tokens`.
+Sim, de dois jeitos. No build: cada marca é uma entrada de 4 cores e um degradê em `src/brand/palettes.ts`. Em tempo de execução, quando cada cliente cadastra a própria marca: `applyPalette(sementes)` gera a paleta completa, claro e escuro, com o contraste AA conferido e ajustado. As cores de sistema e os neutros não mudam, e cada combinação pronta tem um código (por exemplo `T1-C2-M3`).
 
 **Posso migrar o layout do meu sistema com uma IA?**
 Sim. O [`AGENTS.md`](AGENTS.md) (e o `CLAUDE.md` e o `GEMINI.md`) conduz qualquer agente de IA por um briefing guiado, as regras de design e a ordem de migração; o [`docs/PROMPT_MIGRACAO.md`](docs/PROMPT_MIGRACAO.md) traz o prompt pronto.

@@ -11,11 +11,13 @@ Obrigado pelo interesse. Este repositório é mantido por [Bruno Magalhaes](http
    npm run typecheck
    npm run lint
    npm run check:rules
-   npm test
+   npm run test:coverage    # unitários e de componente, com o piso de cobertura por arquivo
    npm run test:layout
    npm run test:a11y
    npm run registry:build   # se criou ou renomeou componente; faça commit do registry.json
+   npm run palettes:build   # se mexeu nas sementes de src/brand/palettes.ts; faça commit do palettes.css
    ```
+   **Componente novo ou alterado entra com teste de comportamento** ao lado dele (`nome.test.tsx`, com `// @vitest-environment jsdom` na primeira linha e `renderApp` de `src/test/render.tsx`) e ganha um piso de cobertura em `vite.config.ts`. Teste o que a pessoa faz (clicar, digitar, escolher) e o que o componente entrega, não detalhes de implementação.
 4. Abra o Pull Request explicando o que mudou e por quê, com capturas em 360px e 1280px quando houver mudança visual.
 5. O CI roda tudo de novo, mais o build, o Storybook e a regressão visual. O merge só é liberado com tudo verde.
 6. **Mudança visual intencional:** a regressão visual vai falhar, como esperado. O mantenedor aplica no Pull Request o rótulo `atualizar-visual`: o GitHub gera as capturas novas no Linux e faz commit no branch. Quem revisa confere as imagens no próprio PR.

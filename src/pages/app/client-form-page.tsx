@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Building2, Loader2, Mail, Rocket, Star, User } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { Building2, Mail, Rocket, Star, User } from 'lucide-react'
+import { useState } from 'react'
 import { useForm, type UseFormReturn } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { z } from 'zod'
@@ -16,7 +16,7 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from '@/components/ui/toast'
 import { Upload } from '@/components/ui/upload'
-import { lookupCep, lookupCnpj } from '@/lib/lookup'
+import type { LookupResult } from '@/hooks/use-lookup'
 import { zBR } from '@/lib/validators'
 import { fakeUpload } from '@/pages/showcase/demo'
 
@@ -81,74 +81,45 @@ const plans = [
   { value: 'empresa', label: 'Empresa', description: 'Várias unidades.', icon: <Building2 /> },
 ]
 
-const Spinner = () => <Loader2 className="size-icon-sm animate-spin" aria-label="Buscando" />
-
 /**
- * Busca o CNPJ e o CEP assim que estão completos e preenche o que vem abaixo deles.
- * CNPJ: nome, e-mail e telefone (só se vazios) e o endereço. CEP: o endereço.
+ * O que as buscas embutidas no Input preenchem. CNPJ: nome, e-mail e telefone (só se vazios)
+ * e o endereço. CEP: o endereço. O Input faz a busca; aqui só se decide o que preencher.
  */
-function useLookups(form: UseFormReturn<Values>) {
-  const [searching, setSearching] = useState({ doc: false, cep: false })
-  const [docStatus, setDocStatus] = useState<string>('CNPJ preenche os dados da empresa.')
-  const [cepStatus, setCepStatus] = useState<string>('Preenche o endereço.')
-  const doc = form.watch('documento')
-  const cep = form.watch('cep')
+function useLookupFill(form: UseFormReturn<Values>) {
+  const [docStatus, setDocStatus] = useState('CNPJ preenche os dados da empresa.')
+  const [cepStatus, setCepStatus] = useState('Preenche o endereço.')
   const fill = (k: keyof Values, v: string, onlyIfEmpty = false) => {
     if (!v || (onlyIfEmpty && form.getValues(k))) return
     form.setValue(k, v as never, { shouldValidate: true, shouldDirty: true })
   }
-
-  useEffect(() => {
-    if (doc.replace(/\D/g, '').length !== 14) return
-    const ctrl = new AbortController()
-    setSearching((x) => ({ ...x, doc: true }))
-    lookupCnpj(doc, ctrl.signal)
-      .then((c) => {
-        if (!c) return setDocStatus('CNPJ não encontrado. Preencha os dados abaixo.')
-        fill('nome', c.razaoSocial, true)
-        fill('email', c.email, true)
-        fill('telefone', c.telefone, true)
-        fill('cep', c.endereco.cep.replace(/^(\d{5})(\d{3})$/, '$1-$2'))
-        fill('logradouro', c.endereco.logradouro)
-        fill('numero', c.endereco.numero)
-        fill('complemento', c.endereco.complemento)
-        fill('bairro', c.endereco.bairro)
-        fill('cidade', c.endereco.cidade)
-        fill('uf', c.endereco.uf)
-        setDocStatus(`${c.situacao ? `Situação: ${c.situacao}. ` : ''}Dados preenchidos pelo CNPJ.`)
-      })
-      .catch((e: unknown) => {
-        if (!ctrl.signal.aborted) setDocStatus(e instanceof Error ? e.message : 'Falha na busca.')
-      })
-      .finally(() => setSearching((x) => ({ ...x, doc: false })))
-    return () => ctrl.abort()
-    // fill só usa o form, que é estável.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doc])
-
-  useEffect(() => {
-    if (cep.replace(/\D/g, '').length !== 8) return
-    const ctrl = new AbortController()
-    setSearching((x) => ({ ...x, cep: true }))
-    lookupCep(cep, ctrl.signal)
-      .then((a) => {
-        if (!a) return setCepStatus('CEP não encontrado. Preencha o endereço.')
-        fill('logradouro', a.logradouro)
-        fill('bairro', a.bairro)
-        fill('cidade', a.cidade)
-        fill('uf', a.uf)
-        if (a.complemento) fill('complemento', a.complemento, true)
-        setCepStatus('Endereço preenchido pelo CEP. Falta o número.')
-      })
-      .catch((e: unknown) => {
-        if (!ctrl.signal.aborted) setCepStatus(e instanceof Error ? e.message : 'Falha na busca.')
-      })
-      .finally(() => setSearching((x) => ({ ...x, cep: false })))
-    return () => ctrl.abort()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cep])
-
-  return { searching, docStatus, cepStatus }
+  const onDocLookup = (r: LookupResult) => {
+    if (r.status === 'loading') return setDocStatus('Buscando o CNPJ…')
+    setDocStatus(r.message)
+    if (r.status !== 'found' || r.kind !== 'cnpj') return
+    const c = r.data
+    fill('nome', c.razaoSocial, true)
+    fill('email', c.email, true)
+    fill('telefone', c.telefone, true)
+    fill('cep', c.endereco.cep.replace(/^(\d{5})(\d{3})$/, '$1-$2'))
+    fill('logradouro', c.endereco.logradouro)
+    fill('numero', c.endereco.numero)
+    fill('complemento', c.endereco.complemento)
+    fill('bairro', c.endereco.bairro)
+    fill('cidade', c.endereco.cidade)
+    fill('uf', c.endereco.uf)
+  }
+  const onCepLookup = (r: LookupResult) => {
+    if (r.status === 'loading') return setCepStatus('Buscando o CEP…')
+    if (r.status !== 'found' || r.kind !== 'cep') return setCepStatus(r.message)
+    const a = r.data
+    fill('logradouro', a.logradouro)
+    fill('bairro', a.bairro)
+    fill('cidade', a.cidade)
+    fill('uf', a.uf)
+    if (a.complemento) fill('complemento', a.complemento, true)
+    setCepStatus('Endereço preenchido pelo CEP. Falta o número.')
+  }
+  return { docStatus, cepStatus, onDocLookup, onCepLookup }
 }
 
 /**
@@ -177,7 +148,7 @@ export function ClientFormPage() {
     },
   })
   const { isSubmitting } = form.formState
-  const { searching, docStatus, cepStatus } = useLookups(form)
+  const { docStatus, cepStatus, onDocLookup, onCepLookup } = useLookupFill(form)
 
   const submit = async (v: Values) => {
     await new Promise((r) => window.setTimeout(r, 1200))
@@ -211,9 +182,7 @@ export function ClientFormPage() {
               required
               span="sm"
               help={docStatus}
-              render={(f) => (
-                <Input {...f} mask="cpfCnpj" suffix={searching.doc ? <Spinner /> : undefined} />
-              )}
+              render={(f) => <Input {...f} mask="cpfCnpj" onLookup={onDocLookup} />}
             />
             <FormField<Values>
               name="nome"
@@ -267,12 +236,7 @@ export function ClientFormPage() {
               span="sm"
               help={cepStatus}
               render={(f) => (
-                <Input
-                  {...f}
-                  mask="cep"
-                  autoComplete="postal-code"
-                  suffix={searching.cep ? <Spinner /> : undefined}
-                />
+                <Input {...f} mask="cep" autoComplete="postal-code" onLookup={onCepLookup} />
               )}
             />
             <FormField<Values>
