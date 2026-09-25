@@ -30,7 +30,13 @@ export default defineConfig({
     setupFiles: ['src/test/setup.ts'],
     coverage: {
       provider: 'v8',
-      include: ['src/lib/**', 'src/brand/palette.ts', 'src/hooks/**', 'src/components/ui/**'],
+      include: [
+        'src/lib/**',
+        'src/brand/palette.ts',
+        'src/hooks/**',
+        'src/components/ui/**',
+        'scripts/lib/**',
+      ],
       exclude: ['**/*.test.{ts,tsx}'],
       reporter: ['text-summary', 'html'],
       // Piso por arquivo (linhas): a cobertura de quem já tem teste não pode cair. Componente
@@ -39,6 +45,7 @@ export default defineConfig({
         'src/lib/{masks,lookup,validators}.ts': { lines: 85 },
         'src/brand/palette.ts': { lines: 90 },
         'src/hooks/use-lookup.ts': { lines: 90 },
+        'scripts/lib/var-prefix.ts': { lines: 90 },
         'src/components/ui/{input,select,modal,alert,accordion,checkbox,field,radio-group,switch,tabs,textarea}.tsx':
           { lines: 85 },
         'src/components/ui/{table,drawer,button}.tsx': { lines: 75 },
