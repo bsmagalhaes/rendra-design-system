@@ -4,7 +4,7 @@
  * A cor de um projeto tem três camadas, e só uma é da marca:
  *
  *   1. MODELO (formato e fonte): Safira (quadrado), Equilíbrio (intermediário) ou Aurora
- *      (arredondado). Aqui e em src/brand/examples: --brand-font e --radius.
+ *      (arredondado). Aqui e em src/brand/examples: --rendra-brand-font e --rendra-radius.
  *   2. PALETA (a cor da marca): só 4 cores (primária, hover da primária, secundária, hover
  *      da secundária) e o degradê da marca. Sementes em src/brand/palettes.ts; o resto
  *      (texto sobre cada cor, fundo suave, sidebar, gráficos, modo escuro) é gerado com AA
@@ -50,51 +50,51 @@
   color-scheme: light;
 
   /* Fonte e forma */
-  --brand-font: 'Brand Sans', ui-sans-serif, system-ui, sans-serif;
-  --radius: 0.625rem;
+  --rendra-brand-font: 'Brand Sans', ui-sans-serif, system-ui, sans-serif;
+  --rendra-radius: 0.625rem;
 
   /* Superfícies e neutros */
-  --background: #f5f6f7;
-  --background-image: none;
-  --foreground: #0b1d37;
-  --card: #ffffff;
-  --card-foreground: #0b1d37;
-  --popover: #ffffff;
-  --popover-foreground: #0b1d37;
-  --muted: #eaeff5;
-  --muted-foreground: #4f5f76;
-  --border: #dbe2eb;
-  --input: #808fa4;
-  --field: #f5f6f7;
-  --overlay: rgb(7 20 42 / 0.55);
+  --rendra-background: #f5f6f7;
+  --rendra-background-image: none;
+  --rendra-foreground: #0b1d37;
+  --rendra-card: #ffffff;
+  --rendra-card-foreground: #0b1d37;
+  --rendra-popover: #ffffff;
+  --rendra-popover-foreground: #0b1d37;
+  --rendra-muted: #eaeff5;
+  --rendra-muted-foreground: #4f5f76;
+  --rendra-border: #dbe2eb;
+  --rendra-input: #808fa4;
+  --rendra-field: #f5f6f7;
+  --rendra-overlay: rgb(7 20 42 / 0.55);
 
   /* Cores de sistema (iguais em todas as paletas) */
-  --destructive: #b72c05;
-  --destructive-hover: #962404;
-  --destructive-foreground: #ffffff;
-  --destructive-soft: #fcebe6;
-  --destructive-soft-foreground: #962404;
+  --rendra-destructive: #b72c05;
+  --rendra-destructive-hover: #962404;
+  --rendra-destructive-foreground: #ffffff;
+  --rendra-destructive-soft: #fcebe6;
+  --rendra-destructive-soft-foreground: #962404;
 
-  --success: #157a3c;
-  --success-foreground: #ffffff;
-  --success-soft: #e6f5eb;
-  --success-soft-foreground: #14632f;
+  --rendra-success: #157a3c;
+  --rendra-success-foreground: #ffffff;
+  --rendra-success-soft: #e6f5eb;
+  --rendra-success-soft-foreground: #14632f;
 
-  --warning: #b45309;
-  --warning-foreground: #ffffff;
-  --warning-soft: #fdf2e1;
-  --warning-soft-foreground: #8a3d06;
+  --rendra-warning: #b45309;
+  --rendra-warning-foreground: #ffffff;
+  --rendra-warning-soft: #fdf2e1;
+  --rendra-warning-soft-foreground: #8a3d06;
 
-  --info: #0e6cdb;
-  --info-foreground: #ffffff;
-  --info-soft: #e7f0fc;
-  --info-soft-foreground: #0b58b5;
+  --rendra-info: #0e6cdb;
+  --rendra-info-foreground: #ffffff;
+  --rendra-info-soft: #e7f0fc;
+  --rendra-info-soft-foreground: #0b58b5;
 
   /*
    * DEGRADÊS (gerados pela paleta), com regra de uso fixa.
    *   gradient-brand   forte. Só em: sidebar, painel lateral do login, destaque de página,
    *                    tela de erro. No máximo um por tela. Texto por cima usa
-   *                    --gradient-brand-foreground e o ponto de luz nunca fica atrás do texto.
+   *                    --rendra-gradient-brand-foreground e o ponto de luz nunca fica atrás do texto.
    *   gradient-soft    suave. Destaque de superfície (StatCard principal, cabeçalho especial).
    *                    Texto normal por cima (foreground), contraste AA garantido.
    *   gradient-accent  primária para secundária. Só em elementos finos: barra de progresso,
@@ -102,12 +102,14 @@
    * Proibido: degradê em botão, input, badge, fundo de texto corrido ou de tabela.
    */
 
-  /* Sombras: três níveis, sutis. Preferir borda de 1px. A cor (--shadow-color) vem da paleta. */
-  --elevation-sm: 0 1px 2px rgb(var(--shadow-color) / 0.06);
-  --elevation-md:
-    0 2px 8px -2px rgb(var(--shadow-color) / 0.1), 0 1px 2px rgb(var(--shadow-color) / 0.06);
-  --elevation-lg:
-    0 12px 32px -8px rgb(var(--shadow-color) / 0.18), 0 2px 6px rgb(var(--shadow-color) / 0.06);
+  /* Sombras: três níveis, sutis. Preferir borda de 1px. A cor (--rendra-shadow-color) vem da paleta. */
+  --rendra-elevation-sm: 0 1px 2px rgb(var(--rendra-shadow-color) / 0.06);
+  --rendra-elevation-md:
+    0 2px 8px -2px rgb(var(--rendra-shadow-color) / 0.1),
+    0 1px 2px rgb(var(--rendra-shadow-color) / 0.06);
+  --rendra-elevation-lg:
+    0 12px 32px -8px rgb(var(--rendra-shadow-color) / 0.18),
+    0 2px 6px rgb(var(--rendra-shadow-color) / 0.06);
 }
 
 .dark {
@@ -115,28 +117,28 @@
 
   /* As superfícies do escuro vêm da paleta (geradas a partir do fundo do degradê).
      Aqui ficam só as cores de sistema do modo escuro. */
-  --destructive: #b72c05;
-  --destructive-hover: #cf3b0e;
-  --destructive-foreground: #ffffff;
-  --destructive-soft: #3a1a10;
-  --destructive-soft-foreground: #f5a48c;
+  --rendra-destructive: #b72c05;
+  --rendra-destructive-hover: #cf3b0e;
+  --rendra-destructive-foreground: #ffffff;
+  --rendra-destructive-soft: #3a1a10;
+  --rendra-destructive-soft-foreground: #f5a48c;
 
-  --success: #4fcb80;
-  --success-foreground: #04200f;
-  --success-soft: #0f3326;
-  --success-soft-foreground: #86e0a8;
+  --rendra-success: #4fcb80;
+  --rendra-success-foreground: #04200f;
+  --rendra-success-soft: #0f3326;
+  --rendra-success-soft-foreground: #86e0a8;
 
-  --warning: #f2b04f;
-  --warning-foreground: #2a1702;
-  --warning-soft: #362612;
-  --warning-soft-foreground: #f7c77e;
+  --rendra-warning: #f2b04f;
+  --rendra-warning-foreground: #2a1702;
+  --rendra-warning-soft: #362612;
+  --rendra-warning-soft-foreground: #f7c77e;
 
-  --info: #0b6fe0;
-  --info-foreground: #ffffff;
-  --info-soft: #11305a;
-  --info-soft-foreground: #7fb4ef;
+  --rendra-info: #0b6fe0;
+  --rendra-info-foreground: #ffffff;
+  --rendra-info-soft: #11305a;
+  --rendra-info-soft-foreground: #7fb4ef;
 
-  --elevation-sm: 0 1px 2px rgb(var(--shadow-color) / 0.3);
-  --elevation-md: 0 4px 12px -2px rgb(var(--shadow-color) / 0.35);
-  --elevation-lg: 0 16px 40px -8px rgb(var(--shadow-color) / 0.5);
+  --rendra-elevation-sm: 0 1px 2px rgb(var(--rendra-shadow-color) / 0.3);
+  --rendra-elevation-md: 0 4px 12px -2px rgb(var(--rendra-shadow-color) / 0.35);
+  --rendra-elevation-lg: 0 16px 40px -8px rgb(var(--rendra-shadow-color) / 0.5);
 }

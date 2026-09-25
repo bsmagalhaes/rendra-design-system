@@ -14,6 +14,9 @@
  *  - 100vh (usar 100dvh / h-dvh)
  *  - classe montada por template string (p-${n}): o Tailwind não gera a classe
  *  - arquivo .css fora de src/styles e src/brand
+ * Em todo arquivo .ts/.tsx/.css, incluindo src/brand e src/styles (DESIGN_RULES.md, "Nome das
+ * variáveis CSS"):
+ *  - variável própria do Rendra sem o prefixo --rendra- (var(--primary), var(--radius)...)
  * Nas telas do sistema (src/pages/app), também:
  *  - texto orientativo no corpo (description de texto no PageHeader): vai em help, no ícone
  *    de informação que abre um modal
@@ -21,6 +24,7 @@
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative, sep } from 'node:path'
+import { checkVarPrefix } from './lib/var-prefix.ts'
 
 const ROOT = process.cwd()
 const SRC = join(ROOT, 'src')
@@ -59,7 +63,7 @@ const rules = [
     // Só em contexto de fonte (declaração ou nome entre aspas numa pilha de fontes): a
     // palavra "Inter" num texto da interface não é violação.
     test: /font-family|fontFamily|['"](?:Poppins|Inter|Roboto|Arial|Helvetica)(?:['",]| sans| serif)/g,
-    message: 'Nome de fonte fixo. A fonte vem de --brand-font em theme.css.',
+    message: 'Nome de fonte fixo. A fonte vem de --rendra-brand-font em theme.css.',
   },
   {
     id: '100vh',
@@ -70,7 +74,7 @@ const rules = [
     id: 'var-inline',
     test: /var\(--(?:color|radius|shadow|font|spacing)-/g,
     message:
-      'Variáveis --color-*, --radius-* etc. do Tailwind são inline e não existem no CSS. Em JS use as do tema: var(--primary), var(--chart-1), var(--shape-control).',
+      'Variáveis --color-*, --radius-* etc. do Tailwind são inline e não existem no CSS. Em JS use as do tema: var(--rendra-primary), var(--rendra-chart-1), var(--rendra-shape-control).',
   },
   {
     id: 'svg-marca',
@@ -158,6 +162,18 @@ for (const file of files) {
       message: 'Arquivo de variante paralela ou mobile. Resolva com props no componente único.',
     })
   }
+  const text = readFileSync(file, 'utf8')
+  // Roda em todo arquivo, inclusive src/brand e src/styles: é lá que o tema declara as
+  // variáveis, e a ponte para o Tailwind (@theme inline) precisa continuar citando --rendra-*.
+  for (const p of checkVarPrefix(text))
+    problems.push({
+      rel,
+      line: p.line,
+      id: 'variavel-sem-prefixo-rendra',
+      message: p.message,
+      src: p.src,
+    })
+
   if (ALLOWED_DIRS.some((d) => file.startsWith(d))) continue
   if (file.endsWith('.css')) {
     problems.push({
@@ -169,7 +185,6 @@ for (const file of files) {
     })
     continue
   }
-  const text = readFileSync(file, 'utf8')
   if (file.startsWith(APP_PAGES))
     for (const rule of fileRules)
       for (const m of text.matchAll(rule.test)) {
