@@ -18,6 +18,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+import { resolveCatalogCode } from '@/catalog/components'
 import { Button } from '@/components/ui/button'
 import { useBreakpoint } from '@/hooks/use-breakpoint'
 import { cn } from '@/lib/cn'
@@ -168,6 +169,7 @@ function Gauge({
 
   return (
     <figure
+      data-rendra={resolveCatalogCode('Chart', { type: 'gauge' })}
       className={cn('flex min-w-0 flex-col items-center gap-2', className)}
       aria-label={aria['aria-label']}
     >
@@ -277,6 +279,7 @@ function Funnel({ stages, valueFormatter = fmtDefault, className, ...aria }: Fun
 
   return (
     <figure
+      data-rendra={resolveCatalogCode('Chart', { type: 'funnel' })}
       className={cn('flex min-w-0 flex-col items-center', className)}
       aria-label={aria['aria-label']}
     >
@@ -540,6 +543,7 @@ function Cartesian({
 
   return (
     <figure
+      data-rendra={resolveCatalogCode('Chart', { type })}
       className={cn('flex min-w-0 flex-col gap-3', height === 'fill' && 'h-full', className)}
       aria-label={aria['aria-label']}
     >

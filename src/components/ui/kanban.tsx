@@ -440,6 +440,7 @@ export function Kanban({
         ref={boardRef}
         className={cn('flex h-board min-w-0 flex-col gap-3', className)}
         aria-label={aria['aria-label']}
+        data-rendra="KANB-001"
       >
         <Tabs
           variant="pill"
@@ -472,6 +473,7 @@ export function Kanban({
     <section
       ref={boardRef}
       aria-label={aria['aria-label'] ?? 'Quadro kanban'}
+      data-rendra="KANB-001"
       data-allow-overflow
       style={{ '--kanban-cols': Math.min(visibleColumns, columns.length) } as CSSProperties}
       className={cn('flex h-board min-w-0 scrollbar-subtle gap-4 overflow-x-auto', className)}

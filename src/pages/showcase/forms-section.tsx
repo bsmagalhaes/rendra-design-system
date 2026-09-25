@@ -3,7 +3,7 @@ import { Building2, CreditCard, Lock, Mail, Rocket, Search, Star, User } from 'l
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { Grid, Stack } from '@/components/layout'
+import { Grid, Inline, Stack } from '@/components/layout'
 import { ActionBar } from '@/components/ui/action-bar'
 import { Checkbox, CheckboxGroup } from '@/components/ui/checkbox'
 import { DatePicker, type DateRange } from '@/components/ui/date-picker'
@@ -20,7 +20,7 @@ import { toast } from '@/components/ui/toast'
 import { Upload } from '@/components/ui/upload'
 import { formatCurrency } from '@/lib/masks'
 import { zBR } from '@/lib/validators'
-import { Demo, fakeUpload, GroupTitle, wait } from './demo'
+import { CatalogCode, Demo, fakeUpload, GroupTitle, wait } from './demo'
 
 const cities: SelectOption[] = [
   'São Paulo',
@@ -231,6 +231,7 @@ export function FormsSection() {
         title="Input"
         description="Um único Input. Máscara, ícone, limpar e senha são props; a máscara já abre o teclado certo no celular (numérico, telefone, decimal)."
         props="mask (cpf, cnpj, cpfCnpj, phone, cep, date, time, currency, percent), ddi, onDdiChange, ddiOptions, hideDdi, icon, suffix, clearable, type=password, size, invalid, disabled"
+        code="CAMP-001"
       >
         <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="fields">
           <Field label="CPF">
@@ -292,6 +293,7 @@ export function FormsSection() {
         title="Textarea"
         description="Com contador opcional. Cresce com o texto até uma altura máxima."
         props="counter, maxLength, rows, invalid"
+        code="TXT-001"
       >
         <Grid cols={{ base: 1, md: 2 }} gap="fields">
           <Field label="Observações" help="Até 200 caracteres.">
@@ -308,6 +310,7 @@ export function FormsSection() {
         title="RichTextEditor"
         description="Texto rico com títulos, negrito, listas, alinhamento, links, tabela, imagem e modo HTML. Cole um print (Ctrl+V) ou arraste uma imagem; toque nela para redimensionar pelos 4 cantos."
         props="value (HTML), onChange, placeholder, onImageUpload, minHeight, invalid, disabled"
+        code="RTE-001"
       >
         <Field
           label="Descrição do contrato"
@@ -322,6 +325,7 @@ export function FormsSection() {
         title="Select"
         description="Um único Select. No celular abre como painel inferior, com busca no topo e confirmação no rodapé."
         props="options, multiple, searchable, selectAll, showCount, maxChips, creatable, onCreate, loadOptions (async), loading, clearable, size, invalid, disabled"
+        code="SEL-001"
       >
         <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="fields">
           <Field label="Simples">
@@ -389,7 +393,10 @@ export function FormsSection() {
       >
         <Grid cols={{ base: 1, md: 2 }} gap="8">
           <Stack gap="2">
-            <span className="text-sm font-medium">Checkbox em grupo</span>
+            <Inline gap="2" align="center">
+              <span className="text-sm font-medium">Checkbox em grupo</span>
+              <CatalogCode code={['CHK-001', 'CHK-002']} />
+            </Inline>
             <CheckboxGroup
               selectAll
               label="Canais de aviso"
@@ -404,7 +411,10 @@ export function FormsSection() {
             />
           </Stack>
           <Stack gap="2">
-            <span className="text-sm font-medium">Radio em lista</span>
+            <Inline gap="2" align="center">
+              <span className="text-sm font-medium">Radio em lista</span>
+              <CatalogCode code="RDO-001" />
+            </Inline>
             <RadioGroup
               aria-label="Cobrança"
               value={radio}
@@ -417,7 +427,10 @@ export function FormsSection() {
             />
           </Stack>
           <Stack gap="2" className="md:col-span-2">
-            <span className="text-sm font-medium">Radio em cards</span>
+            <Inline gap="2" align="center">
+              <span className="text-sm font-medium">Radio em cards</span>
+              <CatalogCode code="RDO-002" />
+            </Inline>
             <RadioGroup
               aria-label="Forma de pagamento"
               variant="cards"
@@ -440,7 +453,11 @@ export function FormsSection() {
               ]}
             />
           </Stack>
-          <Stack gap="0" className="md:col-span-2 md:max-w-xl">
+          <Stack gap="2" className="md:col-span-2 md:max-w-xl">
+            <Inline gap="2" align="center">
+              <span className="text-sm font-medium">Switch</span>
+              <CatalogCode code="SWT-001" />
+            </Inline>
             <Switch
               label="Notificações por e-mail"
               description="Receba um resumo das pendências toda manhã."
@@ -461,6 +478,7 @@ export function FormsSection() {
         title="DatePicker"
         description="Calendário em português. Período mostra dois meses no desktop e um no celular. No celular abre como painel inferior."
         props="range, time, minDate, maxDate, clearable, size, invalid, disabled"
+        code="DTP-001"
       >
         <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="fields">
           <Field label="Data">
@@ -489,6 +507,7 @@ export function FormsSection() {
         title="Slider"
         description="Valor único ou faixa. A alça tem área de toque de 44px no celular."
         props="value (1 ou 2 números), min, max, step, showValue, formatValue"
+        code="SLD-001"
       >
         <Grid cols={{ base: 1, md: 2 }} gap="8">
           <Field label="Desconto">
@@ -519,6 +538,7 @@ export function FormsSection() {
         title="Upload"
         description="Arrastar e soltar no desktop, tocar para escolher no celular. Lista com progresso, erro por arquivo e tentar de novo. Dica: um arquivo com 'erro' no nome simula falha."
         props="accept, multiple, maxSizeMb, onUpload(file, onProgress), onChange, hint"
+        code="UPL-001"
       >
         <Field label="Documentos" help="PDF ou imagem, até 5 MB cada.">
           <Upload accept="image/*,.pdf" maxSizeMb={5} onUpload={fakeUpload} />
@@ -529,6 +549,7 @@ export function FormsSection() {
         id="formulario-validado"
         title="Formulário com validação"
         description="React Hook Form + Zod: validação ao sair do campo, mensagens em português, CPF/CNPJ verificado de verdade, foco no primeiro erro ao enviar e botão com carregamento."
+        code={['FORM-001', 'FORM-002']}
         bare
       >
         <ValidatedForm />

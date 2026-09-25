@@ -20,6 +20,10 @@ describe('Select', () => {
     await userEvent.click(await screen.findByRole('option', { name: /Rio de Janeiro/ }))
     expect(onChange).toHaveBeenCalledWith('rj')
     expect(screen.getByRole('combobox', { name: 'Estado' })).toHaveTextContent('Rio de Janeiro')
+    expect(screen.getByRole('combobox', { name: 'Estado' })).toHaveAttribute(
+      'data-rendra',
+      'SEL-001',
+    )
   })
 
   it('com busca, filtra as opções pelo texto', async () => {

@@ -25,6 +25,7 @@ export function PopoverContent({
         align={align}
         sideOffset={sideOffset}
         collisionPadding={16}
+        data-rendra="POP-001"
         className={cn(
           'z-50 rounded-surface border bg-popover text-popover-foreground shadow-md outline-none',
           width === 'sm' ? 'w-popover-sm' : 'w-popover',

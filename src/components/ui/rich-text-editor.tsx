@@ -481,6 +481,7 @@ export function RichTextEditor({
   return (
     <div
       data-slot="control"
+      data-rendra="RTE-001"
       className={cn(
         'flex min-w-0 flex-col overflow-hidden rounded-control border border-input bg-field text-foreground transition-[border-color,box-shadow] duration-150 focus-within:border-ring focus-within:bg-card focus-within:ring-2 focus-within:ring-ring/25',
         invalid &&

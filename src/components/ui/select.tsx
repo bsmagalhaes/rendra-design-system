@@ -247,6 +247,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
       aria-describedby={props['aria-describedby']}
       aria-label={id ? undefined : label}
       disabled={disabled}
+      data-rendra="SEL-001"
       // Teclas no gatilho não chegam à lista (Enter não seleciona opção com o painel fechado).
       onKeyDown={(e) => e.stopPropagation()}
       className={cn(

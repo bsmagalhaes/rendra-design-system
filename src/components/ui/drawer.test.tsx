@@ -21,7 +21,10 @@ function Harness({ dirty }: { dirty?: boolean }) {
 describe('Drawer', () => {
   it('abre com título e fecha pelo Esc', async () => {
     renderApp(<Harness />)
-    expect(screen.getByRole('dialog', { name: 'Novo cliente' })).toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: 'Novo cliente' })).toHaveAttribute(
+      'data-rendra',
+      'GAV-001',
+    )
     await userEvent.keyboard('{Escape}')
     await waitFor(() => expect(screen.getByTestId('estado')).toHaveTextContent('fechado'))
   })

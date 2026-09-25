@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { ClientDrawer } from '@/pages/app/client-drawer'
-import { Demo, GroupTitle } from './demo'
+import { CatalogCode, Demo, GroupTitle } from './demo'
 
 export function CompositionSection() {
   const [drawer, setDrawer] = useState(false)
@@ -24,6 +24,7 @@ export function CompositionSection() {
         title="Drawer com rodapé fixo"
         description="Formulário de volume médio (até ~12 campos). Header fixo, só o body rola, rodapé com 30/70 sempre visível. Preencha um campo e tente fechar: ele pede confirmação. No celular ocupa a tela inteira."
         props="open, onOpenChange, title, description, icon, size (sm, md, lg, xl, full), footer, dirty"
+        code="GAV-001"
       >
         <Button icon={<UserPlus />} className="self-start" onClick={() => setDrawer(true)}>
           Abrir drawer de cadastro
@@ -88,7 +89,11 @@ export function CompositionSection() {
           <CardContent>
             <Stack gap="4">
               <p className="text-sm">Dados gerais do cliente.</p>
-              <Separator />
+              <span className="flex items-center gap-2">
+                <Separator className="flex-1" />
+                <CatalogCode code="SEP-001" />
+                <Separator className="flex-1" />
+              </span>
               <p className="text-sm font-semibold">Contratos</p>
               <p className="text-sm text-muted-foreground">
                 Seção interna separada por linha, não por card.

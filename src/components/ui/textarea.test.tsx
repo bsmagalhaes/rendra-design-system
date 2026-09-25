@@ -15,5 +15,6 @@ describe('Textarea', () => {
     renderApp(<Harness />)
     await userEvent.type(screen.getByLabelText('Observações'), 'Olá')
     expect(screen.getByText(/3\s*\/\s*20/)).toBeInTheDocument()
+    expect(screen.getByLabelText('Observações')).toHaveAttribute('data-rendra', 'TXT-001')
   })
 })

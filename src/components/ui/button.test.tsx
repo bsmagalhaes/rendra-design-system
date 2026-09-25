@@ -31,4 +31,14 @@ describe('Button', () => {
     renderApp(<Button iconOnly aria-label="Excluir" icon={<svg />} />)
     expect(screen.getByRole('button', { name: 'Excluir' })).toBeInTheDocument()
   })
+
+  it('data-rendra muda com a variante (catálogo de componentes)', () => {
+    const { rerender } = renderApp(<Button>Salvar</Button>)
+    expect(screen.getByRole('button', { name: 'Salvar' })).toHaveAttribute('data-rendra', 'BTN-001')
+    rerender(<Button variant="destructive">Excluir</Button>)
+    expect(screen.getByRole('button', { name: 'Excluir' })).toHaveAttribute(
+      'data-rendra',
+      'BTN-005',
+    )
+  })
 })

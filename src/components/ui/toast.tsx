@@ -29,6 +29,7 @@ function show(type: FeedbackType, title: string, opts: ToastOptions = {}) {
     (id) => (
       <div
         role={type === 'error' ? 'alert' : 'status'}
+        data-rendra="TST-001"
         className={cn(
           'flex w-full items-start gap-3 rounded-control border bg-popover p-4 text-popover-foreground shadow-lg',
           tone[type],

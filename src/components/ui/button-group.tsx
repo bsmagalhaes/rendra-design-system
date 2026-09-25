@@ -36,6 +36,7 @@ export function ButtonGroup({
       <div
         role="radiogroup"
         aria-label={aria['aria-label']}
+        data-rendra="BTNG-001"
         className={cn(
           'inline-flex max-w-full flex-wrap gap-1 rounded-control border bg-muted p-1',
           fullWidth && 'flex w-full',
@@ -73,6 +74,7 @@ export function ButtonGroup({
     <div
       role="group"
       aria-label={aria['aria-label']}
+      data-rendra="BTNG-001"
       className={cn(
         'inline-flex max-w-full',
         '[&>*]:rounded-none [&>*]:shadow-none [&>*:first-child]:rounded-l-control [&>*:focus-visible]:z-10 [&>*:last-child]:rounded-r-control [&>*:not(:first-child)]:-ml-px',

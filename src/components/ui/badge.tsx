@@ -39,7 +39,11 @@ export interface BadgeProps
 /** Badge único: tom semântico, suave ou sólido, com bolinha opcional. */
 export function Badge({ tone, solid, dot, icon, className, children, ...props }: BadgeProps) {
   return (
-    <span className={cn(badgeVariants({ tone, solid }), className)} {...props}>
+    <span
+      data-rendra="BDG-001"
+      className={cn(badgeVariants({ tone, solid }), className)}
+      {...props}
+    >
       {dot && <span aria-hidden className="size-2 shrink-0 rounded-full bg-current" />}
       {icon && (
         <span aria-hidden className="flex shrink-0">

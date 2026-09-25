@@ -6,7 +6,7 @@ import { EmptyState } from './empty-state'
 
 describe('EmptyState', () => {
   it('mostra título, descrição e a ação', () => {
-    renderApp(
+    const { container } = renderApp(
       <EmptyState
         title="Nenhum contrato ainda"
         description="Os contratos aparecem aqui."
@@ -16,5 +16,6 @@ describe('EmptyState', () => {
     expect(screen.getByText('Nenhum contrato ainda')).toBeInTheDocument()
     expect(screen.getByText('Os contratos aparecem aqui.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Novo contrato' })).toBeInTheDocument()
+    expect(container.querySelector('[data-rendra="VAZ-001"]')).toBeInTheDocument()
   })
 })

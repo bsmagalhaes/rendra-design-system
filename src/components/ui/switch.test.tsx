@@ -13,5 +13,6 @@ describe('Switch', () => {
     await userEvent.click(sw)
     expect(onCheckedChange).toHaveBeenLastCalledWith(true)
     expect(sw).toBeChecked()
+    expect(sw).toHaveAttribute('data-rendra', 'SWT-001')
   })
 })

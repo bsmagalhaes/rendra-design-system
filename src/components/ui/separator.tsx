@@ -13,7 +13,11 @@ export function Separator({
 }) {
   if (label) {
     return (
-      <div role="separator" className={cn('flex items-center gap-3', className)}>
+      <div
+        role="separator"
+        data-rendra="SEP-001"
+        className={cn('flex items-center gap-3', className)}
+      >
         <span className="h-px flex-1 bg-border" />
         <span className="text-xs text-muted-foreground">{label}</span>
         <span className="h-px flex-1 bg-border" />
@@ -24,6 +28,7 @@ export function Separator({
     <div
       role="separator"
       aria-orientation={orientation}
+      data-rendra="SEP-001"
       className={cn(
         'shrink-0 bg-border',
         orientation === 'horizontal' ? 'h-px w-full' : 'w-px self-stretch',

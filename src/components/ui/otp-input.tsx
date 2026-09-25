@@ -56,6 +56,7 @@ export function OtpInput({
       role="group"
       aria-label="Código de verificação"
       aria-describedby={aria['aria-describedby']}
+      data-rendra="OTP-001"
       className="grid w-full max-w-sm grid-cols-otp gap-2"
       style={{ '--otp': length } as CSSProperties}
     >

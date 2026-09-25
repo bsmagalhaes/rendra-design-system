@@ -13,10 +13,11 @@ describe('OtpInput', () => {
       const [v, setV] = useState('')
       return <OtpInput value={v} onChange={setV} onComplete={onComplete} />
     }
-    renderApp(<Harness />)
+    const { container } = renderApp(<Harness />)
     const [first] = screen.getAllByRole('textbox')
     await userEvent.click(first!)
     await userEvent.paste('123456')
     await waitFor(() => expect(onComplete).toHaveBeenCalledWith('123456'))
+    expect(container.querySelector('[data-rendra="OTP-001"]')).toBeInTheDocument()
   })
 })

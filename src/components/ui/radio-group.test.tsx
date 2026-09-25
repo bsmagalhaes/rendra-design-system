@@ -20,5 +20,23 @@ describe('RadioGroup', () => {
     )
     await userEvent.click(screen.getByRole('radio', { name: /Profissional/ }))
     expect(onChange).toHaveBeenCalledWith('pro')
+    expect(screen.getByRole('radiogroup', { name: 'Plano' })).toHaveAttribute(
+      'data-rendra',
+      'RDO-001',
+    )
+  })
+
+  it('variant="cards" usa o código de catálogo RDO-002', () => {
+    renderApp(
+      <RadioGroup
+        aria-label="Plano"
+        variant="cards"
+        options={[{ value: 'basico', label: 'Básico' }]}
+      />,
+    )
+    expect(screen.getByRole('radiogroup', { name: 'Plano' })).toHaveAttribute(
+      'data-rendra',
+      'RDO-002',
+    )
   })
 })

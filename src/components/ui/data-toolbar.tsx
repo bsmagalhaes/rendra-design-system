@@ -110,7 +110,7 @@ export function DataToolbar({
   )
 
   return (
-    <div className="flex flex-col gap-3 border-b p-4">
+    <div data-rendra="DTB-001" className="flex flex-col gap-3 border-b p-4">
       {selectionBar && !isMobile ? (
         <div className="flex min-h-control-md flex-wrap items-center gap-3">{selectionBar}</div>
       ) : (

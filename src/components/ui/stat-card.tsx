@@ -41,7 +41,10 @@ export function StatCard({
   const TrendIcon = flat ? Minus : up ? ArrowUpRight : ArrowDownRight
 
   return (
-    <Card className={cn('@container gap-3 p-4 md:p-6', highlight && 'bg-gradient-soft', className)}>
+    <Card
+      data-rendra="STAT-001"
+      className={cn('@container gap-3 p-4 md:p-6', highlight && 'bg-gradient-soft', className)}
+    >
       <div className="flex items-start justify-between gap-3">
         <span className="text-sm text-muted-foreground">{label}</span>
         {icon && (

@@ -26,6 +26,7 @@ export function DropdownMenuContent({
       <D.Content
         sideOffset={sideOffset}
         collisionPadding={16}
+        data-rendra="DDM-001"
         className={cn(panel, className)}
         {...props}
       />

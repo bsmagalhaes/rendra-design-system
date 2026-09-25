@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router'
+import { resolveCatalogCode } from '@/catalog/components'
 import { cn } from '@/lib/cn'
 
 export interface BreadcrumbItem {
@@ -23,9 +24,10 @@ interface BreadcrumbProps {
  */
 export function Breadcrumb({ items, variant = 'responsive', className }: BreadcrumbProps) {
   if (items.length === 0) return null
+  const code = resolveCatalogCode('Breadcrumb', { variant })
   if (variant === 'trail') {
     return (
-      <nav aria-label="Trilha de navegação" className={cn('min-w-0', className)}>
+      <nav data-rendra={code} aria-label="Trilha de navegação" className={cn('min-w-0', className)}>
         <ol className="flex min-w-0 items-center gap-1 overflow-hidden text-xs text-muted-foreground">
           {items.map((item, i) => {
             const last = i === items.length - 1
@@ -65,7 +67,7 @@ export function Breadcrumb({ items, variant = 'responsive', className }: Breadcr
   const parent = [...items.slice(0, -1)].reverse().find((i) => i.to)
 
   return (
-    <nav aria-label="Trilha de navegação" className={cn('min-w-0', className)}>
+    <nav data-rendra={code} aria-label="Trilha de navegação" className={cn('min-w-0', className)}>
       {/* Mobile: voltar + tela atual */}
       <div className="flex min-w-0 items-center gap-1 md:hidden">
         {parent?.to ? (

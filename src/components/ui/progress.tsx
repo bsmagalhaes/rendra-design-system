@@ -30,7 +30,7 @@ export interface ProgressProps extends VariantProps<typeof bar> {
 export function Progress({ value, size = 'md', tone, showValue, label, className }: ProgressProps) {
   const indeterminate = value == null
   return (
-    <div className={cn('flex min-w-0 items-center gap-3', className)}>
+    <div data-rendra="PROG-001" className={cn('flex min-w-0 items-center gap-3', className)}>
       <P.Root
         value={indeterminate ? null : value}
         aria-label={label}

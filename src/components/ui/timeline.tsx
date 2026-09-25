@@ -23,7 +23,7 @@ const dot: Record<NonNullable<TimelineEvent['tone']>, string> = {
 /** Linha do tempo única, com eventos em ordem e tom semântico por evento. */
 export function Timeline({ events, className }: { events: TimelineEvent[]; className?: string }) {
   return (
-    <ol className={cn('@container flex flex-col', className)}>
+    <ol data-rendra="TLN-001" className={cn('@container flex flex-col', className)}>
       {events.map((e, i) => (
         <li key={e.id} className="relative flex gap-3 pb-6 last:pb-0">
           {i < events.length - 1 && (
