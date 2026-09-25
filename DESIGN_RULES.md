@@ -180,13 +180,32 @@ Toda ação tem um lugar previsto. Botão fora desses lugares é erro de revisã
 | Ação de uma linha ou de um cartão                           | menu de ações da linha (`rowActions`) ou do cartão                       |
 | Ação de um campo (trocar foto, gerar senha)                 | junto do próprio campo, dentro do `Field`                                |
 
-**Texto orientativo** (como usar a tela, de onde vem um número, o que uma seção faz) **nunca fica no corpo da tela**: nem como parágrafo, nem como `Alert` informativo, nem num botão avulso "Saiba mais" ou "Como funciona". Ele vira um **ícone de informação discreto ao lado do título** a que se refere, que abre um `Modal` informativo:
+**Texto orientativo** (como usar a tela, de onde vem um número, o que uma seção faz) **nunca fica solto no corpo da tela**: nem como parágrafo, nem como `Alert` informativo, nem num botão avulso "Saiba mais" ou "Como funciona". Ele vira um **ícone de informação discreto ao lado do título** a que se refere, que abre um `Modal` informativo:
 
 - da tela: `PageHeader help` (o ícone aparece ao lado do título, no header fixo);
 - de uma seção: `CardTitle help` ou `FormSection help`;
 - em outro ponto, só quando nenhum título servir: `<InfoHint title>`.
 
-O `description` do `PageHeader` e os subtítulos de card descrevem **o que é** (status, segmento, "Plano, valor e início"), nunca **o que fazer**. A ajuda de um campo (`Field help`) continua abaixo dele, curta. O `npm run check:rules` barra, nas telas do sistema, `description` de texto no `PageHeader`, subtítulo que começa com verbo de instrução ("Comece", "Clique", "Arraste", "Preencha"...) e botão solto no conteúdo de um card.
+**Orientação curta abaixo do campo é permitida**, na prop `help` do `Field` (e do `FormField`), com limite de caracteres pela largura do campo (`span`):
+
+| `span`        | Largura | Limite        |
+| ------------- | ------- | ------------- |
+| `full`        | 100%    | 150           |
+| `xl`          | 67%     | 100           |
+| `lg`          | 50%     | 70            |
+| `md` e `half` | 33%     | 40 (o padrão) |
+| `sm`          | 25%     | 30            |
+| `xs`          | 17%     | 20            |
+
+Acima do limite, o texto vai para o `help` em modal (`PageHeader`, `CardTitle` ou `FormSection help`) ou para um bloco recolhido na seção ("Por que essas perguntas"). E mais:
+
+- **Por seção, no máximo metade dos campos com orientação.** Orientação em todo campo vira ruído.
+- **Uma linha só**, sempre abaixo do controle; **nunca entre o rótulo e o controle**.
+- **Nunca repete o que o campo já diz** (rótulo, placeholder, máscara). "Informe o CPF" abaixo de "CPF" é erro.
+- **Limite, formato e contador ficam dentro do componente** (o contador do `Textarea`, a dica de tipo e tamanho do `Upload`), nunca soltos no corpo.
+- **Um subtítulo por seção** e **no máximo um bloco recolhido por seção**.
+
+O `description` do `PageHeader` pode descrever **o que é** a tela, curto (até 150 caracteres); os subtítulos de card também descrevem (status, segmento, "Plano, valor e início"). Nenhum dos dois **instrui**. O `npm run check:rules` barra, nas telas do sistema: `help` literal de `Field` e `FormField` acima do limite do `span` (sem `span`, vale o de `md`); mais da metade dos campos de uma `FormSection` com `help` literal; `description` literal do `PageHeader` acima de 150 caracteres; subtítulo que começa com verbo de instrução ("Comece", "Clique", "Arraste", "Preencha"...); e botão solto no conteúdo de um card. Texto dinâmico (`help={mensagem}`) não é medido pelo verificador, mas segue a mesma regra.
 
 ### Cabeçalho de listagem
 
@@ -295,7 +314,9 @@ Teclado em tudo; foco visível (`:focus-visible` global com `--rendra-ring`); co
 16. Fundo tingido no modo claro (a página e os campos usam #f5f6f7; os cards, branco).
 17. Título da página repetido no corpo quando já está no header.
 18. Botão solto: toda ação fica no rodapé fixo, na barra da tabela, no `PageHeader`, no cabeçalho do card ou no menu da linha.
-19. Texto orientativo no corpo da tela (parágrafo, `Alert` informativo, botão "Saiba mais"): use `help` ao lado do título, que abre um modal.
+19. Texto orientativo solto no corpo da tela (parágrafo, `Alert` informativo, botão "Saiba mais"): use `help` ao lado do título, que abre um modal.
+20. Orientação do campo acima do limite do `span` (full 150, xl 100, lg 70, md 40, sm 30, xs 20), em mais da metade dos campos da seção, em mais de uma linha, entre o rótulo e o controle ou repetindo o que o campo já diz.
+21. `description` do `PageHeader` com mais de 150 caracteres ou dando instrução.
 
 ## 11. Checklist de revisão
 
@@ -310,6 +331,7 @@ Antes de entregar qualquer mudança de interface:
 - [ ] Botões pela `ActionBar` (100%, 30/70, menu), com carregamento no envio.
 - [ ] Nenhum botão solto: cada ação está no rodapé, na barra da tabela, no `PageHeader`, no `CardHeader actions` ou no menu da linha.
 - [ ] Texto orientativo só em `help` (ícone de informação ao lado do título, que abre modal); subtítulos descrevem, não instruem.
+- [ ] Orientação abaixo do campo dentro do limite do `span`, em uma linha, em no máximo metade dos campos da seção, sem repetir o rótulo; limite, formato e contador dentro do componente.
 - [ ] Formulário: rótulo acima, obrigatório marcado, erro abaixo do campo, `gap="fields"` entre campos, 3 campos por linha (CEP e CNPJ primeiro).
 - [ ] Tabela: seleção primeiro, situação antes das ações, ações por último, números à direita, vazio, carregando e erro.
 - [ ] Cores só por token semântico; contraste AA conferido em `/tokens`, nos modos claro e escuro.

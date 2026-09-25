@@ -18,12 +18,15 @@
  * variáveis CSS"):
  *  - variável própria do Rendra sem o prefixo --rendra- (var(--primary), var(--radius)...)
  * Nas telas do sistema (src/pages/app), também:
- *  - texto orientativo no corpo (description de texto no PageHeader): vai em help, no ícone
- *    de informação que abre um modal
+ *  - texto orientativo (regra C7, scripts/lib/help-length.ts): help literal de Field e
+ *    FormField acima do limite do span, mais da metade dos campos de uma FormSection com
+ *    orientação, description do PageHeader acima de 150 caracteres e subtítulo que começa
+ *    com verbo de instrução
  *  - botão solto no conteúdo de um card: ação de card vai em CardHeader actions
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative, sep } from 'node:path'
+import { checkGuidance } from './lib/help-length.ts'
 import { checkVarPrefix } from './lib/var-prefix.ts'
 
 const ROOT = process.cwd()
@@ -132,19 +135,6 @@ const problems = []
 const APP_PAGES = join(SRC, 'pages', 'app')
 const fileRules = [
   {
-    id: 'texto-orientativo',
-    test: /<PageHeader\b(?:(?!\/>)[\s\S])*?\bdescription=\s*(?:["'`]|\{\s*["'`])/g,
-    message:
-      'Texto orientativo no corpo da tela. Use PageHeader help (ícone de informação ao lado do título, que abre um modal).',
-  },
-  {
-    id: 'texto-orientativo',
-    // Subtítulo que dá instrução (começa com verbo no imperativo) também é texto orientativo.
-    test: /(?:description=\{?\s*["'`]|<CardDescription>\s*)(?:Comece|Clique|Toque|Arraste|Preencha|Use|Escolha|Selecione|Digite|Informe|Veja|Confira)\b/g,
-    message:
-      'Instrução no subtítulo. Use help (PageHeader, CardTitle ou FormSection): ícone de informação que abre um modal.',
-  },
-  {
     id: 'botao-solto',
     test: /<CardContent\b[^>]*>\s*(?:<Stack\b[^>]*>\s*)?<Button\b|<Button\b[^>]*\bself-(?:start|end|center)\b/g,
     message:
@@ -185,13 +175,16 @@ for (const file of files) {
     })
     continue
   }
-  if (file.startsWith(APP_PAGES))
+  if (file.startsWith(APP_PAGES)) {
+    // Texto orientativo (regra C7): limite por span, metade da seção, descrição e instrução.
+    for (const p of checkGuidance(text)) problems.push({ rel, ...p })
     for (const rule of fileRules)
       for (const m of text.matchAll(rule.test)) {
         const line = text.slice(0, m.index).split('\n').length
         const src = m[0].split('\n')[0].trim()
         problems.push({ rel, line, id: rule.id, message: rule.message, src })
       }
+  }
   const lines = text.split('\n')
   lines.forEach((line, i) => {
     for (const rule of rules) {
