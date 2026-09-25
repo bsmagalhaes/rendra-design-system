@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
+import { findUnprefixedDeclarations, TAILWIND_NAMESPACE } from '../../scripts/lib/var-prefix'
 
 /*
  * Prefixo --rendra- (docs/specs/v2-plano.md, seções 1.8 e 2.5; etapa 2.0.0-alpha.1): toda
@@ -14,31 +15,13 @@ import { describe, expect, it } from 'vitest'
  * fora do @theme, em @layer base, só para sobrescrever o valor em telas maiores (ex.:
  * --spacing-control-sm dentro de @media (width >= 48rem)). Nenhum dos dois casos é variável
  * própria do Rendra, então os dois ficam de fora desta checagem pelo nome, não pelo bloco.
+ *
+ * A lógica mora num módulo só (scripts/lib/var-prefix.ts), importado também por
+ * scripts/check-design-rules.mjs e por src/brand/palette.test.ts, para nunca divergir.
  */
 
 const STYLES_DIR = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(STYLES_DIR, '..', '..')
-
-// Mesma exceção do scripts/check-design-rules.mjs: "tracking" é a escala de letter-spacing do
-// Tailwind, e o "$" cobre o degrau zerado sem sufixo (--spacing: initial;).
-const TAILWIND_NAMESPACE =
-  /^(color|spacing|text|font|radius|shadow|container|breakpoint|animate|ease|tw|tracking)(-|$)/
-
-/** Declarações de variável (`--nome: valor;`) fora do prefixo --rendra-, e fora da exceção
- * do namespace do Tailwind. */
-function findUnprefixedDeclarations(text: string) {
-  const found: { line: number; name: string; src: string }[] = []
-  const lines = text.split('\n')
-  lines.forEach((line, i) => {
-    const m = /^\s*--([a-zA-Z][\w-]*)\s*:/.exec(line)
-    if (!m) return
-    const name = m[1]!
-    if (name.startsWith('rendra-')) return
-    if (TAILWIND_NAMESPACE.test(name)) return
-    found.push({ line: i + 1, name, src: line.trim() })
-  })
-  return found
-}
 
 const files = [
   ['src/styles/theme.css', join(STYLES_DIR, 'theme.css')],
@@ -68,5 +51,22 @@ describe('prefixo --rendra- nas variáveis CSS do tema', () => {
     expect(declared.has('spacing-4')).toBe(true)
     expect(TAILWIND_NAMESPACE.test('spacing-4')).toBe(true)
     expect(findUnprefixedDeclarations(text).some((v) => v.name === 'spacing-4')).toBe(false)
+  })
+
+  // Bloqueador 3 (validação do Fable): --radius e --shadow-color batem em TAILWIND_NAMESPACE
+  // (--radius-*, --shadow-*) mesmo sendo variável própria do Rendra. Caso negativo: uma
+  // declaração solta, fora de qualquer @theme, ainda precisa falhar para --primary, --radius
+  // e --shadow-color, e passar para --rendra-primary.
+  it('acusa --primary, --radius e --shadow-color soltos fora de @theme, mas não a versão com --rendra-', () => {
+    const text = [
+      ':root {',
+      '  --primary: #0b6fe0;',
+      '  --radius: 0.625rem;',
+      '  --shadow-color: 11 29 55;',
+      '  --rendra-primary: #0b6fe0;',
+      '}',
+    ].join('\n')
+    const names = findUnprefixedDeclarations(text).map((v) => v.name)
+    expect(names).toEqual(['primary', 'radius', 'shadow-color'])
   })
 })

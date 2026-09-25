@@ -22,7 +22,9 @@ export default defineConfig({
   base: process.env.BASE_PATH ?? '/',
   // Testes unitários (Vitest). Os testes de layout (Playwright) ficam em tests/.
   test: {
-    include: ['src/**/*.test.{ts,tsx}'],
+    // scripts/lib cobre a lógica compartilhada com scripts/check-design-rules.mjs (regra
+    // variavel-sem-prefixo-rendra), que precisa de teste próprio (etapa 2.0.0-alpha.2).
+    include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.{ts,tsx}'],
     // Funções puras no Node; testes de componente pedem jsdom na primeira linha do arquivo.
     environment: 'node',
     setupFiles: ['src/test/setup.ts'],

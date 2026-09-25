@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { TAILWIND_NAMESPACE } from '../../scripts/lib/var-prefix'
 import { contrast, createPalette, mix, paletteCss, type PaletteSeeds } from './palette'
 import { paletteSeeds } from './palettes'
 
@@ -74,14 +75,14 @@ describe('createPalette', () => {
     // prefixo --rendra-, createPalette não pode devolver nenhuma chave que não comece com ele.
     // O único jeito de uma exceção existir seria colidir com o namespace do próprio Tailwind
     // (--color-*, --spacing-*, --text-*, --font-*, --radius-*, --shadow-*, --container-*), o que
-    // nunca acontece aqui: createPalette só emite variáveis semânticas próprias do Rendra.
-    const TAILWIND_NAMESPACE =
-      /^--(color|spacing|text|font|radius|shadow|container|breakpoint|animate|ease|tw)-/
+    // nunca acontece aqui: createPalette só emite variáveis semânticas próprias do Rendra. A
+    // mesma exceção de scripts/check-design-rules.mjs e src/styles/tokens-prefix.test.ts, para
+    // nunca divergir (docs/specs/v2-plano.md, escopo do bloqueador 3 da validação do Fable).
     for (const seeds of [...paletteSeeds, client]) {
       const p = createPalette(seeds)
       for (const vars of [p.light, p.dark]) {
         for (const key of Object.keys(vars)) {
-          if (TAILWIND_NAMESPACE.test(key)) continue
+          if (TAILWIND_NAMESPACE.test(key.slice(2))) continue
           expect(key, `chave sem prefixo --rendra-: ${key}`).toMatch(/^--rendra-/)
         }
       }
