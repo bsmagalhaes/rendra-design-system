@@ -73,11 +73,17 @@ export function Demo({
 export function Row({
   label,
   code,
+  block,
   children,
 }: {
   label: string
   /** Código do catálogo desta variante específica (quando o componente tem mais de um). */
-  code?: string
+  code?: string | string[]
+  /**
+   * Empilha os filhos na largura total (Stack) em vez de alinhá-los lado a lado (Inline).
+   * Para componentes que ocupam a linha inteira, como Tabs e Breadcrumb.
+   */
+  block?: boolean
   children: ReactNode
 }) {
   return (
@@ -88,7 +94,7 @@ export function Row({
         </span>
         {code && <CatalogCode code={code} />}
       </Inline>
-      <Inline gap="3">{children}</Inline>
+      {block ? <Stack gap="3">{children}</Stack> : <Inline gap="3">{children}</Inline>}
     </Stack>
   )
 }

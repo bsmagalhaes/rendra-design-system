@@ -68,7 +68,7 @@ const catalog = {
   name: 'catalog',
   title: 'Catálogo de componentes',
   description:
-    'Código de cada componente e variante (ABA-001, BTN-001...), usado no data-rendra, na vitrine (/componentes) e no BRIEFING_MODELO. Todo componente de src/components/ui depende dele.',
+    'Código de cada componente e variante (ABA-001, BTN-001...), usado no data-rendra, na vitrine (/componentes) e no BRIEFING_MODELO. Os componentes com variante (os que calculam o data-rendra com resolveCatalogCode) dependem dele.',
   files: ['src/catalog/components.ts'],
 }
 const layout = {

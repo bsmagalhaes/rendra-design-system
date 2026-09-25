@@ -34,6 +34,7 @@ const groups = [
   {
     title: 'Formulário',
     items: [
+      ['field', 'Field e Label'],
       ['input', 'Input'],
       ['textarea', 'Textarea'],
       ['editor', 'RichTextEditor'],
@@ -42,6 +43,7 @@ const groups = [
       ['datepicker', 'DatePicker'],
       ['slider', 'Slider'],
       ['upload', 'Upload'],
+      ['otp', 'OtpInput'],
       ['formulario-validado', 'Formulário validado'],
     ],
   },
@@ -66,6 +68,7 @@ const groups = [
       ['timeline', 'Timeline'],
       ['accordion', 'Accordion'],
       ['chart', 'Chart'],
+      ['widgets', 'WidgetGrid'],
     ],
   },
   {
@@ -73,6 +76,7 @@ const groups = [
     items: [
       ['calendario', 'Calendar (agenda)'],
       ['kanban', 'Kanban'],
+      ['atendimento', 'Atendimento (chat)'],
       ['visualizador', 'ImageViewer'],
     ],
   },
@@ -80,6 +84,7 @@ const groups = [
     title: 'Feedback',
     items: [
       ['icone-feedback', 'Ícone de feedback'],
+      ['logotipo', 'Logotipo da marca'],
       ['alert', 'Alert'],
       ['toast', 'Toast'],
       ['modal', 'Modal'],

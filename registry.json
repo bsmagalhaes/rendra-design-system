@@ -96,7 +96,7 @@
       "name": "catalog",
       "type": "registry:item",
       "title": "Catálogo de componentes",
-      "description": "Código de cada componente e variante (ABA-001, BTN-001...), usado no data-rendra, na vitrine (/componentes) e no BRIEFING_MODELO. Todo componente de src/components/ui depende dele.",
+      "description": "Código de cada componente e variante (ABA-001, BTN-001...), usado no data-rendra, na vitrine (/componentes) e no BRIEFING_MODELO. Os componentes com variante (os que calculam o data-rendra com resolveCatalogCode) dependem dele.",
       "dependencies": [],
       "registryDependencies": [],
       "files": [
@@ -811,7 +811,7 @@
           "target": "src/components/ui/modal.tsx"
         }
       ],
-      "meta": { "codes": ["MOD-001", "MOD-002"] }
+      "meta": { "codes": ["MOD-001", "MOD-002", "MOD-003"] }
     },
     {
       "name": "otp-input",

@@ -88,7 +88,7 @@ export function NavigationSection() {
         description="Variante linha ou pílula. Se as abas não couberem na largura do bloco, viram um Select, sem rolagem lateral. Diminua a janela para ver."
         props="items (value, label, icon, count, content), variant (line | pill), value, onChange"
       >
-        <Row label="Linha (padrão), com ícone e contador" code="ABA-001">
+        <Row label="Linha (padrão), com ícone e contador" code="ABA-001" block>
           <Tabs
             aria-label="Seções do cliente"
             items={[
@@ -119,6 +119,7 @@ export function NavigationSection() {
         <Row
           label="Pílula, com ícone e contador (variação de exibição, mesmo código)"
           code="ABA-002"
+          block
         >
           <Tabs
             variant="pill"
@@ -137,7 +138,10 @@ export function NavigationSection() {
             ]}
           />
         </Row>
-        <Row label="Muitas abas: vira Select sozinho quando não cabe (automático, sem código)">
+        <Row
+          label="Muitas abas: vira Select sozinho quando não cabe (automático, sem código)"
+          block
+        >
           <Tabs
             aria-label="Muitas abas"
             items={[
@@ -160,7 +164,11 @@ export function NavigationSection() {
         description="No desktop mostra a trilha completa. No mobile vira botão voltar com o nome da tela atual."
         props="items: { label, to? }[], variant (responsive | trail)"
       >
-        <Row label="Responsiva (padrão): trilha no desktop, botão voltar no celular" code="BRD-001">
+        <Row
+          label="Responsiva (padrão): trilha no desktop, botão voltar no celular"
+          code="BRD-001"
+          block
+        >
           <Breadcrumb
             items={[
               { label: 'Painel', to: '/' },
@@ -169,7 +177,7 @@ export function NavigationSection() {
             ]}
           />
         </Row>
-        <Row label="Trilha em texto (usada no header do AppShell)" code="BRD-002">
+        <Row label="Trilha em texto (usada no header do AppShell)" code="BRD-002" block>
           <Breadcrumb
             variant="trail"
             items={[
