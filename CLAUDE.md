@@ -48,13 +48,13 @@ npm run build         # build de produção
 
 ## Matriz de modelos (inegociável)
 
-| Etapa | Modelo | Confronta código |
-|---|---|---|
-| Levantamento | Fable | Sim |
-| Plano e spec | Sonnet | Não, usa o briefing |
-| Validação do plano | Opus | Sim |
-| Execução | Sonnet | Não |
-| Validação da entrega | Fable | Sim |
+| Etapa                | Modelo | Confronta código    |
+| -------------------- | ------ | ------------------- |
+| Levantamento         | Fable  | Sim                 |
+| Plano e spec         | Sonnet | Não, usa o briefing |
+| Validação do plano   | Opus   | Sim                 |
+| Execução             | Sonnet | Não                 |
+| Validação da entrega | Fable  | Sim                 |
 
 Nenhum modelo valida o que ele mesmo escreveu.
 
