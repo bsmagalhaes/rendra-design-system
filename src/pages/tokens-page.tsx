@@ -164,22 +164,42 @@ const semantic = [
 ] as const
 
 const neutrals = [
-  { token: 'background', swatch: 'bg-background', fg: '--foreground', note: 'Fundo da aplicação' },
-  { token: 'card', swatch: 'bg-card', fg: '--card-foreground', note: 'Superfície de conteúdo' },
+  {
+    token: 'background',
+    swatch: 'bg-background',
+    fg: '--rendra-foreground',
+    note: 'Fundo da aplicação',
+  },
+  {
+    token: 'card',
+    swatch: 'bg-card',
+    fg: '--rendra-card-foreground',
+    note: 'Superfície de conteúdo',
+  },
   {
     token: 'muted',
     swatch: 'bg-muted',
-    fg: '--muted-foreground',
+    fg: '--rendra-muted-foreground',
     note: 'Apoio e texto secundário',
   },
   {
     token: 'secondary',
     swatch: 'bg-secondary',
-    fg: '--secondary-foreground',
+    fg: '--rendra-secondary-foreground',
     note: 'Botão secundário',
   },
-  { token: 'accent', swatch: 'bg-accent', fg: '--accent-foreground', note: 'Hover e item ativo' },
-  { token: 'popover', swatch: 'bg-popover', fg: '--popover-foreground', note: 'Menus e painéis' },
+  {
+    token: 'accent',
+    swatch: 'bg-accent',
+    fg: '--rendra-accent-foreground',
+    note: 'Hover e item ativo',
+  },
+  {
+    token: 'popover',
+    swatch: 'bg-popover',
+    fg: '--rendra-popover-foreground',
+    note: 'Menus e painéis',
+  },
 ] as const
 
 const typeScale = [
@@ -354,11 +374,14 @@ export function TokensPage() {
                 <div className="grid grid-cols-2 overflow-hidden rounded-control border">
                   <div className={cn('flex flex-col items-start gap-4 p-4', c.base)}>
                     <span className="text-sm font-medium">{c.title}</span>
-                    <RatioChip fg={`--${c.name}-foreground`} bg={`--${c.name}`} />
+                    <RatioChip fg={`--rendra-${c.name}-foreground`} bg={`--rendra-${c.name}`} />
                   </div>
                   <div className={cn('flex flex-col items-start gap-4 p-4', c.hover)}>
                     <span className="text-sm font-medium">Hover</span>
-                    <RatioChip fg={`--${c.name}-hover-foreground`} bg={`--${c.name}-hover`} />
+                    <RatioChip
+                      fg={`--rendra-${c.name}-hover-foreground`}
+                      bg={`--rendra-${c.name}-hover`}
+                    />
                   </div>
                 </div>
                 <Inline gap="3">
@@ -428,18 +451,21 @@ export function TokensPage() {
                 <div className={cn('flex flex-col gap-6 p-4', s.fill)}>
                   <div className="flex items-start justify-between gap-2">
                     <span className="text-sm font-medium">{s.title}</span>
-                    <RatioChip fg={`--${s.name}-foreground`} bg={`--${s.name}`} />
+                    <RatioChip fg={`--rendra-${s.name}-foreground`} bg={`--rendra-${s.name}`} />
                   </div>
                   <span className="text-2xl font-semibold">Aa</span>
                 </div>
                 <div className={cn('flex items-center justify-between gap-2 p-4', s.soft)}>
                   <span className="text-sm font-medium">Suave</span>
-                  <RatioChip fg={`--${s.name}-soft-foreground`} bg={`--${s.name}-soft`} />
+                  <RatioChip
+                    fg={`--rendra-${s.name}-soft-foreground`}
+                    bg={`--rendra-${s.name}-soft`}
+                  />
                 </div>
                 {s.name === 'primary' && (
                   <div className="flex items-center justify-between gap-2 border-t p-4">
                     <span className="text-sm font-medium text-primary-text">Como texto</span>
-                    <RatioChip fg="--primary-text" bg="--card" />
+                    <RatioChip fg="--rendra-primary-text" bg="--rendra-card" />
                   </div>
                 )}
                 <div className="flex flex-wrap gap-x-3 gap-y-1 border-t p-4 font-mono text-xs text-muted-foreground">
@@ -467,7 +493,7 @@ export function TokensPage() {
                   <div className="flex min-w-0 flex-col gap-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <code className="font-mono text-xs">{n.token}</code>
-                      <RatioChip fg={n.fg} bg={`--${n.token}`} />
+                      <RatioChip fg={n.fg} bg={`--rendra-${n.token}`} />
                     </div>
                     <span className="text-xs text-muted-foreground">{n.note}</span>
                   </div>
@@ -487,7 +513,7 @@ export function TokensPage() {
                 <div className="flex flex-col gap-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <code className="font-mono text-xs">input</code>
-                    <RatioChip fg="--input" bg="--card" min={3} />
+                    <RatioChip fg="--rendra-input" bg="--rendra-card" min={3} />
                   </div>
                   <span className="text-xs text-muted-foreground">Contorno de campos</span>
                 </div>
@@ -497,7 +523,7 @@ export function TokensPage() {
                 <div className="flex flex-col gap-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <code className="font-mono text-xs">ring</code>
-                    <RatioChip fg="--ring" bg="--background" min={3} />
+                    <RatioChip fg="--rendra-ring" bg="--rendra-background" min={3} />
                   </div>
                   <span className="text-xs text-muted-foreground">Foco visível</span>
                 </div>
@@ -583,7 +609,7 @@ export function TokensPage() {
           <Section
             id="raio"
             title="Raio"
-            description="Um token base (--radius) e derivados. Mudar o base arredonda o sistema inteiro."
+            description="Um token base (--rendra-radius) e derivados. Mudar o base arredonda o sistema inteiro."
           >
             <Panel className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               {radii.map((r) => (
