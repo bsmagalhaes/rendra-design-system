@@ -5,6 +5,7 @@ import type { FeedbackType } from '@/brand'
 import { Grid, Inline, Stack } from '@/components/layout'
 import { Alert } from '@/components/ui/alert'
 import { BrandFeedbackIcon, feedbackLabels } from '@/components/ui/brand-feedback-icon'
+import { BrandLogo } from '@/components/ui/brand-logo'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { EmptyState } from '@/components/ui/empty-state'
@@ -71,6 +72,20 @@ export function FeedbackSection() {
             </Stack>
           ))}
         </Grid>
+      </Demo>
+
+      <Demo
+        id="logotipo"
+        title="Logotipo da marca"
+        description="O selo com o símbolo do modelo e as cores da paleta ativa, então acompanha o tema. Sobre a sidebar usa on=sidebar, sobre o degradê do login on=brand; aqui, sobre o card, on=surface."
+        props="on (sidebar, surface, brand), symbolOnly, size (sm, md)"
+        code="LOGO-001"
+      >
+        <Inline gap="8" align="center">
+          <BrandLogo />
+          <BrandLogo size="sm" />
+          <BrandLogo symbolOnly />
+        </Inline>
       </Demo>
 
       <Demo
@@ -169,7 +184,7 @@ export function FeedbackSection() {
         description="Só para confirmações, mensagens e formulários de até 3 campos. No celular ocupa a tela inteira, com o rodapé fixo e os botões 30/70."
         props="type (confirm, destructive, info, form), size (sm, md, lg), title, description, confirmLabel, cancelLabel, onConfirm (assíncrono), formId, loading"
       >
-        <Row label="Tipos (confirm, destructive e info usam o mesmo código; form usa outro)">
+        <Row label="Tipos (confirm e destructive usam o mesmo código; info e form têm o seu)">
           <Stack gap="1" align="center">
             <Button variant="outline" onClick={() => setModal('confirm')}>
               Confirmação
@@ -186,7 +201,7 @@ export function FeedbackSection() {
             <Button variant="outline" icon={<Info />} onClick={() => setModal('info')}>
               Informativo
             </Button>
-            <CatalogCode code="MOD-001" />
+            <CatalogCode code="MOD-003" />
           </Stack>
           <Stack gap="1" align="center">
             <Button variant="outline" icon={<UserPlus />} onClick={() => setModal('form')}>

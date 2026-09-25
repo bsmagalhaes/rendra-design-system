@@ -4,7 +4,6 @@ import { describe, expect, it } from 'vitest'
 import { colorCodes, menuCodes, themeCodes } from '@/config/presets'
 import {
   CATALOG,
-  CATALOG_DATA_RENDRA_EXCEPTIONS,
   CATALOG_EXCLUDED_FILES,
   COMPONENT_CODE_PATTERN,
   assertCatalogIntegrity,
@@ -144,20 +143,108 @@ describe('catálogo de componentes: sem colisão com os códigos de modelo (T/C/
   })
 })
 
+/** Escapa um texto para uso literal dentro de uma RegExp. */
+function escapeRegExp(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+/**
+ * O valor aparece no código-fonte como literal entre aspas ('line', "pill") ou como chave de
+ * objeto (variants: { primary: '...' } do cva, ou 'primary': ...). Palavra solta em
+ * comentário ou nome de variável não conta.
+ */
+function sourceDeclaresVariant(source: string, value: string): boolean {
+  const v = escapeRegExp(value)
+  // Chave de objeto: depois de "{" ou "," ou no começo da linha (cva com comentário antes).
+  return new RegExp(`(['"])${v}\\1|(^|[{,])\\s*${v}\\s*:`, 'm').test(source)
+}
+
 describe('catálogo de componentes: variantProps existem de verdade no componente', () => {
-  it('todo valor de variantProps aparece como literal no arquivo do componente (checagem viável, não uma AST)', () => {
+  it('todo valor de variantProps aparece como literal entre aspas ou chave de objeto no arquivo', () => {
     for (const entry of CATALOG) {
       if (Object.keys(entry.variantProps).length === 0) continue
       const source = readFileSync(join(process.cwd(), 'src', entry.file), 'utf8')
       for (const value of Object.values(entry.variantProps)) {
         if (typeof value === 'string') {
-          // Aceita tanto o valor como literal de tipo/união ('line' | 'pill') quanto como
-          // chave de objeto sem aspas (variants: { primary: '...' } do cva).
-          const found = new RegExp(`['"]?\\b${value}\\b['"]?`).test(source)
-          expect(found, `${entry.code}: "${value}" não aparece em ${entry.file}`).toBe(true)
+          expect(
+            sourceDeclaresVariant(source, value),
+            `${entry.code}: "${value}" não aparece em ${entry.file}`,
+          ).toBe(true)
         }
       }
     }
+  })
+
+  it('a checagem recusa o valor solto (comentário ou nome) e aceita aspas e chave de objeto', () => {
+    expect(sourceDeclaresVariant('// variante pill, em comentário', 'pill')).toBe(false)
+    expect(sourceDeclaresVariant('const pillWidth = 2', 'pill')).toBe(false)
+    expect(sourceDeclaresVariant("variant: 'line' | 'pill'", 'pill')).toBe(true)
+    expect(sourceDeclaresVariant('variant: "pill"', 'pill')).toBe(true)
+    expect(sourceDeclaresVariant("variants: { primary: 'bg-primary' }", 'primary')).toBe(true)
+    expect(sourceDeclaresVariant("{\n  ghost: 'x',\n}", 'ghost')).toBe(true)
+    expect(sourceDeclaresVariant("{\n  // comentário\n  ghost: 'x',\n}", 'ghost')).toBe(true)
+    expect(sourceDeclaresVariant('{\n  // ghost: comentado\n}', 'ghost')).toBe(false)
+  })
+})
+
+/** Códigos literais de data-rendra="XXX-000" num código-fonte. */
+function literalDataRendraCodes(source: string): string[] {
+  return [...source.matchAll(/data-rendra="([A-Z]{3,4}-\d{3})"/g)].map((m) => m[1]!)
+}
+
+/** Componentes com mais de uma entrada no catálogo para o mesmo arquivo. */
+function componentsWithVariants(file: string): string[] {
+  const count = new Map<string, number>()
+  for (const entry of CATALOG.filter((e) => e.file === file)) {
+    count.set(entry.component, (count.get(entry.component) ?? 0) + 1)
+  }
+  return [...count].filter(([, n]) => n > 1).map(([component]) => component)
+}
+
+describe('catálogo de componentes: data-rendra no código dos componentes', () => {
+  it('extrai só os data-rendra literais no formato do catálogo', () => {
+    const source =
+      'a data-rendra="BTN-001" b data-rendra={code} c data-rendra="x-1" d data-rendra="ABA-002"'
+    expect(literalDataRendraCodes(source)).toEqual(['BTN-001', 'ABA-002'])
+  })
+
+  it('todo data-rendra literal de src/components/ui existe no catálogo, com o arquivo certo', () => {
+    for (const file of realUiFiles()) {
+      const source = readFileSync(join(process.cwd(), 'src', file), 'utf8')
+      for (const code of literalDataRendraCodes(source)) {
+        const entry = getCatalogEntry(code)
+        expect(entry, `${file}: data-rendra="${code}" não existe no catálogo`).toBeDefined()
+        expect(entry?.file, `${file}: data-rendra="${code}" é de outro arquivo`).toBe(file)
+      }
+    }
+  })
+
+  it('arquivo com mais de uma variante do mesmo componente resolve o código com resolveCatalogCode', () => {
+    for (const file of realUiFiles()) {
+      const components = componentsWithVariants(file)
+      if (components.length === 0) continue
+      const source = readFileSync(join(process.cwd(), 'src', file), 'utf8')
+      expect(
+        /import\s*\{[^}]*\bresolveCatalogCode\b[^}]*\}\s*from\s*'@\/catalog\/components'/.test(
+          source,
+        ),
+        `${file} (${components.join(', ')}) precisa importar resolveCatalogCode`,
+      ).toBe(true)
+    }
+  })
+
+  it('toda entrada do catálogo aparece na vitrine (/componentes)', () => {
+    const showcaseDir = join(process.cwd(), 'src/pages/showcase')
+    const sources = [
+      ...readdirSync(showcaseDir)
+        .filter((name) => name.endsWith('.tsx') && !name.endsWith('.test.tsx'))
+        .map((name) => readFileSync(join(showcaseDir, name), 'utf8')),
+      readFileSync(join(process.cwd(), 'src/pages/components-page.tsx'), 'utf8'),
+    ].join('\n')
+    const missing = CATALOG.filter(
+      (entry) => !sources.includes(`'${entry.code}'`) && !sources.includes(`"${entry.code}"`),
+    )
+    expect(missing.map((entry) => entry.code)).toEqual([])
   })
 })
 
@@ -187,14 +274,6 @@ describe('helpers do catálogo', () => {
 
   it('resolveCatalogCode lança para um componente sem nenhum código cadastrado', () => {
     expect(() => resolveCatalogCode('ComponenteQueNaoExiste')).toThrow()
-  })
-})
-
-describe('exceções documentadas de data-rendra', () => {
-  it('toda exceção aponta para um código que existe de verdade no catálogo', () => {
-    for (const code of Object.keys(CATALOG_DATA_RENDRA_EXCEPTIONS)) {
-      expect(getCatalogEntry(code)).toBeDefined()
-    }
   })
 })
 

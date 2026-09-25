@@ -21,9 +21,34 @@ import { Table } from '@/components/ui/table'
 import { clientColumns } from '@/pages/app/client-columns'
 import { Timeline } from '@/components/ui/timeline'
 import { toast } from '@/components/ui/toast'
+import { WidgetGrid, type Widget } from '@/components/ui/widget-grid'
 import { bySegment, clients, monthly, statusTone, type Client } from '@/mocks/clients'
 import { formatCurrency } from '@/lib/masks'
 import { CatalogCode, Demo, GroupTitle, Row } from './demo'
+
+/* Widgets de exemplo para a vitrine do WidgetGrid (cada um já é um card). */
+const demoWidgets: Widget[] = [
+  {
+    id: 'receita',
+    w: 4,
+    h: 2,
+    content: <StatCard label="Receita do mês" value={formatCurrency(61300)} change={4.4} />,
+  },
+  {
+    id: 'clientes',
+    w: 4,
+    h: 2,
+    content: <StatCard label="Clientes ativos" value="1.284" change={2.1} />,
+  },
+  {
+    id: 'custo',
+    w: 4,
+    h: 2,
+    content: (
+      <StatCard label="Custo por cliente" value={formatCurrency(38.9)} change={-3.2} inverse />
+    ),
+  },
+]
 
 export function DataSection() {
   const [search, setSearch] = useState('')
@@ -44,9 +69,9 @@ export function DataSection() {
       <Demo
         id="table"
         title="Table"
-        description="Barra de ferramentas no mesmo card. Seleção na primeira coluna, ações na última com largura fixa, números à direita, datas curtas e texto com até 3 linhas. No celular vira cards com 'Ver detalhes' e ações em massa numa barra fixa no rodapé."
+        description="Barra de ferramentas (DataToolbar, prop toolbar) no mesmo card. Seleção na primeira coluna, ações na última com largura fixa, números à direita, datas curtas e texto com até 3 linhas. No celular vira cards com 'Ver detalhes' e ações em massa numa barra fixa no rodapé."
         props="columns (kind, mobile, lines, sortable, hideable), selectable, expandable, sortable, globalFilter, columnVisibility, bulkActions, rowActions, density, loading, error, empty, pageSize, mobilePagination, toolbar"
-        code="TAB-001"
+        code={['TAB-001', 'DTB-001']}
         bare
       >
         <Grid cols={{ base: 1, md: 2 }} gap="4">
@@ -523,6 +548,17 @@ export function DataSection() {
             />
           </Stack>
         </Grid>
+      </Demo>
+
+      <Demo
+        id="widgets"
+        title="WidgetGrid"
+        description="Painel em widgets que se encaixam sozinhos. Com editable, dá para arrastar e redimensionar, e a arrumação fica salva no navegador; no celular, os widgets empilham. A tela Painel mostra a edição com Ajustar dashboard."
+        props="widgets (id, w, h, minW, minH, content), editable, storageKey"
+        code="WDG-001"
+        bare
+      >
+        <WidgetGrid widgets={demoWidgets} />
       </Demo>
     </>
   )

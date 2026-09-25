@@ -36,6 +36,7 @@ export default defineConfig({
         'src/hooks/**',
         'src/components/ui/**',
         'scripts/lib/**',
+        'src/catalog/**',
       ],
       exclude: ['**/*.test.{ts,tsx}'],
       reporter: ['text-summary', 'html'],
@@ -46,6 +47,7 @@ export default defineConfig({
         'src/brand/palette.ts': { lines: 90 },
         'src/hooks/use-lookup.ts': { lines: 90 },
         'scripts/lib/var-prefix.ts': { lines: 90 },
+        'src/catalog/components.ts': { lines: 90 },
         'src/components/ui/{input,select,modal,alert,accordion,checkbox,field,radio-group,switch,tabs,textarea}.tsx':
           { lines: 85 },
         'src/components/ui/{table,drawer,button}.tsx': { lines: 75 },

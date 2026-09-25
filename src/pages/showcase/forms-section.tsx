@@ -7,9 +7,10 @@ import { Grid, Inline, Stack } from '@/components/layout'
 import { ActionBar } from '@/components/ui/action-bar'
 import { Checkbox, CheckboxGroup } from '@/components/ui/checkbox'
 import { DatePicker, type DateRange } from '@/components/ui/date-picker'
-import { Field } from '@/components/ui/field'
+import { Field, Label } from '@/components/ui/field'
 import { Form, FormField, FormSection } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { OtpInput } from '@/components/ui/otp-input'
 import { RadioGroup } from '@/components/ui/radio-group'
 import { Select, type SelectOption } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
@@ -20,7 +21,7 @@ import { toast } from '@/components/ui/toast'
 import { Upload } from '@/components/ui/upload'
 import { formatCurrency } from '@/lib/masks'
 import { zBR } from '@/lib/validators'
-import { CatalogCode, Demo, fakeUpload, GroupTitle, wait } from './demo'
+import { CatalogCode, Demo, fakeUpload, GroupTitle, Row, wait } from './demo'
 
 const cities: SelectOption[] = [
   'São Paulo',
@@ -214,6 +215,7 @@ export function FormsSection() {
   const [range, setRange] = useState<DateRange | null>(null)
   const [dateTime, setDateTime] = useState<Date | null>(null)
   const [price, setPrice] = useState([40])
+  const [otp, setOtp] = useState('')
   const [band, setBand] = useState([1200, 6400])
   const [checks, setChecks] = useState<string[]>(['email'])
   const [radio, setRadio] = useState('mensal')
@@ -225,6 +227,35 @@ export function FormsSection() {
         title="Formulário"
         description="Rótulo acima, obrigatório marcado, erro abaixo em espaço reservado. Inputs com 16px no mobile para o iOS não dar zoom."
       />
+
+      <Demo
+        id="field"
+        title="Field e Label"
+        description="A moldura de todo campo: rótulo acima, obrigatório marcado no rótulo, ajuda curta abaixo e erro no lugar da ajuda. O Label sozinho serve para um controle fora do Field."
+        props="Field (label, required, help, error, span, newRow, reserveMessage, id) · Label (required, htmlFor)"
+      >
+        <Row label="Field com rótulo, obrigatório, ajuda e erro" code="FLD-001" block>
+          <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="fields">
+            <Field label="Nome" required>
+              <Input />
+            </Field>
+            <Field label="E-mail" help="Usado para enviar a nota fiscal.">
+              <Input type="email" />
+            </Field>
+            <Field label="Telefone" required error="Informe um telefone válido.">
+              <Input mask="phone" invalid />
+            </Field>
+          </Grid>
+        </Row>
+        <Row label="Label sozinho, ligado a um controle" code="FLD-002" block>
+          <Stack gap="2">
+            <Label htmlFor="vitrine-label-apelido" required>
+              Apelido
+            </Label>
+            <Input id="vitrine-label-apelido" />
+          </Stack>
+        </Row>
+      </Demo>
 
       <Demo
         id="input"
@@ -542,6 +573,22 @@ export function FormsSection() {
       >
         <Field label="Documentos" help="PDF ou imagem, até 5 MB cada.">
           <Upload accept="image/*,.pdf" maxSizeMb={5} onUpload={fakeUpload} />
+        </Field>
+      </Demo>
+
+      <Demo
+        id="otp"
+        title="OtpInput"
+        description="Código de verificação em caixas separadas, para SMS ou e-mail. Aceita colar o código inteiro, avança sozinho e abre o teclado numérico no celular."
+        props="length, value, onChange, onComplete, invalid, disabled, id"
+        code="OTP-001"
+      >
+        <Field label="Código de verificação" help="Enviado por SMS.">
+          <OtpInput
+            value={otp}
+            onChange={setOtp}
+            onComplete={(v) => toast.success(`Código ${v} conferido`)}
+          />
         </Field>
       </Demo>
 

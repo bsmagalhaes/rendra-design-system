@@ -54,4 +54,29 @@ describe('Row', () => {
     expect(screen.getByText('Variante pílula')).toBeInTheDocument()
     expect(screen.getByText('ABA-002')).toBeInTheDocument()
   })
+
+  it('com block, empilha os filhos na largura total (Stack) em vez de lado a lado', () => {
+    renderApp(
+      <>
+        <Row label="Em bloco" block>
+          <p>filho em bloco</p>
+        </Row>
+        <Row label="Em linha">
+          <p>filho em linha</p>
+        </Row>
+      </>,
+    )
+    expect(screen.getByText('filho em bloco').parentElement).toHaveClass('flex-col')
+    expect(screen.getByText('filho em linha').parentElement).not.toHaveClass('flex-col')
+  })
+
+  it('aceita mais de um código na mesma variante', () => {
+    renderApp(
+      <Row label="Mensagens" code={['CHAT-002', 'CHAT-003']}>
+        <p>conteúdo</p>
+      </Row>,
+    )
+    expect(screen.getByText('CHAT-002')).toBeInTheDocument()
+    expect(screen.getByText('CHAT-003')).toBeInTheDocument()
+  })
 })

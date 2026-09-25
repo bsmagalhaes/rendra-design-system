@@ -73,7 +73,10 @@ export function Modal({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-overlay data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0" />
         <Dialog.Content
-          data-rendra={resolveCatalogCode('Modal', { type })}
+          // destructive tem o mesmo formato do confirm (só muda a cor): mesmo código, MOD-001.
+          data-rendra={resolveCatalogCode('Modal', {
+            type: type === 'destructive' ? 'confirm' : type,
+          })}
           className={cn(
             // Mobile: tela inteira. Desktop: centralizado.
             'fixed inset-0 z-50 flex h-dvh flex-col bg-card text-card-foreground outline-none',

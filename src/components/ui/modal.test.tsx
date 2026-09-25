@@ -37,6 +37,24 @@ describe('Modal', () => {
     )
   })
 
+  it('type="info" usa o código próprio MOD-003, com um botão só', () => {
+    renderApp(<Harness type="info" />)
+    expect(screen.getByRole('dialog', { name: 'Excluir cliente?' })).toHaveAttribute(
+      'data-rendra',
+      'MOD-003',
+    )
+    expect(screen.getByRole('button', { name: 'Entendi' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Cancelar' })).not.toBeInTheDocument()
+  })
+
+  it('type="destructive" mantém o código do confirm, MOD-001 (só muda a cor)', () => {
+    renderApp(<Harness type="destructive" />)
+    expect(screen.getByRole('dialog', { name: 'Excluir cliente?' })).toHaveAttribute(
+      'data-rendra',
+      'MOD-001',
+    )
+  })
+
   it('ação assíncrona: carrega até terminar e só então fecha', async () => {
     let finish = () => {}
     const onConfirm = vi.fn(() => new Promise<void>((r) => (finish = r)))

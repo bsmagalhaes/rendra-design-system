@@ -41,17 +41,6 @@ export const CATALOG_EXCLUDED_FILES = [
   'components/ui/picker-panel.tsx',
 ]
 
-/**
- * Componentes catalogados cujo `data-rendra` não é verificável por um teste comum de
- * renderização (motivo registrado ao lado de cada um; exigido pelo teste de integridade).
- */
-export const CATALOG_DATA_RENDRA_EXCEPTIONS: Record<string, string> = {
-  'TST-001':
-    'O toast é uma função imperativa (toast.success/error/...): o elemento só existe quando ' +
-    'o Sonner o desenha, de forma assíncrona, dentro do portal do <Toaster />, fora da árvore ' +
-    'React do componente que chamou a função.',
-}
-
 export const CATALOG: ComponentCatalogEntry[] = [
   // ---------------------------------------------------------------- accordion
   {
@@ -460,7 +449,8 @@ export const CATALOG: ComponentCatalogEntry[] = [
     file: 'components/ui/modal.tsx',
     variantProps: { type: 'confirm' },
     whenToUse:
-      'Para confirmar, avisar ou informar algo com uma ação principal e no máximo uma secundária.',
+      'Para confirmar uma ação com uma principal e uma de cancelar; type="destructive" usa o ' +
+      'mesmo código, porque só muda a cor.',
   },
   {
     code: 'MOD-002',
@@ -469,6 +459,15 @@ export const CATALOG: ComponentCatalogEntry[] = [
     file: 'components/ui/modal.tsx',
     variantProps: { type: 'form' },
     whenToUse: 'Para um formulário de até 3 campos simples, sem sair da tela atual.',
+  },
+  {
+    code: 'MOD-003',
+    name: 'Modal informativo',
+    component: 'Modal',
+    file: 'components/ui/modal.tsx',
+    variantProps: { type: 'info' },
+    whenToUse:
+      'Para só informar algo, sem decisão a tomar: um botão só, de largura total, que fecha o modal.',
   },
   // ---------------------------------------------------------------- otp-input
   {

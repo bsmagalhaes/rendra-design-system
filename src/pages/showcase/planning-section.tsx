@@ -1,17 +1,25 @@
 import { useMemo, useState } from 'react'
+import { Stack } from '@/components/layout'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
+import { ChatComposer, ChatThread, ConversationList, type ChatMessage } from '@/components/ui/chat'
 import { ImageViewer } from '@/components/ui/image-viewer'
 import { Kanban, moveKanbanCard, type KanbanCard } from '@/components/ui/kanban'
 import { toast } from '@/components/ui/toast'
+import { demoTickets } from '@/mocks/chat'
 import { demoCards, demoEvents, pipelineColumns } from '@/mocks/planning'
-import { Demo } from './demo'
+import { Demo, Row } from './demo'
 
-/* Vitrine: calendário, kanban e visualizador de imagens. */
+/* Vitrine: calendário, kanban, atendimento (chat) e visualizador de imagens. */
 export function PlanningSection() {
   const events = useMemo(() => demoEvents(), [])
   const [cards, setCards] = useState<KanbanCard[]>(() => demoCards())
   const [image, setImage] = useState<number | null>(null)
+  const tickets = useMemo(() => demoTickets().slice(0, 3), [])
+  const [activeTicket, setActiveTicket] = useState<string | null>(tickets[0]?.id ?? null)
+  const [messages, setMessages] = useState<ChatMessage[]>(
+    () => tickets[0]?.messages.slice(0, 3) ?? [],
+  )
   const images = useMemo(() => {
     const files = import.meta.glob<string>('../../../docs/images/safira-*.png', {
       eager: true,
@@ -57,6 +65,29 @@ export function PlanningSection() {
           onCardMove={(id, to, index) => setCards((l) => moveKanbanCard(l, id, to, index))}
           onAddCard={() => toast.info('Novo card')}
         />
+      </Demo>
+      <Demo
+        id="atendimento"
+        title="Atendimento (chat)"
+        description="Três peças do atendimento omnichannel: a lista de conversas, as mensagens e o campo de mensagem, que cresce com o texto e aceita anexos por botão, arrastar e soltar ou colar. A tela Atendimento junta as três na altura da tela."
+        props="ConversationList (items, activeId, onSelect, empty) · ChatThread (messages, onReply, onReact, onEdit, onDelete) · ChatComposer (onSend, placeholder, disabled, accept, quickReplies)"
+      >
+        <Row label="Lista de conversas" code="CHAT-001" block>
+          <ConversationList items={tickets} activeId={activeTicket} onSelect={setActiveTicket} />
+        </Row>
+        <Row label="Mensagens e campo de mensagem" code={['CHAT-002', 'CHAT-003']} block>
+          <Stack gap="0">
+            <ChatThread messages={messages} />
+            <ChatComposer
+              onSend={({ text }) =>
+                setMessages((list) => [
+                  ...list,
+                  { id: `vitrine-${list.length}`, from: 'agent', text, time: new Date() },
+                ])
+              }
+            />
+          </Stack>
+        </Row>
       </Demo>
       <Demo
         id="visualizador"
