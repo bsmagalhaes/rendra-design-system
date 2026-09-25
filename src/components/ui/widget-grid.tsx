@@ -103,6 +103,7 @@ export function WidgetGrid({ widgets, editable = false, storageKey, className }:
   return (
     <div
       ref={containerRef}
+      data-rendra="WDG-001"
       className={cn('widget-grid min-w-0', editable && !mobile && 'is-editing', className)}
     >
       {mounted && (

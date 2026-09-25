@@ -594,6 +594,7 @@ export function Calendar({
 
   return (
     <Card
+      data-rendra="CAL-001"
       className={cn('overflow-hidden', className)}
       aria-label={aria['aria-label'] ?? 'Calendário'}
       role="region"

@@ -13,6 +13,7 @@ describe('Input', () => {
     render(<Input aria-label="Nome" onChange={onChange} />)
     await userEvent.type(screen.getByLabelText('Nome'), 'Ana')
     expect(onChange).toHaveBeenLastCalledWith('Ana')
+    expect(screen.getByLabelText('Nome').closest('[data-rendra="CAMP-001"]')).toBeInTheDocument()
   })
 
   it('aplica a máscara de CPF e entrega o valor sem máscara', async () => {

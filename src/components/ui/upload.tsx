@@ -110,7 +110,7 @@ export function Upload({
   }
 
   return (
-    <div className="flex min-w-0 flex-col gap-3">
+    <div data-rendra="UPL-001" className="flex min-w-0 flex-col gap-3">
       <label
         htmlFor={inputId}
         onDragOver={(e) => {

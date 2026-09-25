@@ -862,6 +862,7 @@ export function Table<T>({
   const total = filteredCount
   return (
     <Card
+      data-rendra="TAB-001"
       className="overflow-hidden"
       aria-busy={isLoading || server.loading || undefined}
       // Marca a carga remota (os testes esperam a primeira página chegar).

@@ -8,14 +8,17 @@ import { Checkbox, CheckboxGroup } from './checkbox'
 describe('Checkbox e CheckboxGroup', () => {
   it('marca pelo rótulo', async () => {
     const onCheckedChange = vi.fn()
-    renderApp(<Checkbox label="Aceito os termos" onCheckedChange={onCheckedChange} />)
+    const { container } = renderApp(
+      <Checkbox label="Aceito os termos" onCheckedChange={onCheckedChange} />,
+    )
     await userEvent.click(screen.getByText('Aceito os termos'))
     expect(onCheckedChange).toHaveBeenCalledWith(true)
+    expect(container.querySelector('[data-rendra="CHK-001"]')).toBeInTheDocument()
   })
 
   it('grupo com selecionar todos', async () => {
     const onChange = vi.fn()
-    renderApp(
+    const { container } = renderApp(
       <CheckboxGroup
         aria-label="Canais"
         selectAll
@@ -30,5 +33,6 @@ describe('Checkbox e CheckboxGroup', () => {
     expect(onChange).toHaveBeenLastCalledWith(['email'])
     await userEvent.click(screen.getByRole('checkbox', { name: /todos/i }))
     expect(onChange).toHaveBeenLastCalledWith(['email', 'sms'])
+    expect(container.querySelector('[data-rendra="CHK-002"]')).toBeInTheDocument()
   })
 })

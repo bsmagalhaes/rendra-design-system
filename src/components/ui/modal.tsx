@@ -1,5 +1,6 @@
 import { Dialog } from 'radix-ui'
 import { useState, type ReactNode } from 'react'
+import { resolveCatalogCode } from '@/catalog/components'
 import { BrandFeedbackIcon } from '@/components/ui/brand-feedback-icon'
 import { ActionBar } from '@/components/ui/action-bar'
 import { cn } from '@/lib/cn'
@@ -72,6 +73,7 @@ export function Modal({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-overlay data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0" />
         <Dialog.Content
+          data-rendra={resolveCatalogCode('Modal', { type })}
           className={cn(
             // Mobile: tela inteira. Desktop: centralizado.
             'fixed inset-0 z-50 flex h-dvh flex-col bg-card text-card-foreground outline-none',

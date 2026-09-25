@@ -2,6 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { Loader2 } from 'lucide-react'
 import { Slot } from 'radix-ui'
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react'
+import { resolveCatalogCode } from '@/catalog/components'
 import { cn } from '@/lib/cn'
 
 /**
@@ -86,10 +87,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     console.warn('Button com iconOnly precisa de aria-label.')
   }
   const classes = cn(buttonVariants({ variant, size, iconOnly, fullWidth }), className)
+  const code = resolveCatalogCode('Button', { variant: variant ?? 'primary' })
 
   if (asChild) {
     return (
-      <Slot.Root ref={ref} className={classes} {...props}>
+      <Slot.Root ref={ref} data-rendra={code} className={classes} {...props}>
         {children}
       </Slot.Root>
     )
@@ -100,6 +102,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     <button
       ref={ref}
       type={type}
+      data-rendra={code}
       className={classes}
       disabled={disabled || loading}
       aria-busy={loading || undefined}

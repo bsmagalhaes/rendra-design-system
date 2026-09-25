@@ -119,6 +119,7 @@ export function BrandFeedbackIcon({
   return (
     <span
       data-slot="feedback-icon"
+      data-rendra="BFI-001"
       className={cn(
         iconVariants({ type, size }),
         animated && type === 'error' && 'animate-shake',

@@ -59,6 +59,7 @@ export function ActionBar({ primary, cancel, secondary, sticky, className }: Act
 
   const bar = (
     <div
+      data-rendra="ACB-001"
       className={cn(
         sticky && 'border-t bg-card px-4 pt-4 pb-safe md:px-6',
         // Fora do AppShell (Storybook, telas soltas): fixo no fim da área rolável.

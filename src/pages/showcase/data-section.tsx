@@ -1,6 +1,6 @@
 import { Download, Eye, Mail, Pencil, Trash2, TrendingUp, Users, Wallet } from 'lucide-react'
 import { useState } from 'react'
-import { Grid, Stack } from '@/components/layout'
+import { Grid, Inline, Stack } from '@/components/layout'
 import { Accordion } from '@/components/ui/accordion'
 import { Avatar, AvatarGroup } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -23,7 +23,7 @@ import { Timeline } from '@/components/ui/timeline'
 import { toast } from '@/components/ui/toast'
 import { bySegment, clients, monthly, statusTone, type Client } from '@/mocks/clients'
 import { formatCurrency } from '@/lib/masks'
-import { Demo, GroupTitle, Row } from './demo'
+import { CatalogCode, Demo, GroupTitle, Row } from './demo'
 
 export function DataSection() {
   const [search, setSearch] = useState('')
@@ -46,6 +46,7 @@ export function DataSection() {
         title="Table"
         description="Barra de ferramentas no mesmo card. Seleção na primeira coluna, ações na última com largura fixa, números à direita, datas curtas e texto com até 3 linhas. No celular vira cards com 'Ver detalhes' e ações em massa numa barra fixa no rodapé."
         props="columns (kind, mobile, lines, sortable, hideable), selectable, expandable, sortable, globalFilter, columnVisibility, bulkActions, rowActions, density, loading, error, empty, pageSize, mobilePagination, toolbar"
+        code="TAB-001"
         bare
       >
         <Grid cols={{ base: 1, md: 2 }} gap="4">
@@ -197,6 +198,7 @@ export function DataSection() {
         title="StatCard"
         description="Indicador com variação. No máximo um em destaque (degradê suave) por tela. Em grid: 1 coluna no celular, 2 para cards pequenos."
         props="label, value, change, changeLabel, inverse, icon, highlight, loading, footer"
+        code="STAT-001"
       >
         <Grid cols={{ base: 1, sm: 2, xl: 4 }}>
           <StatCard
@@ -231,6 +233,7 @@ export function DataSection() {
         title="Card"
         description="Agrupa conteúdo de página, com borda de 1px. Nunca card dentro de card nem rolagem dentro de card."
         props="CardHeader, CardTitle, CardDescription, CardContent, CardFooter"
+        code="CARD-001"
       >
         <Grid cols={{ base: 1, md: 2 }}>
           <Card>
@@ -264,6 +267,7 @@ export function DataSection() {
         title="Badge"
         description="Tom semântico suave ou sólido, com bolinha opcional."
         props="tone (neutral, primary, success, warning, error, info, outline), solid, dot"
+        code="BDG-001"
       >
         <Row label="Suaves">
           <Badge>Neutro</Badge>
@@ -305,10 +309,12 @@ export function DataSection() {
         description="Foto ou iniciais. O formato acompanha o template."
         props="Avatar (name, src, size) · AvatarGroup (people, max, size)"
       >
-        <Row label="Tamanhos e grupo">
+        <Row label="Tamanhos" code="AVT-001">
           <Avatar name="Ana Ribeiro" size="sm" />
           <Avatar name="Bruno Costa" />
           <Avatar name="Carla Mendes" size="lg" />
+        </Row>
+        <Row label="Em grupo, com o excedente" code="AVT-002">
           <AvatarGroup
             people={[
               { name: 'Ana Ribeiro' },
@@ -327,6 +333,7 @@ export function DataSection() {
         title="Lista"
         description="Linhas com início, título, descrição e fim. Navegável por prop."
         props="items (title, description, leading, trailing, to, onClick), divided, empty"
+        code="LIST-001"
       >
         <List
           items={clients.slice(0, 4).map((c) => ({
@@ -349,6 +356,7 @@ export function DataSection() {
         title="Timeline"
         description="Eventos em ordem, com tom semântico e data curta."
         props="events (title, description, date, tone, icon)"
+        code="TLN-001"
       >
         <Timeline
           events={[
@@ -377,6 +385,7 @@ export function DataSection() {
         title="Accordion"
         description="Blocos recolhíveis com animação de altura."
         props="items (value, title, content, disabled), multiple, defaultValue"
+        code="ACRN-001"
       >
         <Accordion
           defaultValue={['1']}
@@ -400,47 +409,119 @@ export function DataSection() {
       <Demo
         id="chart"
         title="Chart"
-        description="Linha, barra, área e pizza com as cores do template. No celular: legenda abaixo, eixos simplificados e opção de ver os valores em lista."
-        props="type (line, bar, area, pie), data, xKey, series (key, label, color), valueFormatter, height, listThreshold"
+        description="Linha, barra, área, pizza, combinado, velocímetro de meta e funil, com as cores do template. No celular: legenda abaixo, eixos simplificados e opção de ver os valores em lista."
+        props="type (line, bar, area, pie, combo, gauge, funnel), data, xKey, series (key, label, color, kind), valueFormatter, height, listThreshold"
       >
         <Grid cols={{ base: 1, lg: 2 }} gap="8">
-          <Chart
-            aria-label="Receita e meta por mês"
-            type="area"
-            data={monthly}
-            xKey="mes"
-            series={[
-              { key: 'receita', label: 'Receita' },
-              { key: 'meta', label: 'Meta' },
-            ]}
-            valueFormatter={(n) => `R$ ${(n / 1000).toLocaleString('pt-BR')} mil`}
-          />
-          <Chart
-            aria-label="Receita por mês"
-            type="bar"
-            data={monthly}
-            xKey="mes"
-            series={[{ key: 'receita', label: 'Receita' }]}
-            valueFormatter={(n) => `${(n / 1000).toLocaleString('pt-BR')} mil`}
-          />
-          <Chart
-            aria-label="Receita e meta em linha"
-            type="line"
-            data={monthly}
-            xKey="mes"
-            series={[
-              { key: 'receita', label: 'Receita' },
-              { key: 'meta', label: 'Meta', color: 3 },
-            ]}
-            valueFormatter={(n) => `${(n / 1000).toLocaleString('pt-BR')} mil`}
-          />
-          <Chart
-            aria-label="Clientes por segmento"
-            type="pie"
-            data={bySegment}
-            xKey="segmento"
-            series={[{ key: 'clientes', label: 'Clientes' }]}
-          />
+          <Stack gap="2">
+            <Inline gap="2" align="center">
+              <span className="text-sm font-medium">Área</span>
+              <CatalogCode code="CHT-003" />
+            </Inline>
+            <Chart
+              aria-label="Receita e meta por mês"
+              type="area"
+              data={monthly}
+              xKey="mes"
+              series={[
+                { key: 'receita', label: 'Receita' },
+                { key: 'meta', label: 'Meta' },
+              ]}
+              valueFormatter={(n) => `R$ ${(n / 1000).toLocaleString('pt-BR')} mil`}
+            />
+          </Stack>
+          <Stack gap="2">
+            <Inline gap="2" align="center">
+              <span className="text-sm font-medium">Barras</span>
+              <CatalogCode code="CHT-002" />
+            </Inline>
+            <Chart
+              aria-label="Receita por mês"
+              type="bar"
+              data={monthly}
+              xKey="mes"
+              series={[{ key: 'receita', label: 'Receita' }]}
+              valueFormatter={(n) => `${(n / 1000).toLocaleString('pt-BR')} mil`}
+            />
+          </Stack>
+          <Stack gap="2">
+            <Inline gap="2" align="center">
+              <span className="text-sm font-medium">Linha</span>
+              <CatalogCode code="CHT-001" />
+            </Inline>
+            <Chart
+              aria-label="Receita e meta em linha"
+              type="line"
+              data={monthly}
+              xKey="mes"
+              series={[
+                { key: 'receita', label: 'Receita' },
+                { key: 'meta', label: 'Meta', color: 3 },
+              ]}
+              valueFormatter={(n) => `${(n / 1000).toLocaleString('pt-BR')} mil`}
+            />
+          </Stack>
+          <Stack gap="2">
+            <Inline gap="2" align="center">
+              <span className="text-sm font-medium">Pizza</span>
+              <CatalogCode code="CHT-004" />
+            </Inline>
+            <Chart
+              aria-label="Clientes por segmento"
+              type="pie"
+              data={bySegment}
+              xKey="segmento"
+              series={[{ key: 'clientes', label: 'Clientes' }]}
+            />
+          </Stack>
+          <Stack gap="2">
+            <Inline gap="2" align="center">
+              <span className="text-sm font-medium">Combinado (barra e linha)</span>
+              <CatalogCode code="CHT-005" />
+            </Inline>
+            <Chart
+              aria-label="Receita em barras e meta em linha"
+              type="combo"
+              data={monthly}
+              xKey="mes"
+              series={[
+                { key: 'receita', label: 'Receita', kind: 'bar' },
+                { key: 'meta', label: 'Meta', kind: 'line', color: 3 },
+              ]}
+              valueFormatter={(n) => `${(n / 1000).toLocaleString('pt-BR')} mil`}
+            />
+          </Stack>
+          <Stack gap="2">
+            <Inline gap="2" align="center">
+              <span className="text-sm font-medium">Velocímetro de meta</span>
+              <CatalogCode code="CHT-006" />
+            </Inline>
+            <Chart
+              aria-label="Meta do mês"
+              type="gauge"
+              value={61300}
+              max={80000}
+              target={70000}
+              label="Receita do mês"
+              valueFormatter={formatCurrency}
+            />
+          </Stack>
+          <Stack gap="2" className="md:col-span-2">
+            <Inline gap="2" align="center">
+              <span className="text-sm font-medium">Funil</span>
+              <CatalogCode code="CHT-007" />
+            </Inline>
+            <Chart
+              aria-label="Funil de vendas"
+              type="funnel"
+              stages={[
+                { label: 'Visitas', value: 4200 },
+                { label: 'Contatos', value: 1180 },
+                { label: 'Propostas', value: 320 },
+                { label: 'Fechados', value: 96 },
+              ]}
+            />
+          </Stack>
         </Grid>
       </Demo>
     </>

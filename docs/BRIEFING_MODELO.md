@@ -4,7 +4,7 @@ Roteiro usado pela IA (e por pessoas) antes de começar. As respostas vão para 
 
 **Como conduzir**
 
-- Os blocos 1, 2 e 6 a 10 são abertos: pergunte agrupado, o bloco inteiro de uma vez.
+- Os blocos 1, 2 e 6 a 11 são abertos: pergunte agrupado, o bloco inteiro de uma vez.
 - Os blocos 3 (navegação), 4 (tema) e 5 (cores) são um **fluxo guiado**, nesta ordem: uma decisão por mensagem, com as opções numeradas, uma frase de quando usar cada uma e o padrão marcado. A resposta decide a próxima pergunta, e o que não se aplica é pulado (quem escolhe menu superior nunca ouve perguntas de sidebar).
 - Se o usuário responder várias decisões de uma vez, aceite e pule para a próxima em aberto.
 - Aceite "não sei, sugira": recomende com base nos blocos 1 e 2, explique em uma frase e peça confirmação.
@@ -182,26 +182,46 @@ Para cada tela: nome, objetivo, contêiner (página, drawer ou modal) e priorida
 | ---- | -------- | --------- | ---------- |
 |      |          |           |            |
 
-## 7. Dados
+## 7. Componentes e variantes
+
+Cada componente do design system, e cada variante visual dele (não tamanho, não tom, formato), tem um **código de catálogo**: três ou quatro letras, hífen, três dígitos (`BTN-001`, `ABA-002`). É diferente do código de modelo do bloco 3.0 (`T1-C4-M5`): aquele escolhe tema, cores e menu; este escolhe **qual variante de cada componente** a tela usa.
+
+Veja todos com `npm run dev`, abra `/componentes` e olhe o selo ao lado de cada exemplo. Diga, para cada situação abaixo, qual código quer (ou "não sei, sugira": o padrão já é uma sugestão fundamentada). O que não estiver na tabela é porque o componente **só tem um código** (é a variante única dele, sem escolha a fazer); ainda assim vale conferir o exemplo na vitrine.
+
+| Situação                                                   | Código padrão                                                      | Outras opções do mesmo componente                                                                                      |
+| ---------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| Ação principal de uma tela ou formulário                   | `BTN-001` (primário)                                               | `BTN-002` secundário, `BTN-003` contornado, `BTN-004` fantasma, `BTN-005` destrutivo, `BTN-006` link                   |
+| Dividir o conteúdo de uma tela em seções                   | `ABA-001` (linha, com sublinhado)                                  | `ABA-002` pílula (mais destaque visual)                                                                                |
+| Confirmar, avisar ou informar algo (até 1 ação secundária) | `MOD-001` (confirmação)                                            | —                                                                                                                      |
+| Cadastro rápido de até 3 campos, sem sair da tela          | `MOD-002` (formulário)                                             | —                                                                                                                      |
+| Escolher uma entre poucas opções simples                   | `RDO-001` (lista, com bolinha)                                     | `RDO-002` cartões (com ícone e descrição, mais destaque)                                                               |
+| Trilha de navegação dentro do corpo da página              | `BRD-001` (responsiva: trilha no desktop, botão voltar no celular) | `BRD-002` sempre em texto (usada no header do AppShell, não é escolha de tela)                                         |
+| Gráfico de um indicador                                    | `CHT-001` linha                                                    | `CHT-002` barras, `CHT-003` área, `CHT-004` pizza, `CHT-005` combinado, `CHT-006` velocímetro de meta, `CHT-007` funil |
+
+Componentes com um código só (exemplos comuns, veja o resto na vitrine): `CAMP-001` campo de texto, `SEL-001` select, `DTP-001` seletor de data, `TAB-001` tabela, `GAV-001` gaveta (drawer), `UPL-001` upload, `KANB-001` kanban, `CAL-001` calendário, `WIZ-001` wizard (`WIZ-002` para o indicador de etapas sozinho).
+
+- Código escolhido por situação (preencha as linhas que fizerem sentido para este projeto):
+
+## 8. Dados
 
 - Entidades principais (por exemplo cliente, contrato, pedido) e seus campos mais importantes:
 - Listagens: quais colunas, filtros e ações em massa:
 - Formulários longos (viram página em seções ou wizard):
 
-## 8. Acesso e integrações
+## 9. Acesso e integrações
 
 - Login: e-mail e senha, verificação em duas etapas, login social, SSO:
 - Perfis e permissões:
 - Integrações (API, pagamentos, e-mail, mapas):
 
-## 9. Somente para migração
+## 10. Somente para migração
 
 - Onde está o projeto atual (caminho local ou URL do repositório):
 - Stack atual (React? versão? Tailwind? bundler?):
 - Telas prioritárias para migrar, em ordem:
 - O que não pode mudar (fluxos, URLs, textos, integrações):
 
-## 10. Prazo e entrega
+## 11. Prazo e entrega
 
 - Etapas e o que precisa estar pronto primeiro:
 - Quem aprova cada etapa:

@@ -15,5 +15,6 @@ describe('Upload', () => {
     expect(await screen.findByText('contrato.pdf')).toBeInTheDocument()
     expect(screen.getByText('Arquivo maior que 1 MB.')).toBeInTheDocument()
     expect(onChange).toHaveBeenCalled()
+    expect(container.querySelector('[data-rendra="UPL-001"]')).toBeInTheDocument()
   })
 })

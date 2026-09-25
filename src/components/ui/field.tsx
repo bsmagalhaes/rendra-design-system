@@ -25,7 +25,11 @@ export function Label({
   ...props
 }: ComponentProps<typeof L.Root> & { required?: boolean }) {
   return (
-    <L.Root className={cn('text-sm font-medium text-foreground', className)} {...props}>
+    <L.Root
+      data-rendra="FLD-002"
+      className={cn('text-sm font-medium text-foreground', className)}
+      {...props}
+    >
       {children}
       {required && (
         <span className="text-destructive" aria-hidden>
@@ -116,6 +120,7 @@ export function Field({
     >
       <div
         data-slot="field"
+        data-rendra="FLD-001"
         className={cn(
           'flex min-w-0 flex-col gap-2',
           fieldSpanClass[span === 'half' ? 'md' : span],

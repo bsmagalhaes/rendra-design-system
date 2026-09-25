@@ -26,6 +26,7 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <div
+      data-rendra="VAZ-001"
       className={cn(
         'flex flex-col items-center justify-center gap-4 text-center',
         size === 'compact' ? 'px-4 py-8' : 'px-4 py-12 md:py-16',

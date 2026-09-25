@@ -37,6 +37,7 @@ export function ErrorPage({ code, title, description, fullScreen = false }: Erro
 
   return (
     <div
+      data-rendra="ERRO-001"
       className={cn(
         'flex w-full items-center justify-center px-4 py-12',
         fullScreen ? 'min-h-dvh' : 'min-h-full',

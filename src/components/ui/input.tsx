@@ -156,7 +156,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   }
 
   return (
-    <div data-slot="control" className={cn(controlFrame({ size, invalid }), className)}>
+    <div
+      data-slot="control"
+      data-rendra="CAMP-001"
+      className={cn(controlFrame({ size, invalid }), className)}
+    >
       {showDdi && (
         // Seletor nativo transparente sobre o "+55": no celular abre a lista do sistema.
         <span className="relative -ml-1 flex h-full shrink-0 items-center gap-1 border-r pr-2 text-sm font-medium">

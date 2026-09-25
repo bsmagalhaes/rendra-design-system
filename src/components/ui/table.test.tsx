@@ -47,11 +47,12 @@ afterEach(() => setViewportWidth(1280))
 
 describe('Table', () => {
   it('mostra as linhas e formata moeda', () => {
-    renderTable()
+    const { container } = renderTable()
     expect(names()).toEqual(['Carla', 'Ana', 'Bruno'])
     expect(
       screen.getByText('R$ 1.250,50', { normalizer: (t) => t.replace(/\s/g, ' ') }),
     ).toBeInTheDocument()
+    expect(container.querySelector('[data-rendra="TAB-001"]')).toBeInTheDocument()
   })
 
   it('ordena ao clicar no cabeçalho, e inverte no segundo clique', async () => {

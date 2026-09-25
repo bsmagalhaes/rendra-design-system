@@ -28,7 +28,7 @@ export interface ListProps {
 export function List({ items, divided = true, empty, className }: ListProps) {
   if (items.length === 0 && empty) return <>{empty}</>
   return (
-    <ul className={cn('flex flex-col', divided && 'divide-y', className)}>
+    <ul data-rendra="LIST-001" className={cn('flex flex-col', divided && 'divide-y', className)}>
       {items.map((it) => {
         const interactive = Boolean(it.to || it.onClick)
         const body = (

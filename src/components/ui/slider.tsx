@@ -34,7 +34,7 @@ export function Slider({
 }: SliderProps) {
   const current = value ?? defaultValue
   return (
-    <div className="flex flex-col gap-3">
+    <div data-rendra="SLD-001" className="flex flex-col gap-3">
       {showValue && (
         <div className="flex justify-between text-sm font-medium tabular-nums">
           <span>{formatValue(current[0] ?? min)}</span>

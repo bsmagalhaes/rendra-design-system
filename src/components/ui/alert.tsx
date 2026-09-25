@@ -50,6 +50,7 @@ export function Alert({
   return (
     <div
       role={type === 'error' || type === 'warning' ? 'alert' : 'status'}
+      data-rendra="ALRT-001"
       className={cn(
         alertVariants({ type }),
         pill ? 'items-center py-3 pr-4 pl-4 md:pr-6' : 'p-4',

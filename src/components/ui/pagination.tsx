@@ -45,7 +45,11 @@ export function Pagination({
   const fmt = (n: number) => n.toLocaleString('pt-BR')
 
   return (
-    <nav aria-label="Paginação" className={cn('flex min-w-0 flex-col gap-3', className)}>
+    <nav
+      aria-label="Paginação"
+      data-rendra="PAG-001"
+      className={cn('flex min-w-0 flex-col gap-3', className)}
+    >
       {/* Mobile */}
       <div className="flex flex-col gap-3 md:hidden">
         {mobileMode === 'loadMore' ? (

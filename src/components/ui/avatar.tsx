@@ -31,7 +31,7 @@ export interface AvatarProps extends VariantProps<typeof avatarVariants> {
 
 export function Avatar({ name, src, size, className }: AvatarProps) {
   return (
-    <A.Root className={cn(avatarVariants({ size }), className)}>
+    <A.Root data-rendra="AVT-001" className={cn(avatarVariants({ size }), className)}>
       {src && <A.Image src={src} alt={name} className="size-full object-cover" />}
       <A.Fallback delayMs={src ? 400 : 0} aria-label={name}>
         {initials(name)}
@@ -57,6 +57,7 @@ export function AvatarGroup({ people, max = 4, size = 'md', className }: AvatarG
       className={cn('flex items-center -space-x-2', className)}
       aria-label={people.map((p) => p.name).join(', ')}
       role="group"
+      data-rendra="AVT-002"
     >
       {visible.map((p) => (
         <Avatar key={p.name} name={p.name} src={p.src} size={size} className="ring-2 ring-card" />

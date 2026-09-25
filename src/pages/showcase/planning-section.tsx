@@ -33,6 +33,7 @@ export function PlanningSection() {
         title="Calendar"
         description="Um componente para calendário e agenda: mês, semana, dia e lista são a prop view. No celular, o mês vira compacto com a lista do dia e a semana vira o dia com a faixa dos 7 dias."
         props="events, view (month, week, day, agenda), views, date, onDateChange, onEventClick, onDateClick, hours"
+        code="CAL-001"
         bare
       >
         <Calendar
@@ -46,6 +47,7 @@ export function PlanningSection() {
         title="Kanban"
         description="Colunas com cards. Arraste no computador; no toque e no teclado, o menu do card move para outra coluna. No celular, uma coluna por vez. Limite por coluna (limit) deixa o contador em alerta."
         props="columns (id, title, tone, limit), cards (title, description, tags, assignee, dueDate, meta), onCardMove, onCardClick, onAddCard, renderCard"
+        code="KANB-001"
         bare
       >
         <Kanban
@@ -61,6 +63,7 @@ export function PlanningSection() {
         title="ImageViewer"
         description="Abre imagens por cima da tela, sem sair da página. Setas e Esc no teclado, arrastar para o lado e pinça no celular."
         props="images (src, alt, caption), index, onIndexChange"
+        code="IMG-001"
       >
         <Button variant="outline" onClick={() => setImage(0)} disabled={!images.length}>
           Abrir galeria de exemplo

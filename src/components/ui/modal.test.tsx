@@ -20,10 +20,21 @@ describe('Modal', () => {
   it('confirmar chama a ação e fecha', async () => {
     const onConfirm = vi.fn()
     renderApp(<Harness onConfirm={onConfirm} />)
-    expect(screen.getByRole('dialog', { name: 'Excluir cliente?' })).toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: 'Excluir cliente?' })).toHaveAttribute(
+      'data-rendra',
+      'MOD-001',
+    )
     await userEvent.click(screen.getByRole('button', { name: 'Confirmar' }))
     expect(onConfirm).toHaveBeenCalledTimes(1)
     await waitFor(() => expect(screen.getByTestId('estado')).toHaveTextContent('fechado'))
+  })
+
+  it('type="form" usa o código de catálogo MOD-002, não o de confirmação', () => {
+    renderApp(<Harness type="form" />)
+    expect(screen.getByRole('dialog', { name: 'Excluir cliente?' })).toHaveAttribute(
+      'data-rendra',
+      'MOD-002',
+    )
   })
 
   it('ação assíncrona: carrega até terminar e só então fecha', async () => {

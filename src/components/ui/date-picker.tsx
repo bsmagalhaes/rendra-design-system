@@ -245,6 +245,7 @@ export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(
         ref={ref}
         id={id}
         type="button"
+        data-rendra="DTP-001"
         disabled={disabled}
         data-invalid={invalid || undefined}
         aria-describedby={props['aria-describedby']}
