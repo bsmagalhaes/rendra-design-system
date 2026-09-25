@@ -25,7 +25,12 @@
   --rendra-accent: #f0f6fd;
   --rendra-accent-foreground: #0b1d37;
   --rendra-sidebar: #0b1d37;
-  --rendra-sidebar-image: radial-gradient(120% 120% at 80% 0%, #034889 0%, #0b1d37 45%, #07142a 100%);
+  --rendra-sidebar-image: radial-gradient(
+    120% 120% at 80% 0%,
+    #034889 0%,
+    #0b1d37 45%,
+    #07142a 100%
+  );
   --rendra-sidebar-foreground: #f0f4f8;
   --rendra-sidebar-muted-foreground: #aeb7c1;
   --rendra-sidebar-border: rgb(255 255 255 / 0.14);
@@ -33,7 +38,12 @@
   --rendra-sidebar-active: rgb(11 111 224 / 0.24);
   --rendra-sidebar-active-foreground: #ffffff;
   --rendra-sidebar-indicator: #98d10a;
-  --rendra-gradient-brand: radial-gradient(120% 120% at 80% 0%, #034889 0%, #0b1d37 45%, #07142a 100%);
+  --rendra-gradient-brand: radial-gradient(
+    120% 120% at 80% 0%,
+    #034889 0%,
+    #0b1d37 45%,
+    #07142a 100%
+  );
   --rendra-gradient-brand-foreground: #ffffff;
   --rendra-gradient-accent: linear-gradient(90deg, #0b6fe0 0%, #98d10a 100%);
   --rendra-gradient-soft: linear-gradient(135deg, #e7f1fc 0%, #ffffff 65%);
@@ -48,7 +58,12 @@
 :root:not([data-palette]).dark,
 :root[data-palette='safira'].dark {
   --rendra-background: #07142a;
-  --rendra-background-image: radial-gradient(120% 80% at 80% 0%, #05315e 0%, #091932 40%, #07142a 100%);
+  --rendra-background-image: radial-gradient(
+    120% 80% at 80% 0%,
+    #05315e 0%,
+    #091932 40%,
+    #07142a 100%
+  );
   --rendra-foreground: #e8eff8;
   --rendra-card: #061b37;
   --rendra-card-foreground: #e8eff8;
@@ -75,7 +90,12 @@
   --rendra-accent: #152943;
   --rendra-accent-foreground: #e8eff8;
   --rendra-sidebar: #061226;
-  --rendra-sidebar-image: radial-gradient(120% 120% at 80% 0%, #034889 0%, #0b1d37 45%, #07142a 100%);
+  --rendra-sidebar-image: radial-gradient(
+    120% 120% at 80% 0%,
+    #034889 0%,
+    #0b1d37 45%,
+    #07142a 100%
+  );
   --rendra-sidebar-foreground: #f0f4f8;
   --rendra-sidebar-muted-foreground: #aeb7c1;
   --rendra-sidebar-border: rgb(255 255 255 / 0.14);
@@ -83,7 +103,12 @@
   --rendra-sidebar-active: rgb(11 111 224 / 0.24);
   --rendra-sidebar-active-foreground: #ffffff;
   --rendra-sidebar-indicator: #98d10a;
-  --rendra-gradient-brand: radial-gradient(120% 120% at 80% 0%, #034889 0%, #0b1d37 45%, #07142a 100%);
+  --rendra-gradient-brand: radial-gradient(
+    120% 120% at 80% 0%,
+    #034889 0%,
+    #0b1d37 45%,
+    #07142a 100%
+  );
   --rendra-gradient-brand-foreground: #ffffff;
   --rendra-gradient-accent: linear-gradient(90deg, #0b6fe0 0%, #98d10a 100%);
   --rendra-gradient-soft: linear-gradient(135deg, #073366 0%, #061b37 65%);
@@ -112,7 +137,12 @@
   --rendra-accent: #f5f3fc;
   --rendra-accent-foreground: #0b1d37;
   --rendra-sidebar: #241d45;
-  --rendra-sidebar-image: radial-gradient(120% 120% at 80% 0%, #3b2a8c 0%, #241d45 45%, #1d1a2e 100%);
+  --rendra-sidebar-image: radial-gradient(
+    120% 120% at 80% 0%,
+    #3b2a8c 0%,
+    #241d45 45%,
+    #1d1a2e 100%
+  );
   --rendra-sidebar-foreground: #f3f2f8;
   --rendra-sidebar-muted-foreground: #b5b2c2;
   --rendra-sidebar-border: rgb(255 255 255 / 0.14);
@@ -120,7 +150,12 @@
   --rendra-sidebar-active: rgb(91 63 209 / 0.24);
   --rendra-sidebar-active-foreground: #ffffff;
   --rendra-sidebar-indicator: #725ad7;
-  --rendra-gradient-brand: radial-gradient(120% 120% at 80% 0%, #3b2a8c 0%, #241d45 45%, #1d1a2e 100%);
+  --rendra-gradient-brand: radial-gradient(
+    120% 120% at 80% 0%,
+    #3b2a8c 0%,
+    #241d45 45%,
+    #1d1a2e 100%
+  );
   --rendra-gradient-brand-foreground: #ffffff;
   --rendra-gradient-accent: linear-gradient(90deg, #5b3fd1 0%, #0e7490 100%);
   --rendra-gradient-soft: linear-gradient(135deg, #efecfa 0%, #ffffff 65%);
@@ -134,7 +169,12 @@
 
 :root[data-palette='equilibrio'].dark {
   --rendra-background: #1a1729;
-  --rendra-background-image: radial-gradient(120% 80% at 80% 0%, #2c215f 0%, #201b3a 40%, #1a1729 100%);
+  --rendra-background-image: radial-gradient(
+    120% 80% at 80% 0%,
+    #2c215f 0%,
+    #201b3a 40%,
+    #1a1729 100%
+  );
   --rendra-foreground: #e8eff8;
   --rendra-card: #211c3b;
   --rendra-card-foreground: #e8eff8;
@@ -161,7 +201,12 @@
   --rendra-accent: #2e2a47;
   --rendra-accent-foreground: #e8eff8;
   --rendra-sidebar: #1a1729;
-  --rendra-sidebar-image: radial-gradient(120% 120% at 80% 0%, #3b2a8c 0%, #241d45 45%, #1d1a2e 100%);
+  --rendra-sidebar-image: radial-gradient(
+    120% 120% at 80% 0%,
+    #3b2a8c 0%,
+    #241d45 45%,
+    #1d1a2e 100%
+  );
   --rendra-sidebar-foreground: #f3f2f8;
   --rendra-sidebar-muted-foreground: #b5b2c2;
   --rendra-sidebar-border: rgb(255 255 255 / 0.14);
@@ -169,7 +214,12 @@
   --rendra-sidebar-active: rgb(91 63 209 / 0.24);
   --rendra-sidebar-active-foreground: #ffffff;
   --rendra-sidebar-indicator: #725ad7;
-  --rendra-gradient-brand: radial-gradient(120% 120% at 80% 0%, #3b2a8c 0%, #241d45 45%, #1d1a2e 100%);
+  --rendra-gradient-brand: radial-gradient(
+    120% 120% at 80% 0%,
+    #3b2a8c 0%,
+    #241d45 45%,
+    #1d1a2e 100%
+  );
   --rendra-gradient-brand-foreground: #ffffff;
   --rendra-gradient-accent: linear-gradient(90deg, #5b3fd1 0%, #0e7490 100%);
   --rendra-gradient-soft: linear-gradient(135deg, #312665 0%, #211c3b 65%);
@@ -198,7 +248,12 @@
   --rendra-accent: #f1f7f6;
   --rendra-accent-foreground: #0b1d37;
   --rendra-sidebar: #0c5f59;
-  --rendra-sidebar-image: radial-gradient(120% 120% at 80% 0%, #11857b 0%, #0c5f59 45%, #083f3b 100%);
+  --rendra-sidebar-image: radial-gradient(
+    120% 120% at 80% 0%,
+    #11857b 0%,
+    #0c5f59 45%,
+    #083f3b 100%
+  );
   --rendra-sidebar-foreground: #ffffff;
   --rendra-sidebar-muted-foreground: #ffffff;
   --rendra-sidebar-border: rgb(255 255 255 / 0.14);
@@ -206,7 +261,12 @@
   --rendra-sidebar-active: rgb(180 70 31 / 0.24);
   --rendra-sidebar-active-foreground: #ffffff;
   --rendra-sidebar-indicator: #74b0ab;
-  --rendra-gradient-brand: radial-gradient(120% 120% at 80% 0%, #11857b 0%, #0c5f59 45%, #083f3b 100%);
+  --rendra-gradient-brand: radial-gradient(
+    120% 120% at 80% 0%,
+    #11857b 0%,
+    #0c5f59 45%,
+    #083f3b 100%
+  );
   --rendra-gradient-brand-foreground: #ffffff;
   --rendra-gradient-accent: linear-gradient(90deg, #0f766e 0%, #b4461f 100%);
   --rendra-gradient-soft: linear-gradient(135deg, #e7f1f1 0%, #ffffff 65%);
@@ -220,7 +280,12 @@
 
 :root[data-palette='aurora'].dark {
   --rendra-background: #041d1b;
-  --rendra-background-image: radial-gradient(120% 80% at 80% 0%, #083c38 0%, #052523 40%, #041d1b 100%);
+  --rendra-background-image: radial-gradient(
+    120% 80% at 80% 0%,
+    #083c38 0%,
+    #052523 40%,
+    #041d1b 100%
+  );
   --rendra-foreground: #e8eff8;
   --rendra-card: #052926;
   --rendra-card-foreground: #e8eff8;
@@ -247,7 +312,12 @@
   --rendra-accent: #143633;
   --rendra-accent-foreground: #e8eff8;
   --rendra-sidebar: #073935;
-  --rendra-sidebar-image: radial-gradient(120% 120% at 80% 0%, #11857b 0%, #0c5f59 45%, #083f3b 100%);
+  --rendra-sidebar-image: radial-gradient(
+    120% 120% at 80% 0%,
+    #11857b 0%,
+    #0c5f59 45%,
+    #083f3b 100%
+  );
   --rendra-sidebar-foreground: #ffffff;
   --rendra-sidebar-muted-foreground: #ffffff;
   --rendra-sidebar-border: rgb(255 255 255 / 0.14);
@@ -255,7 +325,12 @@
   --rendra-sidebar-active: rgb(180 70 31 / 0.24);
   --rendra-sidebar-active-foreground: #ffffff;
   --rendra-sidebar-indicator: #74b0ab;
-  --rendra-gradient-brand: radial-gradient(120% 120% at 80% 0%, #11857b 0%, #0c5f59 45%, #083f3b 100%);
+  --rendra-gradient-brand: radial-gradient(
+    120% 120% at 80% 0%,
+    #11857b 0%,
+    #0c5f59 45%,
+    #083f3b 100%
+  );
   --rendra-gradient-brand-foreground: #ffffff;
   --rendra-gradient-accent: linear-gradient(90deg, #0f766e 0%, #b4461f 100%);
   --rendra-gradient-soft: linear-gradient(135deg, #083f3a 0%, #052926 65%);
@@ -285,7 +360,12 @@
   --rendra-accent: #f2f4f4;
   --rendra-accent-foreground: #0b1d37;
   --rendra-sidebar: #2e414d;
-  --rendra-sidebar-image: radial-gradient(120% 120% at 80% 0%, #3e5664 0%, #2e414d 45%, #1f2d36 100%);
+  --rendra-sidebar-image: radial-gradient(
+    120% 120% at 80% 0%,
+    #3e5664 0%,
+    #2e414d 45%,
+    #1f2d36 100%
+  );
   --rendra-sidebar-foreground: #f3f5f6;
   --rendra-sidebar-muted-foreground: #c1c7ca;
   --rendra-sidebar-border: rgb(255 255 255 / 0.14);
@@ -293,7 +373,12 @@
   --rendra-sidebar-active: rgb(234 96 13 / 0.24);
   --rendra-sidebar-active-foreground: #ffffff;
   --rendra-sidebar-indicator: #ea600d;
-  --rendra-gradient-brand: radial-gradient(120% 120% at 80% 0%, #3e5664 0%, #2e414d 45%, #1f2d36 100%);
+  --rendra-gradient-brand: radial-gradient(
+    120% 120% at 80% 0%,
+    #3e5664 0%,
+    #2e414d 45%,
+    #1f2d36 100%
+  );
   --rendra-gradient-brand-foreground: #ffffff;
   --rendra-gradient-accent: linear-gradient(90deg, #2e414d 0%, #ea600d 100%);
   --rendra-gradient-soft: linear-gradient(135deg, #eaeced 0%, #ffffff 65%);
@@ -307,7 +392,12 @@
 
 :root[data-palette='ardosia'].dark {
   --rendra-background: #121a1f;
-  --rendra-background-image: radial-gradient(120% 80% at 80% 0%, #273741 0%, #192229 40%, #121a1f 100%);
+  --rendra-background-image: radial-gradient(
+    120% 80% at 80% 0%,
+    #273741 0%,
+    #192229 40%,
+    #121a1f 100%
+  );
   --rendra-foreground: #e8eff8;
   --rendra-card: #19252b;
   --rendra-card-foreground: #e8eff8;
@@ -334,7 +424,12 @@
   --rendra-accent: #273238;
   --rendra-accent-foreground: #e8eff8;
   --rendra-sidebar: #1c2931;
-  --rendra-sidebar-image: radial-gradient(120% 120% at 80% 0%, #3e5664 0%, #2e414d 45%, #1f2d36 100%);
+  --rendra-sidebar-image: radial-gradient(
+    120% 120% at 80% 0%,
+    #3e5664 0%,
+    #2e414d 45%,
+    #1f2d36 100%
+  );
   --rendra-sidebar-foreground: #f3f5f6;
   --rendra-sidebar-muted-foreground: #c1c7ca;
   --rendra-sidebar-border: rgb(255 255 255 / 0.14);
@@ -342,7 +437,12 @@
   --rendra-sidebar-active: rgb(234 96 13 / 0.24);
   --rendra-sidebar-active-foreground: #ffffff;
   --rendra-sidebar-indicator: #ea600d;
-  --rendra-gradient-brand: radial-gradient(120% 120% at 80% 0%, #3e5664 0%, #2e414d 45%, #1f2d36 100%);
+  --rendra-gradient-brand: radial-gradient(
+    120% 120% at 80% 0%,
+    #3e5664 0%,
+    #2e414d 45%,
+    #1f2d36 100%
+  );
   --rendra-gradient-brand-foreground: #ffffff;
   --rendra-gradient-accent: linear-gradient(90deg, #2e414d 0%, #ea600d 100%);
   --rendra-gradient-soft: linear-gradient(135deg, #1f2d35 0%, #19252b 65%);

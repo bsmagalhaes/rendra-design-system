@@ -89,4 +89,13 @@ describe('findUnprefixedDeclarations (declaração --nome: valor;)', () => {
       [],
     )
   })
+
+  it('acusa token novo inventado sem prefixo, mesmo fora do catálogo de RENDRA_VAR_EXACT', () => {
+    // Bloqueador 3, item 9: um arquivo de tema só declara variável própria do Rendra ou
+    // variável do namespace do Tailwind; "--label-size" não é nenhum dos dois, então também
+    // precisa de --rendra- mesmo sem constar em RENDRA_VAR_EXACT/RENDRA_VAR_PREFIXES.
+    expect(isRendraOwnVar('label-size')).toBe(false)
+    const names = findUnprefixedDeclarations('--label-size: 11px;\n').map((v) => v.name)
+    expect(names).toEqual(['label-size'])
+  })
 })

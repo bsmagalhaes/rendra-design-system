@@ -139,12 +139,21 @@ export function checkVarPrefix(text: string): VarPrefixViolation[] {
 }
 
 /**
- * Varre declarações (`--nome: valor;`) fora do prefixo --rendra-, e fora da exceção do
- * namespace do Tailwind (usada por src/styles/tokens-prefix.test.ts). Diferente de
- * `checkVarPrefix`, não precisa pular o bloco @theme: a exceção de namespace vale pelo nome,
- * não pelo bloco (globals.css redeclara --spacing-control-sm fora de @theme, em @layer base,
- * só para sobrescrever o valor em telas maiores, e isso também não é variável própria do
+ * Varre declarações (`--nome: valor;`) num arquivo de tema (theme.css, globals.css,
+ * palettes.css, o theme.css de cada modelo em src/brand/examples — usada por
+ * src/styles/tokens-prefix.test.ts). Diferente
+ * de `checkVarPrefix`, não precisa pular o bloco @theme: a exceção de namespace vale pelo
+ * nome, não pelo bloco (globals.css redeclara --spacing-control-sm fora de @theme, em @layer
+ * base, só para sobrescrever o valor em telas maiores, e isso também não é variável própria do
  * Rendra).
+ *
+ * Acusa quando `isRendraOwnVar(name) || !TAILWIND_NAMESPACE.test(name)`: um arquivo de tema só
+ * declara variável própria do Rendra ou variável do namespace do Tailwind (dentro de @theme);
+ * qualquer outro nome é um token novo inventado direto no arquivo, sem passar pelo catálogo de
+ * `RENDRA_VAR_EXACT`/`RENDRA_VAR_PREFIXES` — também precisa do prefixo --rendra-, mesmo sem
+ * constar nas listas acima (é por isso que a condição não usa só `isRendraOwnVar`, como em
+ * `checkVarPrefix`: lá, fora de um arquivo de tema, um nome desconhecido pode ser variável de
+ * instância por elemento; aqui, dentro de um arquivo de tema, não pode).
  */
 export function findUnprefixedDeclarations(text: string): VarPrefixViolation[] {
   const found: VarPrefixViolation[] = []
@@ -154,9 +163,7 @@ export function findUnprefixedDeclarations(text: string): VarPrefixViolation[] {
     if (!m) return
     const name = m[1]!
     if (name.startsWith('rendra-')) return
-    // Mesma ordem de checkVarPrefix: pergunta primeiro se é variável própria do Rendra (fonte
-    // da verdade); só um "não" abre espaço para a exceção de namespace do Tailwind.
-    if (!isRendraOwnVar(name)) return
+    if (!isRendraOwnVar(name) && TAILWIND_NAMESPACE.test(name)) return
     found.push({
       line: i + 1,
       name,
