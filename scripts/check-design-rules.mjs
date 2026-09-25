@@ -14,6 +14,9 @@
  *  - 100vh (usar 100dvh / h-dvh)
  *  - classe montada por template string (p-${n}): o Tailwind não gera a classe
  *  - arquivo .css fora de src/styles e src/brand
+ * Em todo arquivo .ts/.tsx/.css, incluindo src/brand e src/styles (DESIGN_RULES.md, "Nome das
+ * variáveis CSS"):
+ *  - variável própria do Rendra sem o prefixo --rendra- (var(--primary), var(--radius)...)
  * Nas telas do sistema (src/pages/app), também:
  *  - texto orientativo no corpo (description de texto no PageHeader): vai em help, no ícone
  *    de informação que abre um modal
@@ -59,7 +62,7 @@ const rules = [
     // Só em contexto de fonte (declaração ou nome entre aspas numa pilha de fontes): a
     // palavra "Inter" num texto da interface não é violação.
     test: /font-family|fontFamily|['"](?:Poppins|Inter|Roboto|Arial|Helvetica)(?:['",]| sans| serif)/g,
-    message: 'Nome de fonte fixo. A fonte vem de --brand-font em theme.css.',
+    message: 'Nome de fonte fixo. A fonte vem de --rendra-brand-font em theme.css.',
   },
   {
     id: '100vh',
@@ -70,7 +73,7 @@ const rules = [
     id: 'var-inline',
     test: /var\(--(?:color|radius|shadow|font|spacing)-/g,
     message:
-      'Variáveis --color-*, --radius-* etc. do Tailwind são inline e não existem no CSS. Em JS use as do tema: var(--primary), var(--chart-1), var(--shape-control).',
+      'Variáveis --color-*, --radius-* etc. do Tailwind são inline e não existem no CSS. Em JS use as do tema: var(--rendra-primary), var(--rendra-chart-1), var(--rendra-shape-control).',
   },
   {
     id: 'svg-marca',
@@ -121,6 +124,112 @@ rules.push({
 const forbiddenFileNames = /(Mobile|Simples|Simple|ComBusca|Grande|Pequeno|Small|Large)\.(t|j)sx?$/i
 const forbiddenFileNamesKebab = /-(mobile|simples|simple|com-busca|grande|pequeno)\.(t|j)sx?$/i
 
+/*
+ * variavel-sem-prefixo-rendra (etapa 2.0.0-alpha.2 do plano da v2): toda variável CSS que é
+ * vocabulário do tema do Rendra (cor, fonte, raio, sombra, degradê, gráfico, sidebar) precisa
+ * vir como var(--rendra-<nome>). Não entram nesta lista: o namespace do próprio Tailwind
+ * (--color-*, --spacing-*, --text-*, --font-*, --radius-*, --shadow-*, --container-*,
+ * --breakpoint-*, --animate-*, --ease-*, --tw-*), variáveis de terceiros (--radix-*, do Radix
+ * UI) e as variáveis de instância por elemento que os componentes escrevem via estilo inline
+ * (--progress, --otp, --kanban-cols, --board-h, --delay, --from, --span, --top, --bottom,
+ * --fill, --angle, --ratio, --days, --autosize-h, --h...): essas não são tokens de tema, são
+ * valor calculado por instância, e ficam fora do contrato --rendra-*.
+ */
+const RENDRA_VAR_EXACT = new Set([
+  'primary',
+  'primary-foreground',
+  'primary-hover',
+  'primary-hover-foreground',
+  'secondary',
+  'secondary-foreground',
+  'secondary-hover',
+  'secondary-hover-foreground',
+  'primary-soft',
+  'primary-soft-foreground',
+  'primary-text',
+  'ring',
+  'accent',
+  'accent-foreground',
+  'background',
+  'background-image',
+  'foreground',
+  'card',
+  'card-foreground',
+  'popover',
+  'popover-foreground',
+  'muted',
+  'muted-foreground',
+  'border',
+  'input',
+  'field',
+  'overlay',
+  'destructive',
+  'destructive-hover',
+  'destructive-foreground',
+  'destructive-soft',
+  'destructive-soft-foreground',
+  'success',
+  'success-foreground',
+  'success-soft',
+  'success-soft-foreground',
+  'warning',
+  'warning-foreground',
+  'warning-soft',
+  'warning-soft-foreground',
+  'info',
+  'info-foreground',
+  'info-soft',
+  'info-soft-foreground',
+  'shadow-color',
+  'brand-font',
+  'radius',
+  'sidebar',
+])
+const RENDRA_VAR_PREFIXES = ['sidebar-', 'gradient-', 'chart-', 'elevation-', 'shape-', 'meter-']
+// "tracking" (--tracking-tight etc.) é a escala de letter-spacing do próprio Tailwind v4,
+// declarada em @theme junto de --spacing e --text; entra na mesma exceção de namespace. O "$"
+// cobre o caso de degrau zerado sem sufixo (--spacing: initial;), que também é do Tailwind.
+const TAILWIND_NAMESPACE =
+  /^(color|spacing|text|font|radius|shadow|container|breakpoint|animate|ease|tw|tracking)(-|$)/
+const THIRD_PARTY_VAR = /^radix-/
+
+function isRendraOwnVar(name) {
+  if (RENDRA_VAR_EXACT.has(name)) return true
+  return RENDRA_VAR_PREFIXES.some((p) => name.startsWith(p))
+}
+
+/** Varre var(--x) do arquivo inteiro, pulando o bloco @theme (que faz a ponte documentada
+ * entre o namespace do Tailwind e o --rendra-* do tema) e comentários. */
+function checkVarPrefix(text) {
+  const found = []
+  const lines = text.split('\n')
+  let themeDepth = 0
+  lines.forEach((line, i) => {
+    if (themeDepth === 0 && /^\s*@theme\b/.test(line)) {
+      themeDepth += (line.match(/\{/g) ?? []).length - (line.match(/\}/g) ?? []).length
+      return
+    }
+    if (themeDepth > 0) {
+      themeDepth += (line.match(/\{/g) ?? []).length - (line.match(/\}/g) ?? []).length
+      return
+    }
+    if (/^\s*(\/\/|\*|\/\*)/.test(line)) return
+    for (const m of line.matchAll(/var\(--([a-zA-Z][\w-]*)\)/g)) {
+      const name = m[1]
+      if (name.startsWith('rendra-')) continue
+      if (TAILWIND_NAMESPACE.test(name)) continue
+      if (THIRD_PARTY_VAR.test(name)) continue
+      if (!isRendraOwnVar(name)) continue
+      found.push({
+        line: i + 1,
+        message: `Variável própria do Rendra sem o prefixo --rendra-. Use var(--rendra-${name}).`,
+        src: line.trim(),
+      })
+    }
+  })
+  return found
+}
+
 const files = walk(SRC).filter((f) => /\.(tsx?|jsx?|css)$/.test(f))
 const problems = []
 
@@ -158,6 +267,18 @@ for (const file of files) {
       message: 'Arquivo de variante paralela ou mobile. Resolva com props no componente único.',
     })
   }
+  const text = readFileSync(file, 'utf8')
+  // Roda em todo arquivo, inclusive src/brand e src/styles: é lá que o tema declara as
+  // variáveis, e a ponte para o Tailwind (@theme inline) precisa continuar citando --rendra-*.
+  for (const p of checkVarPrefix(text))
+    problems.push({
+      rel,
+      line: p.line,
+      id: 'variavel-sem-prefixo-rendra',
+      message: p.message,
+      src: p.src,
+    })
+
   if (ALLOWED_DIRS.some((d) => file.startsWith(d))) continue
   if (file.endsWith('.css')) {
     problems.push({
@@ -169,7 +290,6 @@ for (const file of files) {
     })
     continue
   }
-  const text = readFileSync(file, 'utf8')
   if (file.startsWith(APP_PAGES))
     for (const rule of fileRules)
       for (const m of text.matchAll(rule.test)) {

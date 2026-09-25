@@ -49,17 +49,19 @@ Tudo o que é da marca mora em dois arquivos e numa pasta:
 2. `src/brand/brand.config.ts`: nome do produto, logotipos (claro e escuro), símbolo, favicon, formato e ícones de feedback.
 3. `src/brand/assets/`: os SVGs e as fontes da marca.
 
-**Nenhum componente pode conter** cor hexadecimal, `rgb()`, nome de fonte, logotipo ou ícone de marca fixo. Componentes leem a marca por `useBrand()` e as cores pelos nomes semânticos (`bg-primary`, `text-muted-foreground`). Em JavaScript, como nos gráficos, use as variáveis do tema, por exemplo `var(--chart-1)` e `var(--primary)`. As `--color-*` do Tailwind são inline e não existem no CSS.
+**Nenhum componente pode conter** cor hexadecimal, `rgb()`, nome de fonte, logotipo ou ícone de marca fixo. Componentes leem a marca por `useBrand()` e as cores pelos nomes semânticos (`bg-primary`, `text-muted-foreground`). Em JavaScript, como nos gráficos, use as variáveis do tema, por exemplo `var(--rendra-chart-1)` e `var(--rendra-primary)`. As `--color-*` do Tailwind são inline e não existem no CSS.
+
+**Nome das variáveis CSS.** Toda variável CSS própria do Rendra (cor, fonte, raio, sombra, degradê, gráfico, sidebar) começa com `--rendra-`, sempre por extenso, nunca abreviado: `--rendra-primary`, `--rendra-radius`, `--rendra-sidebar`, `--rendra-brand-font`, `--rendra-shape-control`, `--rendra-elevation-md`, `--rendra-meter-low`, `--rendra-gradient-brand`. As classes do JSX **não mudam**: `bg-primary`, `rounded-control` continuam existindo, porque o `@theme inline` de `globals.css` mapeia `--color-primary: var(--rendra-primary)`, e assim por diante para cada variável. A exceção é o namespace do próprio Tailwind (`--color-*`, `--spacing-*`, `--text-*`, `--font-*`, `--radius-*`, `--shadow-*`, `--container-*`, `--breakpoint-*`, `--animate-*`, `--ease-*`, `--tw-*`): renomeá-lo mudaria toda classe JSX, então ele fica sem o prefixo. O `check:rules` barra `var(--x)` sem o prefixo fora dessa exceção.
 
 ### Cor: três camadas
 
 A cor de um projeto tem **três camadas**, e só uma delas é da marca:
 
-| Camada      | O que é                                                                                                                                     | Onde fica                                                                          | Muda por projeto?                   |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------- |
-| **Modelo**  | Formato e fonte: Safira (quadrado), Equilíbrio (intermediário) ou Aurora (arredondado). São só três.                                        | `src/styles/theme.css` e `src/brand/examples` (`--radius`, `--brand-font`)         | Escolhe-se um dos três              |
-| **Paleta**  | A cor da marca: **4 cores** (primária, hover da primária, secundária, hover da secundária) e o **degradê da marca** (3 paradas). Nada mais. | Sementes em `src/brand/palettes.ts`; o resto é gerado em `src/styles/palettes.css` | Sim: é a identidade do cliente      |
-| **Sistema** | Neutros do modo claro (fundo #f5f6f7, card branco, borda, texto) e cores de sistema: erro, sucesso, alerta e informação.                    | `src/styles/theme.css`                                                             | **Não**: iguais em todas as paletas |
+| Camada      | O que é                                                                                                                                     | Onde fica                                                                                | Muda por projeto?                   |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------- |
+| **Modelo**  | Formato e fonte: Safira (quadrado), Equilíbrio (intermediário) ou Aurora (arredondado). São só três.                                        | `src/styles/theme.css` e `src/brand/examples` (`--rendra-radius`, `--rendra-brand-font`) | Escolhe-se um dos três              |
+| **Paleta**  | A cor da marca: **4 cores** (primária, hover da primária, secundária, hover da secundária) e o **degradê da marca** (3 paradas). Nada mais. | Sementes em `src/brand/palettes.ts`; o resto é gerado em `src/styles/palettes.css`       | Sim: é a identidade do cliente      |
+| **Sistema** | Neutros do modo claro (fundo #f5f6f7, card branco, borda, texto) e cores de sistema: erro, sucesso, alerta e informação.                    | `src/styles/theme.css`                                                                   | **Não**: iguais em todas as paletas |
 
 Das 4 cores e do degradê, o gerador (`createPalette`, em `src/brand/palette.ts`) calcula todo o resto: texto sobre cada cor, fundo suave, primária como texto, foco, sidebar, degradês, gráficos, sombra e as superfícies do modo escuro. Cada par é conferido para **WCAG AA** na geração; se uma cor não passa com o texto pedido, ele a escurece (ou clareia) até passar e registra o ajuste. Nunca escreva à mão as variáveis de paleta nem peça ao cliente mais que as 4 cores e o degradê.
 
@@ -77,11 +79,11 @@ São três modelos, cada um com formato, fonte e símbolo fixos:
 | Rendra Aurora         | `pill`, 100% arredondado | verde-petróleo + laranja                        |
 
 - **O modelo não muda de formato.** O formato vem do `brand.config.ts` (`shape`). Os componentes não têm prop `shape`: usam `rounded-control`, `rounded-surface`, `rounded-item` e `rounded-avatar`.
-- **A sidebar é sempre colorida**, também no modo claro: cada paleta define um degradê na cor da marca (`--sidebar` e `--sidebar-image`), com texto claro e contraste AA. Nunca sidebar branca ou cinza.
+- **A sidebar é sempre colorida**, também no modo claro: cada paleta define um degradê na cor da marca (`--rendra-sidebar` e `--rendra-sidebar-image`), com texto claro e contraste AA. Nunca sidebar branca ou cinza.
 - **O logotipo acompanha o tema.** Use sempre `<BrandLogo on="sidebar" | "surface" | "brand" />`: ele monta o selo com o símbolo do modelo e as cores da paleta ativa. Só use os SVGs de logo como estão (`logoMode: 'image'` no `brand.config.ts`) quando a arte oficial não puder ser recolorida.
 - **A paleta pode ser trocada.** Qualquer modelo pode usar a paleta de outro: no `<html>`, `data-brand` define o modelo e `data-palette` define as cores.
 - Todo template define `primary`, `primary-hover`, `secondary`, `secondary-hover`, os `*-foreground` correspondentes e os `*-hover-foreground`. A cor de hover pode ser outra cor da marca: o texto sobre ela usa o `*-hover-foreground`.
-- **Primária como preenchimento e como texto são tokens diferentes.** `bg-primary` é o preenchimento (botão, selo). Para link, ícone ou destaque em texto sobre o fundo, use `text-primary-text`, nunca `text-primary`: no modo escuro a primária costuma ficar escura demais para texto, e o `--primary-text` é o tom que passa AA. Todo tema define `--primary-text` no claro e no escuro, e a página `/tokens` mostra o contraste dele.
+- **Primária como preenchimento e como texto são tokens diferentes.** `bg-primary` é o preenchimento (botão, selo). Para link, ícone ou destaque em texto sobre o fundo, use `text-primary-text`, nunca `text-primary`: no modo escuro a primária costuma ficar escura demais para texto, e o `--rendra-primary-text` é o tom que passa AA. Todo tema define `--rendra-primary-text` no claro e no escuro, e a página `/tokens` mostra o contraste dele.
 
 ## 4. Tokens
 
@@ -96,7 +98,7 @@ Base de 4px. **Só estes degraus existem:** `0, 1, 2, 3, 4, 6, 8, 12, 16, 24` (0
 
 ### Tipografia
 
-Sete tamanhos (`text-xs` a `text-3xl`), com line-height e letter-spacing definidos. Os títulos são menores no mobile e têm tracking levemente negativo. Três pesos, e só três: `font-normal` (400), `font-medium` (500) e `font-semibold` (600). A fonte vem de `--brand-font`.
+Sete tamanhos (`text-xs` a `text-3xl`), com line-height e letter-spacing definidos. Os títulos são menores no mobile e têm tracking levemente negativo. Três pesos, e só três: `font-normal` (400), `font-medium` (500) e `font-semibold` (600). A fonte vem de `--rendra-brand-font`.
 
 ### Cores
 
@@ -104,7 +106,7 @@ Tokens semânticos: `background`, `foreground`, `card`, `popover`, `muted`, `mut
 
 ### Raio, sombra e densidade
 
-- Raio: `--radius`, com os derivados por papel, controlados pelo formato do modelo. Escolha pelo papel do elemento, nunca pelo visual que quer:
+- Raio: `--rendra-radius`, com os derivados por papel, controlados pelo formato do modelo. Escolha pelo papel do elemento, nunca pelo visual que quer:
 
   | Papel      | Classe            | Onde                                                                                      | No Aurora (arredondado)         |
   | ---------- | ----------------- | ----------------------------------------------------------------------------------------- | ------------------------------- |
@@ -222,7 +224,7 @@ Rótulo **sempre acima** do campo; obrigatório marcado no rótulo (`required`);
 
 - **Kanban:** o quadro ocupa a altura que sobra na tela e nunca passa dela; cada etapa rola por dentro e mostra mais cards ao chegar no fim (rolagem infinita, `pageSize` e `onLoadMore`). O **(+) de adicionar fica no título da etapa**. Com `valueFields`, o card mostra os valores (ex.: P&S e MRR) e a etapa mostra o total de cada um; no card, a data fica à esquerda e o avatar do responsável à direita, abaixo de uma divisória. Muitas etapas rolam na horizontal dentro do quadro.
 - **Painel em widgets (`WidgetGrid`):** "Ajustar dashboard" libera arrastar e redimensionar; os outros widgets se encaixam sozinhos e a arrumação fica salva no navegador. No celular, os widgets empilham e não se editam.
-- **Gráficos:** velocímetro de meta em meio círculo com degradê vermelho, amarelo e verde (`--meter-*`), percentual grande e meta e realizado em texto. Funil com etapas que afunilam, o valor e o nome dentro de cada faixa e a conversão entre elas, com a maior queda destacada.
+- **Gráficos:** velocímetro de meta em meio círculo com degradê vermelho, amarelo e verde (`--rendra-meter-*`), percentual grande e meta e realizado em texto. Funil com etapas que afunilam, o valor e o nome dentro de cada faixa e a conversão entre elas, com a maior queda destacada.
 - **Atendimento (chat):** lista, conversa e dados do contato lado a lado na altura da tela; no celular, a lista e a conversa em tela cheia. O campo de mensagem tem 2 linhas, cresce com o texto, e aceita anexos por botão, arrastar e soltar ou colar (Ctrl+V de arquivo, print ou imagem).
 - **Barras de rolagem internas** usam `scrollbar-subtle`: finas, sem trilho, na cor da borda.
 
@@ -271,7 +273,7 @@ A sidebar tem z-index maior que o header. O menu vem de `src/config/navigation.t
 
 ## 9. Acessibilidade
 
-Teclado em tudo; foco visível (`:focus-visible` global com `--ring`); contraste AA; rótulo em todo campo; `aria-label` em botão só com ícone (`iconOnly`); um `h1` por página; textos da interface em **português do Brasil**; datas em DD/MM/AAAA; valores em R$ 1.250,00.
+Teclado em tudo; foco visível (`:focus-visible` global com `--rendra-ring`); contraste AA; rótulo em todo campo; `aria-label` em botão só com ícone (`iconOnly`); um `h1` por página; textos da interface em **português do Brasil**; datas em DD/MM/AAAA; valores em R$ 1.250,00.
 
 ## 10. O que é proibido
 
