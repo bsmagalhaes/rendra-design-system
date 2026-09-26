@@ -761,3 +761,16 @@
 @utility h-var {
   height: var(--h, 100%);
 }
+/* Moldura do recorte de imagem (ImageCropper): a proporção escolhida vira a altura. */
+@utility aspect-crop {
+  aspect-ratio: var(--crop-ratio, 1);
+}
+/*
+ * Posição e zoom da imagem dentro da moldura, por variável (arraste e zoom do
+ * ImageCropper). A centralização (-50%, -50%) já entra aqui: não combinar com as
+ * utilities de translate do Tailwind no mesmo elemento, que sobrescreveriam este transform.
+ */
+@utility cropper-image {
+  transform: translate(-50%, -50%) translate(var(--crop-x, 0px), var(--crop-y, 0px))
+    scale(var(--crop-scale, 1));
+}

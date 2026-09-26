@@ -278,3 +278,32 @@ export const UploadArquivos: Story = {
     </Field>
   ),
 }
+export const UploadGaleria: Story = {
+  name: 'Upload: layout gallery',
+  render: () => (
+    <Field label="Fotos" help="Arraste a alça para reordenar as fotos.">
+      <Upload
+        layout="gallery"
+        accept="image/*"
+        maxItems={6}
+        onUpload={fakeUpload}
+        onReorder={() => undefined}
+      />
+    </Field>
+  ),
+}
+export const UploadComRecorte: Story = {
+  name: 'Upload: crop',
+  render: () => (
+    <Field label="Foto de perfil" help="A imagem só entra na lista depois de recortada.">
+      <Upload
+        layout="gallery"
+        accept="image/*"
+        multiple={false}
+        maxItems={1}
+        onUpload={fakeUpload}
+        crop={{ aspects: [{ id: 'quadrado', label: 'Quadrado', ratio: 1 }], maxOutputWidth: 1200 }}
+      />
+    </Field>
+  ),
+}

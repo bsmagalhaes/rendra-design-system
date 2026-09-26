@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react'
+import { CheckCircle2, SkipForward, XCircle } from 'lucide-react'
+import type { ComponentType, ReactNode } from 'react'
 import type { FeedbackType } from '@/brand'
 import { cn } from '@/lib/cn'
 
@@ -10,6 +11,8 @@ export interface TimelineEvent {
   date: string
   tone?: FeedbackType | 'neutral'
   icon?: ReactNode
+  /** Resultado do evento: mostrado com ícone e texto, nunca só pela cor. */
+  status?: 'succeeded' | 'failed' | 'skipped'
 }
 
 const dot: Record<NonNullable<TimelineEvent['tone']>, string> = {
@@ -20,36 +23,85 @@ const dot: Record<NonNullable<TimelineEvent['tone']>, string> = {
   error: 'bg-destructive-soft text-destructive-soft-foreground',
 }
 
+const statusTone: Record<
+  NonNullable<TimelineEvent['status']>,
+  NonNullable<TimelineEvent['tone']>
+> = {
+  succeeded: 'success',
+  failed: 'error',
+  skipped: 'neutral',
+}
+
+const statusIcon: Record<
+  NonNullable<TimelineEvent['status']>,
+  ComponentType<{ className?: string }>
+> = {
+  succeeded: CheckCircle2,
+  failed: XCircle,
+  skipped: SkipForward,
+}
+
+const statusLabel: Record<NonNullable<TimelineEvent['status']>, string> = {
+  succeeded: 'Concluído',
+  failed: 'Falhou',
+  skipped: 'Ignorado',
+}
+
+const statusTextTone: Record<NonNullable<TimelineEvent['status']>, string> = {
+  succeeded: 'text-success-soft-foreground',
+  failed: 'text-destructive-soft-foreground',
+  skipped: 'text-muted-foreground',
+}
+
 /** Linha do tempo única, com eventos em ordem e tom semântico por evento. */
 export function Timeline({ events, className }: { events: TimelineEvent[]; className?: string }) {
   return (
     <ol data-rendra="TLN-001" className={cn('@container flex flex-col', className)}>
-      {events.map((e, i) => (
-        <li key={e.id} className="relative flex gap-3 pb-6 last:pb-0">
-          {i < events.length - 1 && (
+      {events.map((e, i) => {
+        const StatusIcon = e.status ? statusIcon[e.status] : null
+        const tone = e.tone ?? (e.status ? statusTone[e.status] : 'neutral')
+        return (
+          <li key={e.id} className="relative flex gap-3 pb-6 last:pb-0">
+            {i < events.length - 1 && (
+              <span
+                aria-hidden
+                className="absolute top-8 bottom-0 left-4 w-px -translate-x-1/2 bg-border"
+              />
+            )}
             <span
               aria-hidden
-              className="absolute top-8 bottom-0 left-4 w-px -translate-x-1/2 bg-border"
-            />
-          )}
-          <span
-            aria-hidden
-            className={cn(
-              'relative flex size-8 shrink-0 items-center justify-center rounded-full [&_svg]:size-icon-sm',
-              dot[e.tone ?? 'neutral'],
-            )}
-          >
-            {e.icon ?? <span className="size-2 rounded-full bg-current" />}
-          </span>
-          <div className="flex min-w-0 flex-1 flex-col gap-1 pt-1">
-            <div className="flex min-w-0 flex-col gap-1 @sm:flex-row @sm:items-baseline @sm:justify-between @sm:gap-3">
-              <span className="text-sm font-medium">{e.title}</span>
-              <time className="shrink-0 text-xs text-muted-foreground tabular-nums">{e.date}</time>
+              className={cn(
+                'relative flex size-8 shrink-0 items-center justify-center rounded-full [&_svg]:size-icon-sm',
+                dot[tone],
+              )}
+            >
+              {e.icon ?? (StatusIcon && <StatusIcon />) ?? (
+                <span className="size-2 rounded-full bg-current" />
+              )}
+            </span>
+            <div className="flex min-w-0 flex-1 flex-col gap-1 pt-1">
+              <div className="flex min-w-0 flex-col gap-1 @sm:flex-row @sm:items-baseline @sm:justify-between @sm:gap-3">
+                <span className="text-sm font-medium">{e.title}</span>
+                <time className="shrink-0 text-xs text-muted-foreground tabular-nums">
+                  {e.date}
+                </time>
+              </div>
+              {e.description && <p className="text-sm text-muted-foreground">{e.description}</p>}
+              {e.status && StatusIcon && (
+                <span
+                  className={cn(
+                    'inline-flex w-fit items-center gap-1 text-xs font-medium [&_svg]:size-icon-sm',
+                    statusTextTone[e.status],
+                  )}
+                >
+                  <StatusIcon />
+                  {statusLabel[e.status]}
+                </span>
+              )}
             </div>
-            {e.description && <p className="text-sm text-muted-foreground">{e.description}</p>}
-          </div>
-        </li>
-      ))}
+          </li>
+        )
+      })}
     </ol>
   )
 }

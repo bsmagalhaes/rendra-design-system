@@ -396,6 +396,16 @@ export const CATALOG: ComponentCatalogEntry[] = [
     variantProps: {},
     whenToUse: 'Para agrupar campos relacionados dentro de um card com título.',
   },
+  // ---------------------------------------------------------------- image-cropper
+  {
+    code: 'CROP-001',
+    name: 'Recorte de imagem',
+    component: 'ImageCropper',
+    file: 'components/ui/image-cropper.tsx',
+    variantProps: {},
+    whenToUse:
+      'Para recortar uma imagem numa proporção fixa antes de enviar (foto de perfil, capa).',
+  },
   // ---------------------------------------------------------------- image-viewer
   {
     code: 'IMG-001',
@@ -432,6 +442,16 @@ export const CATALOG: ComponentCatalogEntry[] = [
     variantProps: {},
     whenToUse: 'Para um funil de etapas com cartões que se movem entre colunas.',
   },
+  {
+    code: 'KANB-002',
+    name: 'Quadro kanban com destinos de arraste',
+    component: 'Kanban',
+    file: 'components/ui/kanban.tsx',
+    variantProps: { hasDropTargets: true },
+    whenToUse:
+      'Quando o card pode ir para uma ação além de outra coluna (ex.: "Marcar como ganho"), ' +
+      'mostrada numa barra durante o arraste e no menu "Mover para".',
+  },
   // ---------------------------------------------------------------- list
   {
     code: 'LIST-001',
@@ -440,6 +460,14 @@ export const CATALOG: ComponentCatalogEntry[] = [
     file: 'components/ui/list.tsx',
     variantProps: {},
     whenToUse: 'Para linhas simples com início, título, descrição e fim, navegáveis ou não.',
+  },
+  {
+    code: 'LIST-002',
+    name: 'Lista reordenável',
+    component: 'List',
+    file: 'components/ui/list.tsx',
+    variantProps: { sortable: true },
+    whenToUse: 'Quando a pessoa pode mudar a ordem das linhas, por arraste ou pelas setas da alça.',
   },
   // ---------------------------------------------------------------- modal
   {
@@ -666,6 +694,14 @@ export const CATALOG: ComponentCatalogEntry[] = [
     file: 'components/ui/upload.tsx',
     variantProps: {},
     whenToUse: 'Para arrastar e soltar ou escolher arquivos, com lista e progresso por arquivo.',
+  },
+  {
+    code: 'UPL-002',
+    name: 'Upload em galeria',
+    component: 'Upload',
+    file: 'components/ui/upload.tsx',
+    variantProps: { layout: 'gallery' },
+    whenToUse: 'Para upload de fotos e vídeos, com miniatura em vez de linha de lista.',
   },
   // ---------------------------------------------------------------- widget-grid
   {

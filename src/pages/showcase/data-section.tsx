@@ -50,6 +50,19 @@ const demoWidgets: Widget[] = [
   },
 ]
 
+/** Demonstra List sortable: arraste a alça ou use as setas do teclado. */
+function ListaReordenavel() {
+  const [order, setOrder] = useState(() => clients.slice(0, 4))
+  return (
+    <List
+      items={order.map((c) => ({ id: c.id, title: c.name, description: c.city }))}
+      onReorder={(items) =>
+        setOrder(items.map((it) => order.find((c) => c.id === it.id)!).filter(Boolean))
+      }
+    />
+  )
+}
+
 export function DataSection() {
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState<string[]>([])
@@ -356,31 +369,37 @@ export function DataSection() {
       <Demo
         id="lista"
         title="Lista"
-        description="Linhas com início, título, descrição e fim. Navegável por prop."
-        props="items (title, description, leading, trailing, to, onClick), divided, empty"
-        code="LIST-001"
+        description="Linhas com início, título, descrição e fim. Navegável por prop, reordenável por prop e com selo de status."
+        props="items (title, description, leading, trailing, to, onClick, tone), divided, empty, onReorder, itemLabel"
+        code={['LIST-001', 'LIST-002']}
       >
-        <List
-          items={clients.slice(0, 4).map((c) => ({
-            id: c.id,
-            title: c.name,
-            description: `${c.city} · ${c.segment}`,
-            leading: <Avatar name={c.name} />,
-            trailing: (
-              <Badge tone={statusTone[c.status]} dot>
-                {c.status}
-              </Badge>
-            ),
-            to: `/clientes/${c.id}`,
-          }))}
-        />
+        <Row label="Padrão, com selo de status" code="LIST-001">
+          <List
+            items={clients.slice(0, 4).map((c, i) => ({
+              id: c.id,
+              title: c.name,
+              description: `${c.city} · ${c.segment}`,
+              leading: <Avatar name={c.name} />,
+              trailing: (
+                <Badge tone={statusTone[c.status]} dot>
+                  {c.status}
+                </Badge>
+              ),
+              to: `/clientes/${c.id}`,
+              tone: i === 0 ? 'success' : i === 1 ? 'warning' : i === 2 ? 'error' : 'neutral',
+            }))}
+          />
+        </Row>
+        <Row label="Reordenável (arraste a alça ou use as setas)" code="LIST-002" block>
+          <ListaReordenavel />
+        </Row>
       </Demo>
 
       <Demo
         id="timeline"
         title="Timeline"
-        description="Eventos em ordem, com tom semântico e data curta."
-        props="events (title, description, date, tone, icon)"
+        description="Eventos em ordem, com tom semântico, data curta e resultado (status) com ícone e texto."
+        props="events (title, description, date, tone, icon, status)"
         code="TLN-001"
       >
         <Timeline
@@ -390,17 +409,24 @@ export function DataSection() {
               title: 'Contrato assinado',
               description: 'Plano Profissional, 12 meses.',
               date: '22/09/2026 14:30',
-              tone: 'success',
+              status: 'succeeded',
             },
             { id: '2', title: 'Proposta enviada', date: '18/09/2026 09:10', tone: 'info' },
             {
               id: '3',
-              title: 'Pagamento em atraso',
-              description: 'Fatura de agosto.',
-              date: '12/09/2026',
-              tone: 'error',
+              title: 'Cobrança automática',
+              description: 'Cartão recusado pelo banco.',
+              date: '15/09/2026',
+              status: 'failed',
             },
-            { id: '4', title: 'Cliente cadastrado', date: '02/09/2026' },
+            {
+              id: '4',
+              title: 'Lembrete de renovação',
+              description: 'Cliente já tinha renovado antes.',
+              date: '13/09/2026',
+              status: 'skipped',
+            },
+            { id: '5', title: 'Cliente cadastrado', date: '02/09/2026' },
           ]}
         />
       </Demo>

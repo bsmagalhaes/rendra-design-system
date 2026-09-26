@@ -1,19 +1,45 @@
+import { Handshake, ThumbsDown } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Stack } from '@/components/layout'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { ChatComposer, ChatThread, ConversationList, type ChatMessage } from '@/components/ui/chat'
 import { ImageViewer } from '@/components/ui/image-viewer'
-import { Kanban, moveKanbanCard, type KanbanCard } from '@/components/ui/kanban'
+import {
+  Kanban,
+  moveKanbanCard,
+  type KanbanCard,
+  type KanbanDropTarget,
+} from '@/components/ui/kanban'
 import { toast } from '@/components/ui/toast'
 import { demoTickets } from '@/mocks/chat'
 import { demoCards, demoEvents, pipelineColumns } from '@/mocks/planning'
 import { Demo, Row } from './demo'
 
+const dropTargets: KanbanDropTarget[] = [
+  { id: 'ganho', label: 'Marcar como ganho', icon: <Handshake />, tone: 'success' },
+  {
+    id: 'perdido',
+    label: 'Marcar como perdido',
+    hint: 'Encerra o negócio',
+    icon: <ThumbsDown />,
+    tone: 'error',
+  },
+  {
+    id: 'arquivar',
+    label: 'Arquivar',
+    icon: <ThumbsDown />,
+    tone: 'neutral',
+    disabled: true,
+    disabledReason: 'Só depois de ganho ou perdido',
+  },
+]
+
 /* Vitrine: calendário, kanban, atendimento (chat) e visualizador de imagens. */
 export function PlanningSection() {
   const events = useMemo(() => demoEvents(), [])
   const [cards, setCards] = useState<KanbanCard[]>(() => demoCards())
+  const [targetCards] = useState<KanbanCard[]>(() => demoCards())
   const [image, setImage] = useState<number | null>(null)
   const tickets = useMemo(() => demoTickets().slice(0, 3), [])
   const [activeTicket, setActiveTicket] = useState<string | null>(tickets[0]?.id ?? null)
@@ -64,6 +90,25 @@ export function PlanningSection() {
           cards={cards}
           onCardMove={(id, to, index) => setCards((l) => moveKanbanCard(l, id, to, index))}
           onAddCard={() => toast.info('Novo card')}
+        />
+      </Demo>
+      <Demo
+        id="kanban-destinos"
+        title="Kanban com destinos de arraste"
+        description="Além de mudar de coluna, o card pode ir para uma ação (ganho, perdido). A barra aparece durante o arraste; o menu 'Mover para' lista os mesmos destinos, com o desabilitado mostrando o motivo."
+        props="dropTargets (id, label, hint, icon, tone, disabled, disabledReason), onDropTarget"
+        code="KANB-002"
+        bare
+      >
+        <Kanban
+          aria-label="Funil com destinos de arraste"
+          columns={pipelineColumns}
+          cards={targetCards}
+          dropTargets={dropTargets}
+          onDropTarget={(cardId, targetId) => {
+            const target = dropTargets.find((t) => t.id === targetId)
+            toast.info(`${target?.label} · card ${cardId}`)
+          }}
         />
       </Demo>
       <Demo

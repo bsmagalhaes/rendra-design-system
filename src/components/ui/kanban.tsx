@@ -1,6 +1,23 @@
 import { format } from 'date-fns'
-import { ArrowRightLeft, CalendarDays, Mail, MoreHorizontal, Phone, Plus, User } from 'lucide-react'
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import {
+  ArrowRightLeft,
+  CalendarDays,
+  GripVertical,
+  Mail,
+  MoreHorizontal,
+  Phone,
+  Plus,
+  User,
+} from 'lucide-react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from 'react'
+import { resolveCatalogCode } from '@/catalog/components'
 import { Avatar } from '@/components/ui/avatar'
 import { Badge, type BadgeProps } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -15,6 +32,7 @@ import { Tabs } from '@/components/ui/tabs'
 import { useBreakpoint } from '@/hooks/use-breakpoint'
 import { useFillHeight } from '@/hooks/use-fill-height'
 import { cn } from '@/lib/cn'
+import { bindPointerDrag, findDragTarget } from '@/lib/sortable'
 
 /*
  * Kanban único: colunas e cards por props; a tela guarda o estado e recebe onCardMove.
@@ -83,6 +101,23 @@ export interface KanbanValueField {
   label: string
 }
 
+/**
+ * Destino de arraste (etapa A14): uma ação para onde o card vai, diferente de "outra
+ * coluna" (ex.: "Marcar como ganho", "Arquivar"). Aparece numa barra durante o arraste e
+ * como opção do menu "Mover para" (equivalente por teclado, sempre disponível).
+ */
+export interface KanbanDropTarget {
+  id: string
+  label: string
+  /** Texto curto de apoio, mostrado abaixo do rótulo na barra. */
+  hint?: string
+  icon?: ReactNode
+  tone?: BadgeProps['tone']
+  disabled?: boolean
+  /** Motivo mostrado quando desabilitado; o destino recusa o solto. */
+  disabledReason?: string
+}
+
 export interface KanbanProps {
   columns: KanbanColumn[]
   cards: KanbanCard[]
@@ -111,6 +146,13 @@ export interface KanbanProps {
   valueFields?: KanbanValueField[]
   /** Formato dos valores. Padrão: moeda (R$ 1.250,00). */
   formatValue?: (n: number) => string
+  /**
+   * Destinos de arraste além das colunas (ex.: "Marcar como ganho"). Com eles, mostra uma
+   * barra durante o arraste e o menu "Mover para" passa a listar estes destinos.
+   */
+  dropTargets?: KanbanDropTarget[]
+  /** Card solto num destino da barra (ou escolhido no menu "Mover para"). */
+  onDropTarget?: (cardId: string, targetId: string) => void
   'aria-label'?: string
   className?: string
 }
@@ -125,14 +167,27 @@ const dotTone: Record<NonNullable<BadgeProps['tone']>, string> = {
   outline: 'bg-border',
 }
 
+const targetIconTone: Record<NonNullable<BadgeProps['tone']>, string> = {
+  neutral: 'text-muted-foreground',
+  primary: 'text-primary-text',
+  success: 'text-success',
+  warning: 'text-warning',
+  error: 'text-destructive',
+  info: 'text-info',
+  outline: 'text-foreground',
+}
+
 function CardBody({
   card,
   valueFields = [],
   formatValue,
+  withHandle,
 }: {
   card: KanbanCard
   valueFields?: KanbanValueField[]
   formatValue: (n: number) => string
+  /** Reserva o espaço da alça de arraste no toque, à esquerda do título. */
+  withHandle?: boolean
 }) {
   const shown = valueFields.slice(0, 2)
   return (
@@ -146,8 +201,8 @@ function CardBody({
           ))}
         </span>
       )}
-      {/* Só o título reserva o espaço do botão de ações; o resto usa a largura toda. */}
-      <span className="flex flex-col pr-8">
+      {/* Só o título reserva o espaço do botão de ações (e da alça, no toque). */}
+      <span className={cn('flex flex-col pr-8', withHandle && 'pl-8')}>
         <span className="line-clamp-2 text-sm font-medium">{card.title}</span>
         {card.subtitle && (
           <span className="text-xs text-muted-foreground tabular-nums">{card.subtitle}</span>
@@ -225,9 +280,12 @@ export function Kanban({
   visibleColumns = 5,
   onLoadMore,
   hasMore,
+  dropTargets,
+  onDropTarget,
   className,
   ...aria
 }: KanbanProps) {
+  const code = resolveCatalogCode('Kanban', { hasDropTargets: Boolean(dropTargets?.length) })
   const { isMobile } = useBreakpoint()
   const boardRef = useFillHeight()
   // Touchpad: o gesto lateral leva o quadro para o mesmo lado dos dedos (esquerda move o
@@ -248,6 +306,12 @@ export function Kanban({
   const [active, setActive] = useState(columns[0]?.id ?? '')
   const [dragging, setDragging] = useState<string | null>(null)
   const [over, setOver] = useState<{ column: string; index: number } | null>(null)
+  // Arraste por toque (motor de src/lib/sortable.ts): reordena dentro da coluna sem
+  // dropTargets, ou solta num destino da barra quando dropTargets está presente.
+  const [touchDrag, setTouchDrag] = useState<{
+    cardId: string
+    overTargetId: string | null
+  } | null>(null)
 
   const inColumn = (id: string) => cards.filter((c) => c.columnId === id)
 
@@ -257,8 +321,47 @@ export function Kanban({
     setOver(null)
   }
 
-  const moveMenu = (card: KanbanCard) =>
-    onCardMove ? (
+  const draggingCardId = dragging ?? touchDrag?.cardId ?? null
+  const showTargetBar = Boolean(dropTargets?.length) && draggingCardId !== null
+
+  const dropOnTarget = (cardId: string, targetId: string) => {
+    const target = dropTargets?.find((t) => t.id === targetId)
+    if (!target || target.disabled) return
+    onDropTarget?.(cardId, targetId)
+  }
+
+  const startTouchDrag = (card: KanbanCard, e: ReactPointerEvent<HTMLElement>) => {
+    if (!onCardMove && !(dropTargets?.length && onDropTarget)) return
+    setTouchDrag({ cardId: card.id, overTargetId: null })
+    bindPointerDrag(e.currentTarget, e, {
+      onMove: (x, y) => {
+        if (dropTargets?.length) {
+          const found = findDragTarget(x, y, 'data-kanban-target')
+          setTouchDrag({ cardId: card.id, overTargetId: found?.id ?? null })
+          return
+        }
+        const found = findDragTarget(x, y, 'data-kanban-card')
+        if (found && found.id !== card.id) {
+          const list = inColumn(card.columnId)
+          let toIndex = list.findIndex((c) => c.id === found.id)
+          if (toIndex === -1) toIndex = list.length
+          if (!found.before) toIndex += 1
+          onCardMove?.(card.id, card.columnId, toIndex)
+        }
+      },
+      onEnd: () => {
+        setTouchDrag((state) => {
+          if (state?.overTargetId) dropOnTarget(card.id, state.overTargetId)
+          return null
+        })
+      },
+    })
+  }
+
+  const moveMenu = (card: KanbanCard) => {
+    const hasTargets = Boolean(dropTargets?.length)
+    if (!onCardMove && !(hasTargets && onDropTarget)) return null
+    return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -273,24 +376,89 @@ export function Kanban({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Mover para</DropdownMenuLabel>
-          {columns
-            .filter((c) => c.id !== card.columnId)
-            .map((c) => (
-              <DropdownMenuItem
-                key={c.id}
-                onSelect={() => onCardMove(card.id, c.id, inColumn(c.id).length)}
-              >
-                <ArrowRightLeft />
-                {c.title}
-              </DropdownMenuItem>
-            ))}
+          {hasTargets
+            ? dropTargets!.map((t) => (
+                <DropdownMenuItem
+                  key={t.id}
+                  disabled={t.disabled}
+                  onSelect={() => dropOnTarget(card.id, t.id)}
+                >
+                  {t.icon ?? <ArrowRightLeft />}
+                  <span className="flex min-w-0 flex-col">
+                    <span className="truncate">{t.label}</span>
+                    {t.disabled && t.disabledReason && (
+                      <span className="truncate text-xs text-muted-foreground">
+                        {t.disabledReason}
+                      </span>
+                    )}
+                  </span>
+                </DropdownMenuItem>
+              ))
+            : columns
+                .filter((c) => c.id !== card.columnId)
+                .map((c) => (
+                  <DropdownMenuItem
+                    key={c.id}
+                    onSelect={() => onCardMove?.(card.id, c.id, inColumn(c.id).length)}
+                  >
+                    <ArrowRightLeft />
+                    {c.title}
+                  </DropdownMenuItem>
+                ))}
         </DropdownMenuContent>
       </DropdownMenu>
-    ) : null
+    )
+  }
+
+  /** Barra de destinos, mostrada durante o arraste (mouse ou toque) quando há dropTargets. */
+  const targetBar = showTargetBar && (
+    <div
+      aria-label="Soltar em"
+      className="fixed inset-x-4 bottom-4 z-30 flex justify-center gap-2 overflow-x-auto rounded-surface border bg-card p-2 shadow-lg"
+    >
+      {dropTargets!.map((t) => (
+        <div
+          key={t.id}
+          data-kanban-target={t.id}
+          onDragOver={(e) => {
+            if (dragging && !t.disabled) e.preventDefault()
+          }}
+          onDrop={(e) => {
+            e.preventDefault()
+            if (dragging) {
+              dropOnTarget(dragging, t.id)
+              setDragging(null)
+            }
+          }}
+          className={cn(
+            'flex min-w-24 flex-col items-center gap-1 rounded-block border p-2 text-center text-xs transition-colors',
+            t.disabled
+              ? 'cursor-not-allowed opacity-50'
+              : touchDrag?.overTargetId === t.id && 'bg-primary-soft/60 ring-2 ring-ring',
+          )}
+        >
+          {t.icon && (
+            <span aria-hidden className={targetIconTone[t.tone ?? 'neutral']}>
+              {t.icon}
+            </span>
+          )}
+          <span className="font-medium">{t.label}</span>
+          {t.hint && !t.disabled && <span className="text-muted-foreground">{t.hint}</span>}
+          {t.disabled && t.disabledReason && (
+            <span className="text-muted-foreground">{t.disabledReason}</span>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+
+  const canTouchDrag = Boolean(onCardMove) || Boolean(dropTargets?.length && onDropTarget)
+  const showHandle = isMobile && canTouchDrag
 
   const cardItem = (card: KanbanCard, index: number) => (
     <li
       key={card.id}
+      data-kanban-card={card.id}
       draggable={!isMobile && Boolean(onCardMove)}
       onDragStart={(e) => {
         setDragging(card.id)
@@ -317,7 +485,7 @@ export function Kanban({
       className={cn(
         'relative flex rounded-block border bg-card p-3 shadow-sm transition-[box-shadow,opacity]',
         !isMobile && onCardMove && 'cursor-grab active:cursor-grabbing',
-        dragging === card.id && 'opacity-50',
+        (dragging === card.id || touchDrag?.cardId === card.id) && 'opacity-50',
         over?.column === card.columnId &&
           over.index === index &&
           dragging !== card.id &&
@@ -333,7 +501,12 @@ export function Kanban({
           {renderCard ? (
             renderCard(card)
           ) : (
-            <CardBody card={card} valueFields={valueFields} formatValue={formatValue} />
+            <CardBody
+              card={card}
+              valueFields={valueFields}
+              formatValue={formatValue}
+              withHandle={showHandle}
+            />
           )}
         </button>
       ) : (
@@ -341,9 +514,24 @@ export function Kanban({
           {renderCard ? (
             renderCard(card)
           ) : (
-            <CardBody card={card} valueFields={valueFields} formatValue={formatValue} />
+            <CardBody
+              card={card}
+              valueFields={valueFields}
+              formatValue={formatValue}
+              withHandle={showHandle}
+            />
           )}
         </div>
+      )}
+      {showHandle && (
+        <button
+          type="button"
+          aria-label={`Arrastar ${card.title}`}
+          className="absolute top-2 left-2 z-10 flex size-touch touch-none items-center justify-center rounded-item text-muted-foreground active:cursor-grabbing"
+          onPointerDown={(e) => startTouchDrag(card, e)}
+        >
+          <GripVertical className="size-icon-sm" aria-hidden />
+        </button>
       )}
       <span className="absolute top-2 right-2 z-10">{moveMenu(card)}</span>
     </li>
@@ -440,8 +628,9 @@ export function Kanban({
         ref={boardRef}
         className={cn('flex h-board min-w-0 flex-col gap-3', className)}
         aria-label={aria['aria-label']}
-        data-rendra="KANB-001"
+        data-rendra={code}
       >
+        {targetBar}
         <Tabs
           variant="pill"
           aria-label="Colunas"
@@ -473,11 +662,12 @@ export function Kanban({
     <section
       ref={boardRef}
       aria-label={aria['aria-label'] ?? 'Quadro kanban'}
-      data-rendra="KANB-001"
+      data-rendra={code}
       data-allow-overflow
       style={{ '--kanban-cols': Math.min(visibleColumns, columns.length) } as CSSProperties}
       className={cn('flex h-board min-w-0 scrollbar-subtle gap-4 overflow-x-auto', className)}
     >
+      {targetBar}
       {columns.map((col) => (
         <div
           key={col.id}

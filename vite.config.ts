@@ -55,7 +55,12 @@ export default defineConfig({
         'src/components/ui/{input,select,modal,alert,accordion,checkbox,field,radio-group,switch,tabs,textarea}.tsx':
           { lines: 85 },
         'src/components/ui/{table,drawer,button}.tsx': { lines: 75 },
-        'src/components/ui/{pagination,otp-input,upload}.tsx': { lines: 60 },
+        'src/components/ui/{pagination,otp-input}.tsx': { lines: 60 },
+        'src/lib/sortable.ts': { lines: 95 },
+        'src/components/ui/{list,timeline}.tsx': { lines: 95 },
+        'src/components/ui/upload.tsx': { lines: 80 },
+        'src/components/ui/image-cropper.tsx': { lines: 80 },
+        'src/components/ui/kanban.tsx': { lines: 50 },
       },
     },
   },
