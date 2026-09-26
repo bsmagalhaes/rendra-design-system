@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { LookupResult } from '@/hooks/use-lookup'
+import { Field } from './field'
 import { Input } from './input'
 
 afterEach(() => vi.unstubAllGlobals())
@@ -200,6 +201,21 @@ describe('Input variant="secret" (A10)', () => {
     expect(screen.getByText('Nenhum valor salvo')).toBeInTheDocument()
   })
 
+  it('dentro de um Field, o Label aponta para um elemento que existe de verdade (o botão Trocar)', () => {
+    render(
+      <Field label="Chave de API" help="Nunca aparece em texto puro.">
+        <Input variant="secret" hasValue maskedHint="••••••a1b2c3" />
+      </Field>,
+    )
+    // getByLabelText só encontra isto se o id do Field bater com o id de algum elemento:
+    // antes da correção, o modo leitura não tinha <input> nenhum e não repassava id, e essa
+    // busca falhava (o Label ficava com htmlFor apontando para nada).
+    const control = screen.getByLabelText('Chave de API')
+    expect(control.tagName).toBe('BUTTON')
+    expect(control).toHaveTextContent('Trocar')
+    expect(control).toHaveAttribute('aria-describedby')
+  })
+
   it('"Trocar" troca a dica mascarada por um campo vazio e editável', async () => {
     render(<SecretField />)
     expect(screen.getByText('••••••a1b2c3')).toBeInTheDocument()
@@ -211,16 +227,20 @@ describe('Input variant="secret" (A10)', () => {
     expect(input).toHaveValue('nova-chave')
   })
 
-  it('em edição, o campo abre vazio e o valor salvo não aparece no DOM', () => {
+  it('em edição, o campo abre vazio e o valor salvo não aparece em lugar nenhum do DOM', () => {
+    const segredoReal = 'sk-live-nao-pode-vazar-987654'
     const { container } = render(
       <Input
         aria-label="Chave de API"
         variant="secret"
         hasValue
         isEditing
+        value={segredoReal}
+        defaultValue={segredoReal}
         maskedHint="••••••a1b2c3"
       />,
     )
+    expect(container.innerHTML).not.toContain(segredoReal)
     expect(container.innerHTML).not.toContain('a1b2c3')
     const input = screen.getByLabelText('Chave de API')
     expect(input).toHaveValue('')

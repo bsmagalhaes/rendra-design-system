@@ -12,12 +12,17 @@ import { controlFrame } from '@/lib/control'
  * (PickerPanel): popover no desktop, bottom sheet no mobile.
  */
 
-const HEX_PATTERN = /^#[0-9a-f]{6}$/i
+const HEX_PATTERN = /^#?[0-9a-f]{6}$/i
 
-/** #rrggbb minúsculo, ou null quando o texto não é um hexadecimal válido de 6 dígitos. */
+/**
+ * #rrggbb minúsculo, ou null quando o texto não é um hexadecimal válido de 6 dígitos.
+ * Aceita com ou sem o "#" na frente (o campo livre também aceita "0ea5e9").
+ */
 function normalizeHex(value: string): string | null {
   const v = value.trim()
-  return HEX_PATTERN.test(v) ? v.toLowerCase() : null
+  if (!HEX_PATTERN.test(v)) return null
+  const digits = v.startsWith('#') ? v.slice(1) : v
+  return `#${digits.toLowerCase()}`
 }
 
 export interface ColorPickerProps {

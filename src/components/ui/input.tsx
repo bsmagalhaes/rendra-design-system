@@ -223,13 +223,27 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const isPassword = type === 'password'
   const country = ddiOptions.find((c) => c.ddi === ddi)
   const isSecret = variant === 'secret'
+  // id e aria-* que o Field injeta no controle (não removidos de props: o <input> normal
+  // continua recebendo pelo {...props}). No modo leitura do secret não há <input>; sem
+  // repassar para o botão Trocar, o Label do Field fica apontando para um id inexistente.
+  const {
+    id: fieldId,
+    'aria-describedby': fieldDescribedBy,
+    'aria-required': fieldRequired,
+  } = props
 
-  const clear = () => {
+  // Esvazia o valor (máscara, estado interno e os callbacks): usado por "Limpar campo" e
+  // por trocar de unidade, que nunca deve carregar o número de uma unidade para outra.
+  const resetValue = () => {
     if (maskRef.current) maskRef.current.value = ''
     setInner('')
     onChange?.('')
     onValueChange?.('', '')
     onCentsChange?.(null)
+  }
+
+  const clear = () => {
+    resetValue()
     inputRef.current?.focus()
   }
 
@@ -237,11 +251,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const changeUnit = (id: string) => {
     setInnerUnit(id)
     onUnitChange?.(id)
-    if (maskRef.current) maskRef.current.value = ''
-    setInner('')
-    onChange?.('')
-    onValueChange?.('', '')
-    onCentsChange?.(null)
+    resetValue()
   }
 
   // ---------------------------------------------------------------- variant="secret" (A10)
@@ -255,7 +265,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         <span className="min-w-0 flex-1 truncate font-mono text-sm text-muted-foreground">
           {hasValue ? (maskedHint ?? '••••••••') : 'Nenhum valor salvo'}
         </span>
-        <Button type="button" variant="ghost" size="sm" onClick={onStartEdit} disabled={disabled}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={onStartEdit}
+          disabled={disabled}
+          id={fieldId}
+          aria-describedby={fieldDescribedBy}
+          aria-required={fieldRequired}
+        >
           Trocar
         </Button>
         {hasValue && onRemove && (
