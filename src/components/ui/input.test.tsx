@@ -97,4 +97,13 @@ describe('Input', () => {
       ),
     )
   })
+
+  it('inputClassName vai no <input>; className vai no quadro em volta', () => {
+    render(<Input aria-label="Item" className="quadro-extra" inputClassName="line-through" />)
+    const input = screen.getByLabelText('Item')
+    expect(input).toHaveClass('line-through')
+    expect(input).not.toHaveClass('quadro-extra')
+    expect(input.closest('[data-slot="control"]')).toHaveClass('quadro-extra')
+    expect(input.closest('[data-slot="control"]')).not.toHaveClass('line-through')
+  })
 })

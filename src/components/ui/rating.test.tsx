@@ -1,9 +1,17 @@
 // @vitest-environment jsdom
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { useState } from 'react'
+import { describe, expect, it } from 'vitest'
 import { renderApp } from '@/test/render'
-import { Rating } from './rating'
+import { Rating, type RatingProps } from './rating'
+
+/** Componente controlado: o clique precisa mudar o valor de verdade, não só chamar onChange. */
+function Controlled(props: Omit<RatingProps, 'value' | 'onChange'> & { initial: number | null }) {
+  const { initial, ...rest } = props
+  const [value, setValue] = useState<number | null>(initial)
+  return <Rating {...rest} value={value} onChange={setValue} />
+}
 
 describe('Rating: variant stars', () => {
   it('mostra 5 estrelas por padrão, com data-rendra RTG-001', () => {
@@ -12,27 +20,46 @@ describe('Rating: variant stars', () => {
     expect(container.querySelector('[data-rendra="RTG-001"]')).toBeInTheDocument()
   })
 
-  it('clicar numa estrela marca e chama onChange com o número', async () => {
-    const onChange = vi.fn()
-    renderApp(<Rating variant="stars" value={null} onChange={onChange} aria-label="Nota" />)
-    await userEvent.click(screen.getByRole('radio', { name: '3 estrelas' }))
-    expect(onChange).toHaveBeenCalledWith(3)
+  it('clicar numa estrela marca ela (aria-checked e preenchimento) e desmarca as demais', async () => {
+    renderApp(<Controlled variant="stars" initial={null} aria-label="Nota" />)
+    const star3 = screen.getByRole('radio', { name: '3 estrelas' })
+    await userEvent.click(star3)
+
+    expect(star3).toHaveAttribute('aria-checked', 'true')
+    expect(star3.querySelector('svg')).toHaveClass('fill-current')
+    expect(screen.getByRole('radio', { name: '2 estrelas' })).toHaveAttribute(
+      'aria-checked',
+      'false',
+    )
+    expect(screen.getByRole('radio', { name: '4 estrelas' })).toHaveAttribute(
+      'aria-checked',
+      'false',
+    )
   })
 
-  it('clicar de novo na estrela já marcada desmarca e devolve null', async () => {
-    const onChange = vi.fn()
-    renderApp(<Rating variant="stars" value={3} onChange={onChange} aria-label="Nota" />)
-    await userEvent.click(screen.getByRole('radio', { name: '3 estrelas' }))
-    expect(onChange).toHaveBeenCalledWith(null)
+  it('clicar de novo na estrela já marcada desmarca: nenhuma fica com aria-checked nem preenchida', async () => {
+    renderApp(<Controlled variant="stars" initial={3} aria-label="Nota" />)
+    const star3 = screen.getByRole('radio', { name: '3 estrelas' })
+    expect(star3).toHaveAttribute('aria-checked', 'true')
+
+    await userEvent.click(star3)
+
+    for (const radio of screen.getAllByRole('radio')) {
+      expect(radio).toHaveAttribute('aria-checked', 'false')
+      expect(radio.querySelector('svg')).not.toHaveClass('fill-current')
+    }
   })
 
   it('seta para a direita move e marca a próxima estrela', async () => {
-    const onChange = vi.fn()
-    renderApp(<Rating variant="stars" value={2} onChange={onChange} aria-label="Nota" />)
-    const current = screen.getByRole('radio', { name: '2 estrelas' })
-    current.focus()
+    renderApp(<Controlled variant="stars" initial={2} aria-label="Nota" />)
+    const star2 = screen.getByRole('radio', { name: '2 estrelas' })
+    star2.focus()
     await userEvent.keyboard('{ArrowRight}')
-    expect(onChange).toHaveBeenCalledWith(3)
+
+    const star3 = screen.getByRole('radio', { name: '3 estrelas' })
+    expect(star3).toHaveAttribute('aria-checked', 'true')
+    expect(star3).toHaveFocus()
+    expect(star2).toHaveAttribute('aria-checked', 'false')
   })
 
   it('max customiza o total de estrelas', () => {
@@ -62,17 +89,17 @@ describe('Rating: variant scale', () => {
     expect(screen.getByText('Muito provável')).toBeInTheDocument()
   })
 
-  it('clicar numa nota marca; clicar de novo desmarca e devolve null', async () => {
-    const onChange = vi.fn()
-    const { rerender } = renderApp(
-      <Rating variant="scale" value={null} onChange={onChange} aria-label="Nota" />,
-    )
-    await userEvent.click(screen.getByRole('radio', { name: 'Nota 8' }))
-    expect(onChange).toHaveBeenCalledWith(8)
+  it('clicar numa nota marca ela (aria-checked e data-state); clicar de novo desmarca', async () => {
+    renderApp(<Controlled variant="scale" initial={null} aria-label="Nota" />)
+    const nota8 = screen.getByRole('radio', { name: 'Nota 8' })
 
-    rerender(<Rating variant="scale" value={8} onChange={onChange} aria-label="Nota" />)
-    await userEvent.click(screen.getByRole('radio', { name: 'Nota 8' }))
-    expect(onChange).toHaveBeenCalledWith(null)
+    await userEvent.click(nota8)
+    expect(nota8).toHaveAttribute('aria-checked', 'true')
+    expect(nota8).toHaveAttribute('data-state', 'checked')
+
+    await userEvent.click(nota8)
+    expect(nota8).toHaveAttribute('aria-checked', 'false')
+    expect(nota8).not.toHaveAttribute('data-state')
   })
 
   it('min e max customizam a faixa', () => {

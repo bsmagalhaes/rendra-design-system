@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { useState } from 'react'
+import { describe, expect, it } from 'vitest'
 import { Input } from '@/components/ui/input'
 import { renderApp } from '@/test/render'
 import { RepeatableField, type RepeatableItem } from './repeatable-field'
@@ -10,21 +11,21 @@ interface Phone extends RepeatableItem {
   number: string
 }
 
+/** Componente controlado: a lista renderizada precisa refletir a mudança, não só chamar onChange. */
 function Demo({
-  items,
-  onChangeSpy,
+  initial,
   showPrimary = false,
   maxItems,
 }: {
-  items: Phone[]
-  onChangeSpy: (items: Phone[]) => void
+  initial: Phone[]
   showPrimary?: boolean
   maxItems?: number
 }) {
+  const [items, setItems] = useState<Phone[]>(initial)
   return (
     <RepeatableField<Phone>
       items={items}
-      onChange={onChangeSpy}
+      onChange={setItems}
       createItem={() => ({ id: `novo-${items.length}`, number: '' })}
       renderField={(item, update, index) => (
         <Input
@@ -43,86 +44,91 @@ function Demo({
 
 describe('RepeatableField', () => {
   it('sem itens, mostra o texto vazio e data-rendra REP-001', () => {
-    const onChangeSpy = vi.fn()
-    const { container } = renderApp(<Demo items={[]} onChangeSpy={onChangeSpy} />)
+    const { container } = renderApp(<Demo initial={[]} />)
     expect(screen.getByText('Nenhum telefone ainda.')).toBeInTheDocument()
     expect(container.querySelector('[data-rendra="REP-001"]')).toBeInTheDocument()
   })
 
-  it('adicionar chama onChange com um item novo', async () => {
-    const onChangeSpy = vi.fn()
-    renderApp(<Demo items={[]} onChangeSpy={onChangeSpy} />)
+  it('adicionar faz a nova linha aparecer na tela (e some o texto vazio)', async () => {
+    renderApp(<Demo initial={[]} />)
     await userEvent.click(screen.getByRole('button', { name: 'Adicionar telefone' }))
-    expect(onChangeSpy).toHaveBeenCalledWith([{ id: 'novo-0', number: '' }])
+
+    expect(screen.getByRole('textbox', { name: 'Telefone 1' })).toBeInTheDocument()
+    expect(screen.queryByText('Nenhum telefone ainda.')).not.toBeInTheDocument()
   })
 
-  it('respeita maxItems: o botão de adicionar desabilita no limite', () => {
-    const onChangeSpy = vi.fn()
+  it('respeita maxItems: o botão de adicionar desabilita no limite e não cria uma terceira linha', async () => {
     renderApp(
       <Demo
-        items={[
+        initial={[
           { id: '1', number: '111' },
           { id: '2', number: '222' },
         ]}
-        onChangeSpy={onChangeSpy}
         maxItems={2}
       />,
     )
-    expect(screen.getByRole('button', { name: 'Adicionar telefone' })).toBeDisabled()
+    const addButton = screen.getByRole('button', { name: 'Adicionar telefone' })
+    expect(addButton).toBeDisabled()
+
+    await userEvent.click(addButton)
+    expect(screen.getAllByRole('textbox')).toHaveLength(2)
   })
 
-  it('marcar um item como principal desmarca os outros', async () => {
-    const onChangeSpy = vi.fn()
+  it('marcar um item como principal mostra "Principal" nele e "Tornar principal" no outro', async () => {
     renderApp(
       <Demo
-        items={[
+        initial={[
           { id: '1', number: '111', isPrimary: true },
           { id: '2', number: '222' },
         ]}
-        onChangeSpy={onChangeSpy}
         showPrimary
       />,
     )
+    expect(screen.getByRole('button', { name: 'Principal' })).toBeInTheDocument()
+
     await userEvent.click(screen.getByRole('button', { name: 'Tornar principal' }))
-    expect(onChangeSpy).toHaveBeenCalledWith([
-      { id: '1', number: '111', isPrimary: false },
-      { id: '2', number: '222', isPrimary: true },
-    ])
+
+    expect(screen.getAllByRole('button', { name: 'Principal' })).toHaveLength(1)
+    expect(screen.getByRole('button', { name: 'Tornar principal' })).toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: 'Telefone 1' })).toHaveValue('111')
+    expect(screen.getByRole('textbox', { name: 'Telefone 2' })).toHaveValue('222')
   })
 
-  it('remover o item principal passa o papel para o primeiro restante', async () => {
-    const onChangeSpy = vi.fn()
+  it('remover o item principal faz o primeiro restante virar "Principal" na tela', async () => {
     renderApp(
       <Demo
-        items={[
+        initial={[
           { id: '1', number: '111', isPrimary: true },
           { id: '2', number: '222' },
           { id: '3', number: '333' },
         ]}
-        onChangeSpy={onChangeSpy}
         showPrimary
       />,
     )
     await userEvent.click(screen.getByRole('button', { name: 'Remover item 1' }))
-    expect(onChangeSpy).toHaveBeenCalledWith([
-      { id: '2', number: '222', isPrimary: true },
-      { id: '3', number: '333' },
-    ])
+
+    expect(screen.queryByDisplayValue('111')).not.toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: 'Telefone 1' })).toHaveValue('222')
+    expect(screen.getAllByRole('button', { name: 'Principal' })).toHaveLength(1)
+    // O que passou a ser o primeiro item (222) é quem agora tem o botão "Principal".
+    const rows = screen.getAllByRole('textbox')
+    expect(rows[0]).toHaveValue('222')
   })
 
-  it('remover um item que não é o principal não altera quem é principal', async () => {
-    const onChangeSpy = vi.fn()
+  it('remover um item que não é o principal não muda quem tem o selo "Principal"', async () => {
     renderApp(
       <Demo
-        items={[
+        initial={[
           { id: '1', number: '111', isPrimary: true },
           { id: '2', number: '222' },
         ]}
-        onChangeSpy={onChangeSpy}
         showPrimary
       />,
     )
     await userEvent.click(screen.getByRole('button', { name: 'Remover item 2' }))
-    expect(onChangeSpy).toHaveBeenCalledWith([{ id: '1', number: '111', isPrimary: true }])
+
+    expect(screen.getAllByRole('textbox')).toHaveLength(1)
+    expect(screen.getByRole('textbox', { name: 'Telefone 1' })).toHaveValue('111')
+    expect(screen.getByRole('button', { name: 'Principal' })).toBeInTheDocument()
   })
 })

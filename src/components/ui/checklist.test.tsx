@@ -1,84 +1,78 @@
 // @vitest-environment jsdom
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { useState } from 'react'
+import { describe, expect, it } from 'vitest'
 import { renderApp } from '@/test/render'
 import { Checklist, type ChecklistItem } from './checklist'
 
+/** Componente controlado: a lista renderizada precisa refletir a mudança, não só chamar onChange. */
+function Demo({ initial, disabled }: { initial: ChecklistItem[]; disabled?: boolean }) {
+  const [value, setValue] = useState<ChecklistItem[]>(initial)
+  return <Checklist value={value} onChange={setValue} disabled={disabled} aria-label="Tarefas" />
+}
+
 describe('Checklist', () => {
   it('sem itens, mostra só o botão de adicionar, com data-rendra CKLT-001', () => {
-    const onChange = vi.fn()
-    const { container } = renderApp(
-      <Checklist value={[]} onChange={onChange} aria-label="Tarefas" />,
-    )
+    const { container } = renderApp(<Demo initial={[]} />)
     expect(screen.getByRole('button', { name: 'Adicionar item' })).toBeInTheDocument()
     expect(container.querySelector('[data-rendra="CKLT-001"]')).toBeInTheDocument()
   })
 
-  it('adicionar cria um item vazio e move o foco para o nome dele', async () => {
-    const onChange = vi.fn()
-    const value: ChecklistItem[] = []
-    renderApp(<Checklist value={value} onChange={onChange} aria-label="Tarefas" />)
+  it('adicionar faz o item novo aparecer na tela, vazio e com o foco', async () => {
+    renderApp(<Demo initial={[]} />)
     await userEvent.click(screen.getByRole('button', { name: 'Adicionar item' }))
-    expect(onChange).toHaveBeenCalledTimes(1)
-    const created = onChange.mock.calls[0]?.[0] as ChecklistItem[]
-    expect(created).toHaveLength(1)
-    expect(created[0]).toMatchObject({ label: '', checked: false })
+
+    const novoCampo = screen.getByRole('textbox', { name: 'Nome do item 1' })
+    expect(novoCampo).toBeInTheDocument()
+    expect(novoCampo).toHaveValue('')
+    expect(novoCampo).toHaveFocus()
   })
 
-  it('digitar no campo do item renomeia (tudo por teclado)', async () => {
-    const onChange = vi.fn()
-    renderApp(
-      <Checklist
-        value={[{ id: '1', label: 'Item', checked: false }]}
-        onChange={onChange}
-        aria-label="Tarefas"
-      />,
-    )
+  it('digitar no campo do item muda o texto mostrado (renomear por teclado)', async () => {
+    renderApp(<Demo initial={[{ id: '1', label: 'Item', checked: false }]} />)
     const input = screen.getByRole('textbox', { name: 'Nome do item 1' })
+
     await userEvent.type(input, 'X')
-    expect(onChange).toHaveBeenLastCalledWith([{ id: '1', label: 'ItemX', checked: false }])
+
+    expect(screen.getByRole('textbox', { name: 'Nome do item 1' })).toHaveValue('ItemX')
   })
 
-  it('marcar o item chama onChange com checked invertido', async () => {
-    const onChange = vi.fn()
-    renderApp(
-      <Checklist
-        value={[{ id: '1', label: 'Regar as plantas', checked: false }]}
-        onChange={onChange}
-        aria-label="Tarefas"
-      />,
-    )
-    await userEvent.click(screen.getByRole('checkbox', { name: 'Marcar Regar as plantas' }))
-    expect(onChange).toHaveBeenCalledWith([{ id: '1', label: 'Regar as plantas', checked: true }])
+  it('marcar o item risca o texto (checkbox marcado e classe de riscado no campo)', async () => {
+    renderApp(<Demo initial={[{ id: '1', label: 'Regar as plantas', checked: false }]} />)
+    const checkbox = screen.getByRole('checkbox', { name: 'Marcar Regar as plantas' })
+    const input = screen.getByRole('textbox', { name: 'Nome do item 1' })
+    expect(checkbox).not.toBeChecked()
+    expect(input).not.toHaveClass('line-through')
+
+    await userEvent.click(checkbox)
+
+    expect(checkbox).toBeChecked()
+    expect(input).toHaveClass('line-through')
+
+    await userEvent.click(checkbox)
+    expect(checkbox).not.toBeChecked()
+    expect(input).not.toHaveClass('line-through')
   })
 
-  it('remover o item chama onChange sem ele', async () => {
-    const onChange = vi.fn()
+  it('remover o item faz a linha dele sumir da tela', async () => {
     renderApp(
-      <Checklist
-        value={[
+      <Demo
+        initial={[
           { id: '1', label: 'Um', checked: false },
           { id: '2', label: 'Dois', checked: false },
         ]}
-        onChange={onChange}
-        aria-label="Tarefas"
       />,
     )
     await userEvent.click(screen.getByRole('button', { name: 'Remover item 1' }))
-    expect(onChange).toHaveBeenCalledWith([{ id: '2', label: 'Dois', checked: false }])
+
+    expect(screen.queryByDisplayValue('Um')).not.toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: 'Nome do item 1' })).toHaveValue('Dois')
+    expect(screen.getAllByRole('textbox')).toHaveLength(1)
   })
 
   it('disabled desabilita marcar, renomear e remover', () => {
-    const onChange = vi.fn()
-    renderApp(
-      <Checklist
-        value={[{ id: '1', label: 'Um', checked: false }]}
-        onChange={onChange}
-        disabled
-        aria-label="Tarefas"
-      />,
-    )
+    renderApp(<Demo initial={[{ id: '1', label: 'Um', checked: false }]} disabled />)
     expect(screen.getByRole('checkbox')).toBeDisabled()
     expect(screen.getByRole('textbox', { name: 'Nome do item 1' })).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Remover item 1' })).toBeDisabled()

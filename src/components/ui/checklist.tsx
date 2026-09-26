@@ -84,6 +84,7 @@ export function Checklist({
             disabled={disabled}
             aria-label={`Nome do item ${index + 1}`}
             className="flex-1"
+            inputClassName={cn(item.checked && 'text-muted-foreground line-through')}
           />
           <Button
             type="button"
