@@ -1,14 +1,17 @@
 import IMask, { type FactoryArg, type InputMask } from 'imask'
-import { ChevronDown, Eye, EyeOff, Loader2, X } from 'lucide-react'
+import { ChevronDown, Eye, EyeOff, X } from 'lucide-react'
 import {
   forwardRef,
   useEffect,
   useImperativeHandle,
   useRef,
   useState,
+  type ChangeEvent,
   type InputHTMLAttributes,
   type ReactNode,
 } from 'react'
+import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 import { useLookup, type LookupResult } from '@/hooks/use-lookup'
 import { cn } from '@/lib/cn'
 import { controlAdornmentButton, controlFrame, controlInput, type ControlSize } from '@/lib/control'
@@ -16,11 +19,19 @@ import {
   DEFAULT_DDI,
   internationalPhoneMask,
   masks,
+  percentMask,
   phoneCountries,
   toCents,
   type MaskName,
   type PhoneCountry,
 } from '@/lib/masks'
+
+/** Uma unidade do seletor embutido do Input (A9). */
+export interface InputUnitOption {
+  /** "percent" e "currency" ligam a máscara de percentual e de moeda automaticamente. */
+  id: string
+  label: string
+}
 
 export interface InputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -31,7 +42,7 @@ export interface InputProps extends Omit<
   mask?: MaskName
   /** Ícone à esquerda. */
   icon?: ReactNode
-  /** Conteúdo fixo à direita (ex.: "kg", "dias"). */
+  /** Conteúdo fixo à direita (ex.: "kg", "dias"). Ignorado quando `units` está presente. */
   suffix?: ReactNode
   /** Mostra botão para limpar quando há valor. */
   clearable?: boolean
@@ -64,6 +75,36 @@ export interface InputProps extends Omit<
    * resultado. A tela decide o que preencher; use `result.message` como ajuda do Field.
    */
   onLookup?: (result: LookupResult) => void
+  /**
+   * Unidades (A9): seletor embutido à direita, no mesmo padrão do seletor de DDI. O id
+   * "percent" liga a máscara de percentual (teto configurável por `percentMax`); "currency"
+   * liga a máscara de moeda (R$ 1.250,00). Qualquer outro id não aplica máscara, só rótulo.
+   * Trocar de unidade sempre limpa o valor do campo.
+   */
+  units?: InputUnitOption[]
+  /** Unidade escolhida (controlada). Sem ela, usa a primeira de `units`. */
+  unit?: string
+  onUnitChange?: (unit: string) => void
+  /** Teto do percentual quando a unidade escolhida é "percent". Padrão 100. */
+  percentMax?: number
+  /**
+   * Variante de valor guardado (A10): mostra `maskedHint` no lugar do valor real, que nunca
+   * chega a existir no DOM. "Trocar" abre um campo vazio (`isEditing`); cancelar volta à
+   * máscara. O componente é controlado pela tela: `isEditing`, `onStartEdit`, `onCancelEdit`.
+   */
+  variant?: 'secret'
+  /** Há um valor salvo (mesmo sem mostrá-lo). */
+  hasValue?: boolean
+  /** Texto mascarado mostrado no lugar do valor, ex.: "••••••a1b2c3". */
+  maskedHint?: string
+  /** Campo aberto para digitar um valor novo. */
+  isEditing?: boolean
+  onStartEdit?: () => void
+  onCancelEdit?: () => void
+  /** Remove o valor salvo. Sem essa prop, o botão "Remover" não aparece. */
+  onRemove?: () => void
+  /** Remoção em andamento: desabilita e mostra o carregamento no botão "Remover". */
+  removing?: boolean
   className?: string
   /**
    * Classe extra no próprio elemento `<input>` (className vai no quadro em volta). Uso raro:
@@ -73,8 +114,8 @@ export interface InputProps extends Omit<
 }
 
 /**
- * Input único. Tipos, máscaras, ícone, limpar e senha são props:
- * nunca crie InputCPF, InputTelefone ou InputSenha.
+ * Input único. Tipos, máscaras, ícone, limpar, senha, unidades e valor guardado são props:
+ * nunca crie InputCPF, InputTelefone, InputSenha ou InputSegredo.
  */
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   {
@@ -100,6 +141,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     hideDdi,
     onCentsChange,
     onLookup,
+    units,
+    unit: unitProp,
+    onUnitChange,
+    percentMax,
+    variant,
+    hasValue,
+    maskedHint,
+    isEditing,
+    onStartEdit,
+    onCancelEdit,
+    onRemove,
+    removing,
     ...props
   },
   ref,
@@ -122,8 +175,31 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const ddi = ddiProp ?? innerDdi
   const showDdi = isPhone && !hideDdi
   const intl = isPhone && ddi !== DEFAULT_DDI
-  const def = intl ? internationalPhoneMask : mask ? masks[mask] : undefined
-  const maskKey = intl ? 'phone-intl' : mask
+
+  // Unidades (A9): seletor embutido à direita. A unidade escolhida decide a máscara.
+  const hasUnits = Boolean(units && units.length > 0)
+  const [innerUnit, setInnerUnit] = useState(unitProp ?? units?.[0]?.id ?? '')
+  const unit = hasUnits ? (unitProp ?? innerUnit) : undefined
+  const unitMaskName = unit === 'percent' ? 'percent' : unit === 'currency' ? 'currency' : undefined
+
+  const def = intl
+    ? internationalPhoneMask
+    : hasUnits
+      ? unitMaskName === 'percent'
+        ? percentMask(percentMax)
+        : unitMaskName === 'currency'
+          ? masks.currency
+          : undefined
+      : mask
+        ? masks[mask]
+        : undefined
+  const maskKey = !def
+    ? undefined
+    : intl
+      ? 'phone-intl'
+      : hasUnits
+        ? `unit-${unitMaskName}-${percentMax ?? ''}`
+        : mask
 
   // Máscara: criada uma vez por tipo de máscara, sincronizada com o valor controlado.
   useEffect(() => {
@@ -134,7 +210,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       setInner(m.value)
       cb.current.onChange?.(m.value)
       cb.current.onValueChange?.(m.unmaskedValue, m.value)
-      if (mask === 'currency') cb.current.onCentsChange?.(toCents(m.value))
+      if (mask === 'currency' || unitMaskName === 'currency')
+        cb.current.onCentsChange?.(toCents(m.value))
     })
     return () => {
       m.destroy()
@@ -151,14 +228,75 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 
   const isPassword = type === 'password'
   const country = ddiOptions.find((c) => c.ddi === ddi)
+  const isSecret = variant === 'secret'
+  // id e aria-* que o Field injeta no controle (não removidos de props: o <input> normal
+  // continua recebendo pelo {...props}). No modo leitura do secret não há <input>; sem
+  // repassar para o botão Trocar, o Label do Field fica apontando para um id inexistente.
+  const {
+    id: fieldId,
+    'aria-describedby': fieldDescribedBy,
+    'aria-required': fieldRequired,
+  } = props
 
-  const clear = () => {
+  // Esvazia o valor (máscara, estado interno e os callbacks): usado por "Limpar campo" e
+  // por trocar de unidade, que nunca deve carregar o número de uma unidade para outra.
+  const resetValue = () => {
     if (maskRef.current) maskRef.current.value = ''
     setInner('')
     onChange?.('')
     onValueChange?.('', '')
     onCentsChange?.(null)
+  }
+
+  const clear = () => {
+    resetValue()
     inputRef.current?.focus()
+  }
+
+  // Trocar de unidade sempre limpa o valor (a máscara muda junto).
+  const changeUnit = (id: string) => {
+    setInnerUnit(id)
+    onUnitChange?.(id)
+    resetValue()
+  }
+
+  // ---------------------------------------------------------------- variant="secret" (A10)
+  if (isSecret && !isEditing) {
+    return (
+      <div
+        data-slot="control"
+        data-rendra="CAMP-001"
+        className={cn(controlFrame({ size, invalid }), className)}
+      >
+        <span className="min-w-0 flex-1 truncate font-mono text-sm text-muted-foreground">
+          {hasValue ? (maskedHint ?? '••••••••') : 'Nenhum valor salvo'}
+        </span>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={onStartEdit}
+          disabled={disabled}
+          id={fieldId}
+          aria-describedby={fieldDescribedBy}
+          aria-required={fieldRequired}
+        >
+          Trocar
+        </Button>
+        {hasValue && onRemove && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onRemove}
+            disabled={disabled || removing}
+            loading={removing}
+          >
+            Remover
+          </Button>
+        )}
+      </div>
+    )
   }
 
   return (
@@ -196,33 +334,70 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         </span>
       )}
       <input
+        key={hasUnits ? `unit-${unit}` : undefined}
         ref={inputRef}
-        type={isPassword && showPassword ? 'text' : type}
+        type={
+          isSecret
+            ? showPassword
+              ? 'text'
+              : 'password'
+            : isPassword && showPassword
+              ? 'text'
+              : type
+        }
         inputMode={inputMode ?? def?.inputMode}
         placeholder={placeholder ?? def?.placeholder}
         disabled={disabled}
         aria-invalid={invalid || undefined}
         aria-busy={searching || undefined}
         className={cn(controlInput, inputClassName)}
-        {...(maskKey
-          ? { defaultValue: current }
-          : {
-              value: current,
-              onChange: (e) => {
-                setInner(e.target.value)
+        {...(isSecret
+          ? {
+              // "Trocar" sempre abre vazio: o valor salvo nunca chega a existir no DOM.
+              defaultValue: '',
+              onChange: (e: ChangeEvent<HTMLInputElement>) => {
                 onChange?.(e.target.value)
                 onValueChange?.(e.target.value, e.target.value)
               },
-            })}
+            }
+          : maskKey
+            ? { defaultValue: current }
+            : {
+                value: current,
+                onChange: (e: ChangeEvent<HTMLInputElement>) => {
+                  setInner(e.target.value)
+                  onChange?.(e.target.value)
+                  onValueChange?.(e.target.value, e.target.value)
+                },
+              })}
         {...props}
       />
       {searching && (
-        <span role="status" className="flex shrink-0 text-muted-foreground [&_svg]:size-icon-sm">
-          <Loader2 className="animate-spin" aria-hidden />
-          <span className="sr-only">Buscando…</span>
+        <Spinner size="sm" label="Buscando…" className="shrink-0 text-muted-foreground" />
+      )}
+      {hasUnits && (
+        // Mesmo padrão do seletor de DDI, à direita: rótulo visível e select nativo por cima.
+        <span className="relative -mr-1 flex h-full shrink-0 items-center gap-1 border-l pl-2 text-sm font-medium">
+          <span aria-hidden>{units?.find((u) => u.id === unit)?.label ?? unit}</span>
+          <ChevronDown className="size-icon-sm text-muted-foreground" aria-hidden />
+          <select
+            aria-label={`Unidade: ${units?.find((u) => u.id === unit)?.label ?? unit}`}
+            value={unit}
+            disabled={disabled}
+            onChange={(e) => changeUnit(e.target.value)}
+            className="absolute inset-0 cursor-pointer bg-popover text-popover-foreground opacity-0 disabled:cursor-not-allowed"
+          >
+            {units?.map((u) => (
+              <option key={u.id} value={u.id} className="bg-popover text-popover-foreground">
+                {u.label}
+              </option>
+            ))}
+          </select>
         </span>
       )}
-      {suffix && <span className="shrink-0 text-sm text-muted-foreground">{suffix}</span>}
+      {!hasUnits && suffix && (
+        <span className="shrink-0 text-sm text-muted-foreground">{suffix}</span>
+      )}
       {clearable && current && !disabled && (
         <button
           type="button"
@@ -233,7 +408,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           <X aria-hidden />
         </button>
       )}
-      {isPassword && (
+      {(isPassword || isSecret) && (
         <button
           type="button"
           onClick={() => setShowPassword((s) => !s)}
@@ -243,6 +418,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         >
           {showPassword ? <EyeOff aria-hidden /> : <Eye aria-hidden />}
         </button>
+      )}
+      {isSecret && (
+        <Button type="button" variant="ghost" size="sm" onClick={onCancelEdit} disabled={disabled}>
+          Cancelar
+        </Button>
       )}
     </div>
   )

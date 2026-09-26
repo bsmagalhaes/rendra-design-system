@@ -1,11 +1,19 @@
-import type { ReactNode } from 'react'
+import { useCallback, type ReactNode } from 'react'
 import { Link, Outlet, useLocation, useMatches, useNavigate, type UIMatch } from 'react-router'
-import type { RouteHandle } from '@/components/app-shell/header'
 import {
   RendraProvider,
   type RendraBreadcrumbItem,
   type RendraLinkProps,
 } from '@/components/rendra-provider'
+
+/**
+ * Metadados de rota lidos pela trilha: handle: { crumb: 'Clientes' }. Convenção do
+ * react-router (`handle`), que não existe em outros roteadores; por isso fica aqui, na
+ * ponte, e não em src/components/app-shell/header.tsx.
+ */
+export interface RouteHandle {
+  crumb?: string | ((params: Record<string, string | undefined>) => string)
+}
 
 /** `Link` do react-router com a interface do `RendraLinkProps` (repassa o resto). */
 function RouterLink({ to, children, ...rest }: RendraLinkProps) {
@@ -38,17 +46,22 @@ function useBreadcrumbsFromMatches(): RendraBreadcrumbItem[] {
 /**
  * Liga o `RendraProvider` ao `react-router` do boilerplate: link, caminho atual, navegar
  * e a trilha. É o único lugar do app que sabe que o roteador é o `react-router`; os
- * componentes de `src/components/ui` não importam `react-router` diretamente.
+ * componentes de `src/components/ui` e o `AppShell` não importam `react-router` diretamente.
  * Sem `children`, renderiza `<Outlet />`, para ser usado como elemento raiz das rotas.
  */
 export function RendraRouterBridge({ children }: { children?: ReactNode } = {}) {
   const navigate = useNavigate()
+  const go = useCallback(
+    (to: string, options?: { replace?: boolean }) => navigate(to, options),
+    [navigate],
+  )
+  const goBack = useCallback(() => navigate(-1), [navigate])
   return (
     <RendraProvider
       linkComponent={RouterLink}
       useCurrentPath={useCurrentPathFromRouter}
-      navigate={(to, options) => navigate(to, options)}
-      goBack={() => navigate(-1)}
+      navigate={go}
+      goBack={goBack}
       useBreadcrumbs={useBreadcrumbsFromMatches}
     >
       {children ?? <Outlet />}
