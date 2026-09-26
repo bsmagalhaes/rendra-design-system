@@ -19,12 +19,16 @@ const originalToBlob = HTMLCanvasElement.prototype.toBlob
 // motor da geometria ter o que calcular.
 const originalClientWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientWidth')
 const originalClientHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientHeight')
+/** Tamanho do canvas criado por confirm(), no momento em que ele chama toBlob. */
+let lastCanvasSize: { width: number; height: number } | null = null
 beforeEach(() => {
+  lastCanvasSize = null
   URL.createObjectURL = vi.fn(() => 'blob:mock')
   URL.revokeObjectURL = vi.fn()
   // @ts-expect-error simula só o que o componente usa do CanvasRenderingContext2D
   HTMLCanvasElement.prototype.getContext = () => ({ drawImage: () => {} })
   HTMLCanvasElement.prototype.toBlob = function (cb, type) {
+    lastCanvasSize = { width: this.width, height: this.height }
     cb(new Blob(['recorte'], { type: type ?? 'image/png' }))
   }
   Object.defineProperty(HTMLElement.prototype, 'clientWidth', { configurable: true, value: 200 })
@@ -159,13 +163,15 @@ describe('ImageCropper', () => {
     HTMLCanvasElement.prototype.getContext = original
   })
 
-  it('carregando a imagem, o botão de recortar habilita e o recorte final chama onConfirm com um File', async () => {
+  it('carregando a imagem, o botão de recortar habilita e o recorte final entrega um File nas dimensões esperadas', async () => {
     const file = new File(['a'], 'foto.png', { type: 'image/png' })
     const onConfirm = vi.fn()
     const { container } = renderApp(
       <ImageCropper file={file} aspects={[square]} onConfirm={onConfirm} onCancel={vi.fn()} />,
     )
     const img = container.querySelector('img')!
+    // Moldura quadrada de 200x200 (mockada), imagem original 800x600: a escala mínima
+    // para cobrir vem da altura (200/600), então o retângulo de origem sai em 600x600.
     Object.defineProperty(img, 'naturalWidth', { value: 800, configurable: true })
     Object.defineProperty(img, 'naturalHeight', { value: 600, configurable: true })
     fireEvent.load(img)
@@ -176,5 +182,31 @@ describe('ImageCropper', () => {
     const result = onConfirm.mock.calls[0]![0] as File
     expect(result).toBeInstanceOf(File)
     expect(result.name).toBe('foto.png')
+    expect(result.type).toBe('image/png')
+    expect(lastCanvasSize).toEqual({ width: 600, height: 600 })
+  })
+
+  it('maxOutputWidth encolhe a saída mantendo a proporção do recorte', async () => {
+    const file = new File(['a'], 'foto.png', { type: 'image/png' })
+    const onConfirm = vi.fn()
+    const { container } = renderApp(
+      <ImageCropper
+        file={file}
+        aspects={[square]}
+        maxOutputWidth={300}
+        onConfirm={onConfirm}
+        onCancel={vi.fn()}
+      />,
+    )
+    const img = container.querySelector('img')!
+    Object.defineProperty(img, 'naturalWidth', { value: 800, configurable: true })
+    Object.defineProperty(img, 'naturalHeight', { value: 600, configurable: true })
+    fireEvent.load(img)
+
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Recortar' })).toBeEnabled())
+    fireEvent.click(screen.getByRole('button', { name: 'Recortar' }))
+    await waitFor(() => expect(onConfirm).toHaveBeenCalledTimes(1))
+    // Sem o teto, sairia 600x600; com maxOutputWidth=300, sai 300x300 (mesma proporção 1:1).
+    expect(lastCanvasSize).toEqual({ width: 300, height: 300 })
   })
 })

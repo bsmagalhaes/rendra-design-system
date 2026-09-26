@@ -60,7 +60,7 @@ export default defineConfig({
         'src/components/ui/{list,timeline}.tsx': { lines: 95 },
         'src/components/ui/upload.tsx': { lines: 80 },
         'src/components/ui/image-cropper.tsx': { lines: 80 },
-        'src/components/ui/kanban.tsx': { lines: 50 },
+        'src/components/ui/kanban.tsx': { lines: 70 },
       },
     },
   },
