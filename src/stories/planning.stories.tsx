@@ -1,10 +1,34 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Handshake, ThumbsDown } from 'lucide-react'
 import { useState } from 'react'
 import { Calendar } from '@/components/ui/calendar'
 import { ChatComposer, ChatThread } from '@/components/ui/chat'
-import { Kanban, moveKanbanCard, type KanbanCard } from '@/components/ui/kanban'
+import {
+  Kanban,
+  moveKanbanCard,
+  type KanbanCard,
+  type KanbanDropTarget,
+} from '@/components/ui/kanban'
 import { demoTickets } from '@/mocks/chat'
 import { demoCards, demoEvents, pipelineColumns } from '@/mocks/planning'
+
+const dropTargets: KanbanDropTarget[] = [
+  { id: 'ganho', label: 'Marcar como ganho', icon: <Handshake />, tone: 'success' },
+  {
+    id: 'perdido',
+    label: 'Marcar como perdido',
+    hint: 'Encerra o negócio',
+    icon: <ThumbsDown />,
+    tone: 'error',
+  },
+  {
+    id: 'arquivar',
+    label: 'Arquivar',
+    tone: 'neutral',
+    disabled: true,
+    disabledReason: 'Só depois de ganho ou perdido',
+  },
+]
 
 /* Calendar (calendário e agenda) e Kanban. */
 
@@ -39,6 +63,24 @@ function KanbanDemo() {
 }
 
 export const QuadroKanban: Story = { render: () => <KanbanDemo /> }
+
+function KanbanDropTargetsDemo() {
+  const [cards] = useState<KanbanCard[]>(() => demoCards())
+  return (
+    <Kanban
+      aria-label="Funil com destinos de arraste"
+      columns={pipelineColumns}
+      cards={cards}
+      dropTargets={dropTargets}
+      onDropTarget={() => undefined}
+    />
+  )
+}
+
+export const KanbanComDestinosDeArraste: Story = {
+  name: 'Kanban: dropTargets',
+  render: () => <KanbanDropTargetsDemo />,
+}
 
 function ChatDemo() {
   const [messages, setMessages] = useState(() => demoTickets()[6]?.messages ?? [])

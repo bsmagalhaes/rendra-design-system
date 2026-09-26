@@ -1,7 +1,10 @@
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, GripVertical } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { resolveCatalogCode } from '@/catalog/components'
 import { useRendraLink } from '@/components/rendra-provider'
+import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/cn'
+import { useSortable } from '@/lib/sortable'
 
 export interface ListItem {
   id: string
@@ -14,6 +17,8 @@ export interface ListItem {
   /** Torna a linha navegável. */
   to?: string
   onClick?: () => void
+  /** Selo textual de status da linha, com contraste AA (nunca só cor). */
+  tone?: 'success' | 'error' | 'warning' | 'neutral'
 }
 
 export interface ListProps {
@@ -22,14 +27,56 @@ export interface ListProps {
   divided?: boolean
   empty?: ReactNode
   className?: string
+  /**
+   * Reordena os itens por arraste (mouse e toque) e por teclado (setas ↑/↓ na alça).
+   * Sem ela a lista é só leitura e a alça de arraste não aparece.
+   */
+  onReorder?: (items: ListItem[]) => void
+  /** Nome acessível de cada item para a alça de arraste (ex.: "Cliente A"). Padrão: o título, em texto. */
+  itemLabel?: (item: ListItem) => string
 }
 
-/** Lista única: linhas com início, título, descrição e fim; navegável por prop. */
-export function List({ items, divided = true, empty, className }: ListProps) {
+const toneLabel: Record<NonNullable<ListItem['tone']>, string> = {
+  success: 'Sucesso',
+  warning: 'Atenção',
+  error: 'Erro',
+  neutral: '',
+}
+
+const toneBadge: Record<
+  NonNullable<ListItem['tone']>,
+  'success' | 'warning' | 'error' | 'neutral'
+> = {
+  success: 'success',
+  warning: 'warning',
+  error: 'error',
+  neutral: 'neutral',
+}
+
+function defaultItemLabel(item: ListItem): string {
+  return typeof item.title === 'string' ? item.title : item.id
+}
+
+/** Lista única: linhas com início, título, descrição e fim; navegável por prop; reordenável por prop. */
+export function List({
+  items,
+  divided = true,
+  empty,
+  className,
+  onReorder,
+  itemLabel = defaultItemLabel,
+}: ListProps) {
   const Link = useRendraLink()
+  const sortable = useSortable<ListItem>({
+    items: items.map((it) => ({ id: it.id, data: it })),
+    onReorder: onReorder && ((sorted) => onReorder(sorted.map((s) => s.data))),
+  })
+  const sortableEnabled = Boolean(onReorder)
+  const code = resolveCatalogCode('List', { sortable: sortableEnabled })
+
   if (items.length === 0 && empty) return <>{empty}</>
   return (
-    <ul data-rendra="LIST-001" className={cn('flex flex-col', divided && 'divide-y', className)}>
+    <ul data-rendra={code} className={cn('flex flex-col', divided && 'divide-y', className)}>
       {items.map((it) => {
         const interactive = Boolean(it.to || it.onClick)
         const body = (
@@ -41,6 +88,11 @@ export function List({ items, divided = true, empty, className }: ListProps) {
                 <span className="line-clamp-2 text-sm text-muted-foreground">{it.description}</span>
               )}
             </span>
+            {it.tone && it.tone !== 'neutral' && (
+              <Badge tone={toneBadge[it.tone]} className="shrink-0">
+                {toneLabel[it.tone]}
+              </Badge>
+            )}
             {it.trailing && <span className="flex shrink-0 items-center">{it.trailing}</span>}
             {interactive && (
               <ChevronRight className="size-icon-sm shrink-0 text-muted-foreground" aria-hidden />
@@ -51,8 +103,36 @@ export function List({ items, divided = true, empty, className }: ListProps) {
           'flex min-h-touch w-full items-center gap-3 py-3 text-left',
           interactive && '-mx-2 rounded-item px-2 transition-colors hover:bg-accent',
         )
+        const label = itemLabel(it)
+        const handle = sortableEnabled && (
+          <button
+            type="button"
+            aria-label={`Reordenar ${label}`}
+            className={cn(
+              'flex size-touch shrink-0 cursor-grab items-center justify-center rounded-item text-muted-foreground active:cursor-grabbing',
+              sortable.handleProps(it.id).className,
+            )}
+            onPointerDown={sortable.handleProps(it.id).onPointerDown}
+            onKeyDown={(e) => {
+              if (e.key === 'ArrowUp') {
+                e.preventDefault()
+                sortable.moveBy(it.id, -1)
+              } else if (e.key === 'ArrowDown') {
+                e.preventDefault()
+                sortable.moveBy(it.id, 1)
+              }
+            }}
+          >
+            <GripVertical className="size-icon-sm" aria-hidden />
+          </button>
+        )
         return (
-          <li key={it.id}>
+          <li
+            key={it.id}
+            {...(sortableEnabled ? sortable.itemProps(it.id) : {})}
+            className={cn('flex items-center gap-1', sortable.draggingId === it.id && 'opacity-50')}
+          >
+            {handle}
             {it.to ? (
               <Link to={it.to} className={cls}>
                 {body}

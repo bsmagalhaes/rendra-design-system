@@ -240,14 +240,38 @@ export const Lista: Story = {
     />
   ),
 }
+
+function ListaReordenavelDemo() {
+  const [order, setOrder] = useState(() => clients.slice(0, 4))
+  return (
+    <List
+      items={order.map((c) => ({
+        id: c.id,
+        title: c.name,
+        description: c.city,
+        tone: c.status === 'ativo' ? 'success' : c.status === 'inadimplente' ? 'error' : 'neutral',
+      }))}
+      onReorder={(items) =>
+        setOrder(items.map((it) => order.find((c) => c.id === it.id)!).filter(Boolean))
+      }
+    />
+  )
+}
+export const ListaReordenavel: Story = {
+  name: 'List: sortable + tone',
+  render: () => <ListaReordenavelDemo />,
+}
+
 export const LinhaDoTempo: Story = {
   name: 'Timeline',
   render: () => (
     <Timeline
       events={[
-        { id: '1', title: 'Contrato assinado', date: '22/09/2026', tone: 'success' },
+        { id: '1', title: 'Contrato assinado', date: '22/09/2026', status: 'succeeded' },
         { id: '2', title: 'Proposta enviada', date: '18/09/2026', tone: 'info' },
-        { id: '3', title: 'Cadastro', date: '02/09/2026' },
+        { id: '3', title: 'Cobrança recusada', date: '15/09/2026', status: 'failed' },
+        { id: '4', title: 'Lembrete ignorado', date: '13/09/2026', status: 'skipped' },
+        { id: '5', title: 'Cadastro', date: '02/09/2026' },
       ]}
     />
   ),

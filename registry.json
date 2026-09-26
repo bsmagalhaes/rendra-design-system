@@ -24,6 +24,7 @@
         { "path": "src/lib/lookup.ts", "type": "registry:file", "target": "src/lib/lookup.ts" },
         { "path": "src/lib/masks.ts", "type": "registry:file", "target": "src/lib/masks.ts" },
         { "path": "src/lib/shape.ts", "type": "registry:file", "target": "src/lib/shape.ts" },
+        { "path": "src/lib/sortable.ts", "type": "registry:file", "target": "src/lib/sortable.ts" },
         {
           "path": "src/lib/validators.ts",
           "type": "registry:file",
@@ -347,7 +348,7 @@
       "type": "registry:item",
       "title": "breadcrumb",
       "description": "Componente breadcrumb do Rendra Design System.",
-      "dependencies": ["lucide-react@^1.47.0", "react-router@^8.4.0"],
+      "dependencies": ["lucide-react@^1.47.0"],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
@@ -629,7 +630,7 @@
       "type": "registry:item",
       "title": "error-page",
       "description": "Componente error-page do Rendra Design System.",
-      "dependencies": ["lucide-react@^1.47.0", "react-router@^8.4.0"],
+      "dependencies": ["lucide-react@^1.47.0"],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
@@ -686,6 +687,29 @@
         }
       ],
       "meta": { "codes": ["FORM-001", "FORM-002"] }
+    },
+    {
+      "name": "image-cropper",
+      "type": "registry:item",
+      "title": "image-cropper",
+      "description": "Componente image-cropper do Rendra Design System.",
+      "dependencies": [],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/action-bar.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/alert.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/slider.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tabs.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/image-cropper.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/image-cropper.tsx"
+        }
+      ],
+      "meta": { "codes": ["CROP-001"] }
     },
     {
       "name": "image-viewer",
@@ -757,6 +781,7 @@
         "https://bsmagalhaes.github.io/rendra-design-system/r/avatar.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/badge.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tabs.json",
@@ -769,15 +794,17 @@
           "target": "src/components/ui/kanban.tsx"
         }
       ],
-      "meta": { "codes": ["KANB-001"] }
+      "meta": { "codes": ["KANB-001", "KANB-002"] }
     },
     {
       "name": "list",
       "type": "registry:item",
       "title": "list",
       "description": "Componente list do Rendra Design System.",
-      "dependencies": ["lucide-react@^1.47.0", "react-router@^8.4.0"],
+      "dependencies": ["lucide-react@^1.47.0"],
       "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/badge.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
       ],
@@ -788,7 +815,7 @@
           "target": "src/components/ui/list.tsx"
         }
       ],
-      "meta": { "codes": ["LIST-001"] }
+      "meta": { "codes": ["LIST-001", "LIST-002"] }
     },
     {
       "name": "modal",
@@ -1124,8 +1151,7 @@
         "@tanstack/react-table@^8.21.3",
         "date-fns@^4.4.0",
         "lucide-react@^1.47.0",
-        "radix-ui@^1.6.7",
-        "react-router@^8.4.0"
+        "radix-ui@^1.6.7"
       ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/badge.json",
@@ -1196,7 +1222,7 @@
       "type": "registry:item",
       "title": "timeline",
       "description": "Componente timeline do Rendra Design System.",
-      "dependencies": [],
+      "dependencies": ["lucide-react@^1.47.0"],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
@@ -1258,7 +1284,9 @@
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/image-cropper.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/progress.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
       ],
@@ -1269,7 +1297,7 @@
           "target": "src/components/ui/upload.tsx"
         }
       ],
-      "meta": { "codes": ["UPL-001"] }
+      "meta": { "codes": ["UPL-001", "UPL-002"] }
     },
     {
       "name": "widget-grid",
@@ -1727,7 +1755,11 @@
       "type": "registry:item",
       "title": "error-page (teste)",
       "description": "Testes de comportamento do error-page, com Vitest e Testing Library.",
-      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.1"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/error-page.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
@@ -1779,6 +1811,24 @@
           "path": "src/components/ui/form.test.tsx",
           "type": "registry:file",
           "target": "src/components/ui/form.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "image-cropper-test",
+      "type": "registry:item",
+      "title": "image-cropper (teste)",
+      "description": "Testes de comportamento do image-cropper, com Vitest e Testing Library.",
+      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.1"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/image-cropper.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/image-cropper.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/image-cropper.test.tsx"
         }
       ]
     },
@@ -1849,7 +1899,11 @@
       "type": "registry:item",
       "title": "kanban (teste)",
       "description": "Testes de comportamento do kanban, com Vitest e Testing Library.",
-      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.1"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/kanban.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"

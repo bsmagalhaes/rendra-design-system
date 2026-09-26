@@ -567,13 +567,45 @@ export function FormsSection() {
       <Demo
         id="upload"
         title="Upload"
-        description="Arrastar e soltar no desktop, tocar para escolher no celular. Lista com progresso, erro por arquivo e tentar de novo. Dica: um arquivo com 'erro' no nome simula falha."
-        props="accept, multiple, maxSizeMb, onUpload(file, onProgress), onChange, hint"
-        code="UPL-001"
+        description="Arrastar e soltar no desktop, tocar para escolher no celular. Lista ou galeria com miniatura, progresso, erro por arquivo e tentar de novo. Dica: um arquivo com 'erro' no nome simula falha."
+        props="accept, multiple, maxSizeMb, onUpload(file, onProgress), onChange, hint, layout, maxItems, onRemove, onRetry, onReorder, crop"
+        code={['UPL-001', 'UPL-002', 'CROP-001']}
       >
-        <Field label="Documentos" help="PDF ou imagem, até 5 MB cada.">
-          <Upload accept="image/*,.pdf" maxSizeMb={5} onUpload={fakeUpload} />
-        </Field>
+        <Row label="Lista" code="UPL-001" block>
+          <Field label="Documentos" help="PDF ou imagem, até 5 MB cada.">
+            <Upload accept="image/*,.pdf" maxSizeMb={5} onUpload={fakeUpload} />
+          </Field>
+        </Row>
+        <Row label="Galeria, com reordenar" code="UPL-002" block>
+          <Field label="Fotos" help="Arraste a alça para reordenar as fotos.">
+            <Upload
+              layout="gallery"
+              accept="image/*"
+              maxSizeMb={5}
+              maxItems={6}
+              onUpload={fakeUpload}
+              onReorder={() => undefined}
+            />
+          </Field>
+        </Row>
+        <Row label="Com recorte antes de enviar" code="CROP-001" block>
+          <Field label="Foto de perfil" help="A imagem só entra na lista depois de recortada.">
+            <Upload
+              layout="gallery"
+              accept="image/*"
+              multiple={false}
+              maxItems={1}
+              onUpload={fakeUpload}
+              crop={{
+                aspects: [
+                  { id: 'quadrado', label: 'Quadrado', ratio: 1 },
+                  { id: 'paisagem', label: 'Paisagem', ratio: 16 / 9 },
+                ],
+                maxOutputWidth: 1200,
+              }}
+            />
+          </Field>
+        </Row>
       </Demo>
 
       <Demo
