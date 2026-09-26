@@ -214,7 +214,7 @@ function Appearance() {
             }))}
           />
         </Field>
-        <Field label="Paleta de cores" help="Combine qualquer modelo com qualquer paleta.">
+        <Field label="Paleta de cores" help="Combina com qualquer modelo.">
           <ButtonGroup
             aria-label="Paleta de cores"
             value={palette.id}
