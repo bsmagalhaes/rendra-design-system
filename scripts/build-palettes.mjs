@@ -3,8 +3,14 @@
  *   npm run palettes:build           grava o arquivo
  *   npm run palettes:build -- --check  só confere se está em dia (usado no CI)
  * Cada paleta sai com o modo claro e o escuro, e os ajustes de contraste ficam no comentário.
+ *
+ * O CSS gerado passa pelo Prettier (config do projeto, .prettierrc.json) antes de gravar e
+ * antes de comparar no --check: o prefixo --rendra- nas chaves da paleta (etapa 2.0.0-alpha.1)
+ * deixa algumas linhas mais longas que os 100 caracteres do printWidth, e é o Prettier quem
+ * decide como quebrá-las, não um valor arbitrário escrito à mão aqui.
  */
 import { readFileSync, writeFileSync } from 'node:fs'
+import { format, resolveConfig } from 'prettier'
 import { createPalette, paletteCss } from '../src/brand/palette.ts'
 import { paletteSeeds } from '../src/brand/palettes.ts'
 
@@ -18,8 +24,15 @@ const header = `/*
  * Para mudar uma paleta, edite as sementes e rode \`npm run palettes:build\`.
  */
 `
-const css =
+const rawCss =
   header + paletteSeeds.map((s, i) => '\n' + paletteCss(createPalette(s), i === 0)).join('')
+
+async function formatCss(source) {
+  const config = (await resolveConfig(OUT)) ?? {}
+  return format(source, { ...config, filepath: OUT })
+}
+
+const css = await formatCss(rawCss)
 
 if (process.argv.includes('--check')) {
   let current = ''

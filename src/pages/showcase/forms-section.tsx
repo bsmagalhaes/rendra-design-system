@@ -3,14 +3,20 @@ import { Building2, CreditCard, Lock, Mail, Rocket, Search, Star, User } from 'l
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { Grid, Stack } from '@/components/layout'
+import { Grid, Inline, Stack } from '@/components/layout'
 import { ActionBar } from '@/components/ui/action-bar'
+import { COLOR_PICKER_SWATCHES } from '@/brand/palette'
 import { Checkbox, CheckboxGroup } from '@/components/ui/checkbox'
+import { ColorPicker } from '@/components/ui/color-picker'
 import { DatePicker, type DateRange } from '@/components/ui/date-picker'
-import { Field } from '@/components/ui/field'
+import { Checklist, type ChecklistItem } from '@/components/ui/checklist'
+import { Field, Label } from '@/components/ui/field'
 import { Form, FormField, FormSection } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { OtpInput } from '@/components/ui/otp-input'
 import { RadioGroup } from '@/components/ui/radio-group'
+import { Rating } from '@/components/ui/rating'
+import { RepeatableField, type RepeatableItem } from '@/components/ui/repeatable-field'
 import { Select, type SelectOption } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
@@ -20,7 +26,7 @@ import { toast } from '@/components/ui/toast'
 import { Upload } from '@/components/ui/upload'
 import { formatCurrency } from '@/lib/masks'
 import { zBR } from '@/lib/validators'
-import { Demo, fakeUpload, GroupTitle, wait } from './demo'
+import { CatalogCode, Demo, fakeUpload, GroupTitle, Row, wait } from './demo'
 
 const cities: SelectOption[] = [
   'São Paulo',
@@ -64,6 +70,10 @@ const schema = z.object({
   aceite: z.literal(true, { error: 'É preciso aceitar os termos.' }),
 })
 type FormValues = z.infer<typeof schema>
+
+interface DemoPhone extends RepeatableItem {
+  number: string
+}
 
 function ValidatedForm() {
   const form = useForm<FormValues>({
@@ -214,9 +224,23 @@ export function FormsSection() {
   const [range, setRange] = useState<DateRange | null>(null)
   const [dateTime, setDateTime] = useState<Date | null>(null)
   const [price, setPrice] = useState([40])
+  const [otp, setOtp] = useState('')
   const [band, setBand] = useState([1200, 6400])
   const [checks, setChecks] = useState<string[]>(['email'])
   const [radio, setRadio] = useState('mensal')
+  const [stars, setStars] = useState<number | null>(4)
+  const [nps, setNps] = useState<number | null>(null)
+  const [phones, setPhones] = useState<DemoPhone[]>([
+    { id: 'p1', number: '(11) 99999-0001', isPrimary: true },
+    { id: 'p2', number: '(11) 99999-0002' },
+  ])
+  const [checklist, setChecklist] = useState<ChecklistItem[]>([
+    { id: 'c1', label: 'Enviar contrato assinado', checked: true },
+    { id: 'c2', label: 'Confirmar dados bancários', checked: false },
+  ])
+  const [color, setColor] = useState(COLOR_PICKER_SWATCHES[0])
+  const [amountUnit, setAmountUnit] = useState('percent')
+  const [apiKeyEditing, setApiKeyEditing] = useState(false)
 
   return (
     <>
@@ -227,10 +251,40 @@ export function FormsSection() {
       />
 
       <Demo
+        id="field"
+        title="Field e Label"
+        description="A moldura de todo campo: rótulo acima, obrigatório marcado no rótulo, ajuda curta abaixo e erro no lugar da ajuda. O Label sozinho serve para um controle fora do Field."
+        props="Field (label, required, help, error, span, newRow, reserveMessage, id) · Label (required, htmlFor)"
+      >
+        <Row label="Field com rótulo, obrigatório, ajuda e erro" code="FLD-001" block>
+          <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="fields">
+            <Field label="Nome" required>
+              <Input />
+            </Field>
+            <Field label="E-mail" help="Usado para enviar a nota fiscal.">
+              <Input type="email" />
+            </Field>
+            <Field label="Telefone" required error="Informe um telefone válido.">
+              <Input mask="phone" invalid />
+            </Field>
+          </Grid>
+        </Row>
+        <Row label="Label sozinho, ligado a um controle" code="FLD-002" block>
+          <Stack gap="2">
+            <Label htmlFor="vitrine-label-apelido" required>
+              Apelido
+            </Label>
+            <Input id="vitrine-label-apelido" />
+          </Stack>
+        </Row>
+      </Demo>
+
+      <Demo
         id="input"
         title="Input"
-        description="Um único Input. Máscara, ícone, limpar e senha são props; a máscara já abre o teclado certo no celular (numérico, telefone, decimal)."
-        props="mask (cpf, cnpj, cpfCnpj, phone, cep, date, time, currency, percent), ddi, onDdiChange, ddiOptions, hideDdi, icon, suffix, clearable, type=password, size, invalid, disabled"
+        description="Um único Input. Máscara, ícone, limpar, senha, unidades e valor guardado são props; a máscara já abre o teclado certo no celular (numérico, telefone, decimal)."
+        props="mask (cpf, cnpj, cpfCnpj, phone, cep, date, time, currency, percent), ddi, onDdiChange, ddiOptions, hideDdi, icon, suffix, clearable, type=password, units, unit, onUnitChange, percentMax, variant=secret, size, invalid, disabled"
+        code="CAMP-001"
       >
         <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="fields">
           <Field label="CPF">
@@ -284,6 +338,46 @@ export function FormsSection() {
             <Input size="md" placeholder="Médio" />
             <Input size="lg" placeholder="Grande" />
           </Stack>
+          <Field label="Com unidades" help="Trocar de unidade limpa o valor.">
+            <Input
+              units={[
+                { id: 'percent', label: '%' },
+                { id: 'currency', label: 'R$' },
+                { id: 'kg', label: 'kg' },
+              ]}
+              unit={amountUnit}
+              onUnitChange={setAmountUnit}
+              percentMax={100}
+            />
+          </Field>
+          <Field label="Valor guardado (chave de API)" help="O valor salvo nunca aparece no campo.">
+            <Input
+              variant="secret"
+              hasValue
+              maskedHint="••••••a1b2c3"
+              isEditing={apiKeyEditing}
+              onStartEdit={() => setApiKeyEditing(true)}
+              onCancelEdit={() => setApiKeyEditing(false)}
+              onRemove={() => setApiKeyEditing(false)}
+            />
+          </Field>
+        </Grid>
+      </Demo>
+
+      <Demo
+        id="cor"
+        title="ColorPicker"
+        description="Amostras da marca e uma cor livre por hexadecimal, no mesmo painel do Select (popover no desktop, painel inferior no celular)."
+        props="value, onChange, swatches, disabled, aria-label"
+        code="COR-001"
+      >
+        <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="fields">
+          <Field label="Cor de destaque">
+            <ColorPicker aria-label="Cor de destaque" value={color} onChange={setColor} />
+          </Field>
+          <Field label="Desabilitado">
+            <ColorPicker aria-label="Cor de destaque" value={color} disabled />
+          </Field>
         </Grid>
       </Demo>
 
@@ -292,6 +386,7 @@ export function FormsSection() {
         title="Textarea"
         description="Com contador opcional. Cresce com o texto até uma altura máxima."
         props="counter, maxLength, rows, invalid"
+        code="TXT-001"
       >
         <Grid cols={{ base: 1, md: 2 }} gap="fields">
           <Field label="Observações" help="Até 200 caracteres.">
@@ -308,6 +403,7 @@ export function FormsSection() {
         title="RichTextEditor"
         description="Texto rico com títulos, negrito, listas, alinhamento, links, tabela, imagem e modo HTML. Cole um print (Ctrl+V) ou arraste uma imagem; toque nela para redimensionar pelos 4 cantos."
         props="value (HTML), onChange, placeholder, onImageUpload, minHeight, invalid, disabled"
+        code="RTE-001"
       >
         <Field
           label="Descrição do contrato"
@@ -322,6 +418,7 @@ export function FormsSection() {
         title="Select"
         description="Um único Select. No celular abre como painel inferior, com busca no topo e confirmação no rodapé."
         props="options, multiple, searchable, selectAll, showCount, maxChips, creatable, onCreate, loadOptions (async), loading, clearable, size, invalid, disabled"
+        code="SEL-001"
       >
         <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="fields">
           <Field label="Simples">
@@ -389,7 +486,10 @@ export function FormsSection() {
       >
         <Grid cols={{ base: 1, md: 2 }} gap="8">
           <Stack gap="2">
-            <span className="text-sm font-medium">Checkbox em grupo</span>
+            <Inline gap="2" align="center">
+              <span className="text-sm font-medium">Checkbox em grupo</span>
+              <CatalogCode code={['CHK-001', 'CHK-002']} />
+            </Inline>
             <CheckboxGroup
               selectAll
               label="Canais de aviso"
@@ -404,7 +504,10 @@ export function FormsSection() {
             />
           </Stack>
           <Stack gap="2">
-            <span className="text-sm font-medium">Radio em lista</span>
+            <Inline gap="2" align="center">
+              <span className="text-sm font-medium">Radio em lista</span>
+              <CatalogCode code="RDO-001" />
+            </Inline>
             <RadioGroup
               aria-label="Cobrança"
               value={radio}
@@ -417,7 +520,10 @@ export function FormsSection() {
             />
           </Stack>
           <Stack gap="2" className="md:col-span-2">
-            <span className="text-sm font-medium">Radio em cards</span>
+            <Inline gap="2" align="center">
+              <span className="text-sm font-medium">Radio em cards</span>
+              <CatalogCode code="RDO-002" />
+            </Inline>
             <RadioGroup
               aria-label="Forma de pagamento"
               variant="cards"
@@ -440,7 +546,11 @@ export function FormsSection() {
               ]}
             />
           </Stack>
-          <Stack gap="0" className="md:col-span-2 md:max-w-xl">
+          <Stack gap="2" className="md:col-span-2 md:max-w-xl">
+            <Inline gap="2" align="center">
+              <span className="text-sm font-medium">Switch</span>
+              <CatalogCode code="SWT-001" />
+            </Inline>
             <Switch
               label="Notificações por e-mail"
               description="Receba um resumo das pendências toda manhã."
@@ -461,6 +571,7 @@ export function FormsSection() {
         title="DatePicker"
         description="Calendário em português. Período mostra dois meses no desktop e um no celular. No celular abre como painel inferior."
         props="range, time, minDate, maxDate, clearable, size, invalid, disabled"
+        code="DTP-001"
       >
         <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="fields">
           <Field label="Data">
@@ -489,6 +600,7 @@ export function FormsSection() {
         title="Slider"
         description="Valor único ou faixa. A alça tem área de toque de 44px no celular."
         props="value (1 ou 2 números), min, max, step, showValue, formatValue"
+        code="SLD-001"
       >
         <Grid cols={{ base: 1, md: 2 }} gap="8">
           <Field label="Desconto">
@@ -517,18 +629,131 @@ export function FormsSection() {
       <Demo
         id="upload"
         title="Upload"
-        description="Arrastar e soltar no desktop, tocar para escolher no celular. Lista com progresso, erro por arquivo e tentar de novo. Dica: um arquivo com 'erro' no nome simula falha."
-        props="accept, multiple, maxSizeMb, onUpload(file, onProgress), onChange, hint"
+        description="Arrastar e soltar no desktop, tocar para escolher no celular. Lista ou galeria com miniatura, progresso, erro por arquivo e tentar de novo. Dica: um arquivo com 'erro' no nome simula falha."
+        props="accept, multiple, maxSizeMb, onUpload(file, onProgress), onChange, hint, layout, maxItems, onRemove, onRetry, onReorder, crop"
+        code={['UPL-001', 'UPL-002', 'CROP-001']}
       >
-        <Field label="Documentos" help="PDF ou imagem, até 5 MB cada.">
-          <Upload accept="image/*,.pdf" maxSizeMb={5} onUpload={fakeUpload} />
+        <Row label="Lista" code="UPL-001" block>
+          <Field label="Documentos" help="PDF ou imagem, até 5 MB cada.">
+            <Upload accept="image/*,.pdf" maxSizeMb={5} onUpload={fakeUpload} />
+          </Field>
+        </Row>
+        <Row label="Galeria, com reordenar" code="UPL-002" block>
+          <Field label="Fotos" help="Arraste a alça para reordenar as fotos.">
+            <Upload
+              layout="gallery"
+              accept="image/*"
+              maxSizeMb={5}
+              maxItems={6}
+              onUpload={fakeUpload}
+              onReorder={() => undefined}
+            />
+          </Field>
+        </Row>
+        <Row label="Com recorte antes de enviar" code="CROP-001" block>
+          <Field label="Foto de perfil" help="A imagem só entra na lista depois de recortada.">
+            <Upload
+              layout="gallery"
+              accept="image/*"
+              multiple={false}
+              maxItems={1}
+              onUpload={fakeUpload}
+              crop={{
+                aspects: [
+                  { id: 'quadrado', label: 'Quadrado', ratio: 1 },
+                  { id: 'paisagem', label: 'Paisagem', ratio: 16 / 9 },
+                ],
+                maxOutputWidth: 1200,
+              }}
+            />
+          </Field>
+        </Row>
+      </Demo>
+
+      <Demo
+        id="otp"
+        title="OtpInput"
+        description="Código de verificação em caixas separadas, para SMS ou e-mail. Aceita colar o código inteiro, avança sozinho e abre o teclado numérico no celular."
+        props="length, value, onChange, onComplete, invalid, disabled, id"
+        code="OTP-001"
+      >
+        <Field label="Código de verificação" help="Enviado por SMS.">
+          <OtpInput
+            value={otp}
+            onChange={setOtp}
+            onComplete={(v) => toast.success(`Código ${v} conferido`)}
+          />
         </Field>
+      </Demo>
+
+      <Demo
+        id="avaliacao"
+        title="Rating"
+        description="Avaliação em estrelas (satisfação rápida) ou em escala numérica (NPS e pesquisas). Clicar de novo na opção marcada desmarca e devolve null: nenhuma resposta ainda, nunca zero."
+        props="variant (stars, scale), value (number | null), onChange, max, min, lowLabel, highLabel"
+      >
+        <Row label="Estrelas" code="RTG-001">
+          <Rating
+            variant="stars"
+            value={stars}
+            onChange={setStars}
+            aria-label="Satisfação com o atendimento"
+          />
+        </Row>
+        <Row label="Escala (NPS)" code="RTG-002" block>
+          <Rating
+            variant="scale"
+            value={nps}
+            onChange={setNps}
+            lowLabel="Nada provável"
+            highLabel="Muito provável"
+            aria-label="Qual a chance de você nos recomendar?"
+          />
+        </Row>
+      </Demo>
+
+      <Demo
+        id="campo-repetivel"
+        title="RepeatableField"
+        description="Uma lista de campos do mesmo tipo, como telefones ou e-mails. Marcar um como principal desmarca os outros; remover o principal passa o papel para o primeiro que restar."
+        props="items, onChange, createItem, renderField, showPrimary, maxItems, addLabel, emptyLabel"
+        code="REP-001"
+      >
+        <RepeatableField<DemoPhone>
+          items={phones}
+          onChange={setPhones}
+          createItem={() => ({ id: crypto.randomUUID(), number: '' })}
+          renderField={(item, update, index) => (
+            <Field label={`Telefone ${index + 1}`}>
+              <Input mask="phone" value={item.number} onChange={(v) => update({ number: v })} />
+            </Field>
+          )}
+          showPrimary
+          maxItems={4}
+          addLabel="Adicionar telefone"
+          emptyLabel="Nenhum telefone ainda."
+        />
+      </Demo>
+
+      <Demo
+        id="checklist"
+        title="Checklist"
+        description="Uma lista de verificação editável: criar, renomear, marcar e remover, tudo por teclado, sem gesto especial."
+        props="value (id, label, checked), onChange, addLabel, disabled"
+        code="CKLT-001"
+      >
+        <Checklist
+          value={checklist}
+          onChange={setChecklist}
+          aria-label="Pendências do fechamento"
+        />
       </Demo>
 
       <Demo
         id="formulario-validado"
         title="Formulário com validação"
         description="React Hook Form + Zod: validação ao sair do campo, mensagens em português, CPF/CNPJ verificado de verdade, foco no primeiro erro ao enviar e botão com carregamento."
+        code={['FORM-001', 'FORM-002']}
         bare
       >
         <ValidatedForm />

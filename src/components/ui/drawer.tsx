@@ -82,6 +82,7 @@ export function Drawer({
                 setConfirming(true)
               }
             }}
+            data-rendra="GAV-001"
             className={cn(
               'fixed inset-y-0 right-0 z-50 flex h-dvh w-full flex-col bg-card text-card-foreground shadow-lg outline-none md:border-l',
               'data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right data-[state=open]:animate-in data-[state=open]:slide-in-from-right',

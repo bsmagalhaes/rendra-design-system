@@ -1,14 +1,33 @@
 import type { ReactNode } from 'react'
 import { Inline, Stack } from '@/components/layout'
+import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 
 /* Blocos de montagem da vitrine /componentes. */
+
+/**
+ * Selo discreto com o código do catálogo (etapa 1.2.0-alpha.3 do plano da v2). Um ou mais
+ * códigos, na ordem em que aparecem no catálogo (src/catalog/components.ts).
+ */
+export function CatalogCode({ code }: { code: string | string[] }) {
+  const codes = Array.isArray(code) ? code : [code]
+  return (
+    <Inline gap="1" as="span">
+      {codes.map((c) => (
+        <Badge key={c} tone="neutral" className="font-mono">
+          {c}
+        </Badge>
+      ))}
+    </Inline>
+  )
+}
 
 export function Demo({
   id,
   title,
   description,
   props,
+  code,
   children,
   bare,
 }: {
@@ -16,6 +35,8 @@ export function Demo({
   title: string
   description: string
   props?: string
+  /** Código (ou códigos) do catálogo deste componente, mostrado ao lado do título. */
+  code?: string | string[]
   children: ReactNode
   /** Sem o card em volta (para componentes que já são cards, como a Table). */
   bare?: boolean
@@ -23,9 +44,12 @@ export function Demo({
   return (
     <section id={id} aria-labelledby={`${id}-t`} className="flex scroll-mt-6 flex-col gap-4">
       <Stack gap="1">
-        <h2 id={`${id}-t`} className="text-xl">
-          {title}
-        </h2>
+        <Inline gap="2" align="center">
+          <h2 id={`${id}-t`} className="text-xl">
+            {title}
+          </h2>
+          {code && <CatalogCode code={code} />}
+        </Inline>
         <p className="text-sm text-muted-foreground">{description}</p>
         {props && (
           <p className="text-xs text-muted-foreground">
@@ -46,13 +70,31 @@ export function Demo({
   )
 }
 
-export function Row({ label, children }: { label: string; children: ReactNode }) {
+export function Row({
+  label,
+  code,
+  block,
+  children,
+}: {
+  label: string
+  /** Código do catálogo desta variante específica (quando o componente tem mais de um). */
+  code?: string | string[]
+  /**
+   * Empilha os filhos na largura total (Stack) em vez de alinhá-los lado a lado (Inline).
+   * Para componentes que ocupam a linha inteira, como Tabs e Breadcrumb.
+   */
+  block?: boolean
+  children: ReactNode
+}) {
   return (
     <Stack gap="2">
-      <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-        {label}
-      </span>
-      <Inline gap="3">{children}</Inline>
+      <Inline gap="2" align="center">
+        <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+          {label}
+        </span>
+        {code && <CatalogCode code={code} />}
+      </Inline>
+      {block ? <Stack gap="3">{children}</Stack> : <Inline gap="3">{children}</Inline>}
     </Stack>
   )
 }

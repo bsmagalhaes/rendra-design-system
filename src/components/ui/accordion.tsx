@@ -42,7 +42,12 @@ export function Accordion({ items, multiple, defaultValue, className }: Accordio
     </A.Item>
   ))
   return multiple ? (
-    <A.Root type="multiple" defaultValue={defaultValue} className={cn('flex flex-col', className)}>
+    <A.Root
+      type="multiple"
+      defaultValue={defaultValue}
+      data-rendra="ACRN-001"
+      className={cn('flex flex-col', className)}
+    >
       {content}
     </A.Root>
   ) : (
@@ -50,6 +55,7 @@ export function Accordion({ items, multiple, defaultValue, className }: Accordio
       type="single"
       collapsible
       defaultValue={defaultValue?.[0]}
+      data-rendra="ACRN-001"
       className={cn('flex flex-col', className)}
     >
       {content}

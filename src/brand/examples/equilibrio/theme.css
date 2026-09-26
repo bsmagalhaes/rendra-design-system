@@ -29,6 +29,6 @@
 /* MODELO EQUILIBRIO: fonte e raio. As cores vêm da paleta (atributo data-palette no <html>),
  * que combina com qualquer modelo. */
 :root[data-brand='equilibrio'] {
-  --brand-font: 'Equilibrio Sans', ui-sans-serif, system-ui, sans-serif;
-  --radius: 0.625rem;
+  --rendra-brand-font: 'Equilibrio Sans', ui-sans-serif, system-ui, sans-serif;
+  --rendra-radius: 0.5rem;
 }

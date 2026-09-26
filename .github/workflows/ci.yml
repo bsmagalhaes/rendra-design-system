@@ -32,6 +32,8 @@ jobs:
       - name: Unitários e de componente, com cobertura mínima por arquivo
         run: npm run test:coverage
       - run: npm run build
+      - run: npm run build:lib
+      - run: npm run verify:pack
       - name: Paletas em dia (rode npm run palettes:build e faça commit do palettes.css)
         run: npm run palettes:build -- --check
       - name: Registry em dia (rode npm run registry:build e faça commit do registry.json)
@@ -62,6 +64,9 @@ jobs:
       - name: Regressão visual
         if: ${{ !cancelled() }}
         run: npm run test:visual
+      - name: CSS em camadas
+        if: ${{ !cancelled() }}
+        run: npm run test:css-layers
       - name: Relatório do Playwright
         if: ${{ failure() }}
         uses: actions/upload-artifact@v7

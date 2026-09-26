@@ -1,5 +1,6 @@
 import { Dialog } from 'radix-ui'
 import { useState, type ReactNode } from 'react'
+import { resolveCatalogCode } from '@/catalog/components'
 import { BrandFeedbackIcon } from '@/components/ui/brand-feedback-icon'
 import { ActionBar } from '@/components/ui/action-bar'
 import { cn } from '@/lib/cn'
@@ -72,6 +73,13 @@ export function Modal({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-overlay data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0" />
         <Dialog.Content
+          // destructive tem o mesmo formato do confirm (só muda a cor): mesmo código, MOD-001.
+          // O desvio fica explícito de propósito: sem ele, destructive só cairia em MOD-001
+          // pelo fallback de resolveCatalogCode (o primeiro código do Modal no catálogo), ou
+          // seja, dependeria da ordem das entradas em src/catalog/components.ts.
+          data-rendra={resolveCatalogCode('Modal', {
+            type: type === 'destructive' ? 'confirm' : type,
+          })}
           className={cn(
             // Mobile: tela inteira. Desktop: centralizado.
             'fixed inset-0 z-50 flex h-dvh flex-col bg-card text-card-foreground outline-none',

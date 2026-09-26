@@ -7,9 +7,12 @@ import { Alert } from './alert'
 
 describe('Alert', () => {
   it('mostra título e descrição', () => {
-    renderApp(<Alert type="success" title="Cadastro salvo" description="Já aparece na lista." />)
+    const { container } = renderApp(
+      <Alert type="success" title="Cadastro salvo" description="Já aparece na lista." />,
+    )
     expect(screen.getByText('Cadastro salvo')).toBeInTheDocument()
     expect(screen.getByText('Já aparece na lista.')).toBeInTheDocument()
+    expect(container.querySelector('[data-rendra="ALRT-001"]')).toBeInTheDocument()
   })
 
   it('com onDismiss, tem botão de fechar', async () => {

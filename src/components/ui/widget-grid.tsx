@@ -82,7 +82,9 @@ const read = (key?: string): ResponsiveLayouts<Bp> | null => {
 }
 
 export function WidgetGrid({ widgets, editable = false, storageKey, className }: WidgetGridProps) {
-  const { width, containerRef, mounted } = useContainerWidth()
+  // Mede antes de desenhar: sem isso, a grade nasce com a largura padrão de 1280px e os
+  // widgets deslizam até o lugar certo, passando da borda da tela durante a transição.
+  const { width, containerRef, mounted } = useContainerWidth({ measureBeforeMount: true })
   const defaults = useMemo<ResponsiveLayouts<Bp>>(
     () => ({ lg: flow(widgets, 12), md: flow(widgets, 6), sm: flow(widgets, 1) }),
     [widgets],
@@ -103,6 +105,7 @@ export function WidgetGrid({ widgets, editable = false, storageKey, className }:
   return (
     <div
       ref={containerRef}
+      data-rendra="WDG-001"
       className={cn('widget-grid min-w-0', editable && !mobile && 'is-editing', className)}
     >
       {mounted && (

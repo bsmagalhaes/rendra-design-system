@@ -15,6 +15,7 @@ import {
   Trash2,
 } from 'lucide-react'
 import { useState } from 'react'
+import { Stack } from '@/components/layout'
 import { ActionBar } from '@/components/ui/action-bar'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
@@ -26,7 +27,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Demo, GroupTitle, Row } from './demo'
+import { CatalogCode, Demo, GroupTitle, Row } from './demo'
 
 export function ActionsSection() {
   const [view, setView] = useState('lista')
@@ -45,12 +46,30 @@ export function ActionsSection() {
         props="variant (primary, secondary, outline, ghost, destructive, link), size, icon, iconRight, iconOnly, loading, fullWidth, disabled, asChild"
       >
         <Row label="Variantes">
-          <Button>Primário</Button>
-          <Button variant="secondary">Secundário</Button>
-          <Button variant="outline">Outline</Button>
-          <Button variant="ghost">Ghost</Button>
-          <Button variant="destructive">Destrutivo</Button>
-          <Button variant="link">Link</Button>
+          <Stack gap="1" align="center">
+            <Button>Primário</Button>
+            <CatalogCode code="BTN-001" />
+          </Stack>
+          <Stack gap="1" align="center">
+            <Button variant="secondary">Secundário</Button>
+            <CatalogCode code="BTN-002" />
+          </Stack>
+          <Stack gap="1" align="center">
+            <Button variant="outline">Outline</Button>
+            <CatalogCode code="BTN-003" />
+          </Stack>
+          <Stack gap="1" align="center">
+            <Button variant="ghost">Ghost</Button>
+            <CatalogCode code="BTN-004" />
+          </Stack>
+          <Stack gap="1" align="center">
+            <Button variant="destructive">Destrutivo</Button>
+            <CatalogCode code="BTN-005" />
+          </Stack>
+          <Stack gap="1" align="center">
+            <Button variant="link">Link</Button>
+            <CatalogCode code="BTN-006" />
+          </Stack>
         </Row>
         <Row label="Tamanhos">
           <Button size="sm">Pequeno</Button>
@@ -94,6 +113,7 @@ export function ActionsSection() {
         title="ButtonGroup"
         description="Agrupa botões encostados ou funciona como controle segmentado de escolha única. Quebra linha em vez de rolar."
         props="children | options + value + onChange, size, fullWidth"
+        code="BTNG-001"
       >
         <Row label="Botões agrupados">
           <ButtonGroup aria-label="Alinhamento">
@@ -134,6 +154,7 @@ export function ActionsSection() {
         title="DropdownMenu"
         description="Ações secundárias e menu de três pontinhos. Itens com 44px no celular. Item destrutivo em vermelho."
         props="DropdownMenuItem (destructive), CheckboxItem, RadioItem, Label, Separator, Sub"
+        code="DDM-001"
       >
         <Row label="Exemplos">
           <DropdownMenu>
@@ -178,6 +199,7 @@ export function ActionsSection() {
         title="ActionBar"
         description="A regra de botões do sistema, em qualquer tela: 1 botão ocupa 100%; 2 botões ficam 30% (cancelar) e 70% (principal); a partir da terceira, as extras vão para o menu. O envio mostra carregamento e trava o botão."
         props="primary (label, type, loading, destructive), cancel, secondary[], sticky"
+        code="ACB-001"
       >
         <ActionBar primary={{ label: 'Salvar' }} />
         <ActionBar cancel={{ label: 'Cancelar' }} primary={{ label: 'Salvar cliente' }} />

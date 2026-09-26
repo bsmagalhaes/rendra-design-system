@@ -48,6 +48,7 @@ export function ImageViewer({ images, index, onIndexChange }: ImageViewerProps) 
             if (e.key === 'ArrowRight') go(1)
             if (e.key === 'ArrowLeft') go(-1)
           }}
+          data-rendra="IMG-001"
           className="fixed inset-0 z-50 flex h-dvh flex-col bg-background text-foreground outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0 md:inset-6 md:h-auto md:rounded-surface md:border md:shadow-lg"
         >
           <div className="flex shrink-0 items-center gap-3 border-b pt-safe pr-2 pb-2 pl-4 md:pt-2 md:pr-3 md:pl-6">

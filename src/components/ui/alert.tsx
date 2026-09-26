@@ -1,7 +1,8 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 import { X } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { useBrand, type FeedbackType } from '@/brand'
+import { useBrand } from '@/brand/use-brand'
+import type { FeedbackType } from '@/brand/types'
 import { BrandFeedbackIcon } from '@/components/ui/brand-feedback-icon'
 import { cn } from '@/lib/cn'
 
@@ -50,6 +51,7 @@ export function Alert({
   return (
     <div
       role={type === 'error' || type === 'warning' ? 'alert' : 'status'}
+      data-rendra="ALRT-001"
       className={cn(
         alertVariants({ type }),
         pill ? 'items-center py-3 pr-4 pl-4 md:pr-6' : 'p-4',

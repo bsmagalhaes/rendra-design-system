@@ -1,11 +1,96 @@
 {
-  "name": "rendra-design-system",
-  "private": true,
-  "version": "1.1.0",
+  "name": "@rendra-ui/web",
+  "version": "2.1.0",
   "type": "module",
+  "description": "Design system e boilerplate React (Vite, TypeScript, Tailwind v4, Radix), com CLI de catálogo, auditoria e troca de variante.",
+  "author": {
+    "name": "Bruno Magalhaes",
+    "email": "contato@brunomagalhaes.me",
+    "url": "https://www.brunomagalhaes.me"
+  },
+  "homepage": "https://github.com/bsmagalhaes/rendra-design-system#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bsmagalhaes/rendra-design-system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bsmagalhaes/rendra-design-system/issues"
+  },
+  "keywords": [
+    "design-system",
+    "react",
+    "tailwindcss",
+    "radix",
+    "component-library",
+    "boilerplate",
+    "cli"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
+  "bin": {
+    "rendra": "./bin/rendra.mjs"
+  },
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "sideEffects": [
+    "dist/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./router-bridge": {
+      "types": "./dist/types/rendra-router-bridge.d.ts",
+      "import": "./dist/router-bridge.js"
+    },
+    "./document-viewer": {
+      "types": "./dist/types/document-viewer.d.ts",
+      "import": "./dist/document-viewer.js"
+    },
+    "./rich-text-editor": {
+      "types": "./dist/types/rich-text-editor.d.ts",
+      "import": "./dist/rich-text-editor.js"
+    },
+    "./chart": {
+      "types": "./dist/types/chart.d.ts",
+      "import": "./dist/chart.js"
+    },
+    "./widget-grid": {
+      "types": "./dist/types/widget-grid.d.ts",
+      "import": "./dist/widget-grid.js"
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./base.css": "./dist/base.css",
+    "./components.css": "./dist/components.css",
+    "./package.json": "./package.json"
+  },
+  "peerDependencies": {
+    "radix-ui": "^1.6.7",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "typescript": "^5.9.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
+  "overrides": {
+    "eslint-plugin-jsx-a11y": {
+      "eslint": "$eslint"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:lib": "vite build --config vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/fix-dts-aliases.mjs && node scripts/build-lib.mjs",
+    "verify:pack": "node scripts/verify-pack.mjs",
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "lint": "eslint .",
@@ -25,11 +110,11 @@
     "test:a11y": "playwright test --project=a11y",
     "test:visual": "playwright test --project=visual",
     "test:visual:update": "playwright test --project=visual --update-snapshots",
+    "test:css-layers": "playwright test --project=css-layers",
     "registry:build": "node scripts/build-registry.mjs",
     "palettes:build": "node scripts/build-palettes.mjs"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.9.1",
     "@tanstack/react-table": "^8.21.3",
     "@tiptap/extension-image": "^3.31.3",
     "@tiptap/extension-placeholder": "^3.31.3",
@@ -43,14 +128,14 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.4.0",
     "imask": "^7.6.1",
-    "lucide-react": "^1.47.0",
+    "lucide-react": "^1.48.0",
+    "pdfjs-dist": "^6.3.289",
     "radix-ui": "^1.6.7",
     "react": "^19.3.0",
     "react-day-picker": "^10.0.1",
     "react-dom": "^19.3.0",
     "react-grid-layout": "^2.2.4",
-    "react-hook-form": "^7.88.0",
-    "react-router": "^8.4.0",
+    "react-hook-form": "^7.89.0",
     "recharts": "^3.10.1",
     "sonner": "^2.0.8",
     "tailwind-merge": "^3.7.0",
@@ -58,10 +143,11 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@eslint/js": "^9.39.5",
+    "@eslint/js": "^10.0.1",
     "@fontsource/dm-sans": "^5.3.0",
     "@fontsource/inter": "^5.3.0",
     "@fontsource/poppins": "^5.3.0",
+    "@hookform/resolvers": "^5.9.1",
     "@playwright/test": "^1.63.0",
     "@storybook/addon-a11y": "^10.6.0",
     "@storybook/addon-docs": "^10.6.0",
@@ -70,12 +156,12 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.7",
-    "@types/node": "^26.6.2",
+    "@types/node": "^26.6.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
-    "@vitest/coverage-v8": "^5.0.1",
-    "eslint": "^9.39.5",
+    "@vitest/coverage-v8": "^5.0.2",
+    "eslint": "^10.11.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react-hooks": "^7.1.1",
@@ -83,13 +169,14 @@
     "jsdom": "^30.1.1",
     "prettier": "^3.9.9",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "react-router": "^8.4.0",
     "storybook": "^10.6.0",
     "tailwindcss": "^4.3.3",
     "tw-animate-css": "^1.4.0",
     "typescript": "5.9",
     "typescript-eslint": "^8.70.1",
-    "vite": "^8.3.0",
+    "vite": "^8.3.1",
     "vite-plugin-svgr": "^5.2.0",
-    "vitest": "^5.0.1"
+    "vitest": "^5.0.2"
   }
 }

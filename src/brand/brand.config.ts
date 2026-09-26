@@ -19,6 +19,8 @@ export const brandConfig: BrandConfig = {
   symbol: Symbol,
   favicon,
   shape: 'square',
+  // Rótulo dos campos: 'discreto' (maiúsculo, cinza) ou 'normal' (tamanho e cor do texto).
+  labelStyle: 'discreto',
   sidebarLogo: 'dark',
   feedbackIcons: {},
 }

@@ -1,9 +1,15 @@
 // @vitest-environment jsdom
-import { screen, waitFor, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { RendraProvider, type RendraLinkProps } from '@/components/rendra-provider'
 import { renderApp } from '@/test/render'
 import { Table, type TableColumn, type TableQuery } from './table'
+
+/** Link falso, sem react-router: prova que a Table só depende do RendraProvider. */
+function FakeLink({ to, children }: RendraLinkProps) {
+  return <a href={`fake:${to}`}>{children}</a>
+}
 
 interface Row {
   id: string
@@ -47,11 +53,12 @@ afterEach(() => setViewportWidth(1280))
 
 describe('Table', () => {
   it('mostra as linhas e formata moeda', () => {
-    renderTable()
+    const { container } = renderTable()
     expect(names()).toEqual(['Carla', 'Ana', 'Bruno'])
     expect(
       screen.getByText('R$ 1.250,50', { normalizer: (t) => t.replace(/\s/g, ' ') }),
     ).toBeInTheDocument()
+    expect(container.querySelector('[data-rendra="TAB-001"]')).toBeInTheDocument()
   })
 
   it('ordena ao clicar no cabeçalho, e inverte no segundo clique', async () => {
@@ -122,5 +129,24 @@ describe('Table', () => {
     expect(screen.queryByRole('table')).not.toBeInTheDocument()
     expect(screen.getByText('Carla')).toBeInTheDocument()
     expect(screen.getByText('Bruno')).toBeInTheDocument()
+  })
+
+  it('sem react-router: coluna com href usa o linkComponent do RendraProvider', () => {
+    render(
+      <RendraProvider
+        linkComponent={FakeLink}
+        useCurrentPath={() => '/clientes'}
+        navigate={() => {}}
+        goBack={() => {}}
+      >
+        <Table<Row>
+          aria-label="Clientes"
+          data={rows}
+          getRowId={(r) => r.id}
+          columns={[{ ...columns[0]!, href: (r) => `/clientes/${r.id}` }, ...columns.slice(1)]}
+        />
+      </RendraProvider>,
+    )
+    expect(screen.getByRole('link', { name: 'Carla' })).toHaveAttribute('href', 'fake:/clientes/1')
   })
 })

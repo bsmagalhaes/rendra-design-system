@@ -1,12 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Lock, Mail, Search } from 'lucide-react'
 import { useState } from 'react'
+import { COLOR_PICKER_SWATCHES } from '@/brand/palette'
 import { Checkbox, CheckboxGroup } from '@/components/ui/checkbox'
+import { Checklist, type ChecklistItem } from '@/components/ui/checklist'
+import { ColorPicker } from '@/components/ui/color-picker'
 import { DatePicker, type DateRange } from '@/components/ui/date-picker'
 import { Field } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { OtpInput } from '@/components/ui/otp-input'
 import { RadioGroup } from '@/components/ui/radio-group'
+import { Rating } from '@/components/ui/rating'
+import { RepeatableField, type RepeatableItem } from '@/components/ui/repeatable-field'
 import { Select, type SelectOption } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
@@ -76,6 +81,55 @@ export const Senha: Story = {
 }
 export const ComErro: Story = { args: { invalid: true, icon: <Mail />, defaultValue: 'ana@' } }
 export const Desabilitado: Story = { args: { disabled: true, defaultValue: 'Não editável' } }
+
+/* ------------------------------------------------ Input: unidades e valor guardado */
+
+function InputUnidadesDemo() {
+  const [unit, setUnit] = useState('percent')
+  return (
+    <Field label="Desconto" help="Trocar de unidade limpa o valor.">
+      <Input
+        units={[
+          { id: 'percent', label: '%' },
+          { id: 'currency', label: 'R$' },
+          { id: 'kg', label: 'kg' },
+        ]}
+        unit={unit}
+        onUnitChange={setUnit}
+        percentMax={100}
+      />
+    </Field>
+  )
+}
+export const InputUnidades: Story = {
+  name: 'Input: unidades (percentual, moeda ou livre)',
+  render: () => <InputUnidadesDemo />,
+}
+
+function InputSegredoDemo() {
+  const [hasValue, setHasValue] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
+  return (
+    <Field label="Chave de API" help="O valor salvo nunca aparece no campo.">
+      <Input
+        variant="secret"
+        hasValue={hasValue}
+        maskedHint="••••••a1b2c3"
+        isEditing={isEditing}
+        onStartEdit={() => setIsEditing(true)}
+        onCancelEdit={() => setIsEditing(false)}
+        onRemove={() => {
+          setHasValue(false)
+          setIsEditing(false)
+        }}
+      />
+    </Field>
+  )
+}
+export const InputValorGuardado: Story = {
+  name: 'Input: variant="secret" (valor guardado)',
+  render: () => <InputSegredoDemo />,
+}
 
 /* ------------------------------------------------ Textarea, OTP */
 
@@ -176,6 +230,18 @@ export const SelectCarregando: Story = {
   name: 'Select: loading',
   render: () => <SelectDemo loading />,
 }
+
+/* ------------------------------------------------ ColorPicker */
+
+function ColorPickerDemo() {
+  const [color, setColor] = useState(COLOR_PICKER_SWATCHES[0])
+  return (
+    <Field label="Cor de destaque">
+      <ColorPicker aria-label="Cor de destaque" value={color} onChange={setColor} />
+    </Field>
+  )
+}
+export const SeletorDeCor: Story = { name: 'ColorPicker', render: () => <ColorPickerDemo /> }
 
 /* ------------------------------------------------ Checkbox, Radio, Switch */
 
@@ -278,3 +344,98 @@ export const UploadArquivos: Story = {
     </Field>
   ),
 }
+export const UploadGaleria: Story = {
+  name: 'Upload: layout gallery',
+  render: () => (
+    <Field label="Fotos" help="Arraste a alça para reordenar as fotos.">
+      <Upload
+        layout="gallery"
+        accept="image/*"
+        maxItems={6}
+        onUpload={fakeUpload}
+        onReorder={() => undefined}
+      />
+    </Field>
+  ),
+}
+export const UploadComRecorte: Story = {
+  name: 'Upload: crop',
+  render: () => (
+    <Field label="Foto de perfil" help="A imagem só entra na lista depois de recortada.">
+      <Upload
+        layout="gallery"
+        accept="image/*"
+        multiple={false}
+        maxItems={1}
+        onUpload={fakeUpload}
+        crop={{ aspects: [{ id: 'quadrado', label: 'Quadrado', ratio: 1 }], maxOutputWidth: 1200 }}
+      />
+    </Field>
+  ),
+}
+
+/* ------------------------------------------------ Rating, RepeatableField, Checklist */
+
+function RatingStarsDemo() {
+  const [v, setV] = useState<number | null>(4)
+  return <Rating variant="stars" value={v} onChange={setV} aria-label="Satisfação" />
+}
+export const AvaliacaoEstrelas: Story = {
+  name: 'Rating: estrelas',
+  render: () => <RatingStarsDemo />,
+}
+
+function RatingScaleDemo() {
+  const [v, setV] = useState<number | null>(null)
+  return (
+    <Rating
+      variant="scale"
+      value={v}
+      onChange={setV}
+      lowLabel="Nada provável"
+      highLabel="Muito provável"
+      aria-label="Qual a chance de você nos recomendar?"
+    />
+  )
+}
+export const AvaliacaoEscala: Story = {
+  name: 'Rating: escala (NPS)',
+  render: () => <RatingScaleDemo />,
+}
+
+interface DemoPhone extends RepeatableItem {
+  number: string
+}
+function RepeatableFieldDemo() {
+  const [items, setItems] = useState<DemoPhone[]>([
+    { id: 'p1', number: '(11) 99999-0001', isPrimary: true },
+  ])
+  return (
+    <RepeatableField<DemoPhone>
+      items={items}
+      onChange={setItems}
+      createItem={() => ({ id: crypto.randomUUID(), number: '' })}
+      renderField={(item, update, index) => (
+        <Field label={`Telefone ${index + 1}`}>
+          <Input mask="phone" value={item.number} onChange={(v) => update({ number: v })} />
+        </Field>
+      )}
+      showPrimary
+      addLabel="Adicionar telefone"
+      emptyLabel="Nenhum telefone ainda."
+    />
+  )
+}
+export const CampoRepetivel: Story = {
+  name: 'RepeatableField',
+  render: () => <RepeatableFieldDemo />,
+}
+
+function ChecklistDemo() {
+  const [value, setValue] = useState<ChecklistItem[]>([
+    { id: 'c1', label: 'Enviar contrato assinado', checked: true },
+    { id: 'c2', label: 'Confirmar dados bancários', checked: false },
+  ])
+  return <Checklist value={value} onChange={setValue} aria-label="Pendências do fechamento" />
+}
+export const ListaDeVerificacao: Story = { name: 'Checklist', render: () => <ChecklistDemo /> }

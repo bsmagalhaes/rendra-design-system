@@ -232,7 +232,7 @@ export function ConversationList({
 }: ConversationListProps) {
   if (!items.length) return <p className="p-6 text-center text-sm text-muted-foreground">{empty}</p>
   return (
-    <ul className={cn('flex flex-col gap-1 p-2', className)}>
+    <ul data-rendra="CHAT-001" className={cn('flex flex-col gap-1 p-2', className)}>
       {items.map((c) => {
         const active = c.id === activeId
         return (
@@ -563,6 +563,7 @@ export function ChatThread({
       tabIndex={0}
       aria-live="polite"
       aria-label="Mensagens da conversa"
+      data-rendra="CHAT-002"
       className={cn(
         'flex min-h-0 flex-1 scrollbar-subtle flex-col gap-3 overflow-y-auto overscroll-contain bg-muted/40 p-4',
         className,
@@ -963,6 +964,7 @@ export function ChatComposer({
         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDrag(false)
       }}
       onDrop={onDrop}
+      data-rendra="CHAT-003"
       className={cn(
         '@container relative flex flex-col gap-2 border-t bg-card p-3 pb-safe md:pb-3',
         className,

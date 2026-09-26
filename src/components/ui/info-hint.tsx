@@ -23,7 +23,10 @@ export interface InfoHintProps {
 export function InfoHint({ title, children, className }: InfoHintProps) {
   const [open, setOpen] = useState(false)
   return (
-    <>
+    // Wrapper sem layout próprio (display: contents): o botão é o único elemento sempre
+    // presente (o Modal só monta o próprio conteúdo quando aberto), então o data-rendra
+    // do InfoHint vive aqui, não no botão (que já carrega o código do Button).
+    <span className="contents" data-rendra="INFO-001">
       <Button
         variant="ghost"
         size="sm"
@@ -40,6 +43,6 @@ export function InfoHint({ title, children, className }: InfoHintProps) {
       <Modal open={open} onOpenChange={setOpen} type="info" title={title} size="md">
         <div className="flex flex-col gap-3 text-sm text-muted-foreground">{children}</div>
       </Modal>
-    </>
+    </span>
   )
 }

@@ -56,7 +56,9 @@ export function OtpInput({
       role="group"
       aria-label="Código de verificação"
       aria-describedby={aria['aria-describedby']}
-      className="grid w-full max-w-sm grid-cols-otp gap-2"
+      data-rendra="OTP-001"
+      // gap-1 no celular: 6 casas com 44px de toque mesmo dentro de um card em 360px.
+      className="grid w-full max-w-sm grid-cols-otp gap-1 sm:gap-2"
       style={{ '--otp': length } as CSSProperties}
     >
       {digits.map((d, i) => (

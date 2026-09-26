@@ -25,7 +25,11 @@ export function Label({
   ...props
 }: ComponentProps<typeof L.Root> & { required?: boolean }) {
   return (
-    <L.Root className={cn('text-sm font-medium text-foreground', className)} {...props}>
+    <L.Root
+      data-rendra="FLD-002"
+      className={cn('text-label text-label-foreground label-case', className)}
+      {...props}
+    >
       {children}
       {required && (
         <span className="text-destructive" aria-hidden>
@@ -116,6 +120,7 @@ export function Field({
     >
       <div
         data-slot="field"
+        data-rendra="FLD-001"
         className={cn(
           'flex min-w-0 flex-col gap-2',
           fieldSpanClass[span === 'half' ? 'md' : span],
@@ -134,8 +139,8 @@ export function Field({
             id={messageId}
             role={invalid ? 'alert' : undefined}
             className={cn(
-              '-mt-1 min-h-4 text-xs',
-              invalid ? 'font-medium text-destructive' : 'text-muted-foreground',
+              '-mt-1 min-h-4 text-help',
+              invalid ? 'font-medium text-destructive' : 'text-help-foreground',
             )}
           >
             {message}

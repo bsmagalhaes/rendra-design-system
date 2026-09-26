@@ -20,10 +20,39 @@ describe('Modal', () => {
   it('confirmar chama a ação e fecha', async () => {
     const onConfirm = vi.fn()
     renderApp(<Harness onConfirm={onConfirm} />)
-    expect(screen.getByRole('dialog', { name: 'Excluir cliente?' })).toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: 'Excluir cliente?' })).toHaveAttribute(
+      'data-rendra',
+      'MOD-001',
+    )
     await userEvent.click(screen.getByRole('button', { name: 'Confirmar' }))
     expect(onConfirm).toHaveBeenCalledTimes(1)
     await waitFor(() => expect(screen.getByTestId('estado')).toHaveTextContent('fechado'))
+  })
+
+  it('type="form" usa o código de catálogo MOD-002, não o de confirmação', () => {
+    renderApp(<Harness type="form" />)
+    expect(screen.getByRole('dialog', { name: 'Excluir cliente?' })).toHaveAttribute(
+      'data-rendra',
+      'MOD-002',
+    )
+  })
+
+  it('type="info" usa o código próprio MOD-003, com um botão só', () => {
+    renderApp(<Harness type="info" />)
+    expect(screen.getByRole('dialog', { name: 'Excluir cliente?' })).toHaveAttribute(
+      'data-rendra',
+      'MOD-003',
+    )
+    expect(screen.getByRole('button', { name: 'Entendi' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Cancelar' })).not.toBeInTheDocument()
+  })
+
+  it('type="destructive" mantém o código do confirm, MOD-001 (só muda a cor)', () => {
+    renderApp(<Harness type="destructive" />)
+    expect(screen.getByRole('dialog', { name: 'Excluir cliente?' })).toHaveAttribute(
+      'data-rendra',
+      'MOD-001',
+    )
   })
 
   it('ação assíncrona: carrega até terminar e só então fecha', async () => {

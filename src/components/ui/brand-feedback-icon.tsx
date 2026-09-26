@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 import type { SVGProps } from 'react'
-import { useBrand, type FeedbackType } from '@/brand'
+import { useBrand } from '@/brand/use-brand'
+import type { FeedbackType } from '@/brand/types'
 import { cn } from '@/lib/cn'
 
 const iconVariants = cva('relative inline-flex shrink-0', {
@@ -119,6 +120,7 @@ export function BrandFeedbackIcon({
   return (
     <span
       data-slot="feedback-icon"
+      data-rendra="BFI-001"
       className={cn(
         iconVariants({ type, size }),
         animated && type === 'error' && 'animate-shake',

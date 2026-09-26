@@ -1,5 +1,5 @@
 import { cva } from 'class-variance-authority'
-import { useBrand } from '@/brand'
+import { useBrand } from '@/brand/use-brand'
 import { cn } from '@/lib/cn'
 
 /*
@@ -51,7 +51,11 @@ export function BrandLogo({ on = 'surface', symbolOnly, size = 'md', className }
           : 'light'
     const Logo = brand.logo[variant]
     return (
-      <Logo className={cn('h-8 w-auto', className)} role="img" aria-label={brand.productName} />
+      // Wrapper sem layout próprio (display: contents): só para carregar o data-rendra,
+      // já que o SVG da arte oficial não repassa atributos que não conhece.
+      <span className="contents" data-rendra="LOGO-001">
+        <Logo className={cn('h-8 w-auto', className)} role="img" aria-label={brand.productName} />
+      </span>
     )
   }
 
@@ -59,7 +63,7 @@ export function BrandLogo({ on = 'surface', symbolOnly, size = 'md', className }
   const [first, ...rest] = brand.productName.split(' ')
   const [strong, soft] = word[on]
   return (
-    <span className={cn('flex min-w-0 items-center gap-3', className)}>
+    <span data-rendra="LOGO-001" className={cn('flex min-w-0 items-center gap-3', className)}>
       <span aria-hidden className={tile({ on, size })}>
         <Symbol className="size-full" />
       </span>

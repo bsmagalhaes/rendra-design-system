@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Chart } from '@/components/ui/chart'
 import { List } from '@/components/ui/list'
 import { Pagination } from '@/components/ui/pagination'
+import { QrCode } from '@/components/ui/qr-code'
 import { StatCard } from '@/components/ui/stat-card'
 import { Table } from '@/components/ui/table'
 import { Tabs } from '@/components/ui/tabs'
@@ -240,14 +241,38 @@ export const Lista: Story = {
     />
   ),
 }
+
+function ListaReordenavelDemo() {
+  const [order, setOrder] = useState(() => clients.slice(0, 4))
+  return (
+    <List
+      items={order.map((c) => ({
+        id: c.id,
+        title: c.name,
+        description: c.city,
+        tone: c.status === 'Ativo' ? 'success' : c.status === 'Inadimplente' ? 'error' : 'neutral',
+      }))}
+      onReorder={(items) =>
+        setOrder(items.map((it) => order.find((c) => c.id === it.id)!).filter(Boolean))
+      }
+    />
+  )
+}
+export const ListaReordenavel: Story = {
+  name: 'List: sortable + tone',
+  render: () => <ListaReordenavelDemo />,
+}
+
 export const LinhaDoTempo: Story = {
   name: 'Timeline',
   render: () => (
     <Timeline
       events={[
-        { id: '1', title: 'Contrato assinado', date: '22/09/2026', tone: 'success' },
+        { id: '1', title: 'Contrato assinado', date: '22/09/2026', status: 'succeeded' },
         { id: '2', title: 'Proposta enviada', date: '18/09/2026', tone: 'info' },
-        { id: '3', title: 'Cadastro', date: '02/09/2026' },
+        { id: '3', title: 'Cobrança recusada', date: '15/09/2026', status: 'failed' },
+        { id: '4', title: 'Lembrete ignorado', date: '13/09/2026', status: 'skipped' },
+        { id: '5', title: 'Cadastro', date: '02/09/2026' },
       ]}
     />
   ),
@@ -316,4 +341,15 @@ export const GraficoPizza: Story = {
       series={[{ key: 'clientes', label: 'Clientes' }]}
     />
   ),
+}
+
+export const CodigoQR: Story = {
+  name: 'QrCode',
+  render: () => (
+    <QrCode value="https://rendra.example.com/clientes/42" aria-label="Código QR de exemplo" />
+  ),
+}
+export const CodigoQRVazio: Story = {
+  name: 'QrCode: vazio',
+  render: () => <QrCode value="" />,
 }

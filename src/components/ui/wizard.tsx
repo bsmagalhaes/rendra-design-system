@@ -52,7 +52,7 @@ export function Stepper({
 }: StepperProps) {
   const step = steps[current]
   return (
-    <div className={cn('min-w-0', className)}>
+    <div data-rendra="WIZ-002" className={cn('min-w-0', className)}>
       {/* Mobile: indicador compacto */}
       <div className="flex flex-col gap-2 md:hidden">
         <div className="flex items-baseline justify-between gap-3">
@@ -221,6 +221,7 @@ export function Wizard({
 
   return (
     <div
+      data-rendra="WIZ-001"
       className={cn(
         'flex min-w-0 flex-col gap-8',
         orientation === 'vertical' && 'md:flex-row md:gap-12',

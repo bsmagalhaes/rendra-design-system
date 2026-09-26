@@ -18,6 +18,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+import { resolveCatalogCode } from '@/catalog/components'
 import { Button } from '@/components/ui/button'
 import { useBreakpoint } from '@/hooks/use-breakpoint'
 import { cn } from '@/lib/cn'
@@ -96,7 +97,14 @@ export interface FunnelChartProps extends BaseProps {
 export type ChartProps = CartesianChartProps | GaugeChartProps | FunnelChartProps
 
 // Lê as variáveis do tema direto (as --color-* do Tailwind são inline e não existem no CSS).
-const palette = ['--chart-1', '--chart-2', '--chart-3', '--chart-4', '--chart-5', '--ring']
+const palette = [
+  '--rendra-chart-1',
+  '--rendra-chart-2',
+  '--rendra-chart-3',
+  '--rendra-chart-4',
+  '--rendra-chart-5',
+  '--rendra-ring',
+]
 const colorVar = (i: number) => `var(${palette[(i - 1) % palette.length]})`
 const fmtDefault = (n: number) => n.toLocaleString('pt-BR')
 const pct = (n: number) =>
@@ -168,6 +176,7 @@ function Gauge({
 
   return (
     <figure
+      data-rendra={resolveCatalogCode('Chart', { type: 'gauge' })}
       className={cn('flex min-w-0 flex-col items-center gap-2', className)}
       aria-label={aria['aria-label']}
     >
@@ -184,13 +193,13 @@ function Gauge({
           <defs>
             {/* Degradê contínuo: vermelho, laranja, amarelo e verde */}
             <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="var(--meter-low)" />
+              <stop offset="0%" stopColor="var(--rendra-meter-low)" />
               <stop
                 offset="38%"
-                stopColor="color-mix(in oklab, var(--meter-low), var(--meter-mid))"
+                stopColor="color-mix(in oklab, var(--rendra-meter-low), var(--rendra-meter-mid))"
               />
-              <stop offset="62%" stopColor="var(--meter-mid)" />
-              <stop offset="100%" stopColor="var(--meter-high)" />
+              <stop offset="62%" stopColor="var(--rendra-meter-mid)" />
+              <stop offset="100%" stopColor="var(--rendra-meter-high)" />
             </linearGradient>
           </defs>
           <path
@@ -206,19 +215,19 @@ function Gauge({
             y1={CY}
             x2={ex}
             y2={ey}
-            stroke="var(--foreground)"
+            stroke="var(--rendra-foreground)"
             strokeWidth={4}
             strokeLinecap="round"
             className="transition-all duration-700"
           />
-          <circle cx={CX} cy={CY} r={9} fill="var(--foreground)" />
-          <circle cx={CX} cy={CY} r={4} fill="var(--card)" />
+          <circle cx={CX} cy={CY} r={9} fill="var(--rendra-foreground)" />
+          <circle cx={CX} cy={CY} r={4} fill="var(--rendra-card)" />
           <text
             x={point(0)[0]}
             y={CY + 18}
             textAnchor="middle"
             fontSize={11}
-            fill="var(--muted-foreground)"
+            fill="var(--rendra-muted-foreground)"
           >
             0%
           </text>
@@ -227,7 +236,7 @@ function Gauge({
             y={CY + 18}
             textAnchor="middle"
             fontSize={11}
-            fill="var(--muted-foreground)"
+            fill="var(--rendra-muted-foreground)"
           >
             100%
           </text>
@@ -264,7 +273,7 @@ function Funnel({ stages, valueFormatter = fmtDefault, className, ...aria }: Fun
   // Da primária ao sucesso, escurecido com o tom da sidebar: o texto claro passa AA.
   const fill = (i: number) => {
     const p = n > 1 ? Math.round(100 - (i / (n - 1)) * 100) : 100
-    return `color-mix(in oklab, color-mix(in oklab, var(--primary) ${p}%, var(--success)) 58%, var(--sidebar))`
+    return `color-mix(in oklab, color-mix(in oklab, var(--rendra-primary) ${p}%, var(--rendra-success)) 58%, var(--rendra-sidebar))`
   }
   const rates = stages.map((s, i) => {
     const next = stages[i + 1]
@@ -277,6 +286,7 @@ function Funnel({ stages, valueFormatter = fmtDefault, className, ...aria }: Fun
 
   return (
     <figure
+      data-rendra={resolveCatalogCode('Chart', { type: 'funnel' })}
       className={cn('flex min-w-0 flex-col items-center', className)}
       aria-label={aria['aria-label']}
     >
@@ -363,20 +373,20 @@ function Cartesian({
   const colors = series.map((s, i) => colorVar(s.color ?? i + 1))
 
   const axis = {
-    stroke: 'var(--muted-foreground)',
+    stroke: 'var(--rendra-muted-foreground)',
     fontSize: 12,
     tickLine: false,
     axisLine: false,
   }
   const tooltip = (
     <Tooltip
-      cursor={{ fill: 'var(--muted)', stroke: 'var(--border)' }}
+      cursor={{ fill: 'var(--rendra-muted)', stroke: 'var(--rendra-border)' }}
       formatter={(v) => valueFormatter(Number(v))}
       contentStyle={{
-        background: 'var(--popover)',
-        border: '1px solid var(--border)',
-        borderRadius: 'var(--shape-control)',
-        color: 'var(--popover-foreground)',
+        background: 'var(--rendra-popover)',
+        border: '1px solid var(--rendra-border)',
+        borderRadius: 'var(--rendra-shape-control)',
+        color: 'var(--rendra-popover-foreground)',
         fontSize: 12,
       }}
     />
@@ -404,7 +414,9 @@ function Cartesian({
       tickFormatter={(v) => valueFormatter(Number(v))}
     />
   )
-  const grid = <CartesianGrid vertical={false} stroke="var(--border)" strokeDasharray="3 3" />
+  const grid = (
+    <CartesianGrid vertical={false} stroke="var(--rendra-border)" strokeDasharray="3 3" />
+  )
   const bar = (s: ChartSeries, i: number, lastBar: boolean) => (
     <Bar
       key={s.key}
@@ -433,7 +445,7 @@ function Cartesian({
           innerRadius="55%"
           outerRadius="85%"
           paddingAngle={2}
-          stroke="var(--card)"
+          stroke="var(--rendra-card)"
           isAnimationActive={animate}
         >
           {data.map((_, i) => (
@@ -540,6 +552,7 @@ function Cartesian({
 
   return (
     <figure
+      data-rendra={resolveCatalogCode('Chart', { type })}
       className={cn('flex min-w-0 flex-col gap-3', height === 'fill' && 'h-full', className)}
       aria-label={aria['aria-label']}
     >
