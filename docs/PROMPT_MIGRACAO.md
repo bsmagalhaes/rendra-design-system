@@ -47,5 +47,5 @@ Trabalhe em etapas e me mostre o resultado de cada uma, em mobile (360px) e desk
 7. Limpeza do código antigo.
 
 VERIFICAÇÃO OBRIGATÓRIA AO FIM DE CADA ETAPA
-Rode npm run typecheck, npm run lint, npm run check:rules, npm test, npm run test:a11y e npm run test:layout (ou rendra auditar, se o pacote com a CLI estiver instalado neste projeto). Todo componente novo ou alterado tem código de catálogo e data-rendra (ver DESIGN_RULES.md). Toda tela migrada entra em src/routes.tsx e em src/config/routes-list.ts. Só diga que uma etapa terminou com tudo passando. Se algo falhar, mostre a saída e corrija antes de seguir. Nunca desative uma regra ou um teste para fazer passar.
+Rode npm run typecheck, npm run lint, npm run check:rules (ou rendra auditar, se o pacote com a CLI estiver instalado neste projeto), npm test, npm run test:a11y e npm run test:layout. Todo componente novo ou alterado tem código de catálogo e data-rendra (ver DESIGN_RULES.md). Toda tela migrada entra em src/routes.tsx e em src/config/routes-list.ts. Só diga que uma etapa terminou com tudo passando. Se algo falhar, mostre a saída e corrija antes de seguir. Nunca desative uma regra ou um teste para fazer passar.
 ```

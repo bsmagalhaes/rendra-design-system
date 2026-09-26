@@ -7,9 +7,9 @@ Três verificações automáticas garantem boa parte destas regras. Rode as trê
 ```bash
 npm run check:rules   # cor fixa, valor arbitrário, fora da escala, estilo inline, fonte fixa, 100vh,
                        # var(--color-*) inline, SVG de marca fora de lugar, classe dinâmica, texto largo
-                       # demais, primária como texto, componente duplicado, variável sem --rendra-,
-                       # CSS fora do lugar (15 regras), mais texto orientativo (checkGuidance) e o
-                       # prefixo --rendra- (checkVarPrefix); lista completa no scripts/check-design-rules.mjs
+                       # demais, primária como texto, botão solto, componente duplicado, variável sem
+                       # --rendra-, CSS fora do lugar (15 regras), mais texto orientativo (checkGuidance)
+                       # e o prefixo --rendra- (checkVarPrefix); lista completa no scripts/check-design-rules.mjs
 npm run lint          # TypeScript, React Hooks e acessibilidade (jsx-a11y)
 npm run test:layout   # todas as rotas, 5 larguras, 3 templates: rolagem, largura e toque de 44px
 ```

@@ -20,7 +20,7 @@ Obrigado pelo interesse. Este repositório é mantido por [Bruno Magalhaes](http
    npm run verify:pack      # idem: confere o pacote publicável (npm pack e instalação num projeto à parte)
    ```
    **Componente novo ou alterado entra com teste de comportamento** ao lado dele (`nome.test.tsx`, com `// @vitest-environment jsdom` na primeira linha e `renderApp` de `src/test/render.tsx`) e ganha um piso de cobertura em `vite.config.ts`. Teste o que a pessoa faz (clicar, digitar, escolher) e o que o componente entrega, não detalhes de implementação.
-   **Componente ou variante nova também entra com uma entrada em `src/catalog/components.ts`** (o teste de integridade do catálogo barra código duplicado, fora do formato ou sem cobrir o arquivo) e, se fizer parte da superfície pública do pacote, com o export em `src/index.ts`.
+   **Componente ou variante nova também entra com uma entrada em `src/catalog/components.ts`** (o teste de integridade do catálogo barra código duplicado, fora do formato ou sem cobrir o arquivo), lida pelo próprio componente via `resolveCatalogCode()` para escrever o atributo `data-rendra` do elemento raiz, e, se fizer parte da superfície pública do pacote, com o export em `src/index.ts`.
 4. Abra o Pull Request explicando o que mudou e por quê, com capturas em 360px e 1280px quando houver mudança visual.
 5. O CI roda tudo de novo, mais o build, o Storybook e a regressão visual. O merge só é liberado com tudo verde.
 6. **Mudança visual intencional:** a regressão visual vai falhar, como esperado. O mantenedor aplica no Pull Request o rótulo `atualizar-visual`: o GitHub gera as capturas novas no Linux e faz commit no branch. Quem revisa confere as imagens no próprio PR.
