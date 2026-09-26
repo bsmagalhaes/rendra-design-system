@@ -1,5 +1,5 @@
 /*
- * COR CONTROLADA (Parte B, C5, docs/specs/v2-plano.md seções 2.6 e 4.2, correções da 6.4)
+ * COR CONTROLADA
  * -------------------------------------------------------------------------------------
  * createTheme(input) é uma função pura (sem tocar o DOM, compatível com SSR) com três modos:
  *
@@ -405,8 +405,8 @@ function sidebarLogoFrom(vars: { light: Record<string, string>; dark: Record<str
 
 /**
  * Função pura, sem DOM, compatível com SSR. As chaves de vars.light/vars.dark já nascem
- * prefixadas (--rendra-primary, --rendra-shadow-color...). Ver docs/specs/v2-plano.md,
- * seções 2.6 e 4.2, e as correções da seção 6.4 (formato final do retorno).
+ * prefixadas (--rendra-primary, --rendra-shadow-color...), no mesmo formato que
+ * applyTheme/BrandProvider esperam para injetar no DOM sem reprocessar nada.
  */
 export function createTheme(input: ThemeInput): ThemeResult {
   const { id, name, mode } = input

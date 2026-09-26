@@ -51,9 +51,10 @@ describe('BrandProvider e o estilo do rótulo', () => {
 })
 
 /*
- * BrandProvider controlado, tema em tempo de execução e storage plugável (C5, etapa
- * 2.0.0-alpha.4): docs/specs/v2-plano.md seções 2.6, 4.2 e a correção 6.2.3 (setBrandId não
- * zera a paleta sem chamar onPaletteIdChange no modo controlado).
+ * BrandProvider controlado, tema em tempo de execução e storage plugável: cobre também o
+ * caso em que setBrandId não pode zerar a paleta sem avisar quem controla o estado
+ * (onPaletteIdChange precisa disparar no modo controlado, senão a UI do host fica com a
+ * paleta antiga enquanto o BrandProvider já mudou de marca por dentro).
  */
 
 const outraMarca: BrandConfig = { ...brandConfig, id: 'outra', productName: 'Outra' }

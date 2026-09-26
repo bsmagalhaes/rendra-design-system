@@ -1,10 +1,11 @@
 /*
- * Gera o CSS pré-compilado do pacote (Lote A da Fase 3, docs/specs/fase3-plano.md).
+ * Gera o CSS pré-compilado do pacote.
  *
  * `npm run build:lib` chama este script por último, depois de `vite build` (o JS) e do
  * `tsc` (os .d.ts): ver a cadeia completa no `package.json` (script `build:lib`).
  *
- * Estratégia A (CSS pré-compilado, seção 2.2 do v2-plano.md): roda o Tailwind (a mesma
+ * Estratégia A (CSS pré-compilado, escolhida em vez de exigir o Tailwind instalado no host):
+ * roda o Tailwind (a mesma
  * engine de `src/styles/globals.css`, via @tailwindcss/node, já usada por @tailwindcss/vite)
  * com o @theme zerado e as @utility do projeto, escaneando só os arquivos que o pacote
  * publica (nunca src/app, src/pages, src/mocks ou src/stories, que são do boilerplate).

@@ -1,6 +1,6 @@
 /*
- * ENTRADA SEPARADA: DocumentViewer (rendra-ui/document-viewer)
- * --------------------------------------------------------------
+ * ENTRADA SEPARADA: DocumentViewer (@rendra-ui/web/document-viewer)
+ * ------------------------------------------------------------------
  * Fora da entrada principal (src/index.ts): depende de `pdfjs-dist`, pesado, só entra no
  * bundle de quem realmente usa visualização de PDF.
  */

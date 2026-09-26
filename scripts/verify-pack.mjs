@@ -1,8 +1,8 @@
 /*
- * Verifica o pacote publicável (Lote A da Fase 3, docs/specs/fase3-plano.md), depois de
- * `npm run build:lib`. É o teste que falha hoje (não existe `exports`, `main` nem
- * `src/index.ts`) e passa depois que `vite.lib.config.ts`, `src/index.ts` e o `package.json`
- * novo existirem (docs/specs/fase3-plano.md, "Teste que falha antes e passa depois").
+ * Verifica o pacote publicável (@rendra-ui/web), depois de `npm run build:lib`: prova que o
+ * `package.json` tem `exports`, `main` e o barrel de `src/index.ts` compilados de verdade,
+ * empacotando e instalando (ou inspecionando) o tarball de `npm pack`, nunca lendo `src/`
+ * direto.
  *
  * Empacota o `package.json` REAL do repositório com `npm pack` (o mesmo comando do `npm
  * publish`), nunca um `package.json` sintético: `react-router` e `@hookform/resolvers` são
@@ -189,6 +189,18 @@ if (path === 'estrutural') {
 }
 
 console.log(`\nCaminho usado: ${path}.\n`)
+
+// Nome do pacote publicado: @rendra-ui/web, escopado na organização npm rendra-ui, e
+// publishConfig.access "public" (senão o npm recusaria a publicação de um escopo privado
+// por padrão).
+assert(
+  packageJsonForAssertions.name === '@rendra-ui/web',
+  'package.json publicado tem o nome @rendra-ui/web.',
+)
+assert(
+  packageJsonForAssertions.publishConfig?.access === 'public',
+  'package.json publicado declara publishConfig.access "public".',
+)
 
 // Asserção 2: react-router nunca em dependencies nem em peerDependencies do pacote publicado.
 assert(

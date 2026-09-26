@@ -19,6 +19,10 @@ export default tseslint.config(
       // pelo parser em teste. Mesma razão de scripts/check-design-rules.mjs nunca escanear
       // test/: não é produto, é a "vítima" que o teste audita.
       'test/fixtures',
+      // Worktrees de agente de IA (.claude/worktrees/*): cópias completas do repositório,
+      // cada uma com o próprio node_modules e possivelmente em estado inacabado; nunca é
+      // código deste checkout, então o lint não deve varrê-las.
+      '.claude',
     ],
   },
   {

@@ -71,13 +71,13 @@ describe('createPalette', () => {
   })
 
   it('emite só chaves --rendra-*, nunca o nome antigo sem prefixo', () => {
-    // Fatos do código (docs/specs/v2-plano.md, seção 6.2, item 7): depois da renomeação para o
-    // prefixo --rendra-, createPalette não pode devolver nenhuma chave que não comece com ele.
-    // O único jeito de uma exceção existir seria colidir com o namespace do próprio Tailwind
-    // (--color-*, --spacing-*, --text-*, --font-*, --radius-*, --shadow-*, --container-*), o que
-    // nunca acontece aqui: createPalette só emite variáveis semânticas próprias do Rendra. A
-    // mesma exceção de scripts/check-design-rules.mjs e src/styles/tokens-prefix.test.ts, para
-    // nunca divergir (docs/specs/v2-plano.md, escopo do bloqueador 3 da validação do Fable).
+    // Todo namespace --rendra- existe para nunca colidir com o vocabulário do próprio
+    // Tailwind (--color-*, --spacing-*, --text-*, --font-*, --radius-*, --shadow-*,
+    // --container-*): createPalette não pode devolver nenhuma chave fora desse prefixo, e a
+    // única exceção aceitável seria justamente colidir com esse namespace do Tailwind, o que
+    // nunca acontece aqui, pois createPalette só emite variáveis semânticas próprias do
+    // Rendra. Mesma exceção usada por scripts/check-design-rules.mjs e
+    // src/styles/tokens-prefix.test.ts, para nunca divergir.
     for (const seeds of [...paletteSeeds, client]) {
       const p = createPalette(seeds)
       for (const vars of [p.light, p.dark]) {

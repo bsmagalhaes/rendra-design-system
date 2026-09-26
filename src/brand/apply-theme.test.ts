@@ -4,9 +4,8 @@ import { applyTheme } from './apply-theme'
 import { createTheme } from './theme'
 
 /*
- * applyTheme (Parte B, C5, docs/specs/v2-plano.md seções 2.6 e 4.2): aplica no DOM o
- * resultado (puro) de createTheme. Sem opções, reproduz applyPalette de hoje; com `target`,
- * aplica num contêiner escopado por [data-rendra-root] (C4).
+ * applyTheme: aplica no DOM o resultado (puro) de createTheme. Sem opções, reproduz
+ * applyPalette de hoje; com `target`, aplica num contêiner escopado por [data-rendra-root].
  */
 
 const parceiro = createTheme({

@@ -4,11 +4,10 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 /*
- * CSS em camadas (C4, docs/specs/v2-plano.md, seções 2.4 e 6.2.8; etapa 2.0.0-alpha.8):
- * a ordem das camadas é declarada uma única vez, no topo de globals.css, para que as
- * utilities do host (ou as do próprio Tailwind, geradas a partir das classes do JSX)
- * sempre vençam qualquer camada do Rendra, e rendra.base/rendra.components sempre percam
- * para components/utilities.
+ * CSS em camadas: a ordem das camadas é declarada uma única vez, no topo de globals.css,
+ * para que as utilities do host (ou as do próprio Tailwind, geradas a partir das classes do
+ * JSX) sempre vençam qualquer camada do Rendra, e rendra.base/rendra.components sempre
+ * percam para components/utilities.
  */
 
 const STYLES_DIR = dirname(fileURLToPath(import.meta.url))

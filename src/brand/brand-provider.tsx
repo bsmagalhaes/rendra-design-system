@@ -10,8 +10,8 @@ const BRAND_KEY = 'ui-brand'
 const PALETTE_KEY = 'ui-palette'
 
 /**
- * Armazenamento plugável (C5, docs/specs/v2-plano.md seção 2.6/4.2): get/set simples, para
- * trocar o localStorage padrão por outra fonte (cookie, backend...), ou desligar com `false`.
+ * Armazenamento plugável: get/set simples, para trocar o localStorage padrão por outra fonte
+ * (cookie, backend...), ou desligar com `false`.
  * `remove` é opcional: quando ausente (armazenamento customizado antigo, sem essa peça),
  * `clearKey` cai de volta em `set(key, '')`, para não quebrar quem já implementou só get/set.
  */

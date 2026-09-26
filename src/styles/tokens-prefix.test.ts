@@ -5,8 +5,8 @@ import { describe, expect, it } from 'vitest'
 import { findUnprefixedDeclarations, TAILWIND_NAMESPACE } from '../../scripts/lib/var-prefix'
 
 /*
- * Prefixo --rendra- (docs/specs/v2-plano.md, seções 1.8 e 2.5; etapa 2.0.0-alpha.1): toda
- * variável CSS própria do Rendra declarada em theme.css, nos exemplos de modelo, em
+ * Prefixo --rendra-: toda variável CSS própria do Rendra declarada em theme.css, nos
+ * exemplos de modelo, em
  * palettes.css (gerado) e em globals.css precisa começar com --rendra-. A exceção é o
  * namespace do próprio Tailwind (--color-*, --spacing-*, --text-*, --font-*, --radius-*,
  * --shadow-*, --container-*, --breakpoint-*, --animate-*, --ease-*, --tw-*): ele nasce dentro

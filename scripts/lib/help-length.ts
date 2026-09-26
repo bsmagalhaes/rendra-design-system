@@ -1,7 +1,7 @@
 /*
- * Regra texto-orientativo (DESIGN_RULES.md, "Texto orientativo"; docs/specs/v2-plano.md, seção
- * 1.6 e etapa 1.2.0-alpha.4, com os limites da seção 6.2, item 4). Módulo único: o verificador
- * (scripts/check-design-rules.mjs) e o teste (help-length.test.ts) importam daqui.
+ * Regra texto-orientativo (DESIGN_RULES.md, "Texto orientativo"): os limites de tamanho vivem
+ * num módulo único para o verificador (scripts/check-design-rules.mjs) e o teste
+ * (help-length.test.ts) nunca divergirem sobre o que é "curto demais para instruir".
  *
  * O que mede, só em texto literal escrito no JSX (texto dinâmico, como help={mensagem}, não é
  * medido):

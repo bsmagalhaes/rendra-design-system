@@ -27,9 +27,9 @@ Dois jeitos de trazer o boilerplate: **clonar o repositório** (código-fonte in
 
 ### 1b. Pelo pacote npm
 
-1. Instale o pacote (nome provisório `rendra-ui`) e os peers: `react`, `react-dom` e `radix-ui`.
-2. Importe o CSS uma vez, na entrada do app: `import 'rendra-ui/tokens.css'`, `import 'rendra-ui/base.css'` e `import 'rendra-ui/components.css'`.
-3. Importe os componentes da entrada principal (`import { Button, AppShell } from 'rendra-ui'`) e, se usar react-router, a ponte do subcaminho próprio: `import { RendraRouterBridge } from 'rendra-ui/router-bridge'`. Os componentes pesados (`document-viewer`, `rich-text-editor`, `chart`, `widget-grid`) têm subcaminho próprio, para não pesar o pacote de quem não usa.
+1. Instale o pacote (`@rendra-ui/web`, escopado na organização npm `rendra-ui`) e os peers: `react`, `react-dom` e `radix-ui`.
+2. Importe o CSS uma vez, na entrada do app: `import '@rendra-ui/web/tokens.css'`, `import '@rendra-ui/web/base.css'` e `import '@rendra-ui/web/components.css'`.
+3. Importe os componentes da entrada principal (`import { Button, AppShell } from '@rendra-ui/web'`) e, se usar react-router, a ponte do subcaminho próprio: `import { RendraRouterBridge } from '@rendra-ui/web/router-bridge'`. Os componentes pesados (`document-viewer`, `rich-text-editor`, `chart`, `widget-grid`) têm subcaminho próprio, para não pesar o pacote de quem não usa.
 4. A CLI `rendra` (`rendra codigos`, `rendra auditar` e `rendra trocar`) e o detalhe completo de cada entrada do pacote estão no `README.md`.
 
 ## Caminho 2: projeto existente

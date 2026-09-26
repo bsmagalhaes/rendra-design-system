@@ -484,6 +484,10 @@ export const CATALOG: ComponentCatalogEntry[] = [
     name: 'Quadro kanban',
     component: 'Kanban',
     file: 'components/ui/kanban.tsx',
+    // variantProps fica vazio de propósito: a diferença para KANB-002 é a prop `dropTargets`
+    // (um array de destinos de arraste), não um literal de string/número/booleano, e o
+    // `rendra trocar` não tem como inventar um array, então ele recusa a troca com uma
+    // mensagem clara ("sem prop que os distinga"), e a variante certa fica documentada aqui.
     variantProps: {},
     whenToUse: 'Para um funil de etapas com cartões que se movem entre colunas.',
     isDefault: true,
@@ -504,6 +508,10 @@ export const CATALOG: ComponentCatalogEntry[] = [
     name: 'Lista',
     component: 'List',
     file: 'components/ui/list.tsx',
+    // variantProps fica vazio de propósito: a diferença para LIST-002 é a prop `onReorder`
+    // (uma função de callback), não um literal de string/número/booleano, e o `rendra trocar`
+    // não tem como inventar uma função, então ele recusa a troca com uma mensagem clara ("sem
+    // prop que os distinga"), e a variante certa fica documentada aqui.
     variantProps: {},
     whenToUse: 'Para linhas simples com início, título, descrição e fim, navegáveis ou não.',
     isDefault: true,
@@ -789,7 +797,10 @@ export const CATALOG: ComponentCatalogEntry[] = [
     name: 'Upload',
     component: 'Upload',
     file: 'components/ui/upload.tsx',
-    variantProps: {},
+    // A prop que distingue de UPL-002 é `layout` ('list' | 'gallery', padrão 'list'): declarar
+    // o valor padrão aqui (em vez de {}) é o que permite ao `rendra trocar` inserir
+    // layout="gallery" num elemento sem a prop, ao trocar para UPL-002.
+    variantProps: { layout: 'list' },
     whenToUse: 'Para arrastar e soltar ou escolher arquivos, com lista e progresso por arquivo.',
     isDefault: true,
   },

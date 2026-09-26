@@ -1,8 +1,8 @@
 /*
- * Prefixo --rendra- (docs/specs/v2-plano.md, seções 1.8 e 2.5; etapas 2.0.0-alpha.1 e
- * 2.0.0-alpha.2): toda variável CSS que é vocabulário do tema do Rendra (cor, fonte, raio,
- * sombra, degradê, gráfico, sidebar) precisa vir como --rendra-<nome>. Módulo único: o
- * verificador (scripts/check-design-rules.mjs) e os testes (src/brand/palette.test.ts,
+ * Prefixo --rendra-: toda variável CSS que é vocabulário do tema do Rendra (cor, fonte, raio,
+ * sombra, degradê, gráfico, sidebar) precisa vir como --rendra-<nome>, para nunca colidir com
+ * o namespace de um host que também use Tailwind. Módulo único: o verificador
+ * (scripts/check-design-rules.mjs) e os testes (src/brand/palette.test.ts,
  * src/styles/tokens-prefix.test.ts) importam daqui, para nunca divergir.
  *
  * Ordem da decisão importa: primeiro perguntamos se o nome é variável própria do Rendra (a

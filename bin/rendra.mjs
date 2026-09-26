@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 /*
- * Entrypoint da CLI publicada (`rendra`, fase 3, Lote B, docs/specs/fase3-plano.md). Importa
- * só de dist/cli (nunca de src/cli/*.ts): no pacote publicado não existe `src/`, e mesmo
- * dentro deste repositório o comando roda depois de `npm run build:lib` (correção do Opus,
- * item 3 da validação do plano: a CLI compilada entra no build de biblioteca, o bin importa
- * de dist).
+ * Entrypoint da CLI publicada (`rendra`). Importa só de dist/cli (nunca de src/cli/*.ts): no
+ * pacote publicado não existe `src/`, e mesmo dentro deste repositório o comando roda depois
+ * de `npm run build:lib`, para a CLI usar sempre o mesmo código compilado que vai para o
+ * pacote, nunca um caminho de teste que o consumidor final não teria.
  *
- * Três subcomandos:
+ * Três subcomandos, mais `--help`/sem argumento (ver printHelp, `src/cli/help.ts`):
  *   rendra codigos                    lista o catálogo de códigos de componente
  *   rendra auditar [cwd]              regras genéricas de DESIGN_RULES.md (padrão: cwd atual)
  *   rendra trocar <DE> <PARA> [--dry-run]   troca a variante DE pela PARA no projeto
@@ -58,6 +57,12 @@ function printTrocar(resultado, dryRun) {
 
 async function main() {
   const [command, ...rest] = process.argv.slice(2)
+
+  if (!command || command === '--help' || command === '-h') {
+    const { formatHelp } = await importDist('help')
+    console.log(formatHelp())
+    return
+  }
 
   if (command === 'codigos') {
     const { formatCodigos } = await importDist('codigos')

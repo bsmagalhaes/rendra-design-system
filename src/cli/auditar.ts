@@ -1,11 +1,11 @@
 /*
  * Regras genéricas de design (DESIGN_RULES.md) que não são específicas deste repositório:
  * qualquer projeto que use o Rendra pode ter cor fixa, valor arbitrário do Tailwind, estilo
- * inline, fonte fixa, 100vh ou raio fixo. Módulo único (fase 3, Lote B,
- * docs/specs/fase3-plano.md): `scripts/check-design-rules.mjs` (as regras deste repositório,
- * mais as específicas: var-inline, svg-marca, classe-dinamica, texto-estreito,
- * primaria-como-texto, componente-duplicado, css-fora-do-lugar, botao-solto) e `rendra auditar`
- * (a CLI publicada, para qualquer projeto de destino) importam daqui, para nunca divergir.
+ * inline, fonte fixa, 100vh ou raio fixo. Módulo único: `scripts/check-design-rules.mjs` (as
+ * regras deste repositório, mais as específicas: var-inline, svg-marca, classe-dinamica,
+ * texto-estreito, primaria-como-texto, componente-duplicado, css-fora-do-lugar, botao-solto)
+ * e `rendra auditar` (a CLI publicada, para qualquer projeto de destino) importam daqui, para
+ * nunca divergir.
  *
  * Duas camadas:
  *   - `auditLines(text)`: pura, sem acesso a arquivo. Recebe o texto de UM arquivo e devolve

@@ -141,6 +141,37 @@ describe('trocar', () => {
       trocar({ ts, cwd: join(FIXTURES, 'projeto-limpo'), de: 'CARD-001', para: 'CARD-001' }),
     ).toThrow(/não dá para saber qual elemento reescrever/)
   })
+
+  it('UPL-001 -> UPL-002: elemento sem layout ganha layout="gallery" (catálogo com o default declarado)', () => {
+    const dir = copyFixture('troca-upl-prop-ausente')
+    try {
+      const antes = readFileSync(join(dir, 'src/pagina.tsx'), 'utf8')
+      expect(antes).toContain('<Upload />')
+
+      const resultado = trocar({ ts, cwd: dir, de: 'UPL-001', para: 'UPL-002' })
+
+      expect(resultado.reescritos).toEqual([{ file: 'src/pagina.tsx', line: 6 }])
+      expect(resultado.paraRevisao).toHaveLength(0)
+
+      const depois = readFileSync(join(dir, 'src/pagina.tsx'), 'utf8')
+      expect(depois).toContain('<Upload layout="gallery" />')
+      expect(depois).toBe(antes.replace('<Upload />', '<Upload layout="gallery" />'))
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('KANB-001 -> KANB-002 continua recusando: Kanban não tem prop literal que distinga (documentado no catálogo)', () => {
+    expect(() =>
+      trocar({ ts, cwd: join(FIXTURES, 'projeto-limpo'), de: 'KANB-001', para: 'KANB-002' }),
+    ).toThrow(/não dá para saber qual elemento reescrever/)
+  })
+
+  it('LIST-001 -> LIST-002 continua recusando: List não tem prop literal que distinga (documentado no catálogo)', () => {
+    expect(() =>
+      trocar({ ts, cwd: join(FIXTURES, 'projeto-limpo'), de: 'LIST-001', para: 'LIST-002' }),
+    ).toThrow(/não dá para saber qual elemento reescrever/)
+  })
 })
 
 describe('loadTypeScript', () => {

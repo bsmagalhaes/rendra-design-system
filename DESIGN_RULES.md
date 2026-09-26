@@ -32,7 +32,7 @@ Antes de criar um componente, procure em `src/components/ui` um que resolva o ca
 
 Cada componente de `src/components/ui`, e cada variante visual relevante, tem um código de catálogo (`ABA-001`, `BTN-006`...), escrito no atributo `data-rendra` do elemento raiz via `resolveCatalogCode()`. **A lista de referência é o catálogo, não este documento**: `src/catalog/components.ts`, a vitrine `/componentes` ou (quando o pacote com a CLI estiver instalado) `rendra codigos`; copiar a lista para cá fica desatualizado a cada componente novo. Internos, sem uso direto em tela e fora do catálogo: `overlay-shell`, `picker-panel`, `sortable-handle`.
 
-Componente de `src/components/ui` **nunca importa um roteador direto** (`react-router` ou outro): usa `useRendraLink()`, `useCurrentPath()` e `useRendraNavigate()`, de `@/components/rendra-provider`. A ligação com o roteador real é só a ponte, `RendraRouterBridge` (`src/components/rendra-router-bridge.tsx`, subcaminho `rendra-ui/router-bridge` no pacote), o único lugar do app que sabe qual roteador está em uso.
+Componente de `src/components/ui` **nunca importa um roteador direto** (`react-router` ou outro): usa `useRendraLink()`, `useCurrentPath()` e `useRendraNavigate()`, de `@/components/rendra-provider`. A ligação com o roteador real é só a ponte, `RendraRouterBridge` (`src/components/rendra-router-bridge.tsx`, subcaminho `@rendra-ui/web/router-bridge` no pacote), o único lugar do app que sabe qual roteador está em uso.
 
 ## 2. Regra mestra 2: mobile-first real, sem exceção
 

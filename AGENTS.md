@@ -133,3 +133,7 @@ Nunca afirme que a licença MIT obriga crédito visível na interface: ela não 
 - Toda tela nova entra em `src/routes.tsx` e em `src/config/routes-list.ts`, e ganha story em `src/stories/pages.stories.tsx`.
 - Componente novo ou alterado ganha teste de comportamento ao lado dele (`nome.test.tsx`, com `renderApp` de `src/test/render.tsx`) e um piso de cobertura em `vite.config.ts`.
 - Relate o resultado com fidelidade. Se algo falhou, mostre a saída.
+
+## Autor
+
+Rendra Design System, por Bruno Magalhaes: [brunomagalhaes.me](https://www.brunomagalhaes.me) · [instagram.com/brunomagalhaes.me](https://www.instagram.com/brunomagalhaes.me/).

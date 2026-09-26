@@ -341,24 +341,24 @@ O registry nunca traz marca nem configuração: `theme.css`, `themes.css`, `pale
 
 ### Pacote npm
 
-Para um projeto que já tem o próprio roteador e a própria estrutura de telas, e só quer os componentes prontos como dependência (nome do pacote ainda placeholder, sem publicação):
+Para um projeto que já tem o próprio roteador e a própria estrutura de telas, e só quer os componentes prontos como dependência. O pacote é `@rendra-ui/web`, escopado na organização npm `rendra-ui` (publicar exige acesso a essa organização; enquanto o pacote não estiver publicado, o repositório continua `private` e o build local funciona normalmente):
 
 ```bash
-npm install <nome-do-pacote> react react-dom radix-ui
+npm install @rendra-ui/web react react-dom radix-ui
 ```
 
 ```tsx
-import { Button, Card } from '<nome-do-pacote>'
-import '<nome-do-pacote>/tokens.css'
-import '<nome-do-pacote>/base.css'
-import '<nome-do-pacote>/components.css'
+import { Button, Card } from '@rendra-ui/web'
+import '@rendra-ui/web/tokens.css'
+import '@rendra-ui/web/base.css'
+import '@rendra-ui/web/components.css'
 ```
 
-O CSS já sai compilado (estratégia A: o host recebe `tokens.css`, `base.css` e `components.css` prontos, sem precisar ter o Tailwind instalado, e sem nenhuma variável do namespace do Tailwind vazar para o seu tema). `react-router` fica fora das dependências: quem usa React Router importa a ponte, `<nome-do-pacote>/router-bridge`; quem não usa, não precisa dela. Os componentes pesados (`document-viewer`, `rich-text-editor`, `chart`, `widget-grid`) são subcaminhos próprios, para não engordar quem não usa.
+O CSS já sai compilado (estratégia A: o host recebe `tokens.css`, `base.css` e `components.css` prontos, sem precisar ter o Tailwind instalado, e sem nenhuma variável do namespace do Tailwind vazar para o seu tema). `react-router` fica fora das dependências: quem usa React Router importa a ponte, `@rendra-ui/web/router-bridge`; quem não usa, não precisa dela. Os componentes pesados (`document-viewer`, `rich-text-editor`, `chart`, `widget-grid`) são subcaminhos próprios, para não engordar quem não usa.
 
 ### CLI (`rendra`)
 
-Três comandos, instalados junto com o pacote (`npx rendra <comando>`, ou `rendra` direto se instalado global):
+Três comandos. Com o pacote instalado: `npx rendra <comando>` (ou `rendra` direto, se instalado global). Sem instalar o pacote no projeto: `npx @rendra-ui/web <comando>` roda a mesma CLI direto do registry:
 
 ```bash
 rendra codigos                    # lista o catálogo de códigos de componente

@@ -4,8 +4,7 @@ import { paletteSeeds } from './palettes'
 import { createTheme, tryParseColorToHex, type ThemeInput } from './theme'
 
 /*
- * createTheme (Parte B, C5, docs/specs/v2-plano.md seções 2.6, 4.2 e as correções da 6.4):
- * três modos (gerado, explícito, misto), função pura, já emitindo --rendra-*.
+ * createTheme: três modos (gerado, explícito, misto), função pura, já emitindo --rendra-*.
  */
 
 const safira = paletteSeeds.find((s) => s.id === 'safira')!

@@ -8,8 +8,8 @@
  * (p-5, text-4xl, bg-blue-500, shadow-2xl, font-bold) simplesmente não existem.
  */
 /*
- * Ordem de camadas (C4, docs/specs/v2-plano.md 2.4 e 6.2.8): declarada antes de tudo, para as
- * utilities do host sempre vencerem qualquer camada do Rendra. A ordem é
+ * Ordem de camadas: declarada antes de tudo, para as utilities do host sempre vencerem
+ * qualquer camada do Rendra. A ordem é
  * theme, base, rendra.base, components, rendra.components, utilities:
  *   - rendra.base fica depois de base e antes de components (reset do Rendra, mais fraco que
  *     qualquer componente do host);

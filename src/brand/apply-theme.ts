@@ -1,13 +1,12 @@
 /*
- * APLICAÇÃO NO DOM (Parte B, C5, docs/specs/v2-plano.md, seções 2.6 e 4.2)
+ * APLICAÇÃO NO DOM
  * -------------------------------------------------------------------------
  * applyTheme injeta no DOM o resultado (puro) de createTheme. Sem `target`, reproduz
  * exatamente applyPalette hoje: um <style> em document.head com o claro e o escuro do
  * tema, selecionados por :root[data-palette='<id>'] (quem liga o atributo é o BrandProvider,
  * como já acontece). Com `target`, aplica num contêiner próprio: marca
- * [data-rendra-root='<id>'] nele e escopa o <style> por esse atributo em vez de :root
- * (C4, docs/specs/v2-plano.md seção 2.4), para um contêiner com tema próprio (não o
- * documento inteiro) ler os mesmos tokens --rendra-*.
+ * [data-rendra-root='<id>'] nele e escopa o <style> por esse atributo em vez de :root, para
+ * um contêiner com tema próprio (não o documento inteiro) ler os mesmos tokens --rendra-*.
  */
 import type { ThemeResult } from './theme'
 
