@@ -1,5 +1,5 @@
 /*
- * BUILD DE BIBLIOTECA (pacote, 2.1.0-alpha.1, Lote A, docs/specs/fase3-plano.md)
+ * BUILD DE BIBLIOTECA (pacote, Lote A da Fase 3, docs/specs/fase3-plano.md)
  * --------------------------------------------------------------------------------
  * Gera o JavaScript do pacote (ESM, uma entrada por item da superfície pública, mais os
  * quatro subcaminhos "pesados" e a ponte de rotas). O CSS pré-compilado (tokens.css,
@@ -20,19 +20,29 @@
  * consome o pacote já as tem (peer) ou o npm instala (dependency). `react-router` também
  * fica de fora, mas não é peer nem dependency: só existe na entrada opcional
  * rendra-ui/router-bridge, e quem não a importa nunca precisa dele.
+ *
+ * Estratégia de CSS: A (pré-compilado, adotada, seção 2.2 do v2-plano.md), não B. A
+ * estratégia B seria prefixar toda classe do JSX dos componentes (ex.: `bg-primary` viraria
+ * `rendra-bg-primary`) e deixar o host escanear e compilar o Tailwind dele mesmo contra o
+ * código-fonte do pacote (via `@source` apontando para node_modules/rendra-ui). Ela exigiria
+ * reescrever toda className de todo componente (alto custo, alto risco de esquecer uma) e
+ * ainda obrigaria o host a ter Tailwind v4 instalado; a estratégia A não pede nada disso: o
+ * host recebe CSS puro, sem precisar do Tailwind. Por isso A venceu nesta etapa; B fica só
+ * documentada aqui, não é o caminho ativo (docs/specs/fase3-levantamento.md, seção 1).
  */
 import { readFileSync } from 'node:fs'
 import { fileURLToPath, URL } from 'node:url'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import svgr from 'vite-plugin-svgr'
+import { packageBanner } from './scripts/lib/pkg-banner'
 
 const pkg = JSON.parse(
   readFileSync(fileURLToPath(new URL('./package.json', import.meta.url)), 'utf8'),
 ) as {
   version: string
 }
-const BANNER = `/*! Rendra Design System v${pkg.version} | MIT */`
+const BANNER = packageBanner(pkg.version)
 
 // Peers (react, react-dom, radix-ui) e dependências de produção: nunca entram no bundle.
 // react-router só existe na entrada rendra-ui/router-bridge (fora dos peers e de

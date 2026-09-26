@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
-import type { FeedbackType } from '@/brand'
+import type { FeedbackType } from '@/brand/types'
 
 /*
  * Contrato do menu, do usuário, do menu do usuário, das ações rápidas e das notificações

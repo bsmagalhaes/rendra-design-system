@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { FeedbackType } from '@/brand'
+import type { FeedbackType } from '@/brand/types'
 import { BrandFeedbackIcon } from '@/components/ui/brand-feedback-icon'
 import { cn } from '@/lib/cn'
 

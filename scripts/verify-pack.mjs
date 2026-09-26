@@ -1,50 +1,54 @@
 /*
- * Verifica o pacote publicável (2.1.0-alpha.1, Lote A, docs/specs/fase3-plano.md), depois
- * de `npm run build:lib`. É o teste que falha hoje (não existe `exports`, `main` nem
+ * Verifica o pacote publicável (Lote A da Fase 3, docs/specs/fase3-plano.md), depois de
+ * `npm run build:lib`. É o teste que falha hoje (não existe `exports`, `main` nem
  * `src/index.ts`) e passa depois que `vite.lib.config.ts`, `src/index.ts` e o `package.json`
  * novo existirem (docs/specs/fase3-plano.md, "Teste que falha antes e passa depois").
  *
- * Monta um `package.json` só de publicação (sem devDependencies, sem `react-router` em
- * dependencies: ele só existe na entrada opcional rendra-ui/router-bridge, nunca como
- * dependência do pacote) numa pasta de estágio (dist/.verify-pack/stage), empacota essa
- * pasta com `npm pack` (o mesmo comando do `npm publish`) e confere três coisas observáveis:
+ * Empacota o `package.json` REAL do repositório com `npm pack` (o mesmo comando do `npm
+ * publish`), nunca um `package.json` sintético: `react-router` e `@hookform/resolvers` são
+ * `devDependencies` (usados só pelo boilerplate e pela ponte de rotas opcional), então o
+ * pacote publicado nunca lista `react-router` de verdade em `dependencies` nem em
+ * `peerDependencies`: a afirmação abaixo confere o `package.json` que realmente foi
+ * publicado, não um que este script montasse e apagasse por conta própria (correção do
+ * Fable, item 1: aquilo era tautologia).
  *
- *   1. O componente renderiza HTML sem lançar erro (renderToStaticMarkup).
+ * Confere, no tarball de verdade:
+ *   1. O componente renderiza HTML sem lançar erro (renderToStaticMarkup), inclusive um
+ *      componente com hook (Checkbox, `useId`): prova que o hook funciona com o React do
+ *      próprio projeto consumidor, não com o React deste repositório (correção do Fable,
+ *      item 5).
  *   2. O package.json do pacote publicado não lista `react-router` em `dependencies` nem
  *      em `peerDependencies`.
- *   3. O arquivo de CSS (tokens.css) e o arquivo de entrada do JS (dist/index.js) contêm a
- *      string "Rendra Design System v" seguida da versão exata de package.json; tokens.css
- *      também define `--rendra-primary` e `--rendra-background` (correção do Opus, item 2
- *      da validação do plano: valores padrão da paleta e do tema de sistema, sem a marca).
+ *   3. tokens.css e o arquivo de entrada do JS (dist/index.js) contêm o banner de
+ *      scripts/lib/pkg-banner.ts, com a versão exata de package.json; tokens.css também
+ *      define `--rendra-primary` e `--rendra-background` (tema e paleta padrão) e NÃO
+ *      declara `--color-*` nem `--radius-*` (correção do Fable, item 2: essas variáveis são
+ *      a ponte `@theme inline`, que colidiria com o `@theme` de um host que também use
+ *      Tailwind v4; nenhuma utility do pacote precisa delas, só de --rendra-*).
+ *   4. dist/types não tem brand.config.d.ts nem nada de examples/ (correção do Fable, item
+ *      6: os componentes do pacote importam `@/brand/use-brand` e `@/brand/types`, nunca o
+ *      barrel `@/brand`, que arrastaria a marca de demonstração deste repositório para os
+ *      tipos publicados).
  *
- * Dois caminhos (correção do Opus, item 4): primeiro tenta instalar o tarball com
- * `npm install --prefer-offline` num projeto novo fora do repositório (prova a resolução de
- * dependências de verdade); se o ambiente bloquear a rede, cai para a verificação
- * estrutural (descompacta o tarball com `tar` e confere os arquivos direto, sem instalar).
- * O relatório final diz qual dos dois caminhos rodou.
+ * Dois caminhos: primeiro tenta instalar o tarball com `npm install --prefer-offline` num
+ * projeto novo fora do repositório (prova a resolução de dependências de verdade, com o
+ * React desse projeto, nunca o deste repositório); se o ambiente bloquear a rede, cai para
+ * a verificação estrutural (descompacta o tarball com `tar` e confere os arquivos direto,
+ * renderizando com o React deste repositório, a única opção sem instalar nada). O relatório
+ * final diz qual dos dois caminhos rodou.
  */
 import { execFileSync } from 'node:child_process'
-import {
-  cpSync,
-  existsSync,
-  mkdirSync,
-  mkdtempSync,
-  readdirSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { createElement } from 'react'
-import { renderToStaticMarkup } from 'react-dom/server'
+import { packageBanner } from './lib/pkg-banner.ts'
 
 const ROOT = process.cwd()
 const DIST = join(ROOT, 'dist')
 const WORK = join(DIST, '.verify-pack')
-const STAGE_DIR = join(WORK, 'stage')
 const PACK_OUT_DIR = join(WORK, 'pack-out')
 const EXTRACT_DIR = join(WORK, 'extracted')
+const RM_RETRY = { recursive: true, force: true, maxRetries: 5, retryDelay: 300 }
 
 function fail(message) {
   console.error(`✗ ${message}`)
@@ -62,62 +66,64 @@ if (!existsSync(join(DIST, 'index.js'))) {
 }
 
 const realPkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'))
-const BANNER_TEXT = `Rendra Design System v${realPkg.version}`
+const BANNER = packageBanner(realPkg.version)
 
-// 1) package.json só de publicação: sem devDependencies, sem scripts do repositório, sem
-//    `private`, e sem `react-router` em dependencies (contrato do pacote: só existe na
-//    entrada opcional rendra-ui/router-bridge).
-const dependencies = { ...(realPkg.dependencies ?? {}) }
-delete dependencies['react-router']
-const publishPkg = {
-  name: realPkg.name,
-  version: realPkg.version,
-  type: realPkg.type,
-  license: realPkg.license,
-  description: realPkg.description,
-  main: realPkg.main,
-  types: realPkg.types,
-  bin: realPkg.bin,
-  files: realPkg.files,
-  sideEffects: realPkg.sideEffects,
-  exports: realPkg.exports,
-  peerDependencies: realPkg.peerDependencies,
-  dependencies,
+// Roda dentro do projeto instalado (ou do tarball descompactado): renderiza Button (sem
+// hook) e Checkbox (usa useId), pelo react/react-dom desse mesmo lugar. Um marcador único
+// na saída evita que um aviso do React em stdout atrapalhe o parse do resultado.
+const RENDER_MARKER = 'VERIFY_PACK_RESULT:'
+function renderRunnerScript(pkgSpecifier) {
+  return `import { createElement } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { Button, Checkbox } from ${JSON.stringify(pkgSpecifier)}
+
+try {
+  const button = renderToStaticMarkup(createElement(Button, {}, 'Verificar pacote'))
+  const checkbox = renderToStaticMarkup(createElement(Checkbox, { label: 'Verificar', defaultChecked: true }))
+  console.log('${RENDER_MARKER}' + JSON.stringify({ ok: true, button, checkbox }))
+} catch (error) {
+  console.log('${RENDER_MARKER}' + JSON.stringify({ ok: false, message: String(error?.stack ?? error) }))
+}
+`
 }
 
-rmSync(WORK, { recursive: true, force: true, maxRetries: 5, retryDelay: 300 })
-mkdirSync(STAGE_DIR, { recursive: true })
+function assertRenderResult(stdout) {
+  const line = stdout.split('\n').find((l) => l.startsWith(RENDER_MARKER))
+  assert(!!line, 'O runner de render imprimiu o marcador de resultado.')
+  const result = JSON.parse(line.slice(RENDER_MARKER.length))
+  assert(result.ok, `Render não lançou erro: ${result.ok ? '' : result.message}`)
+  assert(
+    result.button.includes('<button') && result.button.includes('Verificar pacote'),
+    'Button (sem hook) renderiza HTML.',
+  )
+  assert(
+    result.checkbox.includes('Verificar') && /role="checkbox"/.test(result.checkbox),
+    'Checkbox (usa useId) renderiza HTML.',
+  )
+}
+
+rmSync(WORK, RM_RETRY)
 mkdirSync(PACK_OUT_DIR, { recursive: true })
 
-// dist/ tem o próprio WORK dentro (dist/.verify-pack): copia só os arquivos publicados
-// (o "files": ["dist"] do package.json), nunca a pasta de trabalho deste script.
-mkdirSync(join(STAGE_DIR, 'dist'), { recursive: true })
-for (const entry of readdirSync(DIST)) {
-  if (entry === '.verify-pack') continue
-  cpSync(join(DIST, entry), join(STAGE_DIR, 'dist', entry), { recursive: true })
-}
-writeFileSync(join(STAGE_DIR, 'package.json'), JSON.stringify(publishPkg, null, 2))
-const licensePath = join(ROOT, 'LICENSE')
-if (existsSync(licensePath)) cpSync(licensePath, join(STAGE_DIR, 'LICENSE'))
-
-// 2) Empacota (o mesmo comando do npm publish).
+// 1) Empacota o package.json REAL (nunca um sintético): npm pack é o mesmo comando do
+//    npm publish, e lê o package.json e o "files" do próprio repositório.
 const packOutput = execFileSync(
   'npm',
-  ['pack', STAGE_DIR, '--pack-destination', PACK_OUT_DIR, '--json'],
+  ['pack', ROOT, '--pack-destination', PACK_OUT_DIR, '--json'],
   { cwd: ROOT, encoding: 'utf8', shell: process.platform === 'win32' },
 )
 const [packResult] = JSON.parse(packOutput)
 const tarballPath = join(PACK_OUT_DIR, packResult.filename)
 assert(existsSync(tarballPath), `npm pack gerou o tarball (${packResult.filename}).`)
 
-// 3) Caminho 1: instala o tarball num projeto novo, fora do repositório (fora de qualquer
-//    node_modules existente), com --prefer-offline. Só segue por este caminho se o ambiente
-//    tiver rede (ou cache local) para os peers (react, react-dom, radix-ui).
+// 2) Caminho 1: instala o tarball num projeto novo, fora do repositório (fora de qualquer
+//    node_modules existente), com --prefer-offline.
 let path = 'estrutural'
-let packageJsonForAssertions = publishPkg
-let renderModuleSpecifier = join(EXTRACT_DIR, 'package', 'dist', 'index.js')
+let packageJsonForAssertions = null
 let tokensCssPath = join(EXTRACT_DIR, 'package', 'dist', 'tokens.css')
+let baseCssPath = join(EXTRACT_DIR, 'package', 'dist', 'base.css')
 let entryJsPath = join(EXTRACT_DIR, 'package', 'dist', 'index.js')
+let typesDirForAssertions = join(EXTRACT_DIR, 'package', 'dist', 'types')
 
 const consumerDir = mkdtempSync(join(tmpdir(), 'rendra-verify-pack-'))
 try {
@@ -132,9 +138,9 @@ try {
   execFileSync('npm', ['install', tarballPath, '--prefer-offline', '--no-audit', '--no-fund'], {
     cwd: consumerDir,
     stdio: 'pipe',
-    // Instalação de verdade (~200 pacotes na primeira vez): mais lenta que os 30s de um
-    // timeout apertado. Um timeout curto demais mata o npm no meio da escrita e deixa
-    // arquivo travado no Windows (EPERM na limpeza a seguir), não prova que a rede falhou.
+    // Instalação de verdade (~200 pacotes na primeira vez): mais lenta que um timeout
+    // apertado. Um timeout curto demais mata o npm no meio da escrita e deixa arquivo
+    // travado no Windows (EPERM na limpeza a seguir), não prova que a rede falhou.
     timeout: 180_000,
     shell: process.platform === 'win32',
   })
@@ -145,19 +151,30 @@ try {
     const installedDir = join(consumerDir, 'node_modules', realPkg.name, 'dist')
     entryJsPath = join(installedDir, 'index.js')
     tokensCssPath = join(installedDir, 'tokens.css')
-    renderModuleSpecifier = join(installedDir, 'index.js')
+    baseCssPath = join(installedDir, 'base.css')
+    typesDirForAssertions = join(installedDir, 'types')
   }
 } catch {
   // Sem rede (ou sem cache): segue para a verificação estrutural, sem instalar nada.
-  rmSync(consumerDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 300 })
+  rmSync(consumerDir, RM_RETRY)
 }
-// consumerDir só é removido depois das asserções (limpeza no fim do arquivo): elas leem
-// arquivos de dentro dele quando o caminho usado é "instalação".
+// consumerDir só é removido no fim do arquivo (limpeza final): o runner de render lê o
+// React instalado ali quando o caminho usado é "instalação".
 
-// 4) Caminho 2 (estrutural): descompacta o tarball direto, sem instalar.
+// 3) Caminho 2 (estrutural): descompacta o tarball direto, sem instalar.
 if (path === 'estrutural') {
   mkdirSync(EXTRACT_DIR, { recursive: true })
-  execFileSync('tar', ['-xzf', tarballPath, '-C', EXTRACT_DIR])
+  // --force-local: sem isso, o GNU tar lê "C:\..." como host:caminho remoto (dois pontos
+  // depois da letra da unidade) e recusa a extração local no Windows. Barra normal (nunca
+  // contrabarra) e shell:true no Windows: o tar do Git for Windows (MSYS) mistura escape de
+  // argv com a contrabarra crua do child_process, dobrando-a; passando pelo cmd.exe (como
+  // já fazem os comandos npm acima) o caminho chega intacto.
+  const toTarPath = (p) => p.split('\\').join('/')
+  execFileSync(
+    'tar',
+    ['--force-local', '-xzf', toTarPath(tarballPath), '-C', toTarPath(EXTRACT_DIR)],
+    { shell: process.platform === 'win32' },
+  )
   const extractedPkgPath = join(EXTRACT_DIR, 'package', 'package.json')
   assert(existsSync(extractedPkgPath), 'O tarball descompactado tem package.json.')
   packageJsonForAssertions = JSON.parse(readFileSync(extractedPkgPath, 'utf8'))
@@ -175,10 +192,10 @@ assert(
   'package.json publicado não lista react-router em peerDependencies.',
 )
 
-// Asserção 3: banner com a versão exata em tokens.css e no arquivo de entrada do JS.
+// Asserção 3: banner, tema e paleta padrão em tokens.css; ausência da ponte @theme inline.
 assert(existsSync(tokensCssPath), 'tokens.css está no pacote publicado.')
 const tokensCss = readFileSync(tokensCssPath, 'utf8')
-assert(tokensCss.includes(BANNER_TEXT), `tokens.css contém o banner "${BANNER_TEXT}".`)
+assert(tokensCss.includes(BANNER), `tokens.css contém o banner "${BANNER}".`)
 assert(
   /--rendra-primary:\s*#[0-9a-fA-F]{3,8}/.test(tokensCss),
   'tokens.css define --rendra-primary (paleta padrão).',
@@ -187,20 +204,60 @@ assert(
   /--rendra-background:\s*#[0-9a-fA-F]{3,8}/.test(tokensCss),
   'tokens.css define --rendra-background (tema padrão do sistema).',
 )
+assert(
+  !/--color-[a-z-]+:/.test(tokensCss),
+  'tokens.css não declara --color-* (colidiria com o @theme de um host Tailwind v4).',
+)
+assert(
+  !/--radius-[a-z-]+:/.test(tokensCss),
+  'tokens.css não declara --radius-* (colidiria com o @theme de um host Tailwind v4).',
+)
+assert(
+  !/--font-sans:/.test(tokensCss),
+  'tokens.css não declara --font-sans (colidiria com o @theme de um host Tailwind v4).',
+)
+
+// base.css referenciava var(--font-sans) direto (html { font-family: var(--font-sans) }):
+// como --font-sans saiu do tokens.css, a referência precisa ter virado --rendra-brand-font
+// (a variável que --font-sans só espelhava), senão a fonte da marca quebraria no host.
+assert(existsSync(baseCssPath), 'base.css está no pacote publicado.')
+const baseCss = readFileSync(baseCssPath, 'utf8')
+assert(
+  baseCss.includes('var(--rendra-brand-font)'),
+  'base.css usa var(--rendra-brand-font) na fonte do html.',
+)
+assert(!baseCss.includes('var(--font-sans)'), 'base.css não referencia mais var(--font-sans).')
 
 assert(existsSync(entryJsPath), 'dist/index.js está no pacote publicado.')
 const entryJs = readFileSync(entryJsPath, 'utf8')
-assert(entryJs.includes(BANNER_TEXT), `dist/index.js contém o banner "${BANNER_TEXT}".`)
+assert(entryJs.includes(BANNER), `dist/index.js contém o banner "${BANNER}".`)
 
-// Asserção 1: o componente renderiza HTML sem lançar erro. `Button` é `forwardRef(...)`:
-// no runtime do React isso é um objeto (não uma function), então a prova real é o próprio
-// render (regra 4 do CLAUDE.md: o teste confere o resultado, nunca só a chamada).
-const mod = await import(`file://${renderModuleSpecifier.split('\\').join('/')}`)
-assert(mod.Button != null, 'O módulo publicado exporta Button.')
-const html = renderToStaticMarkup(createElement(mod.Button, {}, 'Verificar pacote'))
-assert(html.includes('<button') && html.includes('Verificar pacote'), 'Button renderiza HTML.')
+// Asserção 4: dist/types não arrasta a marca de demonstração (brand.config, examples/).
+assert(
+  !existsSync(join(typesDirForAssertions, 'brand', 'brand.config.d.ts')),
+  'dist/types não tem brand/brand.config.d.ts (marca de demonstração fora dos tipos publicados).',
+)
+assert(
+  !existsSync(join(typesDirForAssertions, 'brand', 'examples')),
+  'dist/types não tem brand/examples (marca de demonstração fora dos tipos publicados).',
+)
 
-rmSync(WORK, { recursive: true, force: true, maxRetries: 5, retryDelay: 300 })
-rmSync(consumerDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 300 })
+// Asserção 1: o componente renderiza HTML sem lançar erro, inclusive um com hook, com o
+// react/react-dom de quem consome o pacote (nunca o deste repositório).
+if (path === 'instalação') {
+  const runnerPath = join(consumerDir, 'render-test.mjs')
+  writeFileSync(runnerPath, renderRunnerScript(realPkg.name))
+  const stdout = execFileSync('node', [runnerPath], { cwd: consumerDir, encoding: 'utf8' })
+  assertRenderResult(stdout)
+} else {
+  const runnerPath = join(EXTRACT_DIR, 'render-test.mjs')
+  const pkgEntry = join(EXTRACT_DIR, 'package', 'dist', 'index.js').split('\\').join('/')
+  writeFileSync(runnerPath, renderRunnerScript(`file://${pkgEntry}`))
+  const stdout = execFileSync('node', [runnerPath], { cwd: ROOT, encoding: 'utf8' })
+  assertRenderResult(stdout)
+}
+
+rmSync(WORK, RM_RETRY)
+rmSync(consumerDir, RM_RETRY)
 
 console.log('\nverify-pack: tudo passou.')

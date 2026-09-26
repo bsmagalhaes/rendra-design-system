@@ -1,7 +1,8 @@
 /*
- * Gera o CSS pré-compilado do pacote (2.1.0-alpha.1, Lote A, docs/specs/fase3-plano.md).
+ * Gera o CSS pré-compilado do pacote (Lote A da Fase 3, docs/specs/fase3-plano.md).
  *
- *   npm run build:lib   (chamado por dentro de scripts/build-lib.mjs após `vite build --config vite.lib.config.ts`)
+ * `npm run build:lib` chama este script por último, depois de `vite build` (o JS) e do
+ * `tsc` (os .d.ts): ver a cadeia completa no `package.json` (script `build:lib`).
  *
  * Estratégia A (CSS pré-compilado, seção 2.2 do v2-plano.md): roda o Tailwind (a mesma
  * engine de `src/styles/globals.css`, via @tailwindcss/node, já usada por @tailwindcss/vite)
@@ -12,16 +13,30 @@
  * explica por quê) e o host não precisa ter o Tailwind instalado.
  *
  * Saída em dist/:
- *   tokens.css      @theme (escala) + @theme inline (ponte --color-* -> --rendra-*) + a
- *                   camada "theme" do Tailwind + o tema padrão (sistema) e a paleta padrão
- *                   (a primeira de src/brand/palettes.ts), claro e escuro, sem a fonte da
- *                   marca (correção do Opus, item 2 da validação do plano: sem @font-face;
- *                   --rendra-brand-font cai na pilha de fontes do sistema).
+ *   tokens.css      @theme (escala) e o tema padrão (sistema) e a paleta padrão (a primeira
+ *                   de src/brand/palettes.ts), claro e escuro, sem a fonte da marca
+ *                   (correção do Opus, item 2 da validação do plano: sem @font-face;
+ *                   --rendra-brand-font cai na pilha de fontes do sistema). Não sai a
+ *                   camada @theme inline (--color-*, --radius-*, --font-sans, --font-mono,
+ *                   --shadow-*, --text-label, --text-help): como esse bloco é `inline`, o
+ *                   Tailwind já resolve cada uso direto para --rendra-* (ou para o valor
+ *                   literal, como em --font-mono) na hora de compilar `components.css`, e
+ *                   deixar essas variáveis também no tokens.css só serviria para colidir
+ *                   com o @theme de um host que também use Tailwind v4 (correção do Fable,
+ *                   item 2: risco 2 do plano). A única exceção provada por uso real é
+ *                   --font-sans, que a camada rendra.base referencia direto
+ *                   (`html { font-family: var(--font-sans) }`, escrito à mão em
+ *                   globals.css, fora de qualquer utility gerada); por isso o texto
+ *                   `var(--font-sans)` de rendra.base é reescrito para `var(--rendra-brand-
+ *                   font)` (a variável que --font-sans só espelhava) antes de --font-sans
+ *                   sair do tokens.css.
  *   base.css        preflight do Tailwind + @layer rendra.base (reset do Rendra).
- *   components.css  @utility do projeto e @layer rendra.components, já compilados para CSS
- *                   real (o host não escaneia os componentes do pacote para gerar classe).
+ *   components.css  @layer properties (fallback das --tw-* para navegador sem @property,
+ *                   correção do Fable, item 3: mantido aqui, nunca descartado), @utility do
+ *                   projeto e @layer rendra.components, já compilados para CSS real (o host
+ *                   não escaneia os componentes do pacote para gerar classe).
  *
- * Cada arquivo sai com o banner `Rendra Design System vX.Y.Z`, com a versão de package.json.
+ * Cada arquivo sai com o banner de scripts/lib/pkg-banner.ts, com a versão de package.json.
  */
 import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { join, posix } from 'node:path'
@@ -30,11 +45,12 @@ import { Scanner } from '@tailwindcss/oxide'
 import { format, resolveConfig } from 'prettier'
 import { createPalette, paletteCss } from '../src/brand/palette.ts'
 import { paletteSeeds } from '../src/brand/palettes.ts'
+import { packageBanner } from './lib/pkg-banner.ts'
 
 const ROOT = process.cwd()
 const OUT_DIR = join(ROOT, 'dist')
 const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'))
-const BANNER = `/*! Rendra Design System v${pkg.version} | MIT */`
+const BANNER = packageBanner(pkg.version)
 
 /** Lista arquivos de um diretório (recursivo), com a extensão pedida, sem teste e sem story. */
 function listSourceFiles(dir, extensions) {
@@ -127,6 +143,53 @@ function extractLayers(css) {
   return { layers, rest }
 }
 
+/**
+ * Extrai o miolo da primeira regra `seletor { ... }` de dentro de `text` (chaves
+ * balanceadas), devolvendo o miolo e o texto ao redor (antes e depois), para reescrever só
+ * o miolo sem arriscar as chaves.
+ */
+function extractFirstRule(text) {
+  const braceStart = text.indexOf('{')
+  if (braceStart === -1) return null
+  let depth = 1
+  let j = braceStart + 1
+  while (depth > 0 && j < text.length) {
+    if (text[j] === '{') depth++
+    else if (text[j] === '}') depth--
+    j++
+  }
+  return {
+    before: text.slice(0, braceStart + 1),
+    inner: text.slice(braceStart + 1, j - 1),
+    after: text.slice(j - 1),
+  }
+}
+
+/**
+ * Remove do miolo de `:root, :host { ... }` (a camada "theme" do Tailwind) as variáveis da
+ * ponte `@theme inline` de globals.css (--color-*, --radius-*, --font-sans, --font-mono,
+ * --shadow-* e --text-label/--text-help com os sufixos --line-height/--letter-spacing/
+ * --font-weight): nenhuma delas é lida por nenhuma utility compilada (o inline já resolveu
+ * cada uma para --rendra-* ou para o valor literal), e deixá-las no tokens.css só colidiria
+ * com o @theme de um host que também use Tailwind v4 (correção do Fable, item 2).
+ */
+function stripInlineThemeNamespace(themeLayerText) {
+  const rule = extractFirstRule(themeLayerText)
+  if (!rule) return themeLayerText
+  const REMOVE_PREFIXES = ['--color-', '--radius-', '--shadow-', '--text-label', '--text-help']
+  const REMOVE_EXACT = new Set(['--font-sans', '--font-mono'])
+  const kept = rule.inner
+    .split(';')
+    .map((d) => d.trim())
+    .filter(Boolean)
+    .filter((decl) => {
+      const name = decl.split(':')[0]?.trim() ?? ''
+      if (REMOVE_EXACT.has(name)) return false
+      return !REMOVE_PREFIXES.some((prefix) => name.startsWith(prefix))
+    })
+  return `${rule.before}\n${kept.map((d) => `    ${d};`).join('\n')}\n  ${rule.after}`
+}
+
 async function formatCss(source, filepath) {
   const config = (await resolveConfig(filepath)) ?? {}
   return format(source, { ...config, filepath })
@@ -173,20 +236,41 @@ async function main() {
 
   const { layers, rest } = extractLayers(built)
 
-  const tokensCss = [BANNER, rest.trim(), layers.theme ? `@layer theme {\n${layers.theme}}` : '']
+  // rendra.base referencia var(--font-sans) direto (html { font-family: var(--font-sans) },
+  // escrito à mão em globals.css); --font-sans só espelhava --rendra-brand-font (@theme
+  // inline), então a referência vira --rendra-brand-font antes de --font-sans sumir do
+  // tokens.css (correção do Fable, item 2).
+  const rendraBaseFixed = (layers['rendra.base'] ?? '').replaceAll(
+    'var(--font-sans)',
+    'var(--rendra-brand-font)',
+  )
+
+  // A ordem de camada vazia (`@layer properties;`, sem miolo) só reserva o nome: o miolo de
+  // verdade (o fallback das --tw-*) vai para components.css a seguir, então a reserva vazia
+  // não tem função no tokens.css e sai (correção do Fable, item 3).
+  const tokensRest = rest.replace(/@layer properties;\s*/, '').trim()
+
+  const tokensCss = [
+    BANNER,
+    tokensRest,
+    layers.theme ? `@layer theme {\n${stripInlineThemeNamespace(layers.theme)}}` : '',
+  ]
     .filter(Boolean)
     .join('\n\n')
 
   const baseCss = [
     BANNER,
     layers.base ? `@layer base {\n${layers.base}}` : '',
-    layers['rendra.base'] ? `@layer rendra.base {\n${layers['rendra.base']}}` : '',
+    rendraBaseFixed ? `@layer rendra.base {\n${rendraBaseFixed}}` : '',
   ]
     .filter(Boolean)
     .join('\n\n')
 
   const componentsCss = [
     BANNER,
+    // Fallback das --tw-* para navegador sem @property (correção do Fable, item 3): mantido,
+    // nunca descartado.
+    layers.properties ? `@layer properties {\n${layers.properties}}` : '',
     layers.utilities ? `@layer utilities {\n${layers.utilities}}` : '',
     layers['rendra.components']
       ? `@layer rendra.components {\n${layers['rendra.components']}}`
