@@ -1,23 +1,24 @@
 /*
- * ENTRADA PRINCIPAL DO PACOTE (rendra-ui)
+ * ENTRADA PRINCIPAL DO PACOTE (@rendra-ui/web)
  * ----------------------------------------
- * Barrel da superfície pública (2.1.0-alpha.1, Lote A, docs/specs/fase3-plano.md):
- * componentes de src/components/ui (menos os internos overlay-shell, picker-panel,
- * sortable-handle, e os quatro "pesados" com entrada própria por subcaminho: document-viewer,
- * rich-text-editor, chart, widget-grid), as primitivas de layout, o AppShell, o
- * RendraProvider (sem depender de um roteador específico), o catálogo de componentes, os
- * hooks e as bibliotecas utilitárias, e a API de marca reutilizável (src/brand/public.ts).
+ * Barrel da superfície pública: componentes de src/components/ui (menos os internos
+ * overlay-shell, picker-panel, sortable-handle, e os quatro "pesados" com entrada própria
+ * por subcaminho: document-viewer, rich-text-editor, chart, widget-grid), as primitivas de
+ * layout, o AppShell, o RendraProvider (sem depender de um roteador específico), o catálogo
+ * de componentes, os hooks e as bibliotecas utilitárias, e a API de marca reutilizável
+ * (src/brand/public.ts).
  *
  * Ficam fora daqui, cada um na própria entrada:
- *   rendra-ui/router-bridge      a ponte com o react-router (único ponto que o importa)
- *   rendra-ui/document-viewer    depende de pdfjs-dist
- *   rendra-ui/rich-text-editor   depende de @tiptap/*
- *   rendra-ui/chart              depende de recharts
- *   rendra-ui/widget-grid        depende de react-grid-layout
+ *   @rendra-ui/web/router-bridge      a ponte com o react-router (único ponto que o importa)
+ *   @rendra-ui/web/document-viewer    depende de pdfjs-dist
+ *   @rendra-ui/web/rich-text-editor   depende de @tiptap/*
+ *   @rendra-ui/web/chart              depende de recharts
+ *   @rendra-ui/web/widget-grid        depende de react-grid-layout
  *
  * O CSS (tokens.css, base.css, components.css) não entra aqui: é publicado como arquivo
- * pré-compilado (estratégia A, seção 2.2 do v2-plano.md), importado à parte
- * ("rendra-ui/tokens.css" etc.), gerado por scripts/build-lib.mjs.
+ * pré-compilado (estratégia A, escolhida para o host nunca precisar ter o Tailwind
+ * instalado), importado à parte ("@rendra-ui/web/tokens.css" etc.), gerado por
+ * scripts/build-lib.mjs.
  */
 
 // Componentes de interface

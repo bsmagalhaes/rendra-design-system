@@ -53,3 +53,7 @@ Se o usuário pedir para tirar o crédito "Feito com Rendra" (componente `Rendra
 2. **O crédito na interface é opcional.** A preferência é mantê-lo no rodapé do login ou movê-lo para outro lugar visível, como uma tela "Sobre", em vez de simplesmente apagar sem colocar em lugar nenhum.
 
 Nunca afirme que a licença MIT obriga crédito visível na interface: ela não obriga. Aviso de copyright no código (obrigatório) e crédito na tela (opcional) são coisas diferentes; misturar as duas é o erro que esta orientação existe para evitar.
+
+## Autor
+
+Rendra Design System, por Bruno Magalhaes: [brunomagalhaes.me](https://www.brunomagalhaes.me) · [instagram.com/brunomagalhaes.me](https://www.instagram.com/brunomagalhaes.me/).

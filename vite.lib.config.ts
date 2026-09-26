@@ -1,5 +1,5 @@
 /*
- * BUILD DE BIBLIOTECA (pacote, Lote A da Fase 3, docs/specs/fase3-plano.md)
+ * BUILD DE BIBLIOTECA (pacote @rendra-ui/web)
  * --------------------------------------------------------------------------------
  * Gera o JavaScript do pacote (ESM, uma entrada por item da superfície pública, mais os
  * quatro subcaminhos "pesados" e a ponte de rotas). O CSS pré-compilado (tokens.css,
@@ -15,20 +15,18 @@
  * pelo Storybook, todos com o próprio `vite.config.ts`. O boilerplate continua exatamente
  * como antes.
  *
- * external: os peers (react, react-dom, radix-ui) e as dependências de produção do
- * levantamento (docs/specs/fase3-levantamento.md, seção 1) ficam de fora do bundle: quem
- * consome o pacote já as tem (peer) ou o npm instala (dependency). `react-router` também
- * fica de fora, mas não é peer nem dependency: só existe na entrada opcional
- * rendra-ui/router-bridge, e quem não a importa nunca precisa dele.
+ * external: os peers (react, react-dom, radix-ui) e as dependências de produção ficam de
+ * fora do bundle: quem consome o pacote já as tem (peer) ou o npm instala (dependency).
+ * `react-router` também fica de fora, mas não é peer nem dependency: só existe na entrada
+ * opcional @rendra-ui/web/router-bridge, e quem não a importa nunca precisa dele.
  *
- * Estratégia de CSS: A (pré-compilado, adotada, seção 2.2 do v2-plano.md), não B. A
- * estratégia B seria prefixar toda classe do JSX dos componentes (ex.: `bg-primary` viraria
- * `rendra-bg-primary`) e deixar o host escanear e compilar o Tailwind dele mesmo contra o
- * código-fonte do pacote (via `@source` apontando para node_modules/rendra-ui). Ela exigiria
- * reescrever toda className de todo componente (alto custo, alto risco de esquecer uma) e
- * ainda obrigaria o host a ter Tailwind v4 instalado; a estratégia A não pede nada disso: o
- * host recebe CSS puro, sem precisar do Tailwind. Por isso A venceu nesta etapa; B fica só
- * documentada aqui, não é o caminho ativo (docs/specs/fase3-levantamento.md, seção 1).
+ * Estratégia de CSS: A (pré-compilado), não B. A estratégia B seria prefixar toda classe do
+ * JSX dos componentes (ex.: `bg-primary` viraria `rendra-bg-primary`) e deixar o host
+ * escanear e compilar o Tailwind dele mesmo contra o código-fonte do pacote (via `@source`
+ * apontando para node_modules/@rendra-ui/web). Ela exigiria reescrever toda className de
+ * todo componente (alto custo, alto risco de esquecer uma) e ainda obrigaria o host a ter
+ * Tailwind v4 instalado; a estratégia A não pede nada disso: o host recebe CSS puro, sem
+ * precisar do Tailwind. Por isso A venceu; B nunca chegou a ser implementada.
  */
 import { readFileSync } from 'node:fs'
 import { fileURLToPath, URL } from 'node:url'
@@ -45,7 +43,7 @@ const pkg = JSON.parse(
 const BANNER = packageBanner(pkg.version)
 
 // Peers (react, react-dom, radix-ui) e dependências de produção: nunca entram no bundle.
-// react-router só existe na entrada rendra-ui/router-bridge (fora dos peers e de
+// react-router só existe na entrada @rendra-ui/web/router-bridge (fora dos peers e de
 // dependencies do package.json), mas também precisa ficar de fora do bundle.
 const EXTERNAL_PACKAGES = [
   'react',
@@ -113,6 +111,7 @@ export default defineConfig({
         'cli/auditar': 'src/cli/auditar.ts',
         'cli/trocar': 'src/cli/trocar.ts',
         'cli/typescript-loader': 'src/cli/typescript-loader.ts',
+        'cli/help': 'src/cli/help.ts',
       },
       formats: ['es'],
       fileName: (_format, entryName) => `${entryName}.js`,

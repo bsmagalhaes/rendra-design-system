@@ -1,6 +1,6 @@
 /*
- * ENTRADA SEPARADA: Chart (rendra-ui/chart)
- * --------------------------------------------
+ * ENTRADA SEPARADA: Chart (@rendra-ui/web/chart)
+ * ------------------------------------------------
  * Fora da entrada principal (src/index.ts): depende de `recharts`, pesado, só entra no
  * bundle de quem realmente usa gráficos.
  */

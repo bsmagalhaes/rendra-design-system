@@ -2,8 +2,8 @@ import { expect, test } from '@playwright/test'
 import { openRoute, useTheme } from './helpers'
 
 /*
- * TESTE DE NAVEGADOR: CSS em camadas (C4, docs/specs/v2-plano.md seção 2.4 e etapa
- * 2.0.0-alpha.8). Três provas, contra o app de verdade (não CSS isolado em jsdom):
+ * TESTE DE NAVEGADOR: CSS em camadas. Três provas, contra o app de verdade (não CSS isolado
+ * em jsdom):
  *
  *   1. uma classe utilitária do host (camada `utilities`) sempre vence uma regra de
  *      `rendra.components` no mesmo elemento, mesmo que o texto da folha injetada

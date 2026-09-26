@@ -5,7 +5,7 @@
  * `paths` no tsconfig só ajuda o próprio `tsc` a RESOLVER o módulo durante a checagem, nunca
  * muda o texto do import gerado (limitação conhecida da ferramenta). Sem esta reescrita, os
  * `.d.ts` publicados teriam `import ... from '@/lib/shape'`, que não existe fora deste
- * repositório (docs/specs/fase3-levantamento.md e fase3-plano.md, Lote A).
+ * repositório.
  *
  * Pura (só matemática de caminho, `node:path`, sem tocar disco), para dar teste de verdade
  * a esta reescrita (validação do Fable no Lote A): scripts/fix-dts-aliases.mjs é só a casca

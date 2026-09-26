@@ -1,7 +1,7 @@
 /*
- * robots.txt gerado por scripts/seo-build.mjs (fase 3, Lote B, docs/specs/fase3-plano.md):
- * bloqueia os robôs de treinamento de IA, mantém tudo liberado para os buscadores comuns.
- * Módulo único: o script e o teste (robots.test.ts) importam daqui, para nunca divergir.
+ * robots.txt gerado por scripts/seo-build.mjs: bloqueia os robôs de treinamento de IA, mantém
+ * tudo liberado para os buscadores comuns. Módulo único: o script e o teste (robots.test.ts)
+ * importam daqui, para nunca divergir.
  */
 
 /**
