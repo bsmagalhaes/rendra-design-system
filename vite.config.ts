@@ -35,6 +35,7 @@ export default defineConfig({
         'src/brand/palette.ts',
         'src/hooks/**',
         'src/components/ui/**',
+        'src/components/rendra-provider.tsx',
         'scripts/lib/**',
         'src/catalog/**',
       ],
@@ -48,6 +49,7 @@ export default defineConfig({
         'src/hooks/use-lookup.ts': { lines: 90 },
         'scripts/lib/var-prefix.ts': { lines: 90 },
         'src/catalog/components.ts': { lines: 90 },
+        'src/components/rendra-provider.tsx': { lines: 90 },
         'scripts/lib/help-length.ts': { lines: 95 },
         'src/components/ui/{input,select,modal,alert,accordion,checkbox,field,radio-group,switch,tabs,textarea}.tsx':
           { lines: 85 },

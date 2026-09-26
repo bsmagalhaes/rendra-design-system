@@ -20,8 +20,8 @@ import {
   RotateCw,
 } from 'lucide-react'
 import { Collapsible } from 'radix-ui'
-import { Link } from 'react-router'
 import { Fragment, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useRendraLink } from '@/components/rendra-provider'
 import { Badge, type BadgeProps } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -194,6 +194,7 @@ function formatValue<T>(col: TableColumn<T>, row: T): ReactNode {
 
 /** Valor da célula com link (href) e linhas extras (details), igual no desktop e no card. */
 function CellContent<T>({ col, row, title }: { col: TableColumn<T>; row: T; title?: boolean }) {
+  const Link = useRendraLink()
   const main = formatValue(col, row)
   const extra = (col.details?.(row) ?? []).filter((d) => d != null && d !== '')
   const value = col.href ? (
