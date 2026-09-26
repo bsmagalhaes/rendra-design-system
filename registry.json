@@ -950,6 +950,25 @@
       "meta": { "codes": ["RDO-001", "RDO-002"] }
     },
     {
+      "name": "rendra-credit",
+      "type": "registry:item",
+      "title": "rendra-credit",
+      "description": "Componente rendra-credit do Rendra Design System.",
+      "dependencies": [],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/rendra-credit.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/rendra-credit.tsx"
+        }
+      ],
+      "meta": { "codes": ["CRED-001"] }
+    },
+    {
       "name": "rich-text-editor",
       "type": "registry:item",
       "title": "rich-text-editor",
@@ -1986,6 +2005,25 @@
           "path": "src/components/ui/radio-group.test.tsx",
           "type": "registry:file",
           "target": "src/components/ui/radio-group.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "rendra-credit-test",
+      "type": "registry:item",
+      "title": "rendra-credit (teste)",
+      "description": "Testes de comportamento do rendra-credit, com Vitest e Testing Library.",
+      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.1"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/rendra-credit.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/rendra-credit.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/rendra-credit.test.tsx"
         }
       ]
     },

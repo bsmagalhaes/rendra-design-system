@@ -522,6 +522,17 @@ export const CATALOG: ComponentCatalogEntry[] = [
     variantProps: { variant: 'cards' },
     whenToUse: 'Para opções com ícone e descrição, quando cada uma merece mais destaque.',
   },
+  // ---------------------------------------------------------------- rendra-credit
+  {
+    code: 'CRED-001',
+    name: 'Crédito Feito com Rendra',
+    component: 'RendraCredit',
+    file: 'components/ui/rendra-credit.tsx',
+    variantProps: {},
+    whenToUse:
+      'No rodapé da tela de login, discreto; pode ser removido (credit={false}) ou levado para ' +
+      'outro lugar visível, como uma tela Sobre.',
+  },
   // ---------------------------------------------------------------- rich-text-editor
   {
     code: 'RTE-001',
