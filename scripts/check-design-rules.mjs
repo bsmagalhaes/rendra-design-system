@@ -7,7 +7,7 @@
  * Proíbe, fora de src/brand e src/styles:
  *  - cor fixa, valor arbitrário do Tailwind, estilo inline, fonte fixa, 100vh e raio fixo:
  *    as seis regras genéricas de DESIGN_RULES.md, compartilhadas com a CLI publicada
- *    (`rendra auditar`, fase 3, Lote B) em src/cli/auditar.ts, para nunca duplicar a lógica
+ *    (`rendra auditar`) em src/cli/auditar.ts, para nunca duplicar a lógica
  *  - importação de SVG de marca fora de src/brand
  *  - arquivo de variante mobile ou paralela de componente (TableMobile, SelectSimples...)
  *  - classe montada por template string (p-${n}): o Tailwind não gera a classe

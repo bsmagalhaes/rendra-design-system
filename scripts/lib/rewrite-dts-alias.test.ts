@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { resolveAliasSpecifier, rewriteAliasSpecifiers } from './rewrite-dts-alias'
 
 /*
- * Teste exigido pela validação do Fable no Lote A (item 4): o tsc não resolve o alias @/ na
- * emissão dos .d.ts (confirmado em dist/types real, 23 imports), e a reescrita própria
- * (sem vite-plugin-dts) precisa de prova de que o caminho relativo calculado está certo.
+ * O tsc não resolve o alias @/ na emissão dos .d.ts (confirmado em dist/types real, 23
+ * imports), e a reescrita própria (sem vite-plugin-dts) precisa de prova de que o caminho
+ * relativo calculado está certo.
  */
 
 describe('resolveAliasSpecifier', () => {

@@ -266,10 +266,10 @@ export function trocar(options: TrocarOptions): TrocarResultado {
 
       let editedAny = false
       for (const edit of classification.edits) {
-        // PARA é a variante padrão do componente: a prop sai por completo (decisão do
-        // Lote B, documentada no CHANGELOG e no README), nunca grava o valor padrão por
-        // extenso. Sem attrNode (a prop já não existia, DE também era padrão), não há nada a
-        // remover: o elemento já está no formato de PARA.
+        // PARA é a variante padrão do componente: a prop sai por completo (documentado no
+        // CHANGELOG e no README), nunca grava o valor padrão por extenso. Sem attrNode (a
+        // prop já não existia, DE também era padrão), não há nada a remover: o elemento já
+        // está no formato de PARA.
         if (paraEntry.isDefault) {
           if (edit.attrNode) {
             const span = attributeRemovalSpan(sourceFile, edit.attrNode)

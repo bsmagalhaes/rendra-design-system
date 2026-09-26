@@ -4,11 +4,10 @@ import { describe, expect, it } from 'vitest'
 import { checkVarPrefix, findUnprefixedDeclarations, isRendraOwnVar } from './var-prefix'
 
 /*
- * Teste da regra variavel-sem-prefixo-rendra (etapa 2.0.0-alpha.2), exigido pela validação do
- * Fable (bloqueador 3: a regra não tinha teste próprio). Cobre o bug relatado: --radius e
- * --shadow-color são variável própria do Rendra, mas o nome bate na regex de namespace do
- * Tailwind (--radius-*, --shadow-*); a ordem certa é perguntar primeiro se é variável própria
- * (RENDRA_VAR_EXACT/RENDRA_VAR_PREFIXES), e só depois a exceção de namespace.
+ * Teste da regra variavel-sem-prefixo-rendra (etapa 2.0.0-alpha.2). Cobre o bug relatado:
+ * --radius e --shadow-color são variável própria do Rendra, mas o nome bate na regex de
+ * namespace do Tailwind (--radius-*, --shadow-*); a ordem certa é perguntar primeiro se é
+ * variável própria (RENDRA_VAR_EXACT/RENDRA_VAR_PREFIXES), e só depois a exceção de namespace.
  */
 
 describe('isRendraOwnVar', () => {

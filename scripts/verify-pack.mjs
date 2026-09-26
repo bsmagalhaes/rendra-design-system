@@ -9,32 +9,29 @@
  * `devDependencies` (usados só pelo boilerplate e pela ponte de rotas opcional), então o
  * pacote publicado nunca lista `react-router` de verdade em `dependencies` nem em
  * `peerDependencies`: a afirmação abaixo confere o `package.json` que realmente foi
- * publicado, não um que este script montasse e apagasse por conta própria (correção do
- * Fable, item 1: aquilo era tautologia).
+ * publicado, não um que este script montasse e apagasse por conta própria, o que seria
+ * tautológico.
  *
  * Confere, no tarball de verdade:
  *   1. O componente renderiza HTML sem lançar erro (renderToStaticMarkup), inclusive um
  *      componente com hook (Checkbox, `useId`): prova que o hook funciona com o React do
- *      próprio projeto consumidor, não com o React deste repositório (correção do Fable,
- *      item 5).
+ *      próprio projeto consumidor, não com o React deste repositório.
  *   2. O package.json do pacote publicado não lista `react-router` em `dependencies` nem
  *      em `peerDependencies`.
  *   3. tokens.css e o arquivo de entrada do JS (dist/index.js) contêm o banner de
  *      scripts/lib/pkg-banner.ts, com a versão exata de package.json; tokens.css também
  *      define `--rendra-primary` e `--rendra-background` (tema e paleta padrão) e NÃO
- *      declara `--color-*` nem `--radius-*` (correção do Fable, item 2: essas variáveis são
- *      a ponte `@theme inline`, que colidiria com o `@theme` de um host que também use
- *      Tailwind v4; nenhuma utility do pacote precisa delas, só de --rendra-*).
- *   4. dist/types não tem brand.config.d.ts nem nada de examples/ (correção do Fable, item
- *      6: os componentes do pacote importam `@/brand/use-brand` e `@/brand/types`, nunca o
- *      barrel `@/brand`, que arrastaria a marca de demonstração deste repositório para os
- *      tipos publicados).
+ *      declara `--color-*` nem `--radius-*`: essas variáveis são a ponte `@theme inline`,
+ *      que colidiria com o `@theme` de um host que também use Tailwind v4; nenhuma utility
+ *      do pacote precisa delas, só de --rendra-*.
+ *   4. dist/types não tem brand.config.d.ts nem nada de examples/: os componentes do
+ *      pacote importam `@/brand/use-brand` e `@/brand/types`, nunca o barrel `@/brand`,
+ *      que arrastaria a marca de demonstração deste repositório para os tipos publicados.
  *   5. tokens.css, base.css e components.css não declaram nenhuma custom property fora de
  *      --rendra- e --tw- (as --tw- do @layer properties são internas do Tailwind e ficam):
  *      cobre de uma vez o namespace inteiro do Tailwind que vazava para o host antes desta
  *      correção (--spacing-*, --text-*, --font-weight-*, --tracking-*, --container-*,
- *      --ease-*, --animate-*, --default-*), risco residual apontado depois da entrega do
- *      Lote A e corrigido em scripts/build-lib.mjs.
+ *      --ease-*, --animate-*, --default-*), corrigido em scripts/build-lib.mjs.
  *
  * Dois caminhos: primeiro tenta instalar o tarball com `npm install --prefer-offline` num
  * projeto novo fora do repositório (prova a resolução de dependências de verdade, com o
@@ -75,8 +72,8 @@ if (!existsSync(join(DIST, 'index.js'))) {
 const realPkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'))
 const BANNER = packageBanner(realPkg.version)
 
-// Fecha o risco descrito no levantamento (o npm pack, usado abaixo, empacota um pacote
-// "private" normalmente e não acusa nada): falha explícito antes de empacotar.
+// O npm pack, usado abaixo, empacota um pacote "private" normalmente e não acusa nada:
+// falha explícito antes de empacotar.
 const privateError = privateFieldError(realPkg)
 if (privateError) fail(privateError)
 
@@ -254,11 +251,10 @@ assert(
 )
 assert(!baseCss.includes('var(--font-sans)'), 'base.css não referencia mais var(--font-sans).')
 
-// Asserção do risco residual (correção do coordenador depois da entrega do Lote A): nenhum
-// dos três arquivos do pacote declara custom property fora de --rendra- e --tw- (--tw- do
-// @layer properties é interno do Tailwind e fica). Cobre de uma vez o namespace inteiro que
-// vazava (--spacing-*, --text-*, --font-weight-*, --tracking-*, --container-*, --ease-*,
-// --animate-*, --default-*), sem depender de listar cada prefixo à mão.
+// Nenhum dos três arquivos do pacote declara custom property fora de --rendra- e --tw-
+// (--tw- do @layer properties é interno do Tailwind e fica). Cobre de uma vez o namespace
+// inteiro que vazava (--spacing-*, --text-*, --font-weight-*, --tracking-*, --container-*,
+// --ease-*, --animate-*, --default-*), sem depender de listar cada prefixo à mão.
 assert(existsSync(componentsCssPath), 'components.css está no pacote publicado.')
 const componentsCss = readFileSync(componentsCssPath, 'utf8')
 const NON_RENDRA_CUSTOM_PROPERTY = /(?<![\w-])--(?!rendra-|tw-)[a-zA-Z0-9-]+\s*:/
