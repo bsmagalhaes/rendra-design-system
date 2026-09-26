@@ -29,6 +29,12 @@
  *      6: os componentes do pacote importam `@/brand/use-brand` e `@/brand/types`, nunca o
  *      barrel `@/brand`, que arrastaria a marca de demonstração deste repositório para os
  *      tipos publicados).
+ *   5. tokens.css, base.css e components.css não declaram nenhuma custom property fora de
+ *      --rendra- e --tw- (as --tw- do @layer properties são internas do Tailwind e ficam):
+ *      cobre de uma vez o namespace inteiro do Tailwind que vazava para o host antes desta
+ *      correção (--spacing-*, --text-*, --font-weight-*, --tracking-*, --container-*,
+ *      --ease-*, --animate-*, --default-*), risco residual apontado depois da entrega do
+ *      Lote A e corrigido em scripts/build-lib.mjs.
  *
  * Dois caminhos: primeiro tenta instalar o tarball com `npm install --prefer-offline` num
  * projeto novo fora do repositório (prova a resolução de dependências de verdade, com o
@@ -122,6 +128,7 @@ let path = 'estrutural'
 let packageJsonForAssertions = null
 let tokensCssPath = join(EXTRACT_DIR, 'package', 'dist', 'tokens.css')
 let baseCssPath = join(EXTRACT_DIR, 'package', 'dist', 'base.css')
+let componentsCssPath = join(EXTRACT_DIR, 'package', 'dist', 'components.css')
 let entryJsPath = join(EXTRACT_DIR, 'package', 'dist', 'index.js')
 let typesDirForAssertions = join(EXTRACT_DIR, 'package', 'dist', 'types')
 
@@ -152,6 +159,7 @@ try {
     entryJsPath = join(installedDir, 'index.js')
     tokensCssPath = join(installedDir, 'tokens.css')
     baseCssPath = join(installedDir, 'base.css')
+    componentsCssPath = join(installedDir, 'components.css')
     typesDirForAssertions = join(installedDir, 'types')
   }
 } catch {
@@ -227,6 +235,25 @@ assert(
   'base.css usa var(--rendra-brand-font) na fonte do html.',
 )
 assert(!baseCss.includes('var(--font-sans)'), 'base.css não referencia mais var(--font-sans).')
+
+// Asserção do risco residual (correção do coordenador depois da entrega do Lote A): nenhum
+// dos três arquivos do pacote declara custom property fora de --rendra- e --tw- (--tw- do
+// @layer properties é interno do Tailwind e fica). Cobre de uma vez o namespace inteiro que
+// vazava (--spacing-*, --text-*, --font-weight-*, --tracking-*, --container-*, --ease-*,
+// --animate-*, --default-*), sem depender de listar cada prefixo à mão.
+assert(existsSync(componentsCssPath), 'components.css está no pacote publicado.')
+const componentsCss = readFileSync(componentsCssPath, 'utf8')
+const NON_RENDRA_CUSTOM_PROPERTY = /(?<![\w-])--(?!rendra-|tw-)[a-zA-Z0-9-]+\s*:/
+for (const [label, css] of [
+  ['tokens.css', tokensCss],
+  ['base.css', baseCss],
+  ['components.css', componentsCss],
+]) {
+  assert(
+    !NON_RENDRA_CUSTOM_PROPERTY.test(css),
+    `${label} não declara nenhuma custom property fora de --rendra- e --tw-.`,
+  )
+}
 
 assert(existsSync(entryJsPath), 'dist/index.js está no pacote publicado.')
 const entryJs = readFileSync(entryJsPath, 'utf8')

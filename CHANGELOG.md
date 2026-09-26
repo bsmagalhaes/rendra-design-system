@@ -6,6 +6,37 @@ O que mudou em cada versão e o que um projeto derivado precisa fazer para atual
 
 Nada ainda.
 
+## 2.1.0 (26/09/2026)
+
+Pacote publicável pronto para uso externo (`import { Button } from '<nome do pacote>'`, `import '<nome do pacote>/tokens.css'`), CLI `rendra`, skill de migração parcial completa, seção de comandos no README e robots.txt bloqueando robô de IA.
+
+### Adicionado
+
+- **Pacote npm** (nome ainda placeholder, `private: true`, nenhuma publicação): `npm run build:lib` gera `dist/index.js` e as entradas por subcaminho (`router-bridge`, `document-viewer`, `rich-text-editor`, `chart`, `widget-grid`) mais `dist/tokens.css`, `dist/base.css` e `dist/components.css`, pré-compilados (estratégia A: o host recebe CSS puro, sem precisar do Tailwind). `react-router` fica fora dos peers e das dependências, só existe na entrada opcional `/router-bridge`. `npm run verify:pack` empacota de verdade (`npm pack`), instala num projeto à parte e confere: sem erro ao renderizar, sem `react-router` no `package.json` publicado, banner com a versão exata em cada arquivo, `--rendra-primary`/`--rendra-background` presentes e nenhuma variável do namespace do Tailwind (`--color-*`, `--radius-*`, `--spacing-*`, `--text-*`, `--font-weight-*`, `--tracking-*`, `--container-*`, `--ease-*`, `--animate-*`, `--default-*`) declarada em nenhum dos três arquivos CSS: as dez que mudam a partir de md (`--spacing-control-*`, `--spacing-header`, `--text-xl/2xl/3xl`) saem renomeadas para `--rendra-*`; o resto do namespace, que nunca muda em tempo de execução, entra direto como valor literal nas utilities compiladas.
+- **CLI `rendra`** (`bin/rendra.mjs`, compilada em `dist/cli/*.js`, nunca lida do `.ts` fonte no pacote publicado): `rendra codigos` lista o catálogo de componentes; `rendra auditar [cwd]` reaplica as sete regras genéricas de `DESIGN_RULES.md` (`cor-fixa`, `valor-arbitrario`, `estilo-inline`, `fonte-fixa`, `100vh`, `fora-da-escala` e a nova `raio-fixo`) num projeto qualquer; `rendra trocar <DE> <PARA> [--dry-run]` reescreve a prop literal que distingue duas variantes do catálogo, preservando formatação, cobrindo também o elemento sem a prop (a variante padrão do componente, marcada `isDefault` em `src/catalog/components.ts`: insere a prop ao trocar para fora do padrão, remove ao trocar para o padrão, nunca escreve o valor padrão por extenso); nunca toca prop dinâmica (`variant={x}`, listada para revisão manual) nem troca entre componentes diferentes (só lista onde aparecem). `typescript` é `peerDependency` opcional: `rendra trocar` carrega o `typescript` do projeto de destino por import dinâmico e sai com mensagem clara, em código de saída diferente de zero, quando não encontra.
+- **`scripts/check-design-rules.mjs`** passa a importar as seis regras genéricas mais `fora-da-escala` de `src/cli/auditar.ts`, a mesma lógica da CLI, em vez de manter uma segunda cópia; a saída do `check:rules` deste repositório continua igual.
+- **Skill `rendra-migracao-parcial`** completa: os três níveis (tokens, padrões, componentes) com o passo a passo, usando `rendra auditar` e `rendra trocar` como os comandos que o agente de destino chama.
+- **README:** seção de comandos e formas de uso, ampliando "Receber atualizações", com boilerplate, registry, pacote npm, CLI, skill e códigos de modelo e de componente.
+- **robots.txt** (`scripts/seo-build.mjs`, `scripts/lib/robots.ts`) libera todo robô de busca e bloqueia dez robôs de IA (`GPTBot`, `ChatGPT-User`, `OAI-SearchBot`, `ClaudeBot`, `anthropic-ai`, `CCBot`, `Google-Extended`, `PerplexityBot`, `Bytespider`, `Applebot-Extended`); `index.html` ganha as metas `noai`/`noimageai` ao lado do `robots` já existente.
+
+## 2.0.0 (26/09/2026)
+
+Versão major para desacoplar rotas, config e CSS do Rendra da forma como o boilerplate os usa, aproximando o repositório das práticas de mercado de design system (peer deps, camadas de CSS, contrato público explícito). Guia de migração das quatro quebras abaixo.
+
+### Quebras e guia de migração
+
+- **Prefixo `--rendra-` em toda variável CSS própria do tema.** `--primary`, `--radius`, `--sidebar`, `--brand-font`, `--shape-control`, `--elevation-md` e todas as outras viram `--rendra-primary`, `--rendra-radius`, `--rendra-sidebar`, `--rendra-brand-font`, `--rendra-shape-control`, `--rendra-elevation-md` etc. As classes do Tailwind no JSX **não mudam** (`bg-primary`, `rounded-control` continuam existindo: o `@theme inline` de `globals.css` mapeia `--color-primary: var(--rendra-primary)`). O namespace do próprio Tailwind (`--color-*`, `--spacing-*`, `--text-*`, `--radius-*`, `--shadow-*`, `--font-*`, `--container-*`) continua sem o prefixo, porque renomeá-lo mudaria toda classe que depende dele. **Migração:** troque toda referência direta a `var(--nome)` (fora de classe Tailwind) para `var(--rendra-nome)`; `npm run check:rules` (regra `variavel-sem-prefixo-rendra`) acusa o que faltar.
+- **`RendraProvider` no lugar do acoplamento direto ao `react-router`.** Navegação (link, rota atual, navegar com voltar) chega por `linkComponent`, `useCurrentPath` e `navigate`, resolvidos pelo `RendraProvider`; quem usa `react-router` direto passa o adaptador de `rendra-router-bridge` (entrada separada do pacote, único ponto que o importa). **Migração:** envolva o app em `<RendraProvider linkComponent={...} useCurrentPath={...} navigate={...}>` (ou use a ponte pronta do React Router) antes de renderizar o `AppShell` ou qualquer link do design system.
+- **`AppShell` desacoplado, por props.** `navigation`, `layout`, dados do usuário, itens do menu do usuário, `logout`, `homeLabel`, `quickActions` e `notifications` chegam por prop, não mais importados direto de `@/config` dentro do componente. **Migração:** monte esses valores no projeto (a partir de `src/config/navigation.ts` e `src/config/layout.ts`, como já era) e passe todos como prop do `AppShell`.
+- **CSS em camadas** (`@layer theme, base, rendra.base, components, rendra.components, utilities`), com escopo por `[data-rendra-root]` além de `:root`: o reset e o estilo de componente do Rendra (`rendra.base`, `rendra.components`) perdem de qualquer `base`/`components`/utility do host, de propósito, para nunca sobrescrever a tela de quem consome o pacote. **Migração:** nenhuma ação se o projeto só usa classes Tailwind; um override direto de seletor precisa entrar na camada certa (ou fora de camada nenhuma, que sempre vence).
+
+### Adicionado
+
+- Catálogo de código por componente e variante (`src/catalog/components.ts`, `data-rendra` no elemento raiz, código na vitrine e no `registry.json`).
+- `createTheme`/`applyTheme` (tema puro, compatível com SSR) e `BrandProvider` controlado (`mode`, `brandId`, `paletteId` com os `on*Change`, `storage` plugável).
+- Texto orientativo curto abaixo do campo (regra C7), com limite de caracteres pela largura.
+- Crédito "Feito com Rendra" no rodapé do login (`RendraCredit`, código `CRED-001`), removível por prop, texto e link substituíveis.
+
 ## 1.1.0 (24/09/2026)
 
 Paleta a partir de 4 cores e do degradê, white label em tempo de execução, testes de comportamento e correções do modelo Aurora.

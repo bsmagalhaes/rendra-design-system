@@ -8,6 +8,8 @@ import {
   COMPONENT_CODE_PATTERN,
   assertCatalogIntegrity,
   catalogByComponent,
+  findComponentsWithMultipleDefaults,
+  findComponentsWithoutDefault,
   findDuplicateCodes,
   findInvalidFormatCodes,
   findPresetCollisions,
@@ -108,6 +110,81 @@ describe('catálogo de componentes: formato e duplicidade', () => {
   it('abas (Tabs) têm só os dois códigos do plano: ABA-001 (linha) e ABA-002 (pílula)', () => {
     const abas = catalogByComponent('Tabs')
     expect(abas.map((e) => e.code).sort()).toEqual(['ABA-001', 'ABA-002'])
+  })
+})
+
+describe('catálogo de componentes: variante padrão (isDefault, fase 3 do Lote B)', () => {
+  it('todo componente com mais de uma variante no catálogo real tem exatamente uma isDefault', () => {
+    expect(findComponentsWithoutDefault(CATALOG)).toEqual([])
+    expect(findComponentsWithMultipleDefaults(CATALOG)).toEqual([])
+  })
+
+  it('ABA-001 (linha) é a variante padrão do Tabs, não ABA-002', () => {
+    expect(getCatalogEntry('ABA-001')?.isDefault).toBe(true)
+    expect(getCatalogEntry('ABA-002')?.isDefault).toBeUndefined()
+  })
+
+  it('acusa componente com mais de uma variante sem nenhuma isDefault, numa lista fabricada', () => {
+    const fixture: ComponentCatalogEntry[] = [
+      {
+        code: 'ABA-001',
+        name: 'x',
+        component: 'Tabs',
+        file: 'components/ui/tabs.tsx',
+        variantProps: { variant: 'line' },
+        whenToUse: '',
+      },
+      {
+        code: 'ABA-002',
+        name: 'y',
+        component: 'Tabs',
+        file: 'components/ui/tabs.tsx',
+        variantProps: { variant: 'pill' },
+        whenToUse: '',
+      },
+    ]
+    expect(findComponentsWithoutDefault(fixture)).toEqual(['Tabs'])
+    expect(findComponentsWithMultipleDefaults(fixture)).toEqual([])
+  })
+
+  it('acusa componente com mais de uma variante isDefault ao mesmo tempo, numa lista fabricada', () => {
+    const fixture: ComponentCatalogEntry[] = [
+      {
+        code: 'ABA-001',
+        name: 'x',
+        component: 'Tabs',
+        file: 'components/ui/tabs.tsx',
+        variantProps: { variant: 'line' },
+        whenToUse: '',
+        isDefault: true,
+      },
+      {
+        code: 'ABA-002',
+        name: 'y',
+        component: 'Tabs',
+        file: 'components/ui/tabs.tsx',
+        variantProps: { variant: 'pill' },
+        whenToUse: '',
+        isDefault: true,
+      },
+    ]
+    expect(findComponentsWithoutDefault(fixture)).toEqual([])
+    expect(findComponentsWithMultipleDefaults(fixture)).toEqual(['Tabs'])
+  })
+
+  it('não acusa nada quando o componente tem só uma variante (nada a distinguir)', () => {
+    const fixture: ComponentCatalogEntry[] = [
+      {
+        code: 'CARD-001',
+        name: 'x',
+        component: 'Card',
+        file: 'components/ui/card.tsx',
+        variantProps: {},
+        whenToUse: '',
+      },
+    ]
+    expect(findComponentsWithoutDefault(fixture)).toEqual([])
+    expect(findComponentsWithMultipleDefaults(fixture)).toEqual([])
   })
 })
 
