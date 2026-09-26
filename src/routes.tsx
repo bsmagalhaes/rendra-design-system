@@ -1,8 +1,7 @@
 import type { ComponentType } from 'react'
 import type { RouteObject } from 'react-router'
-import { AppShell } from '@/components/app-shell/app-shell'
-import type { RouteHandle } from '@/components/app-shell/header'
-import { RendraRouterBridge } from '@/components/rendra-router-bridge'
+import { AppLayout } from '@/app/app-layout'
+import { RendraRouterBridge, type RouteHandle } from '@/components/rendra-router-bridge'
 import { ErrorPage } from '@/components/ui/error-page'
 
 /*
@@ -23,7 +22,7 @@ export const routes: RouteObject[] = [
     element: <RendraRouterBridge />,
     children: [
       {
-        element: <AppShell />,
+        element: <AppLayout />,
         errorElement: <ErrorPage code={500} fullScreen />,
         children: [
           {

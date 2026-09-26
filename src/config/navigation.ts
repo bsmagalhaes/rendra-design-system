@@ -10,42 +10,17 @@ import {
   Settings,
   SquareKanban,
   Users,
-  type LucideIcon,
 } from 'lucide-react'
+import type { NavGroup } from '@/components/app-shell/types'
 
 /*
  * MENU DO SISTEMA
- * Única fonte da sidebar, da barra inferior do mobile e da busca global (Ctrl+K).
+ * Única fonte da sidebar, da barra inferior do mobile e da busca global (Ctrl+K), passada
+ * por prop ao <AppShell navigation={navigation}>. Os tipos (NavItem, NavChild, NavGroup)
+ * vêm de src/components/app-shell/types.ts: o AppShell nunca importa este arquivo.
  */
 
-export interface NavItem {
-  title: string
-  /** Rota. Item com children e sem rota só abre o submenu. */
-  to?: string
-  icon: LucideIcon
-  /** Contador exibido à direita (ex.: pendências). */
-  badge?: number
-  /** Aparece na barra de navegação inferior do mobile (no máximo 4 itens no total). */
-  bottomNav?: boolean
-  /** Rótulo curto para a barra inferior, quando o título não cabe. */
-  shortTitle?: string
-  /** Frase curta exibida no mega menu. */
-  description?: string
-  children?: NavChild[]
-}
-
-export interface NavChild {
-  title: string
-  to: string
-  description?: string
-}
-
-export interface NavGroup {
-  title: string
-  /** Frase curta da seção, exibida no mega menu. */
-  description?: string
-  items: NavItem[]
-}
+export type { NavChild, NavGroup, NavItem } from '@/components/app-shell/types'
 
 export const navigation: NavGroup[] = [
   {
@@ -149,36 +124,9 @@ export const navigation: NavGroup[] = [
   },
 ]
 
-/** Itens da barra inferior do mobile, na ordem do menu. Limite de 4. */
-export const bottomNavItems = navigation
-  .flatMap((g) => g.items)
-  .filter((i) => i.bottomNav)
-  .slice(0, 4)
-
-/** Lista plana de destinos, usada pela busca global. */
-export const navigationTargets = navigation.flatMap((g) =>
-  g.items.flatMap((i) => [
-    ...(i.to ? [{ title: i.title, to: i.to, group: g.title, icon: i.icon }] : []),
-    ...(i.children ?? []).map((c) => ({ title: c.title, to: c.to, group: i.title, icon: i.icon })),
-  ]),
-)
-
-/** Usuário de demonstração. Troque pela sessão real. */
+/** Usuário de demonstração. Troque pela sessão real. Passado por prop: <AppShell user={...}>. */
 export const currentUser = {
   name: 'Ana Ribeiro',
   email: 'ana.ribeiro@empresa.com.br',
   role: 'Administradora',
-}
-
-/**
- * Destino ativo: o mais específico que combina com o endereço.
- * Ex.: em /clientes/novo fica ativo "Novo cliente" (e o grupo Cadastros), não "Clientes".
- */
-export function resolveActiveTo(pathname: string): string | null {
-  const matches = navigationTargets
-    .map((t) => t.to)
-    .filter((to) =>
-      to === '/' ? pathname === '/' : pathname === to || pathname.startsWith(`${to}/`),
-    )
-  return matches.sort((a, b) => b.length - a.length)[0] ?? null
 }

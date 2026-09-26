@@ -1,6 +1,7 @@
 import type { Decorator, Preview } from '@storybook/react-vite'
 import { MemoryRouter } from 'react-router'
 import { activeBrand, availableBrands, availablePalettes, BrandProvider } from '../src/brand'
+import { RendraRouterBridge } from '../src/components/rendra-router-bridge'
 import { Toaster } from '../src/components/ui/toast'
 import { TooltipProvider } from '../src/components/ui/tooltip'
 import '../src/styles/globals.css'
@@ -28,7 +29,13 @@ const withProviders: Decorator = (Story, ctx) => {
       forcedMode={mode}
     >
       <TooltipProvider>
-        {ctx.parameters.router === false ? content : <MemoryRouter>{content}</MemoryRouter>}
+        {ctx.parameters.router === false ? (
+          content
+        ) : (
+          <MemoryRouter>
+            <RendraRouterBridge>{content}</RendraRouterBridge>
+          </MemoryRouter>
+        )}
       </TooltipProvider>
       <Toaster />
     </BrandProvider>

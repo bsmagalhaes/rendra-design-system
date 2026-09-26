@@ -50,6 +50,7 @@ if (typeof window !== 'undefined') {
   window.IntersectionObserver ??= NoopObserver as unknown as typeof IntersectionObserver
 
   Element.prototype.scrollIntoView ??= () => {}
+  Element.prototype.scrollTo ??= () => {}
   Element.prototype.hasPointerCapture ??= () => false
   Element.prototype.setPointerCapture ??= () => {}
   Element.prototype.releasePointerCapture ??= () => {}
