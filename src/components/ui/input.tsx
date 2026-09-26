@@ -65,6 +65,11 @@ export interface InputProps extends Omit<
    */
   onLookup?: (result: LookupResult) => void
   className?: string
+  /**
+   * Classe extra no próprio elemento `<input>` (className vai no quadro em volta). Uso raro:
+   * hoje só o texto riscado de um item marcado no Checklist.
+   */
+  inputClassName?: string
 }
 
 /**
@@ -86,6 +91,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     onValueChange,
     disabled,
     className,
+    inputClassName,
     inputMode,
     placeholder,
     ddi: ddiProp,
@@ -197,7 +203,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         disabled={disabled}
         aria-invalid={invalid || undefined}
         aria-busy={searching || undefined}
-        className={controlInput}
+        className={cn(controlInput, inputClassName)}
         {...(maskKey
           ? { defaultValue: current }
           : {

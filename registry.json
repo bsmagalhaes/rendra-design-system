@@ -2148,6 +2148,7 @@
       "description": "Testes de comportamento do qr-code, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.1"],
       "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/qr-code.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
       ],
