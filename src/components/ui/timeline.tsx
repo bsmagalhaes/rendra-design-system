@@ -1,6 +1,6 @@
 import { CheckCircle2, SkipForward, XCircle } from 'lucide-react'
 import type { ComponentType, ReactNode } from 'react'
-import type { FeedbackType } from '@/brand'
+import type { FeedbackType } from '@/brand/types'
 import { cn } from '@/lib/cn'
 
 export interface TimelineEvent {

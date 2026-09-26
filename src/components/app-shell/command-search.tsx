@@ -1,7 +1,7 @@
 import { Command } from 'cmdk'
 import { Moon, Search, Sun, X } from 'lucide-react'
 import { Dialog, VisuallyHidden } from 'radix-ui'
-import { useBrand } from '@/brand'
+import { useBrand } from '@/brand/use-brand'
 import { useRendraNavigate } from '@/components/rendra-provider'
 import { cn } from '@/lib/cn'
 import { useShell } from './shell-context'
