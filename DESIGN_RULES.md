@@ -100,6 +100,8 @@ Base de 4px. **Só estes degraus existem:** `0, 1, 2, 3, 4, 6, 8, 12, 16, 24` (0
 
 Sete tamanhos (`text-xs` a `text-3xl`), com line-height e letter-spacing definidos. Os títulos são menores no mobile e têm tracking levemente negativo. Três pesos, e só três: `font-normal` (400), `font-medium` (500) e `font-semibold` (600). A fonte vem de `--rendra-brand-font`.
 
+**Rótulo e orientação do campo** têm tokens próprios (`--rendra-label-*` e `--rendra-help-*`, com as classes `text-label`, `text-label-foreground`, `label-case`, `text-help` e `text-help-foreground`). O estilo do rótulo vem de `data-label` no `<html>`, escrito pelo `BrandProvider` a partir de `labelStyle` no `brand.config.ts`: `discreto` (padrão; 11px, peso 500, maiúsculo, espaçado, cinza com AA sobre o card e o fundo) ou `normal` (14px, peso 500, cor do texto). A orientação abaixo do campo é sempre 12px, na cor de texto secundário. Todo token novo do Rendra nasce com o prefixo `--rendra-`, com valor claro e escuro.
+
 ### Cores
 
 Tokens semânticos: `background`, `foreground`, `card`, `popover`, `muted`, `muted-foreground`, `border`, `input`, `field`, `ring`, `primary`, `secondary`, `accent`, `destructive`, `success`, `warning`, `info`. Cada semântica tem fundo forte, texto sobre o forte, fundo suave (`*-soft`) e texto sobre o suave (`*-soft-foreground`). **Contraste mínimo WCAG AA:** 4,5:1 para texto e 3:1 para bordas de campo e foco. A página `/tokens` mede os pares ao vivo. No modo claro, o fundo da página e dos campos é o cinza bem claro **#f5f6f7** em todos os templates, e os cards são brancos: o campo se destaca do card sem precisar de cor. Nada de fundo tingido.

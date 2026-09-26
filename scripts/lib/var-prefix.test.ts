@@ -17,13 +17,15 @@ describe('isRendraOwnVar', () => {
     expect(isRendraOwnVar('shadow-color')).toBe(true)
   })
 
-  it('reconhece as famílias por prefixo (sidebar-, gradient-, chart-, elevation-, shape-, meter-)', () => {
+  it('reconhece as famílias por prefixo (sidebar-, gradient-, chart-, elevation-, shape-, meter-, label-, help-)', () => {
     expect(isRendraOwnVar('sidebar-foreground')).toBe(true)
     expect(isRendraOwnVar('gradient-brand')).toBe(true)
     expect(isRendraOwnVar('chart-3')).toBe(true)
     expect(isRendraOwnVar('elevation-md')).toBe(true)
     expect(isRendraOwnVar('shape-control')).toBe(true)
     expect(isRendraOwnVar('meter-low')).toBe(true)
+    expect(isRendraOwnVar('label-color')).toBe(true)
+    expect(isRendraOwnVar('help-size')).toBe(true)
   })
 
   it('não reconhece namespace do Tailwind nem variável de instância por elemento', () => {
@@ -92,10 +94,10 @@ describe('findUnprefixedDeclarations (declaração --nome: valor;)', () => {
 
   it('acusa token novo inventado sem prefixo, mesmo fora do catálogo de RENDRA_VAR_EXACT', () => {
     // Bloqueador 3, item 9: um arquivo de tema só declara variável própria do Rendra ou
-    // variável do namespace do Tailwind; "--label-size" não é nenhum dos dois, então também
+    // variável do namespace do Tailwind; "--hint-size" não é nenhum dos dois, então também
     // precisa de --rendra- mesmo sem constar em RENDRA_VAR_EXACT/RENDRA_VAR_PREFIXES.
-    expect(isRendraOwnVar('label-size')).toBe(false)
-    const names = findUnprefixedDeclarations('--label-size: 11px;\n').map((v) => v.name)
-    expect(names).toEqual(['label-size'])
+    expect(isRendraOwnVar('hint-size')).toBe(false)
+    const names = findUnprefixedDeclarations('--hint-size: 11px;\n').map((v) => v.name)
+    expect(names).toEqual(['hint-size'])
   })
 })

@@ -67,6 +67,9 @@
   --rendra-input: #808fa4;
   --rendra-field: #f5f6f7;
   --rendra-overlay: rgb(7 20 42 / 0.55);
+  /* Rótulo discreto do campo (data-label="discreto"): cinza delicado com AA sobre o card
+     branco (5,14:1) e sobre o fundo #f5f6f7 (4,75:1). */
+  --rendra-label-color: #5f6f82;
 
   /* Cores de sistema (iguais em todas as paletas) */
   --rendra-destructive: #b72c05;
@@ -117,6 +120,9 @@
 
   /* As superfícies do escuro vêm da paleta (geradas a partir do fundo do degradê).
      Aqui ficam só as cores de sistema do modo escuro. */
+
+  /* Rótulo discreto no escuro: AA sobre o card e o fundo de todas as paletas. */
+  --rendra-label-color: #94a3b8;
   --rendra-destructive: #b72c05;
   --rendra-destructive-hover: #cf3b0e;
   --rendra-destructive-foreground: #ffffff;

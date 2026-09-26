@@ -221,6 +221,46 @@
   --color-chart-3: var(--rendra-chart-3);
   --color-chart-4: var(--rendra-chart-4);
   --color-chart-5: var(--rendra-chart-5);
+
+  /* Rótulo e orientação do campo: o estilo vem de data-label no <html> (discreto ou normal). */
+  --text-label: var(--rendra-label-size);
+  --text-label--line-height: var(--rendra-label-leading);
+  --text-label--letter-spacing: var(--rendra-label-tracking);
+  --text-label--font-weight: var(--rendra-label-weight);
+  --text-help: var(--rendra-help-size);
+  --text-help--line-height: var(--rendra-help-leading);
+  --color-label-foreground: var(--rendra-label-color);
+  --color-help-foreground: var(--rendra-help-color);
+}
+
+/*
+ * RÓTULO DO CAMPO: discreto (padrão; 11px, maiúsculo, espaçado, cinza delicado) ou normal
+ * (14px, cor do texto). O padrão vem de labelStyle no brand.config (atributo data-label no
+ * <html>). A cor do discreto é neutro do sistema, em theme.css (claro e escuro), com AA sobre
+ * o card e sobre o fundo (src/styles/label-contrast.test.ts). A orientação abaixo do campo é
+ * sempre 12px (text-xs), na cor de texto secundário. Fora de camada, como o theme.css.
+ */
+:root {
+  --rendra-label-size: 0.6875rem;
+  --rendra-label-leading: 1rem;
+  --rendra-label-weight: 500;
+  --rendra-label-transform: uppercase;
+  --rendra-label-tracking: 0.08em;
+  --rendra-help-size: var(--text-xs);
+  --rendra-help-leading: var(--text-xs--line-height);
+  --rendra-help-color: var(--rendra-muted-foreground);
+}
+:root[data-label='normal'] {
+  --rendra-label-size: var(--text-sm);
+  --rendra-label-leading: var(--text-sm--line-height);
+  --rendra-label-weight: 500;
+  --rendra-label-transform: none;
+  --rendra-label-tracking: 0em;
+  --rendra-label-color: var(--rendra-foreground);
+}
+
+@utility label-case {
+  text-transform: var(--rendra-label-transform);
 }
 
 /*
