@@ -21,6 +21,14 @@ Pacote publicável pronto para uso externo (`import { Button } from '@rendra-ui/
 - **robots.txt** (`scripts/seo-build.mjs`, `scripts/lib/robots.ts`) libera todo robô de busca, inclusive os seis que buscam ou respondem por assistente de IA a pedido de alguém (`OAI-SearchBot`, `ChatGPT-User`, `Claude-SearchBot`, `Claude-User`, `PerplexityBot`, `Perplexity-User`), e bloqueia só os sete que rastreiam o site inteiro para treinar modelo (`GPTBot`, `ClaudeBot`, `anthropic-ai`, `CCBot`, `Google-Extended`, `Bytespider`, `Applebot-Extended`); `index.html` mantém as metas `noai`/`noimageai` ao lado do `robots` já existente.
 - **`llms.txt`** (`scripts/lib/llms-txt.ts`, testado à parte de `scripts/seo-build.mjs`) ganha as seções "Para quem", instalação (`npm install @rendra-ui/web react react-dom radix-ui`) e os comandos da CLI `rendra`, além do que já tinha ("O que é", "Regras de interface", "Telas do demo", "Documentação").
 
+### Dependências
+
+- `vite` 8.3.1, `vitest`/`@vitest/coverage-v8` 5.0.2, `@types/node` 26.6.3, `lucide-react` 1.48.0 e `react-hook-form` 7.89.0 (patch/minor). `eslint` 10.11.0 com `@eslint/js` 10.0.1, sem alterar `eslint.config.js` nem desativar regra do projeto.
+
+### Pendências
+
+- **`@tanstack/react-table` fica em 8.x nesta versão.** A 9 muda a API de colunas e os tipos; subir exige revisar `src/components/ui/table.tsx` e os testes da tabela, o que fica para um lote futuro dedicado.
+
 ## 2.0.0 (26/09/2026)
 
 Versão major para desacoplar rotas, config e CSS do Rendra da forma como o boilerplate os usa, aproximando o repositório das práticas de mercado de design system (peer deps, camadas de CSS, contrato público explícito). Guia de migração das quatro quebras abaixo.

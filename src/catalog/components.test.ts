@@ -113,7 +113,7 @@ describe('catálogo de componentes: formato e duplicidade', () => {
   })
 })
 
-describe('catálogo de componentes: variante padrão (isDefault, fase 3 do Lote B)', () => {
+describe('catálogo de componentes: variante padrão (isDefault)', () => {
   it('todo componente com mais de uma variante no catálogo real tem exatamente uma isDefault', () => {
     expect(findComponentsWithoutDefault(CATALOG)).toEqual([])
     expect(findComponentsWithMultipleDefaults(CATALOG)).toEqual([])

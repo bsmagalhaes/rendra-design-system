@@ -71,9 +71,9 @@
     "./package.json": "./package.json"
   },
   "peerDependencies": {
+    "radix-ui": "^1.6.7",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "radix-ui": "^1.6.7",
     "typescript": "^5.9.0"
   },
   "peerDependenciesMeta": {
@@ -123,14 +123,14 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.4.0",
     "imask": "^7.6.1",
-    "lucide-react": "^1.47.0",
+    "lucide-react": "^1.48.0",
     "pdfjs-dist": "^6.3.289",
     "radix-ui": "^1.6.7",
     "react": "^19.3.0",
     "react-day-picker": "^10.0.1",
     "react-dom": "^19.3.0",
     "react-grid-layout": "^2.2.4",
-    "react-hook-form": "^7.88.0",
+    "react-hook-form": "^7.89.0",
     "recharts": "^3.10.1",
     "sonner": "^2.0.8",
     "tailwind-merge": "^3.7.0",
@@ -138,7 +138,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@eslint/js": "^9.39.5",
+    "@eslint/js": "^10.0.1",
     "@fontsource/dm-sans": "^5.3.0",
     "@fontsource/inter": "^5.3.0",
     "@fontsource/poppins": "^5.3.0",
@@ -151,12 +151,12 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.7",
-    "@types/node": "^26.6.2",
+    "@types/node": "^26.6.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
-    "@vitest/coverage-v8": "^5.0.1",
-    "eslint": "^9.39.5",
+    "@vitest/coverage-v8": "^5.0.2",
+    "eslint": "^10.11.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react-hooks": "^7.1.1",
@@ -170,8 +170,8 @@
     "tw-animate-css": "^1.4.0",
     "typescript": "5.9",
     "typescript-eslint": "^8.70.1",
-    "vite": "^8.3.0",
+    "vite": "^8.3.1",
     "vite-plugin-svgr": "^5.2.0",
-    "vitest": "^5.0.1"
+    "vitest": "^5.0.2"
   }
 }

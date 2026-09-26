@@ -20,7 +20,7 @@ tests/__screenshots__/darwin
 # Relatório de cobertura dos testes
 coverage
 
-# Artefatos de desenvolvimento (planos, levantamentos, saídas de ferramentas de IA): ficam só na máquina
+# Artefatos de desenvolvimento (planos, notas de análise, saídas de ferramentas de IA): ficam só na máquina
 docs/specs/
 docs/plans/
 docs/superpowers/

@@ -14,11 +14,10 @@
  *
  * Saída em dist/:
  *   tokens.css      o tema padrão (sistema) e a paleta padrão (a primeira de
- *                   src/brand/palettes.ts), claro e escuro, sem a fonte da marca (correção do
- *                   Opus, item 2 da validação do plano: sem @font-face; --rendra-brand-font
- *                   cai na pilha de fontes do sistema). Nenhuma variável fora de --rendra- e
- *                   --tw- sai daqui (correção do risco residual apontado depois da entrega do
- *                   Lote A: o namespace inteiro do Tailwind, --color-*, --radius-*, --shadow-*,
+ *                   src/brand/palettes.ts), claro e escuro, sem a fonte da marca (sem
+ *                   @font-face; --rendra-brand-font cai na pilha de fontes do sistema).
+ *                   Nenhuma variável fora de --rendra- e --tw- sai daqui: o namespace inteiro
+ *                   do Tailwind, --color-*, --radius-*, --shadow-*,
  *                   --font-sans/mono, --text-label/help, e também --spacing-*, --text-* da
  *                   escala, --font-weight-*, --tracking-*, --container-*, --ease-*, --animate-*
  *                   e --default-* do preset embutido, colidiria com o @theme de um host que
@@ -39,7 +38,7 @@
  *                   uso dentro de uma utility gerada).
  *   base.css        preflight do Tailwind + @layer rendra.base (reset do Rendra).
  *   components.css  @layer properties (fallback das --tw-* para navegador sem @property,
- *                   correção do Fable, item 3: mantido aqui, nunca descartado), @utility do
+ *                   mantido aqui, nunca descartado), @utility do
  *                   projeto e @layer rendra.components, já compilados para CSS real (o host
  *                   não escaneia os componentes do pacote para gerar classe).
  *
@@ -304,7 +303,7 @@ async function formatCss(source, filepath) {
 
 async function main() {
   // 1) Tema padrão (sistema), sem as três @font-face da marca e sem o nome da fonte na
-  //    pilha (correção do Opus, item 2): --rendra-brand-font cai direto na pilha do sistema.
+  //    pilha: --rendra-brand-font cai direto na pilha do sistema.
   const themeCssRaw = readFileSync(join(ROOT, 'src/styles/theme.css'), 'utf8')
   const themeCssNoBrandFont = themeCssRaw
     .replace(/@font-face\s*\{[^}]*\}\s*\n?/g, '')
@@ -364,7 +363,7 @@ async function main() {
   // rendra.base referencia var(--font-sans) direto (html { font-family: var(--font-sans) },
   // escrito à mão em globals.css); --font-sans só espelhava --rendra-brand-font (@theme
   // inline), então a referência vira --rendra-brand-font antes de --font-sans sumir do
-  // tokens.css (correção do Fable, item 2).
+  // tokens.css.
   const rendraBaseFixed = (layers['rendra.base'] ?? '').replaceAll(
     'var(--font-sans)',
     'var(--rendra-brand-font)',
@@ -372,7 +371,7 @@ async function main() {
 
   // A ordem de camada vazia (`@layer properties;`, sem miolo) só reserva o nome: o miolo de
   // verdade (o fallback das --tw-*) vai para components.css a seguir, então a reserva vazia
-  // não tem função no tokens.css e sai (correção do Fable, item 3).
+  // não tem função no tokens.css e sai.
   const tokensRest = rest.replace(/@layer properties;\s*/, '').trim()
 
   const themeKept = layers.theme ? keepOnlyRendraDeclarations(layers.theme) : ''
@@ -391,8 +390,7 @@ async function main() {
 
   const componentsCss = [
     BANNER,
-    // Fallback das --tw-* para navegador sem @property (correção do Fable, item 3): mantido,
-    // nunca descartado.
+    // Fallback das --tw-* para navegador sem @property: mantido, nunca descartado.
     layers.properties ? `@layer properties {\n${layers.properties}}` : '',
     layers.utilities ? `@layer utilities {\n${layers.utilities}}` : '',
     layers['rendra.components']

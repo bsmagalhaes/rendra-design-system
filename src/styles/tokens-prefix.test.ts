@@ -53,8 +53,8 @@ describe('prefixo --rendra- nas variáveis CSS do tema', () => {
     expect(findUnprefixedDeclarations(text).some((v) => v.name === 'spacing-4')).toBe(false)
   })
 
-  // Bloqueador 3 (validação do Fable): --radius e --shadow-color batem em TAILWIND_NAMESPACE
-  // (--radius-*, --shadow-*) mesmo sendo variável própria do Rendra. Caso negativo: uma
+  // --radius e --shadow-color batem em TAILWIND_NAMESPACE (--radius-*, --shadow-*) mesmo
+  // sendo variável própria do Rendra. Caso negativo: uma
   // declaração solta, fora de qualquer @theme, ainda precisa falhar para --primary, --radius
   // e --shadow-color, e passar para --rendra-primary.
   it('acusa --primary, --radius e --shadow-color soltos fora de @theme, mas não a versão com --rendra-', () => {

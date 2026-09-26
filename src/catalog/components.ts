@@ -33,8 +33,8 @@ export interface ComponentCatalogEntry {
    * máximo uma por componente (nenhuma, para o componente sem variante ou sem um padrão real,
    * como `Chart`, cuja prop `type` é obrigatória); um componente com mais de uma variante tem
    * exatamente uma marcada `true` (teste de integridade, `assertCatalogIntegrity`). Usada por
-   * `rendra trocar` (fase 3, Lote B): um elemento sem a prop conta como esta variante, e
-   * trocar para uma variante `isDefault` remove a prop em vez de escrever o valor por extenso.
+   * `rendra trocar`: um elemento sem a prop conta como esta variante, e trocar para uma
+   * variante `isDefault` remove a prop em vez de escrever o valor por extenso.
    */
   isDefault?: true
 }
