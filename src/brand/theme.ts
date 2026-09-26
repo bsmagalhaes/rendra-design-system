@@ -347,13 +347,14 @@ function buildReport(
 
 /**
  * Ajustes do modo gerado/misto: compara a cor pedida na semente (primary, primaryHover,
- * secondary, secondaryHover) com a cor que createPalette de fato aplicou em cada preenchimento,
- * claro e escuro. Diferença = ajuste (seja para passar AA com o texto, no claro, seja para
- * ficar visível sobre o card escuro, no escuro; os dois casos hoje ficam só em nota de texto
- * dentro de createPalette, e o escuro é descartado — aqui os dois viram registro estruturado).
+ * secondary, secondaryHover, já normalizadas para hex por seedToPaletteSeeds) com a cor que
+ * createPalette de fato aplicou em cada preenchimento, claro e escuro. Diferença = ajuste (seja
+ * para passar AA com o texto, no claro, seja para ficar visível sobre o card escuro, no escuro;
+ * os dois casos hoje ficam só em nota de texto dentro de createPalette, e o escuro é descartado
+ * — aqui os dois viram registro estruturado).
  */
 function seedAdjustments(
-  seedHexes: Record<'primary' | 'primaryHover' | 'secondary' | 'secondaryHover', string>,
+  seedHexes: Pick<PaletteSeeds, 'primary' | 'primaryHover' | 'secondary' | 'secondaryHover'>,
   vars: { light: Record<string, string>; dark: Record<string, string> },
 ): ThemeAdjustment[] {
   const out: ThemeAdjustment[] = []
@@ -412,23 +413,13 @@ export function createTheme(input: ThemeInput): ThemeResult {
 
   if (mode === 'gerado') {
     if (!input.seed) throw new Error('createTheme: modo "gerado" exige seed.')
-    const seed = input.seed
-    const palette = createPalette(seedToPaletteSeeds(id, name, seed))
+    const paletteSeeds = seedToPaletteSeeds(id, name, input.seed)
+    const palette = createPalette(paletteSeeds)
     const vars = { light: { ...palette.light }, dark: { ...palette.dark } }
     // createPalette já corrige AA na geração; o relatório aqui só confirma (sem reajustar).
     const { report } = buildReport(vars, false)
-    const adjustments = seedAdjustments(
-      {
-        primary: parseColorToHex(seed.primary, 'seed.primary'),
-        primaryHover: parseColorToHex(seed.primaryHover ?? seed.primary, 'seed.primaryHover'),
-        secondary: parseColorToHex(seed.secondary, 'seed.secondary'),
-        secondaryHover: parseColorToHex(
-          seed.secondaryHover ?? seed.secondary,
-          'seed.secondaryHover',
-        ),
-      },
-      vars,
-    )
+    // Reaproveita os hexes já normalizados por seedToPaletteSeeds, sem reanalisar a semente.
+    const adjustments = seedAdjustments(paletteSeeds, vars)
     return { id, name, sidebarLogo: palette.sidebarLogo, vars, report, adjustments }
   }
 
@@ -444,18 +435,11 @@ export function createTheme(input: ThemeInput): ThemeResult {
 
   // misto: sementes geram a base; sobrescritas do explicit vencem por cima.
   if (!input.seed) throw new Error('createTheme: modo "misto" exige seed.')
-  const seed = input.seed
-  const palette = createPalette(seedToPaletteSeeds(id, name, seed))
+  const paletteSeeds = seedToPaletteSeeds(id, name, input.seed)
+  const palette = createPalette(paletteSeeds)
   const vars = { light: { ...palette.light }, dark: { ...palette.dark } }
-  const fromSeed = seedAdjustments(
-    {
-      primary: parseColorToHex(seed.primary, 'seed.primary'),
-      primaryHover: parseColorToHex(seed.primaryHover ?? seed.primary, 'seed.primaryHover'),
-      secondary: parseColorToHex(seed.secondary, 'seed.secondary'),
-      secondaryHover: parseColorToHex(seed.secondaryHover ?? seed.secondary, 'seed.secondaryHover'),
-    },
-    vars,
-  )
+  // Reaproveita os hexes já normalizados por seedToPaletteSeeds, sem reanalisar a semente.
+  const fromSeed = seedAdjustments(paletteSeeds, vars)
   const overrides = input.explicit
   if (overrides?.light) Object.assign(vars.light, translateExplicit(overrides.light))
   if (overrides?.dark) Object.assign(vars.dark, translateExplicit(overrides.dark))
