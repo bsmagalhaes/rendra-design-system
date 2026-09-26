@@ -7,6 +7,18 @@
  * As escalas padrão do Tailwind são zeradas de propósito: classes fora da escala
  * (p-5, text-4xl, bg-blue-500, shadow-2xl, font-bold) simplesmente não existem.
  */
+/*
+ * Ordem de camadas: declarada antes de tudo, para as utilities do host sempre vencerem
+ * qualquer camada do Rendra. A ordem é
+ * theme, base, rendra.base, components, rendra.components, utilities:
+ *   - rendra.base fica depois de base e antes de components (reset do Rendra, mais fraco que
+ *     qualquer componente do host);
+ *   - rendra.components fica depois de components e antes de utilities (estilo de componente
+ *     do Rendra, mais fraco que qualquer utility do host, inclusive as do próprio Tailwind).
+ * utilities continua por último e vencendo tudo, sempre.
+ */
+@layer theme, base, rendra.base, components, rendra.components, utilities;
+
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import './themes.css';
@@ -40,6 +52,7 @@
   --spacing-header: 3.5rem;
   --spacing-chart-sm: 12rem;
   --spacing-chart-md: 16rem;
+  --spacing-viewer: 28rem;
 
   /* Larguras de estrutura */
   --container-sidebar: 16rem;
@@ -132,26 +145,26 @@
 /* Nomes semânticos ligados às variáveis da marca (inline: resolvem no elemento). */
 @theme inline {
   --font-*: initial;
-  --font-sans: var(--brand-font);
+  --font-sans: var(--rendra-brand-font);
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --radius-*: initial;
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
+  --radius-sm: calc(var(--rendra-radius) - 4px);
+  --radius-md: calc(var(--rendra-radius) - 2px);
+  --radius-lg: var(--rendra-radius);
   --radius-full: 9999px;
   /* Raios por papel, controlados pelo formato ativo (data-shape) */
-  --radius-control: var(--shape-control);
-  --radius-surface: var(--shape-surface);
-  --radius-item: var(--shape-item);
+  --radius-control: var(--rendra-shape-control);
+  --radius-surface: var(--rendra-shape-surface);
+  --radius-item: var(--rendra-shape-item);
   /* Bloco dentro de um card (valores, citação, evento): canto pequeno em todos os modelos. */
-  --radius-block: var(--shape-block);
-  --radius-avatar: var(--shape-avatar);
+  --radius-block: var(--rendra-shape-block);
+  --radius-avatar: var(--rendra-shape-avatar);
 
   --shadow-*: initial;
-  --shadow-sm: var(--elevation-sm);
-  --shadow-md: var(--elevation-md);
-  --shadow-lg: var(--elevation-lg);
+  --shadow-sm: var(--rendra-elevation-sm);
+  --shadow-md: var(--rendra-elevation-md);
+  --shadow-lg: var(--rendra-elevation-lg);
   --inset-shadow-*: initial;
   --drop-shadow-*: initial;
   --text-shadow-*: initial;
@@ -159,68 +172,111 @@
   --color-*: initial;
   --color-transparent: transparent;
   --color-current: currentColor;
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-field: var(--field);
-  --color-ring: var(--ring);
-  --color-overlay: var(--overlay);
+  --color-background: var(--rendra-background);
+  --color-foreground: var(--rendra-foreground);
+  --color-card: var(--rendra-card);
+  --color-card-foreground: var(--rendra-card-foreground);
+  --color-popover: var(--rendra-popover);
+  --color-popover-foreground: var(--rendra-popover-foreground);
+  --color-muted: var(--rendra-muted);
+  --color-muted-foreground: var(--rendra-muted-foreground);
+  --color-border: var(--rendra-border);
+  --color-input: var(--rendra-input);
+  --color-field: var(--rendra-field);
+  --color-ring: var(--rendra-ring);
+  --color-overlay: var(--rendra-overlay);
 
-  --color-primary: var(--primary);
-  --color-primary-hover: var(--primary-hover);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary-hover-foreground: var(--primary-hover-foreground);
-  --color-primary-soft: var(--primary-soft);
-  --color-primary-soft-foreground: var(--primary-soft-foreground);
-  --color-primary-text: var(--primary-text);
-  --color-secondary: var(--secondary);
-  --color-secondary-hover: var(--secondary-hover);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary-hover-foreground: var(--secondary-hover-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
+  --color-primary: var(--rendra-primary);
+  --color-primary-hover: var(--rendra-primary-hover);
+  --color-primary-foreground: var(--rendra-primary-foreground);
+  --color-primary-hover-foreground: var(--rendra-primary-hover-foreground);
+  --color-primary-soft: var(--rendra-primary-soft);
+  --color-primary-soft-foreground: var(--rendra-primary-soft-foreground);
+  --color-primary-text: var(--rendra-primary-text);
+  --color-secondary: var(--rendra-secondary);
+  --color-secondary-hover: var(--rendra-secondary-hover);
+  --color-secondary-foreground: var(--rendra-secondary-foreground);
+  --color-secondary-hover-foreground: var(--rendra-secondary-hover-foreground);
+  --color-accent: var(--rendra-accent);
+  --color-accent-foreground: var(--rendra-accent-foreground);
 
-  --color-destructive: var(--destructive);
-  --color-destructive-hover: var(--destructive-hover);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-destructive-soft: var(--destructive-soft);
-  --color-destructive-soft-foreground: var(--destructive-soft-foreground);
-  --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
-  --color-success-soft: var(--success-soft);
-  --color-success-soft-foreground: var(--success-soft-foreground);
-  --color-warning: var(--warning);
-  --color-warning-foreground: var(--warning-foreground);
-  --color-warning-soft: var(--warning-soft);
-  --color-warning-soft-foreground: var(--warning-soft-foreground);
-  --color-info: var(--info);
-  --color-info-foreground: var(--info-foreground);
-  --color-info-soft: var(--info-soft);
-  --color-info-soft-foreground: var(--info-soft-foreground);
+  --color-destructive: var(--rendra-destructive);
+  --color-destructive-hover: var(--rendra-destructive-hover);
+  --color-destructive-foreground: var(--rendra-destructive-foreground);
+  --color-destructive-soft: var(--rendra-destructive-soft);
+  --color-destructive-soft-foreground: var(--rendra-destructive-soft-foreground);
+  --color-success: var(--rendra-success);
+  --color-success-foreground: var(--rendra-success-foreground);
+  --color-success-soft: var(--rendra-success-soft);
+  --color-success-soft-foreground: var(--rendra-success-soft-foreground);
+  --color-warning: var(--rendra-warning);
+  --color-warning-foreground: var(--rendra-warning-foreground);
+  --color-warning-soft: var(--rendra-warning-soft);
+  --color-warning-soft-foreground: var(--rendra-warning-soft-foreground);
+  --color-info: var(--rendra-info);
+  --color-info-foreground: var(--rendra-info-foreground);
+  --color-info-soft: var(--rendra-info-soft);
+  --color-info-soft-foreground: var(--rendra-info-soft-foreground);
 
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-muted-foreground: var(--sidebar-muted-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-active: var(--sidebar-active);
-  --color-sidebar-active-foreground: var(--sidebar-active-foreground);
-  --color-sidebar-indicator: var(--sidebar-indicator);
+  --color-sidebar: var(--rendra-sidebar);
+  --color-sidebar-foreground: var(--rendra-sidebar-foreground);
+  --color-sidebar-muted-foreground: var(--rendra-sidebar-muted-foreground);
+  --color-sidebar-border: var(--rendra-sidebar-border);
+  --color-sidebar-accent: var(--rendra-sidebar-accent);
+  --color-sidebar-active: var(--rendra-sidebar-active);
+  --color-sidebar-active-foreground: var(--rendra-sidebar-active-foreground);
+  --color-sidebar-indicator: var(--rendra-sidebar-indicator);
 
-  --color-gradient-brand-foreground: var(--gradient-brand-foreground);
+  --color-gradient-brand-foreground: var(--rendra-gradient-brand-foreground);
 
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
+  --color-chart-1: var(--rendra-chart-1);
+  --color-chart-2: var(--rendra-chart-2);
+  --color-chart-3: var(--rendra-chart-3);
+  --color-chart-4: var(--rendra-chart-4);
+  --color-chart-5: var(--rendra-chart-5);
+
+  /* Rótulo e orientação do campo: o estilo vem de data-label no <html> (discreto ou normal). */
+  --text-label: var(--rendra-label-size);
+  --text-label--line-height: var(--rendra-label-leading);
+  --text-label--letter-spacing: var(--rendra-label-tracking);
+  --text-label--font-weight: var(--rendra-label-weight);
+  --text-help: var(--rendra-help-size);
+  --text-help--line-height: var(--rendra-help-leading);
+  --color-label-foreground: var(--rendra-label-color);
+  --color-help-foreground: var(--rendra-help-color);
+}
+
+/*
+ * RÓTULO DO CAMPO: discreto (padrão; 11px, maiúsculo, espaçado, cinza delicado) ou normal
+ * (14px, cor do texto). O padrão vem de labelStyle no brand.config (atributo data-label no
+ * <html>). A cor do discreto é neutro do sistema, em theme.css (claro e escuro), com AA sobre
+ * o card e sobre o fundo (src/styles/label-contrast.test.ts). A orientação abaixo do campo é
+ * sempre 12px (text-xs), na cor de texto secundário. Fora de camada, como o theme.css. Escopo
+ * também em [data-rendra-root] (C4), para um contêiner com tema próprio ler os mesmos tokens.
+ */
+:root,
+[data-rendra-root] {
+  --rendra-label-size: 0.6875rem;
+  --rendra-label-leading: 1rem;
+  --rendra-label-weight: 500;
+  --rendra-label-transform: uppercase;
+  --rendra-label-tracking: 0.08em;
+  --rendra-help-size: var(--text-xs);
+  --rendra-help-leading: var(--text-xs--line-height);
+  --rendra-help-color: var(--rendra-muted-foreground);
+}
+:root[data-label='normal'],
+[data-rendra-root][data-label='normal'] {
+  --rendra-label-size: var(--text-sm);
+  --rendra-label-leading: var(--text-sm--line-height);
+  --rendra-label-weight: 500;
+  --rendra-label-transform: none;
+  --rendra-label-tracking: 0em;
+  --rendra-label-color: var(--rendra-foreground);
+}
+
+@utility label-case {
+  text-transform: var(--rendra-label-transform);
 }
 
 /*
@@ -230,51 +286,55 @@
  * Controle e item em pill usam 1,75rem (28px), não 9999px: o navegador limita o raio à
  * metade da altura, então tudo que tem até 56px (botão, campo, chip, item de menu) fica
  * 100% redondo, e o que é mais alto (área de texto, cartão, aviso, item de lista com duas
- * linhas) ganha cantos de 28px em vez de virar círculo.
+ * linhas) ganha cantos de 28px em vez de virar círculo. Variáveis fora de camada (C4), como o
+ * theme.css; escopo também em [data-rendra-root], além do :root.
  */
-@layer base {
+:root,
+[data-rendra-root],
+[data-shape='rounded'] {
+  --rendra-shape-control: calc(var(--rendra-radius) - 2px);
+  --rendra-shape-surface: var(--rendra-radius);
+  --rendra-shape-item: calc(var(--rendra-radius) - 4px);
+  --rendra-shape-block: calc(var(--rendra-radius) - 4px);
+  --rendra-shape-avatar: 9999px;
+}
+[data-shape='square'] {
+  --rendra-shape-control: 0px;
+  --rendra-shape-surface: 0px;
+  --rendra-shape-item: 0px;
+  --rendra-shape-block: 0px;
+  --rendra-shape-avatar: 0px;
+}
+[data-shape='pill'] {
+  --rendra-shape-control: 1.75rem;
+  --rendra-shape-surface: calc(var(--rendra-radius) + 0.75rem);
+  --rendra-shape-item: 1.75rem;
+  /* Arredondado a 100% vale para controles; cards e blocos de informação têm canto pequeno. */
+  --rendra-shape-block: var(--rendra-radius);
+  --rendra-shape-avatar: 9999px;
+}
+
+/* A partir de md: controles compactos (mouse) e títulos no tamanho cheio. Variáveis fora de
+   camada (C4); escopo também em [data-rendra-root]. */
+@media (width >= 48rem) {
   :root,
-  [data-shape='rounded'] {
-    --shape-control: calc(var(--radius) - 2px);
-    --shape-surface: var(--radius);
-    --shape-item: calc(var(--radius) - 4px);
-    --shape-block: calc(var(--radius) - 4px);
-    --shape-avatar: 9999px;
-  }
-  [data-shape='square'] {
-    --shape-control: 0px;
-    --shape-surface: 0px;
-    --shape-item: 0px;
-    --shape-block: 0px;
-    --shape-avatar: 0px;
-  }
-  [data-shape='pill'] {
-    --shape-control: 1.75rem;
-    --shape-surface: calc(var(--radius) + 0.75rem);
-    --shape-item: 1.75rem;
-    /* Arredondado a 100% vale para controles; cards e blocos de informação têm canto pequeno. */
-    --shape-block: var(--radius);
-    --shape-avatar: 9999px;
+  [data-rendra-root] {
+    --spacing-control-sm: 2rem;
+    --spacing-control-md: 2.5rem;
+    --spacing-control-lg: 3rem;
+    --spacing-header: 4rem;
+    --text-xl: 1.25rem;
+    --text-xl--line-height: 1.75rem;
+    --text-2xl: 1.5rem;
+    --text-2xl--line-height: 2rem;
+    --text-3xl: 1.875rem;
+    --text-3xl--line-height: 2.375rem;
   }
 }
 
-/* A partir de md: controles compactos (mouse) e títulos no tamanho cheio. */
-@layer base {
-  @media (width >= 48rem) {
-    :root {
-      --spacing-control-sm: 2rem;
-      --spacing-control-md: 2.5rem;
-      --spacing-control-lg: 3rem;
-      --spacing-header: 4rem;
-      --text-xl: 1.25rem;
-      --text-xl--line-height: 1.75rem;
-      --text-2xl: 1.5rem;
-      --text-2xl--line-height: 2rem;
-      --text-3xl: 1.875rem;
-      --text-3xl--line-height: 2.375rem;
-    }
-  }
-
+/* Reset do Rendra (rendra.base): mais fraco que qualquer componente do host ou do próprio
+   Rendra (components, rendra.components), nunca vence uma classe utilitária. */
+@layer rendra.base {
   html {
     font-family: var(--font-sans);
     -webkit-text-size-adjust: 100%;
@@ -284,14 +344,14 @@
 
   body {
     @apply min-h-dvh bg-background text-base text-foreground antialiased;
-    background-image: var(--background-image);
+    background-image: var(--rendra-background-image);
     background-attachment: fixed;
   }
 
   *,
   ::before,
   ::after {
-    border-color: var(--border);
+    border-color: var(--rendra-border);
   }
 
   h1,
@@ -307,13 +367,13 @@
 
   /* Foco visível padrão para qualquer elemento focável por teclado */
   :focus-visible {
-    outline: 2px solid var(--ring);
+    outline: 2px solid var(--rendra-ring);
     outline-offset: 2px;
   }
 
   ::selection {
-    background-color: var(--primary-soft);
-    color: var(--primary-soft-foreground);
+    background-color: var(--rendra-primary-soft);
+    color: var(--rendra-primary-soft-foreground);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -331,19 +391,19 @@
 /* Utilitários de estrutura (sem valores de marca) */
 /* Degradês: regras de uso em theme.css. Nunca em botão, input ou fundo de texto corrido. */
 @utility bg-gradient-brand {
-  background-color: var(--sidebar);
-  background-image: var(--gradient-brand);
+  background-color: var(--rendra-sidebar);
+  background-image: var(--rendra-gradient-brand);
 }
 @utility bg-gradient-soft {
-  background-image: var(--gradient-soft);
+  background-image: var(--rendra-gradient-soft);
 }
 @utility bg-gradient-accent {
-  background-image: var(--gradient-accent);
+  background-image: var(--rendra-gradient-accent);
 }
 
 @utility bg-sidebar-brand {
-  background-color: var(--sidebar);
-  background-image: var(--sidebar-image);
+  background-color: var(--rendra-sidebar);
+  background-image: var(--rendra-sidebar-image);
 }
 
 @utility pb-safe {
@@ -368,7 +428,7 @@
 }
 
 @utility focus-ring {
-  outline: 2px solid var(--ring);
+  outline: 2px solid var(--rendra-ring);
   outline-offset: 2px;
 }
 
@@ -421,6 +481,44 @@
 /* Largura dinâmica do Progress, via variável CSS (nunca estilo inline) */
 @utility w-progress {
   width: var(--progress, 0%);
+}
+
+/* Progress indeterminado: barra que desliza da esquerda para a direita, no lugar do
+   animate-pulse antigo. Para no prefers-reduced-motion (fica parada, sem sumir). */
+@keyframes rd-progress-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+@utility progress-slide {
+  animation: rd-progress-slide 1.1s ease-in-out infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+/*
+ * Amostra de cor livre do ColorPicker, via variável CSS (nunca estilo inline). A cor da
+ * amostra vem do usuário, não do tema, então o check sobre ela usa branco ou tinta fixos
+ * (nunca um token de marca), escolhidos pelo contraste com a própria amostra. Mesmo par que
+ * src/brand/palette.ts exporta como WHITE e INK (usado ali para o cálculo de contraste);
+ * o valor mora só aqui, e o token evita repetir o hexadecimal numa segunda regra CSS.
+ */
+:root {
+  --rendra-swatch-check-light: #ffffff;
+  --rendra-swatch-check-dark: #0b1d37;
+}
+@utility bg-swatch {
+  background-color: var(--rendra-swatch, transparent);
+}
+@utility swatch-check-light {
+  color: var(--rendra-swatch-check-light);
+}
+@utility swatch-check-dark {
+  color: var(--rendra-swatch-check-dark);
 }
 
 /* Caixas do OtpInput: quantidade vem da variável --otp */
@@ -478,7 +576,7 @@
  * Conteúdo do RichTextEditor (.rich-text): tipografia, listas, tabela e imagem com as
  * alças de redimensionar nos 4 cantos. Mesmos tokens do sistema; nada de cor fixa.
  */
-@layer components {
+@layer rendra.components {
   .rich-text {
     & > * + * {
       margin-top: var(--spacing-3);
@@ -504,28 +602,28 @@
       padding-left: var(--spacing-6);
     }
     & blockquote {
-      border-left: 3px solid var(--border);
+      border-left: 3px solid var(--rendra-border);
       padding-left: var(--spacing-4);
-      color: var(--muted-foreground);
+      color: var(--rendra-muted-foreground);
     }
     & a {
-      color: var(--primary-text);
+      color: var(--rendra-primary-text);
       text-decoration: underline;
     }
     & code {
-      border-radius: var(--shape-item);
-      background: var(--muted);
+      border-radius: var(--rendra-shape-item);
+      background: var(--rendra-muted);
       padding: 0 var(--spacing-1);
       font-size: 0.9em;
     }
     & pre {
-      border-radius: var(--shape-control);
-      background: var(--muted);
+      border-radius: var(--rendra-shape-control);
+      background: var(--rendra-muted);
       padding: var(--spacing-3);
       overflow-x: auto;
     }
     & hr {
-      border-color: var(--border);
+      border-color: var(--rendra-border);
     }
     & table {
       width: 100%;
@@ -534,29 +632,29 @@
     }
     & th,
     & td {
-      border: 1px solid var(--border);
+      border: 1px solid var(--rendra-border);
       padding: var(--spacing-2);
       vertical-align: top;
       text-align: left;
     }
     & th {
-      background: var(--muted);
+      background: var(--rendra-muted);
       font-weight: 600;
     }
     & .selectedCell {
-      background: var(--primary-soft);
+      background: var(--rendra-primary-soft);
     }
     & img {
       max-width: 100%;
       height: auto;
-      border-radius: var(--shape-item);
+      border-radius: var(--rendra-shape-item);
     }
     & p.is-editor-empty:first-child::before {
       content: attr(data-placeholder);
       float: left;
       height: 0;
       pointer-events: none;
-      color: var(--muted-foreground);
+      color: var(--rendra-muted-foreground);
     }
     & [data-resize-wrapper] {
       max-width: 100%;
@@ -565,9 +663,9 @@
       z-index: 1;
       width: var(--spacing-3);
       height: var(--spacing-3);
-      border: 2px solid var(--card);
-      border-radius: var(--shape-item);
-      background: var(--primary);
+      border: 2px solid var(--rendra-card);
+      border-radius: var(--rendra-shape-item);
+      background: var(--rendra-primary);
       opacity: 0;
       transition: opacity 150ms;
     }
@@ -592,7 +690,7 @@
       }
     }
     & [data-resize-container].ProseMirror-selectednode img {
-      outline: 2px solid var(--ring);
+      outline: 2px solid var(--rendra-ring);
       outline-offset: 2px;
     }
   }
@@ -607,9 +705,9 @@
    trilho e na cor da borda; um pouco mais visível ao passar o mouse. */
 @utility scrollbar-subtle {
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in oklab, var(--border) 70%, transparent) transparent;
+  scrollbar-color: color-mix(in oklab, var(--rendra-border) 70%, transparent) transparent;
   &:hover {
-    scrollbar-color: var(--input) transparent;
+    scrollbar-color: var(--rendra-input) transparent;
   }
 }
 
@@ -625,17 +723,20 @@
 
 /*
  * Cores do medidor (velocímetro): vermelho, amarelo e verde de sinal, iguais em todos os
- * temas. São só do gráfico: o valor e o percentual aparecem em texto ao lado.
+ * temas. São só do gráfico: o valor e o percentual aparecem em texto ao lado. Escopo também
+ * em [data-rendra-root], além do :root (C4).
  */
-:root {
-  --meter-low: #dc2626;
-  --meter-mid: #f5b400;
-  --meter-high: #16a34a;
+:root,
+[data-rendra-root] {
+  --rendra-meter-low: #dc2626;
+  --rendra-meter-mid: #f5b400;
+  --rendra-meter-high: #16a34a;
 }
-.dark {
-  --meter-low: #f05252;
-  --meter-mid: #facc15;
-  --meter-high: #34d399;
+.dark,
+[data-rendra-root].dark {
+  --rendra-meter-low: #f05252;
+  --rendra-meter-mid: #facc15;
+  --rendra-meter-high: #34d399;
 }
 
 /* Larguras do Drawer (sheet lateral) no desktop: porcentagem da tela, nunca menos que 28rem. */
@@ -653,12 +754,12 @@
 }
 
 /* WidgetGrid em modo de ajuste: contorno tracejado, prévia na cor da marca e canto de redimensionar visível. */
-@layer components {
+@layer rendra.components {
   .widget-grid .react-grid-item.react-grid-placeholder {
-    border-radius: var(--shape-surface);
-    background: var(--primary-soft);
+    border-radius: var(--rendra-shape-surface);
+    background: var(--rendra-primary-soft);
     opacity: 1;
-    outline: 2px dashed var(--primary);
+    outline: 2px dashed var(--rendra-primary);
   }
   /* Fora do modo de ajuste os widgets não animam: quando a largura muda (barra de rolagem que
      aparece, janela redimensionada), eles vão direto ao lugar, sem passar por fora da tela. */
@@ -667,8 +768,8 @@
     transition: none;
   }
   .widget-grid.is-editing .react-grid-item {
-    border-radius: var(--shape-surface);
-    outline: 2px dashed var(--border);
+    border-radius: var(--rendra-shape-surface);
+    outline: 2px dashed var(--rendra-border);
     outline-offset: 2px;
   }
   .widget-grid.is-editing .react-grid-item > .react-resizable-handle {
@@ -676,7 +777,7 @@
     z-index: 10;
   }
   .widget-grid .react-grid-item > .react-resizable-handle::after {
-    border-color: var(--primary);
+    border-color: var(--rendra-primary);
   }
 }
 
@@ -720,4 +821,24 @@
 /* Altura por variável (ondas do áudio no chat). */
 @utility h-var {
   height: var(--h, 100%);
+}
+/* Moldura do recorte de imagem (ImageCropper): a proporção escolhida vira a altura. */
+@utility aspect-crop {
+  aspect-ratio: var(--crop-ratio, 1);
+}
+/*
+ * Posição e zoom da imagem dentro da moldura, por variável (arraste e zoom do
+ * ImageCropper). A centralização (-50%, -50%) já entra aqui: não combinar com as
+ * utilities de translate do Tailwind no mesmo elemento, que sobrescreveriam este transform.
+ */
+@utility cropper-image {
+  transform: translate(-50%, -50%) translate(var(--crop-x, 0px), var(--crop-y, 0px))
+    scale(var(--crop-scale, 1));
+}
+
+/* Largura e altura iguais por variável (ex.: o tamanho em pixels do QrCode, escolhido pelo
+   projeto que consome o componente, fora da escala fixa de espaço). */
+@utility size-var {
+  width: var(--size, 10rem);
+  height: var(--size, 10rem);
 }

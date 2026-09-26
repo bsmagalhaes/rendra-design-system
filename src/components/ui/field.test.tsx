@@ -7,7 +7,7 @@ import { Input } from './input'
 
 describe('Field', () => {
   it('liga rótulo, ajuda e obrigatório ao controle', () => {
-    renderApp(
+    const { container } = renderApp(
       <Field label="E-mail" help="Usado para entrar." required>
         <Input />
       </Field>,
@@ -15,6 +15,21 @@ describe('Field', () => {
     const input = screen.getByRole('textbox', { name: /E-mail/ })
     expect(input).toHaveAccessibleDescription('Usado para entrar.')
     expect(screen.getByText('*')).toBeInTheDocument()
+    expect(container.querySelector('[data-rendra="FLD-001"]')).toBeInTheDocument()
+    expect(container.querySelector('[data-rendra="FLD-002"]')).toBeInTheDocument()
+  })
+
+  it('rótulo e ajuda usam os tokens de estilo do campo, com o asterisco visível', () => {
+    const { container } = renderApp(
+      <Field label="Nome" help="Como no documento." required>
+        <Input />
+      </Field>,
+    )
+    const label = container.querySelector('[data-rendra="FLD-002"]')
+    expect(label).toHaveClass('text-label', 'text-label-foreground', 'label-case')
+    expect(label).not.toHaveClass('text-sm')
+    expect(screen.getByText('*')).not.toHaveClass('sr-only')
+    expect(screen.getByText('Como no documento.')).toHaveClass('text-help', 'text-help-foreground')
   })
 
   it('erro substitui a ajuda e marca o campo como inválido', () => {

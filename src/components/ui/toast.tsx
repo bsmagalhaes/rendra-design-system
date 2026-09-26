@@ -1,6 +1,6 @@
 import { toast as sonner, Toaster as SonnerToaster } from 'sonner'
-import type { FeedbackType } from '@/brand'
-import { useBrand } from '@/brand'
+import type { FeedbackType } from '@/brand/types'
+import { useBrand } from '@/brand/use-brand'
 import { BrandFeedbackIcon } from '@/components/ui/brand-feedback-icon'
 import { useBreakpoint } from '@/hooks/use-breakpoint'
 import { cn } from '@/lib/cn'
@@ -29,6 +29,7 @@ function show(type: FeedbackType, title: string, opts: ToastOptions = {}) {
     (id) => (
       <div
         role={type === 'error' ? 'alert' : 'status'}
+        data-rendra="TST-001"
         className={cn(
           'flex w-full items-start gap-3 rounded-control border bg-popover p-4 text-popover-foreground shadow-lg',
           tone[type],

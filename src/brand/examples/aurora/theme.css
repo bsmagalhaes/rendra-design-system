@@ -29,6 +29,6 @@
 /* MODELO AURORA: fonte e raio. As cores vêm da paleta (atributo data-palette no <html>),
  * que combina com qualquer modelo. */
 :root[data-brand='aurora'] {
-  --brand-font: 'Aurora Sans', ui-sans-serif, system-ui, sans-serif;
-  --radius: 0.375rem;
+  --rendra-brand-font: 'Aurora Sans', ui-sans-serif, system-ui, sans-serif;
+  --rendra-radius: 0.375rem;
 }

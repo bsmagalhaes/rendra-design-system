@@ -5,26 +5,36 @@
  * `npm run check:rules`.
  *
  * Proíbe, fora de src/brand e src/styles:
- *  - cor fixa (hexadecimal, rgb(), hsl(), oklch())
- *  - valor arbitrário do Tailwind (p-[13px], text-[#fff], w-[37rem])
- *  - estilo inline (style={{ ... }}), exceto variáveis CSS dinâmicas (--x)
- *  - nome de fonte fixo
+ *  - cor fixa, valor arbitrário do Tailwind, estilo inline, fonte fixa, 100vh e raio fixo:
+ *    as seis regras genéricas de DESIGN_RULES.md, compartilhadas com a CLI publicada
+ *    (`rendra auditar`) em src/cli/auditar.ts, para nunca duplicar a lógica
  *  - importação de SVG de marca fora de src/brand
  *  - arquivo de variante mobile ou paralela de componente (TableMobile, SelectSimples...)
- *  - 100vh (usar 100dvh / h-dvh)
  *  - classe montada por template string (p-${n}): o Tailwind não gera a classe
  *  - arquivo .css fora de src/styles e src/brand
+ * Em todo arquivo .ts/.tsx/.css, incluindo src/brand e src/styles (DESIGN_RULES.md, "Nome das
+ * variáveis CSS"):
+ *  - variável própria do Rendra sem o prefixo --rendra- (var(--primary), var(--radius)...)
  * Nas telas do sistema (src/pages/app), também:
- *  - texto orientativo no corpo (description de texto no PageHeader): vai em help, no ícone
- *    de informação que abre um modal
+ *  - texto orientativo (regra C7, scripts/lib/help-length.ts): help literal de Field e
+ *    FormField acima do limite do span, mais da metade dos campos de uma FormSection com
+ *    orientação, description do PageHeader acima de 150 caracteres e subtítulo que começa
+ *    com verbo de instrução
  *  - botão solto no conteúdo de um card: ação de card vai em CardHeader actions
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative, sep } from 'node:path'
+import { auditLines } from '../src/cli/auditar.ts'
+import { checkGuidance } from './lib/help-length.ts'
+import { checkVarPrefix } from './lib/var-prefix.ts'
 
 const ROOT = process.cwd()
 const SRC = join(ROOT, 'src')
-const ALLOWED_DIRS = [join(SRC, 'brand'), join(SRC, 'styles')]
+// src/cli entra na mesma exceção de src/brand e src/styles: não é tela nem componente, é onde
+// as próprias regras genéricas moram (src/cli/auditar.ts), com o nome e o texto de cada uma
+// escritos por extenso em regex e comentário (ex.: a palavra "100vh" no id da regra). Sem a
+// exceção, o verificador acusaria a si mesmo.
+const ALLOWED_DIRS = [join(SRC, 'brand'), join(SRC, 'styles'), join(SRC, 'cli')]
 
 function walk(dir) {
   return readdirSync(dir).flatMap((name) => {
@@ -33,44 +43,18 @@ function walk(dir) {
   })
 }
 
+// As seis regras genéricas (cor-fixa, valor-arbitrario, estilo-inline, fonte-fixa, 100vh,
+// raio-fixo) e a sétima (fora-da-escala) moraram aqui antes da fase 3: agora vivem em
+// src/cli/auditar.ts (auditLines), compartilhadas com `rendra auditar`, e rodam mais abaixo,
+// no mesmo lugar do laço principal onde rodavam antes (depois do corte de ALLOWED_DIRS e do
+// corte de arquivo .css). Aqui ficam só as regras específicas deste repositório, que não fazem
+// sentido num projeto de destino qualquer.
 const rules = [
-  {
-    id: 'cor-fixa',
-    test: /#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|oklch|oklab)\(/g,
-    message: 'Cor fixa em componente. Use um token semântico (bg-primary, text-muted-foreground).',
-    skipLine: (line) => /^\s*(\/\/|\*|\/\*)/.test(line) || /&#\d+;/.test(line),
-  },
-  {
-    id: 'valor-arbitrario',
-    // Valor arbitrário (p-[13px]). Variantes de estado (data-[state=open]:) terminam em ':' e são
-    // permitidas; transition-[...] só lista propriedades, também permitido.
-    test: /(?<![\w-])(?:[a-z]+:)*-?(?!transition-)[a-z][a-z-]*-\[[^\]\s]+\](?!(?:\/[\w-]+)?:)/g,
-    message: 'Valor arbitrário do Tailwind. Use a escala de tokens ou crie um token nomeado.',
-    skipLine: (line) => /^\s*(\/\/|\*|\/\*)/.test(line),
-  },
-  {
-    id: 'estilo-inline',
-    // Qualquer style= que não seja só variável CSS (--x) é estilo inline.
-    test: /style=\{(?![^}]*['"]--)(?!\s*$)/g,
-    message: 'Estilo inline. Use classes; para valor dinâmico use variável CSS (--x).',
-  },
-  {
-    id: 'fonte-fixa',
-    // Só em contexto de fonte (declaração ou nome entre aspas numa pilha de fontes): a
-    // palavra "Inter" num texto da interface não é violação.
-    test: /font-family|fontFamily|['"](?:Poppins|Inter|Roboto|Arial|Helvetica)(?:['",]| sans| serif)/g,
-    message: 'Nome de fonte fixo. A fonte vem de --brand-font em theme.css.',
-  },
-  {
-    id: '100vh',
-    test: /100vh|\bh-screen\b|\bmin-h-screen\b/g,
-    message: 'Use 100dvh (h-dvh / min-h-dvh), nunca 100vh.',
-  },
   {
     id: 'var-inline',
     test: /var\(--(?:color|radius|shadow|font|spacing)-/g,
     message:
-      'Variáveis --color-*, --radius-* etc. do Tailwind são inline e não existem no CSS. Em JS use as do tema: var(--primary), var(--chart-1), var(--shape-control).',
+      'Variáveis --color-*, --radius-* etc. do Tailwind são inline e não existem no CSS. Em JS use as do tema: var(--rendra-primary), var(--rendra-chart-1), var(--rendra-shape-control).',
   },
   {
     id: 'svg-marca',
@@ -100,24 +84,6 @@ const rules = [
   },
 ]
 
-// Degraus fora da escala não geram CSS (o Tailwind ignora em silêncio e o layout quebra).
-const ALLOWED_STEPS = new Set(['0', '1', '2', '3', '4', '6', '8', '12', '16', '24'])
-const STEP_CLASS =
-  /(?<![\w-])-?(?:p[xytrbl]?|m[xytrbl]?|gap(?:-[xy])?|w|h|size|min-[wh]|max-[wh]|inset(?:-[xy])?|top|left|right|bottom|space-[xy]|translate-[xy]|scroll-[mp][xytrbl]?)-(\d+(?:\.\d+)?)(?![\d/.\w-])/g
-rules.push({
-  id: 'fora-da-escala',
-  message:
-    'Degrau fora da escala (permitidos: 0, 1, 2, 3, 4, 6, 8, 12, 16, 24). Use a escala ou um token nomeado.',
-  skipLine: (line) => /^\s*(\/\/|\*|\/\*)/.test(line),
-  test: {
-    lastIndex: 0,
-    test(line) {
-      for (const m of line.matchAll(STEP_CLASS)) if (!ALLOWED_STEPS.has(m[1])) return true
-      return false
-    },
-  },
-})
-
 const forbiddenFileNames = /(Mobile|Simples|Simple|ComBusca|Grande|Pequeno|Small|Large)\.(t|j)sx?$/i
 const forbiddenFileNamesKebab = /-(mobile|simples|simple|com-busca|grande|pequeno)\.(t|j)sx?$/i
 
@@ -127,19 +93,6 @@ const problems = []
 // Regras que olham o arquivo inteiro (JSX em várias linhas), só nas telas do sistema.
 const APP_PAGES = join(SRC, 'pages', 'app')
 const fileRules = [
-  {
-    id: 'texto-orientativo',
-    test: /<PageHeader\b(?:(?!\/>)[\s\S])*?\bdescription=\s*(?:["'`]|\{\s*["'`])/g,
-    message:
-      'Texto orientativo no corpo da tela. Use PageHeader help (ícone de informação ao lado do título, que abre um modal).',
-  },
-  {
-    id: 'texto-orientativo',
-    // Subtítulo que dá instrução (começa com verbo no imperativo) também é texto orientativo.
-    test: /(?:description=\{?\s*["'`]|<CardDescription>\s*)(?:Comece|Clique|Toque|Arraste|Preencha|Use|Escolha|Selecione|Digite|Informe|Veja|Confira)\b/g,
-    message:
-      'Instrução no subtítulo. Use help (PageHeader, CardTitle ou FormSection): ícone de informação que abre um modal.',
-  },
   {
     id: 'botao-solto',
     test: /<CardContent\b[^>]*>\s*(?:<Stack\b[^>]*>\s*)?<Button\b|<Button\b[^>]*\bself-(?:start|end|center)\b/g,
@@ -158,6 +111,18 @@ for (const file of files) {
       message: 'Arquivo de variante paralela ou mobile. Resolva com props no componente único.',
     })
   }
+  const text = readFileSync(file, 'utf8')
+  // Roda em todo arquivo, inclusive src/brand e src/styles: é lá que o tema declara as
+  // variáveis, e a ponte para o Tailwind (@theme inline) precisa continuar citando --rendra-*.
+  for (const p of checkVarPrefix(text))
+    problems.push({
+      rel,
+      line: p.line,
+      id: 'variavel-sem-prefixo-rendra',
+      message: p.message,
+      src: p.src,
+    })
+
   if (ALLOWED_DIRS.some((d) => file.startsWith(d))) continue
   if (file.endsWith('.css')) {
     problems.push({
@@ -169,14 +134,21 @@ for (const file of files) {
     })
     continue
   }
-  const text = readFileSync(file, 'utf8')
-  if (file.startsWith(APP_PAGES))
+  if (file.startsWith(APP_PAGES)) {
+    // Texto orientativo (regra C7): limite por span, metade da seção, descrição e instrução.
+    for (const p of checkGuidance(text)) problems.push({ rel, ...p })
     for (const rule of fileRules)
       for (const m of text.matchAll(rule.test)) {
         const line = text.slice(0, m.index).split('\n').length
         const src = m[0].split('\n')[0].trim()
         problems.push({ rel, line, id: rule.id, message: rule.message, src })
       }
+  }
+  // As seis regras genéricas mais fora-da-escala: src/cli/auditar.ts, compartilhado com
+  // `rendra auditar` (teste de não duplicação em src/cli/auditar.test.ts).
+  for (const v of auditLines(text))
+    problems.push({ rel, line: v.line, id: v.rule, message: v.message, src: v.source })
+
   const lines = text.split('\n')
   lines.forEach((line, i) => {
     for (const rule of rules) {

@@ -1,5 +1,6 @@
 import { Tabs as T } from 'radix-ui'
 import { useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import { resolveCatalogCode } from '@/catalog/components'
 import { Select } from '@/components/ui/select'
 import { cn } from '@/lib/cn'
 
@@ -84,6 +85,7 @@ export function Tabs({
     <T.Root
       value={current}
       onValueChange={set}
+      data-rendra={resolveCatalogCode('Tabs', { variant })}
       className={cn('flex min-w-0 flex-col gap-6', className)}
     >
       <div ref={boxRef} className="relative min-w-0">

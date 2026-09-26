@@ -5,6 +5,7 @@ import type { FeedbackType } from '@/brand'
 import { Grid, Inline, Stack } from '@/components/layout'
 import { Alert } from '@/components/ui/alert'
 import { BrandFeedbackIcon, feedbackLabels } from '@/components/ui/brand-feedback-icon'
+import { BrandLogo } from '@/components/ui/brand-logo'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { EmptyState } from '@/components/ui/empty-state'
@@ -15,10 +16,12 @@ import { Input } from '@/components/ui/input'
 import { Modal, type ModalType } from '@/components/ui/modal'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Progress } from '@/components/ui/progress'
+import { RendraCredit } from '@/components/ui/rendra-credit'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Spinner } from '@/components/ui/spinner'
 import { toast } from '@/components/ui/toast'
 import { Tooltip } from '@/components/ui/tooltip'
-import { Demo, GroupTitle, Row, wait } from './demo'
+import { CatalogCode, Demo, GroupTitle, Row, wait } from './demo'
 
 const types: FeedbackType[] = ['success', 'error', 'warning', 'info']
 const text: Record<FeedbackType, [string, string]> = {
@@ -47,6 +50,7 @@ export function FeedbackSection() {
         title="Ícone de feedback"
         description="O símbolo do template tingido pela cor semântica, com selo de status. Animado: o check se desenha, o X se risca e o erro treme. Cada tipo pode ser trocado por um SVG próprio no brand.config.ts."
         props="type, size (sm, md, lg, xl, 2xl), animated, label"
+        code="BFI-001"
       >
         <Button
           variant="outline"
@@ -73,10 +77,38 @@ export function FeedbackSection() {
       </Demo>
 
       <Demo
+        id="logotipo"
+        title="Logotipo da marca"
+        description="O selo com o símbolo do modelo e as cores da paleta ativa, então acompanha o tema. Sobre a sidebar usa on=sidebar, sobre o degradê do login on=brand; aqui, sobre o card, on=surface."
+        props="on (sidebar, surface, brand), symbolOnly, size (sm, md)"
+        code="LOGO-001"
+      >
+        <Inline gap="8" align="center">
+          <BrandLogo />
+          <BrandLogo size="sm" />
+          <BrandLogo symbolOnly />
+        </Inline>
+      </Demo>
+
+      <Demo
+        id="credito"
+        title="Crédito Feito com Rendra"
+        description="Crédito discreto no rodapé da tela de login, ligado por padrão. Texto e link são substituíveis, e credit={false} remove; no AuthLayout, as props são credit, creditText e creditHref."
+        props="credit, text, href"
+        code="CRED-001"
+      >
+        <Inline gap="8" align="center">
+          <RendraCredit />
+          <RendraCredit text="Feito pela Acme" href="https://acme.com.br/sobre" />
+        </Inline>
+      </Demo>
+
+      <Demo
         id="alert"
         title="Alert"
         description="Ícone à esquerda, título em negrito e descrição. Pode ter ação e fechar."
         props="type, title, description, action, onDismiss, animated"
+        code="ALRT-001"
       >
         <Grid cols={{ base: 1, md: 2 }}>
           {types.map((t) => (
@@ -123,6 +155,7 @@ export function FeedbackSection() {
         title="Toast"
         description="Avisos temporários com o ícone animado. Embaixo no centro no celular, no canto inferior direito no desktop. Erros ficam mais tempo na tela."
         props="toast.success | error | warning | info (título, { description, action, duration })"
+        code="TST-001"
       >
         <Row label="Disparar">
           <Button
@@ -166,19 +199,31 @@ export function FeedbackSection() {
         description="Só para confirmações, mensagens e formulários de até 3 campos. No celular ocupa a tela inteira, com o rodapé fixo e os botões 30/70."
         props="type (confirm, destructive, info, form), size (sm, md, lg), title, description, confirmLabel, cancelLabel, onConfirm (assíncrono), formId, loading"
       >
-        <Row label="Tipos">
-          <Button variant="outline" onClick={() => setModal('confirm')}>
-            Confirmação
-          </Button>
-          <Button variant="destructive" icon={<Trash2 />} onClick={() => setModal('destructive')}>
-            Destrutiva
-          </Button>
-          <Button variant="outline" icon={<Info />} onClick={() => setModal('info')}>
-            Informativo
-          </Button>
-          <Button variant="outline" icon={<UserPlus />} onClick={() => setModal('form')}>
-            Formulário curto
-          </Button>
+        <Row label="Tipos (confirm e destructive usam o mesmo código; info e form têm o seu)">
+          <Stack gap="1" align="center">
+            <Button variant="outline" onClick={() => setModal('confirm')}>
+              Confirmação
+            </Button>
+            <CatalogCode code="MOD-001" />
+          </Stack>
+          <Stack gap="1" align="center">
+            <Button variant="destructive" icon={<Trash2 />} onClick={() => setModal('destructive')}>
+              Destrutiva
+            </Button>
+            <CatalogCode code="MOD-001" />
+          </Stack>
+          <Stack gap="1" align="center">
+            <Button variant="outline" icon={<Info />} onClick={() => setModal('info')}>
+              Informativo
+            </Button>
+            <CatalogCode code="MOD-003" />
+          </Stack>
+          <Stack gap="1" align="center">
+            <Button variant="outline" icon={<UserPlus />} onClick={() => setModal('form')}>
+              Formulário curto
+            </Button>
+            <CatalogCode code="MOD-002" />
+          </Stack>
         </Row>
         <Modal
           open={modal === 'confirm'}
@@ -263,6 +308,7 @@ export function FeedbackSection() {
                 <InfoHint title="Como funciona">
                   <p>O InfoHint abre um modal informativo com o texto, que pode ter parágrafos.</p>
                 </InfoHint>
+                <CatalogCode code="INFO-001" />
               </span>
             </CardHeader>
             <CardContent>
@@ -281,26 +327,32 @@ export function FeedbackSection() {
         props="PopoverContent (width sm, md) · Tooltip (content, side)"
       >
         <Row label="Exemplos">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" icon={<Filter />}>
-                Filtros
+          <Stack gap="1" align="center">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" icon={<Filter />}>
+                  Filtros
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="start" className="p-4">
+                <Stack gap="2">
+                  <span className="text-sm font-semibold">Filtrar por status</span>
+                  <p className="text-sm text-muted-foreground">
+                    Os filtros escolhidos aqui valem para a listagem inteira.
+                  </p>
+                </Stack>
+              </PopoverContent>
+            </Popover>
+            <CatalogCode code="POP-001" />
+          </Stack>
+          <Stack gap="1" align="center">
+            <Tooltip content="Atalho: Ctrl+S">
+              <Button variant="ghost" icon={<Save />}>
+                Passe o mouse
               </Button>
-            </PopoverTrigger>
-            <PopoverContent align="start" className="p-4">
-              <Stack gap="2">
-                <span className="text-sm font-semibold">Filtrar por status</span>
-                <p className="text-sm text-muted-foreground">
-                  Os filtros escolhidos aqui valem para a listagem inteira.
-                </p>
-              </Stack>
-            </PopoverContent>
-          </Popover>
-          <Tooltip content="Atalho: Ctrl+S">
-            <Button variant="ghost" icon={<Save />}>
-              Passe o mouse
-            </Button>
-          </Tooltip>
+            </Tooltip>
+            <CatalogCode code="TIP-001" />
+          </Stack>
         </Row>
       </Demo>
 
@@ -309,6 +361,7 @@ export function FeedbackSection() {
         title="EmptyState"
         description="Estado vazio e de erro com o ícone de feedback da marca e até duas ações."
         props="title, description, type, actions, size (default, compact)"
+        code="VAZ-001"
       >
         <Grid cols={{ base: 1, md: 2 }}>
           <EmptyState
@@ -331,11 +384,15 @@ export function FeedbackSection() {
 
       <Demo
         id="progress-skeleton"
-        title="Progress e Skeleton"
-        description="Progresso determinado ou indeterminado; skeleton com a mesma estrutura do conteúdo final."
-        props="Progress (value, tone, size, showValue, label) · Skeleton (className)"
+        title="Progress, Skeleton e Spinner"
+        description="Progresso determinado ou indeterminado; skeleton com a mesma estrutura do conteúdo final; carregamento breve dentro de um botão, campo ou lista."
+        props="Progress (value, tone, size, showValue, label) · Skeleton (className) · Spinner (size, label)"
       >
         <Stack gap="4">
+          <Inline gap="2" align="center">
+            <span className="text-sm font-medium">Progress</span>
+            <CatalogCode code="PROG-001" />
+          </Inline>
           <Progress value={progress} showValue label="Importação" />
           <Progress value={progress} tone="brand" showValue label="Com degradê do template" />
           <Progress value={null} label="Indeterminado" />
@@ -357,6 +414,10 @@ export function FeedbackSection() {
           </Inline>
         </Stack>
         <Stack gap="3">
+          <Inline gap="2" align="center">
+            <span className="text-sm font-medium">Skeleton</span>
+            <CatalogCode code="SKEL-001" />
+          </Inline>
           <Inline gap="3" wrap={false}>
             <Skeleton className="size-12 shrink-0 rounded-avatar" />
             <Stack gap="2" className="flex-1">
@@ -366,6 +427,17 @@ export function FeedbackSection() {
           </Inline>
           <Skeleton className="h-chart-sm w-full rounded-surface" />
         </Stack>
+        <Stack gap="3">
+          <Inline gap="2" align="center">
+            <span className="text-sm font-medium">Spinner</span>
+            <CatalogCode code="SPIN-001" />
+          </Inline>
+          <Inline gap="4" align="center">
+            <Spinner size="sm" label="Carregando, pequeno" />
+            <Spinner size="md" label="Carregando, médio" />
+            <Spinner size="lg" label="Carregando, grande" />
+          </Inline>
+        </Stack>
       </Demo>
 
       <Demo
@@ -373,6 +445,7 @@ export function FeedbackSection() {
         title="Página de erro"
         description="404 e 500 com o ícone animado e ações na proporção 30/70."
         props="code (404, 500), title, description, fullScreen"
+        code="ERRO-001"
       >
         <Grid cols={{ base: 1, xl: 2 }}>
           <div className="rounded-surface border bg-background">

@@ -18,7 +18,7 @@ describe('applyPalette (white label em tempo de execução)', () => {
     const style = document.head.querySelector('style[data-palette-runtime="parceiro"]')
     expect(style?.textContent).toContain(":root[data-palette='parceiro'] {")
     expect(style?.textContent).toContain(":root[data-palette='parceiro'].dark {")
-    expect(style?.textContent).toContain('--primary: #7a1fa2;')
+    expect(style?.textContent).toContain('--rendra-primary: #7a1fa2;')
   })
 
   it('reaplicar atualiza o mesmo <style>, sem duplicar', () => {
@@ -26,6 +26,6 @@ describe('applyPalette (white label em tempo de execução)', () => {
     applyPalette({ ...seeds, primary: '#1f6fa2' })
     const styles = document.head.querySelectorAll('style[data-palette-runtime="parceiro"]')
     expect(styles).toHaveLength(1)
-    expect(styles[0]?.textContent).toContain('--primary: #1f6fa2;')
+    expect(styles[0]?.textContent).toContain('--rendra-primary: #1f6fa2;')
   })
 })

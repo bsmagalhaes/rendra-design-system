@@ -16,17 +16,35 @@ Obrigado pelo interesse. Este repositório é mantido por [Bruno Magalhaes](http
    npm run test:a11y
    npm run registry:build   # se criou ou renomeou componente; faça commit do registry.json
    npm run palettes:build   # se mexeu nas sementes de src/brand/palettes.ts; faça commit do palettes.css
+   npm run build:lib        # se mexeu na superfície pública (src/index.ts) ou no CSS publicado
+   npm run verify:pack      # idem: confere o pacote publicável (npm pack e instalação num projeto à parte)
    ```
    **Componente novo ou alterado entra com teste de comportamento** ao lado dele (`nome.test.tsx`, com `// @vitest-environment jsdom` na primeira linha e `renderApp` de `src/test/render.tsx`) e ganha um piso de cobertura em `vite.config.ts`. Teste o que a pessoa faz (clicar, digitar, escolher) e o que o componente entrega, não detalhes de implementação.
+   **Componente ou variante nova também entra com uma entrada em `src/catalog/components.ts`** (o teste de integridade do catálogo barra código duplicado, fora do formato ou sem cobrir o arquivo), lida pelo próprio componente via `resolveCatalogCode()` para escrever o atributo `data-rendra` do elemento raiz, e, se fizer parte da superfície pública do pacote, com o export em `src/index.ts`.
 4. Abra o Pull Request explicando o que mudou e por quê, com capturas em 360px e 1280px quando houver mudança visual.
 5. O CI roda tudo de novo, mais o build, o Storybook e a regressão visual. O merge só é liberado com tudo verde.
 6. **Mudança visual intencional:** a regressão visual vai falhar, como esperado. O mantenedor aplica no Pull Request o rótulo `atualizar-visual`: o GitHub gera as capturas novas no Linux e faz commit no branch. Quem revisa confere as imagens no próprio PR.
 7. Registre a mudança em `CHANGELOG.md`, na seção "Não publicado".
 8. O mantenedor revisa, pode pedir ajustes e decide se a contribuição entra.
 
+## Crédito "Feito com Rendra" e licença
+
+Se o usuário pedir para tirar o crédito "Feito com Rendra" (componente `RendraCredit`, código `CRED-001`, no rodapé da tela de login), tire: `credit={false}` no `AuthLayout` (ou no próprio `RendraCredit`). Ao tirar, avise sempre as duas coisas juntas, nunca só uma:
+
+1. **A licença MIT exige manter o aviso de copyright e o arquivo `LICENSE`** no código e em qualquer cópia. Isso não é opcional e não depende de o crédito visível ter sido removido ou não.
+2. **O crédito na interface é opcional.** A preferência é mantê-lo no rodapé do login ou movê-lo para outro lugar visível, como uma tela "Sobre", em vez de simplesmente apagar sem colocar em lugar nenhum.
+
+Nunca afirme que a licença MIT obriga crédito visível na interface: ela não obriga. Aviso de copyright no código (obrigatório) e crédito na tela (opcional) são coisas diferentes; misturar as duas é o erro que esta orientação existe para evitar.
+
+## Dependências e `overrides`
+
+`package.json` não aceita comentário, então a razão de cada entrada em `"overrides"` fica aqui: `eslint-plugin-jsx-a11y` força a versão real do `eslint` do projeto (`$eslint`) porque a versão mais recente publicada do plugin ainda declara `peerDependencies` só até `eslint@^9` (o plugin funciona normal sob o ESLint 10; é só o metadado que está atrasado), e sem o override o `npm ci` sem flag falha com ERESOLVE. Prefira sempre um override restrito ao pacote com o problema a `legacy-peer-deps` no `.npmrc`, que desligaria a checagem de peers do repositório inteiro.
+
 ## Versões
 
-O projeto segue [versionamento semântico](https://semver.org/lang/pt-BR/): correção sobe o último número (1.0.1), recurso novo compatível sobe o do meio (1.1.0), e mudança que exige ajuste nos projetos, como prop renomeada ou token novo obrigatório, sobe o primeiro (2.0.0). Cada versão vira uma tag `vX.Y.Z` e um release no GitHub, com o trecho do CHANGELOG.
+O projeto segue [versionamento semântico](https://semver.org/lang/pt-BR/): correção sobe o último número (1.0.1), recurso novo compatível sobe o do meio (1.1.0), e mudança que exige ajuste nos projetos, como prop renomeada ou token novo obrigatório, sobe o primeiro (2.0.0). Renomear uma variável `--rendra-*` (contrato público de tema) ou uma prop pública de componente é sempre mudança major, mesmo que pareça pequena. Cada versão vira uma tag `vX.Y.Z` e um release no GitHub, com o trecho do CHANGELOG.
+
+A tag dispara `.github/workflows/publish.yml`: builda o pacote, roda o `verify:pack` e publica no npm. Com o _trusted publishing_ do npm configurado para este repositório, o segredo `NPM_TOKEN` não é necessário; sem ele configurado, o workflow usa esse segredo como alternativa.
 
 ## Contato
 

@@ -8,7 +8,7 @@ import { Pagination } from '@/components/ui/pagination'
 import { Stepper, Wizard } from '@/components/ui/wizard'
 import { Tabs } from '@/components/ui/tabs'
 import { toast } from '@/components/ui/toast'
-import { Demo, GroupTitle, wait } from './demo'
+import { Demo, GroupTitle, Row, wait } from './demo'
 
 const steps = [
   { id: 'dados', title: 'Dados', description: 'Quem é o cliente' },
@@ -88,70 +88,105 @@ export function NavigationSection() {
         description="Variante linha ou pílula. Se as abas não couberem na largura do bloco, viram um Select, sem rolagem lateral. Diminua a janela para ver."
         props="items (value, label, icon, count, content), variant (line | pill), value, onChange"
       >
-        <Tabs
-          aria-label="Seções do cliente"
-          items={[
-            { value: 'resumo', label: 'Resumo', icon: <User />, content: tabContent('Resumo') },
-            {
-              value: 'contratos',
-              label: 'Contratos',
-              icon: <FileText />,
-              count: 3,
-              content: tabContent('Contratos'),
-            },
-            {
-              value: 'historico',
-              label: 'Histórico',
-              icon: <History />,
-              content: tabContent('Histórico'),
-            },
-            {
-              value: 'avisos',
-              label: 'Avisos',
-              icon: <Bell />,
-              count: 12,
-              content: tabContent('Avisos'),
-            },
-          ]}
-        />
-        <Tabs
-          variant="pill"
-          aria-label="Período"
-          items={[
-            { value: 'dia', label: 'Hoje', content: tabContent('Hoje') },
-            { value: 'semana', label: 'Semana', content: tabContent('Semana') },
-            { value: 'mes', label: 'Mês', content: tabContent('Mês') },
-            { value: 'ano', label: 'Ano', content: tabContent('Ano') },
-          ]}
-        />
-        <Tabs
-          aria-label="Muitas abas"
-          items={[
-            'Dados gerais',
-            'Endereços',
-            'Contatos',
-            'Contratos',
-            'Faturas',
-            'Documentos',
-            'Atendimentos',
-            'Histórico completo',
-          ].map((l) => ({ value: l, label: l, content: tabContent(l) }))}
-        />
+        <Row label="Linha (padrão), com ícone e contador" code="ABA-001" block>
+          <Tabs
+            aria-label="Seções do cliente"
+            items={[
+              { value: 'resumo', label: 'Resumo', icon: <User />, content: tabContent('Resumo') },
+              {
+                value: 'contratos',
+                label: 'Contratos',
+                icon: <FileText />,
+                count: 3,
+                content: tabContent('Contratos'),
+              },
+              {
+                value: 'historico',
+                label: 'Histórico',
+                icon: <History />,
+                content: tabContent('Histórico'),
+              },
+              {
+                value: 'avisos',
+                label: 'Avisos',
+                icon: <Bell />,
+                count: 12,
+                content: tabContent('Avisos'),
+              },
+            ]}
+          />
+        </Row>
+        <Row
+          label="Pílula, com ícone e contador (variação de exibição, mesmo código)"
+          code="ABA-002"
+          block
+        >
+          <Tabs
+            variant="pill"
+            aria-label="Período"
+            items={[
+              { value: 'dia', label: 'Hoje', icon: <User />, content: tabContent('Hoje') },
+              {
+                value: 'semana',
+                label: 'Semana',
+                icon: <FileText />,
+                count: 3,
+                content: tabContent('Semana'),
+              },
+              { value: 'mes', label: 'Mês', content: tabContent('Mês') },
+              { value: 'ano', label: 'Ano', content: tabContent('Ano') },
+            ]}
+          />
+        </Row>
+        <Row
+          label="Muitas abas: vira Select sozinho quando não cabe (automático, sem código)"
+          block
+        >
+          <Tabs
+            aria-label="Muitas abas"
+            items={[
+              'Dados gerais',
+              'Endereços',
+              'Contatos',
+              'Contratos',
+              'Faturas',
+              'Documentos',
+              'Atendimentos',
+              'Histórico completo',
+            ].map((l) => ({ value: l, label: l, content: tabContent(l) }))}
+          />
+        </Row>
       </Demo>
 
       <Demo
         id="breadcrumb"
         title="Breadcrumb"
         description="No desktop mostra a trilha completa. No mobile vira botão voltar com o nome da tela atual."
-        props="items: { label, to? }[]"
+        props="items: { label, to? }[], variant (responsive | trail)"
       >
-        <Breadcrumb
-          items={[
-            { label: 'Painel', to: '/' },
-            { label: 'Clientes', to: '/clientes' },
-            { label: 'Detalhe do cliente' },
-          ]}
-        />
+        <Row
+          label="Responsiva (padrão): trilha no desktop, botão voltar no celular"
+          code="BRD-001"
+          block
+        >
+          <Breadcrumb
+            items={[
+              { label: 'Painel', to: '/' },
+              { label: 'Clientes', to: '/clientes' },
+              { label: 'Detalhe do cliente' },
+            ]}
+          />
+        </Row>
+        <Row label="Trilha em texto (usada no header do AppShell)" code="BRD-002" block>
+          <Breadcrumb
+            variant="trail"
+            items={[
+              { label: 'Painel', to: '/' },
+              { label: 'Clientes', to: '/clientes' },
+              { label: 'Detalhe do cliente' },
+            ]}
+          />
+        </Row>
       </Demo>
 
       <Demo
@@ -159,6 +194,7 @@ export function NavigationSection() {
         title="Pagination"
         description="Completa no desktop, com itens por página. No celular, anterior e próxima com 'Página 3 de 25', ou 'Carregar mais'."
         props="page, pageSize, total, onPageChange, onPageSizeChange, pageSizes, mobileMode (pages | loadMore), loading"
+        code="PAG-001"
       >
         <Pagination
           page={page}
@@ -183,9 +219,17 @@ export function NavigationSection() {
         props="Wizard (steps, children, onValidateStep, onFinish, onCancel, orientation, stickyFooter) · Stepper (steps, current, errors, orientation, onStepClick)"
       >
         <Stack gap="8">
-          <Stepper steps={steps} current={2} errors={[1]} />
-          <Stepper steps={steps} current={1} orientation="vertical" className="md:max-w-sm" />
-          <WizardDemo />
+          <Row label="Stepper sozinho, horizontal e vertical" code="WIZ-002">
+            <Stack gap="8" className="w-full">
+              <Stepper steps={steps} current={2} errors={[1]} />
+              <Stepper steps={steps} current={1} orientation="vertical" className="md:max-w-sm" />
+            </Stack>
+          </Row>
+          <Row label="Wizard completo, com validação por etapa" code="WIZ-001">
+            <div className="w-full">
+              <WizardDemo />
+            </div>
+          </Row>
         </Stack>
       </Demo>
     </>

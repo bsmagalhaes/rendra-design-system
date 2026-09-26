@@ -16,6 +16,10 @@ describe('Pagination', () => {
   it('na primeira página, anterior fica desativado', () => {
     renderApp(<Pagination page={1} pageSize={15} total={40} onPageChange={() => {}} />)
     expect(screen.getByRole('button', { name: 'Página anterior' })).toBeDisabled()
+    expect(screen.getByRole('navigation', { name: 'Paginação' })).toHaveAttribute(
+      'data-rendra',
+      'PAG-001',
+    )
   })
 
   it('pula direto para uma página', async () => {

@@ -1,41 +1,31 @@
 import { Bell } from 'lucide-react'
 import { useState } from 'react'
-import type { FeedbackType } from '@/brand'
 import { BrandFeedbackIcon } from '@/components/ui/brand-feedback-icon'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { cn } from '@/lib/cn'
+import { useShell } from './shell-context'
 
-interface Notification {
-  id: string
-  type: FeedbackType
-  title: string
-  time: string
-  read: boolean
-}
-
-const initial: Notification[] = [
-  {
-    id: '1',
-    type: 'success',
-    title: 'Contrato 1042 assinado pelo cliente',
-    time: 'há 5 min',
-    read: false,
-  },
-  { id: '2', type: 'warning', title: '3 tarefas vencem hoje', time: 'há 1 h', read: false },
-  { id: '3', type: 'info', title: 'Relatório mensal disponível', time: 'ontem', read: false },
-  {
-    id: '4',
-    type: 'error',
-    title: 'Falha na importação de clientes',
-    time: '20/09/2026',
-    read: true,
-  },
-]
-
+/**
+ * Sino de notificações. Renderizado só quando o AppShell recebe a prop `notifications`;
+ * os itens e os dois retornos de chamada (marcar todas como lidas, marcar uma como lida)
+ * vêm dessa prop, nunca de um mock interno.
+ */
 export function Notifications() {
-  const [items, setItems] = useState(initial)
+  const { notifications } = useShell()
+  const [items, setItems] = useState(() => notifications?.items ?? [])
   const unread = items.filter((n) => !n.read).length
+
+  if (!notifications) return null
+
+  const markAllRead = () => {
+    setItems((all) => all.map((n) => ({ ...n, read: true })))
+    notifications.onMarkAllRead?.()
+  }
+  const markRead = (id: string) => {
+    setItems((all) => all.map((n) => (n.id === id ? { ...n, read: true } : n)))
+    notifications.onItemClick?.(id)
+  }
 
   return (
     <Popover>
@@ -60,12 +50,7 @@ export function Notifications() {
       <PopoverContent align="end" className="flex flex-col">
         <div className="flex items-center justify-between gap-2 border-b py-2 pr-2 pl-4">
           <span className="text-sm font-semibold">Notificações</span>
-          <Button
-            variant="ghost"
-            size="sm"
-            disabled={!unread}
-            onClick={() => setItems((all) => all.map((n) => ({ ...n, read: true })))}
-          >
+          <Button variant="ghost" size="sm" disabled={!unread} onClick={markAllRead}>
             Marcar como lidas
           </Button>
         </div>
@@ -74,9 +59,7 @@ export function Notifications() {
             <li key={n.id}>
               <button
                 type="button"
-                onClick={() =>
-                  setItems((all) => all.map((x) => (x.id === n.id ? { ...x, read: true } : x)))
-                }
+                onClick={() => markRead(n.id)}
                 className="flex w-full items-start gap-3 rounded-item p-2 text-left transition-colors hover:bg-accent"
               >
                 <BrandFeedbackIcon type={n.type} size="md" className="mt-px" />

@@ -7,7 +7,10 @@ import { InfoHint } from './info-hint'
 
 describe('InfoHint', () => {
   it('o ícone abre o texto orientativo num modal, e Entendi fecha', async () => {
-    renderApp(<InfoHint title="Receita do mês">Soma dos contratos faturados no mês.</InfoHint>)
+    const { container } = renderApp(
+      <InfoHint title="Receita do mês">Soma dos contratos faturados no mês.</InfoHint>,
+    )
+    expect(container.querySelector('[data-rendra="INFO-001"]')).toBeInTheDocument()
     expect(screen.queryByText('Soma dos contratos faturados no mês.')).not.toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'Sobre: Receita do mês' }))
     const dialog = await screen.findByRole('dialog', { name: 'Receita do mês' })

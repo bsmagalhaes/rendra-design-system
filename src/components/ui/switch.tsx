@@ -40,6 +40,7 @@ export function Switch({
       disabled={disabled}
       aria-label={aria['aria-label']}
       data-touch="expanded"
+      data-rendra="SWT-001"
       className="relative inline-flex h-6 w-12 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent bg-input transition-colors disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary max-md:before:absolute max-md:before:-inset-3"
     >
       <S.Thumb className="pointer-events-none block size-icon-md rounded-full bg-card shadow-sm transition-transform duration-200 ease-out data-[state=checked]:translate-x-6" />

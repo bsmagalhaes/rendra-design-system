@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { TAILWIND_NAMESPACE } from '../../scripts/lib/var-prefix'
 import { contrast, createPalette, mix, paletteCss, type PaletteSeeds } from './palette'
 import { paletteSeeds } from './palettes'
 
@@ -9,11 +10,11 @@ const hex = (v: string | undefined) => {
 }
 /** Pares texto e fundo que precisam de 4,5:1 (WCAG AA). */
 const textPairs = [
-  ['--primary-foreground', '--primary'],
-  ['--primary-hover-foreground', '--primary-hover'],
-  ['--secondary-foreground', '--secondary'],
-  ['--secondary-hover-foreground', '--secondary-hover'],
-  ['--primary-soft-foreground', '--primary-soft'],
+  ['--rendra-primary-foreground', '--rendra-primary'],
+  ['--rendra-primary-hover-foreground', '--rendra-primary-hover'],
+  ['--rendra-secondary-foreground', '--rendra-secondary'],
+  ['--rendra-secondary-hover-foreground', '--rendra-secondary-hover'],
+  ['--rendra-primary-soft-foreground', '--rendra-primary-soft'],
 ] as const
 
 const client: PaletteSeeds = {
@@ -35,34 +36,57 @@ describe('createPalette', () => {
           4.5,
         )
     // Primária como texto, sobre o fundo e o card do claro e sobre o card do escuro.
-    expect(contrast(hex(p.light['--primary-text']), LIGHT_BG)).toBeGreaterThanOrEqual(4.5)
-    expect(contrast(hex(p.dark['--primary-text']), hex(p.dark['--card']))).toBeGreaterThanOrEqual(
-      4.5,
-    )
-    // Superfícies e texto do escuro.
-    expect(contrast(hex(p.dark['--foreground']), hex(p.dark['--card']))).toBeGreaterThanOrEqual(4.5)
+    expect(contrast(hex(p.light['--rendra-primary-text']), LIGHT_BG)).toBeGreaterThanOrEqual(4.5)
     expect(
-      contrast(hex(p.dark['--muted-foreground']), hex(p.dark['--muted'])),
+      contrast(hex(p.dark['--rendra-primary-text']), hex(p.dark['--rendra-card'])),
+    ).toBeGreaterThanOrEqual(4.5)
+    // Superfícies e texto do escuro.
+    expect(
+      contrast(hex(p.dark['--rendra-foreground']), hex(p.dark['--rendra-card'])),
+    ).toBeGreaterThanOrEqual(4.5)
+    expect(
+      contrast(hex(p.dark['--rendra-muted-foreground']), hex(p.dark['--rendra-muted'])),
     ).toBeGreaterThanOrEqual(4.5)
     // Texto da sidebar sobre o ponto mais claro do degradê (o gerador tenta 7:1; o mínimo é AA).
     const light = seeds.gradient[0]
-    expect(contrast(hex(p.light['--sidebar-foreground']), light)).toBeGreaterThanOrEqual(4.5)
-    expect(contrast(hex(p.light['--sidebar-muted-foreground']), light)).toBeGreaterThanOrEqual(4.5)
+    expect(contrast(hex(p.light['--rendra-sidebar-foreground']), light)).toBeGreaterThanOrEqual(4.5)
+    expect(
+      contrast(hex(p.light['--rendra-sidebar-muted-foreground']), light),
+    ).toBeGreaterThanOrEqual(4.5)
   })
 
   it('mantém as sementes que já passam', () => {
     const p = createPalette(paletteSeeds[0]!)
-    expect(p.light['--primary']).toBe('#0b6fe0')
-    expect(p.light['--secondary']).toBe('#98d10a')
+    expect(p.light['--rendra-primary']).toBe('#0b6fe0')
+    expect(p.light['--rendra-secondary']).toBe('#98d10a')
     expect(p.adjustments).toEqual([])
   })
 
   it('escurece a cor quando o texto branco é forçado e registra o ajuste', () => {
     const ardosia = paletteSeeds.find((s) => s.id === 'ardosia')!
     const p = createPalette(ardosia)
-    expect(p.light['--secondary']).not.toBe('#ea600d')
-    expect(p.light['--secondary-foreground']).toBe('#ffffff')
+    expect(p.light['--rendra-secondary']).not.toBe('#ea600d')
+    expect(p.light['--rendra-secondary-foreground']).toBe('#ffffff')
     expect(p.adjustments.join()).toMatch(/Secundária: #EA600D ajustada/)
+  })
+
+  it('emite só chaves --rendra-*, nunca o nome antigo sem prefixo', () => {
+    // Todo namespace --rendra- existe para nunca colidir com o vocabulário do próprio
+    // Tailwind (--color-*, --spacing-*, --text-*, --font-*, --radius-*, --shadow-*,
+    // --container-*): createPalette não pode devolver nenhuma chave fora desse prefixo, e a
+    // única exceção aceitável seria justamente colidir com esse namespace do Tailwind, o que
+    // nunca acontece aqui, pois createPalette só emite variáveis semânticas próprias do
+    // Rendra. Mesma exceção usada por scripts/check-design-rules.mjs e
+    // src/styles/tokens-prefix.test.ts, para nunca divergir.
+    for (const seeds of [...paletteSeeds, client]) {
+      const p = createPalette(seeds)
+      for (const vars of [p.light, p.dark]) {
+        for (const key of Object.keys(vars)) {
+          if (TAILWIND_NAMESPACE.test(key.slice(2))) continue
+          expect(key, `chave sem prefixo --rendra-: ${key}`).toMatch(/^--rendra-/)
+        }
+      }
+    }
   })
 
   it('escolhe a sidebar clara e o logotipo escuro para degradê claro', () => {

@@ -13,11 +13,17 @@ const items = [
 describe('Tabs', () => {
   it('troca o conteúdo ao escolher a aba', async () => {
     const onChange = vi.fn()
-    renderApp(<Tabs aria-label="Cliente" items={items} onChange={onChange} />)
+    const { container } = renderApp(<Tabs aria-label="Cliente" items={items} onChange={onChange} />)
     expect(screen.getByText('Conteúdo dos dados')).toBeInTheDocument()
     await userEvent.click(screen.getByRole('tab', { name: /Contratos/ }))
     expect(onChange).toHaveBeenCalledWith('contratos')
     expect(screen.getByText('Lista de contratos')).toBeInTheDocument()
+    expect(container.querySelector('[data-rendra="ABA-001"]')).toBeInTheDocument()
+  })
+
+  it('variant="pill" usa o código de catálogo ABA-002', () => {
+    const { container } = renderApp(<Tabs aria-label="Cliente" items={items} variant="pill" />)
+    expect(container.querySelector('[data-rendra="ABA-002"]')).toBeInTheDocument()
   })
 
   it('setas do teclado passam de aba', async () => {

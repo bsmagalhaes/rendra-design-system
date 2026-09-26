@@ -65,10 +65,16 @@ export function Checkbox({
       </C.Indicator>
     </C.Root>
   )
-  if (!label) return <span className={cn('inline-flex', className)}>{box}</span>
+  if (!label)
+    return (
+      <span data-rendra="CHK-001" className={cn('inline-flex', className)}>
+        {box}
+      </span>
+    )
   return (
     <label
       htmlFor={cid}
+      data-rendra="CHK-001"
       className={cn(
         'flex min-h-touch cursor-pointer items-start gap-3 py-3 md:min-h-0 md:py-1',
         disabled && 'cursor-not-allowed opacity-60',
@@ -117,6 +123,7 @@ export function CheckboxGroup({
       role="group"
       aria-label={label}
       aria-describedby={aria['aria-describedby']}
+      data-rendra="CHK-002"
       className="flex flex-col"
     >
       {selectAll && (

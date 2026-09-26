@@ -18,6 +18,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, join, posix } from 'node:path'
 import { format, resolveConfig } from 'prettier'
+import { CATALOG } from '../src/catalog/components.ts'
 
 const ROOT = process.cwd()
 const BASE = (
@@ -63,6 +64,13 @@ const tokens = {
     'globals.css: escala de espaço, tipografia, raio por papel, tokens nomeados e utilitários. Não contém marca: as cores vêm de themes.css, que é do projeto.',
   files: ['src/styles/globals.css'],
 }
+const catalog = {
+  name: 'catalog',
+  title: 'Catálogo de componentes',
+  description:
+    'Código de cada componente e variante (ABA-001, BTN-001...), usado no data-rendra, na vitrine (/componentes) e no BRIEFING_MODELO. Os componentes com variante (os que calculam o data-rendra com resolveCatalogCode) dependem dele.',
+  files: ['src/catalog/components.ts'],
+}
 const layout = {
   name: 'layout',
   title: 'Primitivas de layout',
@@ -73,15 +81,30 @@ const appShell = {
   name: 'app-shell',
   title: 'AppShell',
   description:
-    'Casca da aplicação: sidebar, header, menu superior, mega menu, busca, notificações e barra inferior. Lê o menu e o layout de src/config, que é do projeto.',
+    'Casca da aplicação: sidebar, header, menu superior, mega menu, busca, notificações e barra inferior. Recebe o menu, o layout, o usuário e as notificações por prop; não lê src/config.',
   files: ls('src/components/app-shell', ['.ts', '.tsx']),
 }
-const ui = ls('src/components/ui', ['.tsx']).map((file) => ({
-  name: basename(file, '.tsx'),
-  title: basename(file, '.tsx'),
-  description: `Componente ${basename(file, '.tsx')} do Rendra Design System.`,
-  files: [file],
-}))
+/**
+ * Códigos do catálogo (src/catalog/components.ts, etapa 1.2.0-alpha.1) deste arquivo de
+ * componente, na ordem cadastrada. O catálogo referencia o arquivo como
+ * "components/ui/<nome>.tsx" (relativo a src/); o registry usa o caminho completo.
+ */
+function catalogCodesFor(file) {
+  const relative = file.replace(/^src\//, '')
+  return CATALOG.filter((entry) => entry.file === relative).map((entry) => entry.code)
+}
+
+const ui = ls('src/components/ui', ['.tsx']).map((file) => {
+  const codes = catalogCodesFor(file)
+  return {
+    name: basename(file, '.tsx'),
+    title: basename(file, '.tsx'),
+    description: `Componente ${basename(file, '.tsx')} do Rendra Design System.`,
+    files: [file],
+    // Vazio para os internos sem uso direto em tela (overlay-shell, picker-panel).
+    meta: { codes },
+  }
+})
 
 /*
  * Testes, como itens opcionais: quem tem meta de cobertura instala o teste junto com o
@@ -105,7 +128,7 @@ const uiTests = ui
     files: [i.files[0].replace(/\.tsx$/, '.test.tsx')],
   }))
 
-const items = [core, tokens, layout, appShell, ...ui, testUtils, ...uiTests]
+const items = [core, tokens, catalog, layout, appShell, ...ui, testUtils, ...uiTests]
 const isTest = (item) => item === testUtils || item.name.endsWith('-test')
 
 // Descobre a qual item pertence cada arquivo, para transformar import em dependência.
@@ -150,7 +173,7 @@ function analyze(item) {
     }
   }
   // Todo componente depende dos tokens (as classes só existem com o globals.css).
-  if (item.name !== 'tokens' && item.name !== 'core' && !isTest(item)) reg.add('tokens')
+  if (!['tokens', 'core', 'catalog'].includes(item.name) && !isTest(item)) reg.add('tokens')
   if (isTest(item)) {
     for (const d of item.dev ?? []) deps.add(`${d}@${versions[d]}`)
     return { devDependencies: [...deps].sort(), registryDependencies: [...reg].sort() }
@@ -176,6 +199,8 @@ for (const item of items) {
     ...(devDependencies ? { devDependencies } : { dependencies }),
     registryDependencies: registryDependencies.map((n) => `${BASE}/r/${n}.json`),
     files: item.files.map((f) => ({ path: f, type: 'registry:file', target: f })),
+    // Códigos do catálogo de componentes (etapa 1.2.0-alpha.1): só os itens de src/components/ui.
+    ...(item.meta ? { meta: item.meta } : {}),
   }
   index.items.push(entry)
   const built = {

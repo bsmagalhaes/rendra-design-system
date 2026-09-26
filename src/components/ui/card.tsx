@@ -7,12 +7,21 @@ import { cn } from '@/lib/cn'
  * Nunca aninhe Card dentro de Card: para hierarquia interna use Separator ou título de seção.
  * Nunca coloque rolagem dentro de Card.
  */
-export type CardProps = HTMLAttributes<HTMLDivElement>
+export interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  /**
+   * Uso interno: quando outro componente catalogado (Calendar, FormSection, StatCard,
+   * Table) usa o Card como o próprio elemento raiz, ele passa o seu código aqui para que
+   * o data-rendra mostre a variante certa, não CARD-001. Sem essa prop, o Card se
+   * identifica como CARD-001, o próprio código dele no catálogo.
+   */
+  'data-rendra'?: string
+}
 
-export function Card({ className, ...props }: CardProps) {
+export function Card({ className, 'data-rendra': dataRendra, ...props }: CardProps) {
   return (
     <div
       data-slot="card"
+      data-rendra={dataRendra ?? 'CARD-001'}
       className={cn(
         'flex min-w-0 flex-col rounded-surface border bg-card text-card-foreground',
         className,

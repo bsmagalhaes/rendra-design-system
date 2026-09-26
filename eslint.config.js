@@ -14,6 +14,15 @@ export default tseslint.config(
       'test-results',
       'screenshots',
       'coverage',
+      // Fixtures da CLI (src/cli/*.test.ts): código de exemplo com violação de
+      // propósito (valor arbitrário, prop dinâmica...), nunca compilado nem executado, só lido
+      // pelo parser em teste. Mesma razão de scripts/check-design-rules.mjs nunca escanear
+      // test/: não é produto, é a "vítima" que o teste audita.
+      'test/fixtures',
+      // Worktrees de agente de IA (.claude/worktrees/*): cópias completas do repositório,
+      // cada uma com o próprio node_modules e possivelmente em estado inacabado; nunca é
+      // código deste checkout, então o lint não deve varrê-las.
+      '.claude',
     ],
   },
   {

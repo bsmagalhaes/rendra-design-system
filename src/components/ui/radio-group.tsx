@@ -1,5 +1,6 @@
 import { RadioGroup as R } from 'radix-ui'
 import type { ReactNode } from 'react'
+import { resolveCatalogCode } from '@/catalog/components'
 import { cn } from '@/lib/cn'
 
 export interface RadioOption {
@@ -68,6 +69,7 @@ export function RadioGroup({
       aria-invalid={invalid || undefined}
       aria-describedby={aria['aria-describedby']}
       aria-label={aria['aria-label']}
+      data-rendra={resolveCatalogCode('RadioGroup', { variant })}
       className={cn(
         variant === 'cards'
           ? cn('grid grid-cols-1 gap-3', cols[columns])

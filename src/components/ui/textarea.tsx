@@ -26,6 +26,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
         rows={rows}
         maxLength={maxLength}
         value={current}
+        data-rendra="TXT-001"
         aria-invalid={invalid || undefined}
         onChange={(e) => {
           setInner(e.target.value)

@@ -56,10 +56,18 @@ export interface Palette {
 
 type Rgb = [number, number, number]
 
-const WHITE = '#ffffff'
+/**
+ * Branco e tinta escura de referência. Exportados para o ColorPicker (A1) escolher, por
+ * contraste, a cor do check sobre uma amostra livre do usuário (que não é do tema, então
+ * não tem um par claro/escuro pronto): nenhum componente de fora de src/brand pode ter um
+ * hexadecimal literal, então a comparação usa estas constantes em vez de repetir a cor.
+ * O mesmo par vive em CSS como --rendra-swatch-check-light e --rendra-swatch-check-dark
+ * (src/styles/globals.css); mude os dois lados juntos.
+ */
+export const WHITE = '#ffffff'
 const BLACK = '#000000'
 /** Texto escuro padrão (o mesmo --foreground do theme.css). */
-const INK = '#0b1d37'
+export const INK = '#0b1d37'
 /** Neutros fixos do modo claro, contra os quais a paleta é conferida. */
 const LIGHT = { background: '#f5f6f7', card: '#ffffff' }
 /** Texto claro padrão do modo escuro. */
@@ -92,6 +100,26 @@ export function mix(a: string, b: string, t: number) {
   const y = toRgb(b)
   return toHex([0, 1, 2].map((i) => x[i]! + (y[i]! - x[i]!) * t) as Rgb)
 }
+
+/**
+ * Amostras padrão do ColorPicker (A1): um ponto de partida variado, sem relação com a
+ * paleta da marca. Hexadecimal fixo só pode existir aqui dentro (src/brand); o componente
+ * (fora daqui) sempre recebe a lista por import, nunca com a cor escrita nele.
+ */
+export const COLOR_PICKER_SWATCHES: string[] = [
+  '#0ea5e9',
+  '#6366f1',
+  '#8b5cf6',
+  '#ec4899',
+  '#ef4444',
+  '#f97316',
+  '#f59e0b',
+  '#84cc16',
+  '#10b981',
+  '#14b8a6',
+  '#64748b',
+  '#0f172a',
+]
 
 function luminance(hex: string) {
   const lin = (c: number) => {
@@ -181,28 +209,28 @@ export function createPalette(seeds: PaletteSeeds): Palette {
   const onBrand = sidebarDark ? WHITE : INK
 
   const sidebar = {
-    '--sidebar': g1,
-    '--sidebar-image': brandGradient,
-    '--sidebar-foreground': sidebarFg,
-    '--sidebar-muted-foreground': sidebarMuted,
-    '--sidebar-border': alpha(sidebarDark ? WHITE : INK, 0.14),
-    '--sidebar-accent': alpha(sidebarDark ? WHITE : INK, 0.08),
-    '--sidebar-active': alpha(active, 0.24),
-    '--sidebar-active-foreground': onBrand,
-    '--sidebar-indicator': indicator,
-    '--gradient-brand': brandGradient,
-    '--gradient-brand-foreground': onBrand,
-    '--gradient-accent': `linear-gradient(90deg, ${P} 0%, ${S} 100%)`,
+    '--rendra-sidebar': g1,
+    '--rendra-sidebar-image': brandGradient,
+    '--rendra-sidebar-foreground': sidebarFg,
+    '--rendra-sidebar-muted-foreground': sidebarMuted,
+    '--rendra-sidebar-border': alpha(sidebarDark ? WHITE : INK, 0.14),
+    '--rendra-sidebar-accent': alpha(sidebarDark ? WHITE : INK, 0.08),
+    '--rendra-sidebar-active': alpha(active, 0.24),
+    '--rendra-sidebar-active-foreground': onBrand,
+    '--rendra-sidebar-indicator': indicator,
+    '--rendra-gradient-brand': brandGradient,
+    '--rendra-gradient-brand-foreground': onBrand,
+    '--rendra-gradient-accent': `linear-gradient(90deg, ${P} 0%, ${S} 100%)`,
   }
   const brand = {
-    '--primary': primary.fill,
-    '--primary-foreground': primary.text,
-    '--primary-hover': primaryHover.fill,
-    '--primary-hover-foreground': primaryHover.text,
-    '--secondary': secondary.fill,
-    '--secondary-foreground': secondary.text,
-    '--secondary-hover': secondaryHover.fill,
-    '--secondary-hover-foreground': secondaryHover.text,
+    '--rendra-primary': primary.fill,
+    '--rendra-primary-foreground': primary.text,
+    '--rendra-primary-hover': primaryHover.fill,
+    '--rendra-primary-hover-foreground': primaryHover.text,
+    '--rendra-secondary': secondary.fill,
+    '--rendra-secondary-foreground': secondary.text,
+    '--rendra-secondary-hover': secondaryHover.fill,
+    '--rendra-secondary-hover-foreground': secondaryHover.text,
   }
 
   /* ---------- claro: sobre os neutros fixos (fundo #f5f6f7, card branco) */
@@ -210,20 +238,20 @@ export function createPalette(seeds: PaletteSeeds): Palette {
   const textL = reach(P, LIGHT.background, 4.5, 'dark')
   const light: PaletteVars = {
     ...brand,
-    '--primary-soft': softL,
-    '--primary-soft-foreground': reach(P, softL, 4.5, 'dark'),
-    '--primary-text': textL,
-    '--ring': textL,
-    '--accent': mix(P, WHITE, 0.94),
-    '--accent-foreground': INK,
+    '--rendra-primary-soft': softL,
+    '--rendra-primary-soft-foreground': reach(P, softL, 4.5, 'dark'),
+    '--rendra-primary-text': textL,
+    '--rendra-ring': textL,
+    '--rendra-accent': mix(P, WHITE, 0.94),
+    '--rendra-accent-foreground': INK,
     ...sidebar,
-    '--gradient-soft': `linear-gradient(135deg, ${softL} 0%, ${LIGHT.card} 65%)`,
-    '--chart-1': P,
-    '--chart-2': S,
-    '--chart-3': mix(P, WHITE, 0.45),
-    '--chart-4': mix(P, BLACK, 0.35),
-    '--chart-5': mix(S, BLACK, 0.3),
-    '--shadow-color': rgbTriplet(g2),
+    '--rendra-gradient-soft': `linear-gradient(135deg, ${softL} 0%, ${LIGHT.card} 65%)`,
+    '--rendra-chart-1': P,
+    '--rendra-chart-2': S,
+    '--rendra-chart-3': mix(P, WHITE, 0.45),
+    '--rendra-chart-4': mix(P, BLACK, 0.35),
+    '--rendra-chart-5': mix(S, BLACK, 0.3),
+    '--rendra-shadow-color': rgbTriplet(g2),
   }
 
   /* ---------- escuro: superfícies tiradas do fundo do degradê, texto claro */
@@ -244,48 +272,48 @@ export function createPalette(seeds: PaletteSeeds): Palette {
   const sD = onDark(secondary.fill, 'Secundária')
   const shD = onDark(secondaryHover.fill, 'Hover da secundária')
   const brandDark = {
-    '--primary': pD.fill,
-    '--primary-foreground': pD.text,
-    '--primary-hover': phD.fill,
-    '--primary-hover-foreground': phD.text,
-    '--secondary': sD.fill,
-    '--secondary-foreground': sD.text,
-    '--secondary-hover': shD.fill,
-    '--secondary-hover-foreground': shD.text,
+    '--rendra-primary': pD.fill,
+    '--rendra-primary-foreground': pD.text,
+    '--rendra-primary-hover': phD.fill,
+    '--rendra-primary-hover-foreground': phD.text,
+    '--rendra-secondary': sD.fill,
+    '--rendra-secondary-foreground': sD.text,
+    '--rendra-secondary-hover': shD.fill,
+    '--rendra-secondary-hover-foreground': shD.text,
   }
   const softD = mix(cardD, P, 0.28)
   const textD = reach(mix(P, WHITE, 0.2), cardD, 4.5, 'light')
   const fgD = reach(INK_DARK, popD, 12, 'light')
   const dark: PaletteVars = {
-    '--background': bgD,
-    '--background-image': `radial-gradient(120% 80% at 80% 0%, ${reach(mix(g0, bgD, 0.45), WHITE, 12, 'dark')} 0%, ${reach(mix(g1, bgD, 0.4), WHITE, 16, 'dark')} 40%, ${bgD} 100%)`,
-    '--foreground': fgD,
-    '--card': cardD,
-    '--card-foreground': fgD,
-    '--popover': popD,
-    '--popover-foreground': fgD,
-    '--muted': mutedD,
-    '--muted-foreground': reach(mix(fgD, mutedD, 0.35), mutedD, 4.5, 'light'),
-    '--border': mix(cardD, WHITE, 0.12),
-    '--input': reach(mix(cardD, WHITE, 0.32), cardD, 3, 'light'),
-    '--field': mix(g2, BLACK, 0.1),
-    '--overlay': alpha(mix(g2, BLACK, 0.6), 0.7),
+    '--rendra-background': bgD,
+    '--rendra-background-image': `radial-gradient(120% 80% at 80% 0%, ${reach(mix(g0, bgD, 0.45), WHITE, 12, 'dark')} 0%, ${reach(mix(g1, bgD, 0.4), WHITE, 16, 'dark')} 40%, ${bgD} 100%)`,
+    '--rendra-foreground': fgD,
+    '--rendra-card': cardD,
+    '--rendra-card-foreground': fgD,
+    '--rendra-popover': popD,
+    '--rendra-popover-foreground': fgD,
+    '--rendra-muted': mutedD,
+    '--rendra-muted-foreground': reach(mix(fgD, mutedD, 0.35), mutedD, 4.5, 'light'),
+    '--rendra-border': mix(cardD, WHITE, 0.12),
+    '--rendra-input': reach(mix(cardD, WHITE, 0.32), cardD, 3, 'light'),
+    '--rendra-field': mix(g2, BLACK, 0.1),
+    '--rendra-overlay': alpha(mix(g2, BLACK, 0.6), 0.7),
     ...brandDark,
-    '--primary-soft': softD,
-    '--primary-soft-foreground': reach(mix(P, WHITE, 0.45), softD, 4.5, 'light'),
-    '--primary-text': textD,
-    '--ring': textD,
-    '--accent': mix(cardD, WHITE, 0.06),
-    '--accent-foreground': fgD,
+    '--rendra-primary-soft': softD,
+    '--rendra-primary-soft-foreground': reach(mix(P, WHITE, 0.45), softD, 4.5, 'light'),
+    '--rendra-primary-text': textD,
+    '--rendra-ring': textD,
+    '--rendra-accent': mix(cardD, WHITE, 0.06),
+    '--rendra-accent-foreground': fgD,
     ...sidebar,
-    '--sidebar': mix(g2, BLACK, 0.1),
-    '--gradient-soft': `linear-gradient(135deg, ${softD} 0%, ${cardD} 65%)`,
-    '--chart-1': reach(P, cardD, 3, 'light'),
-    '--chart-2': reach(S, cardD, 3, 'light'),
-    '--chart-3': mix(P, WHITE, 0.45),
-    '--chart-4': mix(P, WHITE, 0.72),
-    '--chart-5': reach(mix(S, WHITE, 0.3), cardD, 3, 'light'),
-    '--shadow-color': '0 0 0',
+    '--rendra-sidebar': mix(g2, BLACK, 0.1),
+    '--rendra-gradient-soft': `linear-gradient(135deg, ${softD} 0%, ${cardD} 65%)`,
+    '--rendra-chart-1': reach(P, cardD, 3, 'light'),
+    '--rendra-chart-2': reach(S, cardD, 3, 'light'),
+    '--rendra-chart-3': mix(P, WHITE, 0.45),
+    '--rendra-chart-4': mix(P, WHITE, 0.72),
+    '--rendra-chart-5': reach(mix(S, WHITE, 0.3), cardD, 3, 'light'),
+    '--rendra-shadow-color': '0 0 0',
   }
 
   return { seeds, light, dark, sidebarLogo: sidebarDark ? 'dark' : 'light', adjustments: notes }

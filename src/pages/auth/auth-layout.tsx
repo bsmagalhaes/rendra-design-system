@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import { useBrand } from '@/brand'
 import { Stack } from '@/components/layout'
 import { BrandLogo } from '@/components/ui/brand-logo'
+import { RendraCredit } from '@/components/ui/rendra-credit'
 import { useRouteMeta } from '@/hooks/use-route-meta'
 import { cn } from '@/lib/cn'
 
@@ -19,6 +20,9 @@ export function AuthLayout({
   children,
   footer,
   width = 'sm',
+  credit = true,
+  creditText,
+  creditHref,
 }: {
   title: string
   description?: ReactNode
@@ -29,6 +33,12 @@ export function AuthLayout({
   footer?: ReactNode
   /** sm: uma coluna (login, senha); md: largura para duas colunas (cadastro). */
   width?: 'sm' | 'md'
+  /** Crédito "Feito com Rendra" no rodapé. Padrão true; false remove. */
+  credit?: boolean
+  /** Texto do crédito (padrão "Feito com Rendra"). */
+  creditText?: string
+  /** Link do crédito (padrão: o repositório do Rendra). */
+  creditHref?: string
 }) {
   useRouteMeta()
   const { brand } = useBrand()
@@ -68,6 +78,7 @@ export function AuthLayout({
           </Stack>
           {children}
           {footer && <div className="text-center text-sm text-muted-foreground">{footer}</div>}
+          <RendraCredit credit={credit} text={creditText} href={creditHref} />
         </Stack>
       </main>
     </div>

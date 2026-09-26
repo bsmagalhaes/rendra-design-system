@@ -45,6 +45,7 @@ export function Form<T extends FieldValues>({
         id={id}
         noValidate
         onSubmit={form.handleSubmit(onSubmit)}
+        data-rendra="FORM-001"
         className={cn('flex min-w-0 flex-col gap-8 md:gap-12', className)}
       >
         {children}
@@ -108,7 +109,7 @@ interface FormSectionProps {
 /** Seção de formulário: card com título e a grade de formulário (3 campos por linha no largo). */
 export function FormSection({ title, description, help, columns, children, id }: FormSectionProps) {
   return (
-    <Card id={id} className="scroll-mt-6">
+    <Card id={id} data-rendra="FORM-002" className="scroll-mt-6">
       <CardHeader>
         <CardTitle help={help}>{title}</CardTitle>
         {description && <CardDescription>{description}</CardDescription>}

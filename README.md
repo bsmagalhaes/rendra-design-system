@@ -35,7 +35,7 @@ Duas regras mestras guiam tudo:
 1. **Um componente por finalidade.** Existe um Select, uma Table, um Modal, um Drawer, um Input. Diferenças são props, nunca arquivos novos.
 2. **Mobile-first real.** Tudo é desenhado primeiro para 360px, sem rolagem horizontal, sem ação que dependa de hover e com toque mínimo de 44px.
 
-E duas de boas práticas, verificadas pelo `npm run check:rules`: **nunca botão solto** (cada ação tem lugar previsto: rodapé fixo, barra da tabela, cabeçalho da tela ou do card, menu da linha) e **texto orientativo nunca no corpo da tela** (vai num ícone de informação ao lado do título, que abre um modal).
+E duas de boas práticas, verificadas pelo `npm run check:rules`: **nunca botão solto** (cada ação tem lugar previsto: rodapé fixo, barra da tabela, cabeçalho da tela ou do card, menu da linha) e **texto orientativo nunca solto no corpo da tela** (vai num ícone de informação ao lado do título, que abre um modal; só a orientação curta abaixo do campo fica visível, com limite de caracteres pela largura dele).
 
 ---
 
@@ -317,7 +317,15 @@ O passo a passo completo, inclusive como adotar o Equilíbrio ou o Aurora como m
 
 ## Receber atualizações nos seus projetos
 
-Um projeto criado a partir do Rendra não fica parado no tempo. Os componentes são publicados como um **registry do shadcn/ui** junto com o demo. Para trazer a versão mais nova de um componente, com as dependências dele:
+Um projeto criado a partir do Rendra não fica parado no tempo, e há mais de um jeito de trazer o design system para um projeto: clonar o boilerplate inteiro, trazer um componente pelo registry, instalar o pacote publicado, rodar a CLI `rendra` ou usar a skill de migração parcial. As subseções abaixo cobrem cada um.
+
+### Boilerplate
+
+Comece por este repositório (`degit`, `npx create-rendra` quando existir, ou clone e apague o `.git`) quando o projeto é novo: você recebe os três templates, as quatro paletas, o AppShell, as telas base e o Storybook, e edita a marca em `src/brand` como descrito em "Como trocar a marca em 5 passos", acima.
+
+### Registry (shadcn/ui)
+
+Os componentes são publicados como um **registry do shadcn/ui** junto com o demo. Para trazer a versão mais nova de um componente, com as dependências dele, num projeto que **não** nasceu deste boilerplate:
 
 ```bash
 npx shadcn@latest add https://bsmagalhaes.github.io/rendra-design-system/r/select.json
@@ -330,6 +338,46 @@ Itens disponíveis: cada componente de `src/components/ui` pelo nome do arquivo 
 **Testes junto com o componente (opcional):** cada componente testado tem um item `<nome>-test` (por exemplo `npx shadcn@latest add @rendra/table-test`), que traz o teste de comportamento e instala as dependências de teste só como desenvolvimento. O `test-utils` traz a preparação do Vitest (`src/test/setup.ts`) e o `renderApp`. Útil quando o seu projeto exige cobertura mínima de cada componente copiado.
 
 O registry nunca traz marca nem configuração: `theme.css`, `themes.css`, `palettes.ts`, `palettes.css`, `brand.config.ts`, `src/brand/index.ts`, os assets e `src/config` são do seu projeto e não são tocados. Arquivos iguais são pulados, e o shadcn pergunta antes de sobrescrever um arquivo que você alterou. Quando uma versão pedir um token de cor novo no tema, o [CHANGELOG](CHANGELOG.md) diz qual e com que valor.
+
+### Pacote npm
+
+Para um projeto que já tem o próprio roteador e a própria estrutura de telas, e só quer os componentes prontos como dependência. O pacote é `@rendra-ui/web`, escopado na organização npm `rendra-ui`:
+
+```bash
+npm install @rendra-ui/web react react-dom radix-ui
+```
+
+```tsx
+import { Button, Card } from '@rendra-ui/web'
+import '@rendra-ui/web/tokens.css'
+import '@rendra-ui/web/base.css'
+import '@rendra-ui/web/components.css'
+```
+
+O CSS já sai compilado (estratégia A: o host recebe `tokens.css`, `base.css` e `components.css` prontos, sem precisar ter o Tailwind instalado, e sem nenhuma variável do namespace do Tailwind vazar para o seu tema). `react-router` fica fora das dependências: quem usa React Router importa a ponte, `@rendra-ui/web/router-bridge`; quem não usa, não precisa dela. Os componentes pesados (`document-viewer`, `rich-text-editor`, `chart`, `widget-grid`) são subcaminhos próprios, para não engordar quem não usa.
+
+**Publicação:** uma tag `vX.Y.Z` empurrada para o repositório (`git push origin vX.Y.Z`) dispara o `.github/workflows/publish.yml`, que builda o pacote, roda o `verify:pack` e publica com `npm publish --provenance --access public`, depois de conferir que a tag bate com a `version` do `package.json`. Com o _trusted publishing_ do npm configurado para este repositório, o workflow dispensa o segredo `NPM_TOKEN`.
+
+### CLI (`rendra`)
+
+Três comandos. Com o pacote instalado: `npx rendra <comando>` (ou `rendra` direto, se instalado global). Sem instalar o pacote no projeto: `npx @rendra-ui/web <comando>` roda a mesma CLI direto do registry:
+
+```bash
+rendra codigos                    # lista o catálogo de códigos de componente
+rendra auditar [pasta]            # regras genéricas de DESIGN_RULES.md no projeto de destino
+rendra trocar <DE> <PARA> --dry-run   # simula a troca de uma variante do catálogo pela outra
+```
+
+`rendra auditar` aplica sete regras estáticas, sem IA (cor fixa, valor arbitrário, estilo inline, fonte fixa, `100vh`, degrau fora da escala, raio fixo), o mesmo tipo de checagem do `check:rules` deste repositório, aplicado a qualquer projeto. `rendra trocar` reescreve a prop literal que distingue duas variantes do catálogo (`ABA-001` para `ABA-002`, por exemplo), sempre com `--dry-run` primeiro: um elemento sem a prop conta como a variante padrão do componente (troca também esse caso, inserindo ou removendo a prop conforme o lado); prop dinâmica (`variant={x}`) nunca é reescrita, só listada para revisão manual, e troca entre componentes diferentes nunca edita, só aponta onde o componente aparece. Só `rendra trocar` precisa do `typescript` instalado no projeto de destino (`peerDependency` opcional do pacote), para ler e reescrever o JSX; sem ele, avisa e sai com erro.
+
+### Skill de migração parcial
+
+[`skills/rendra-migracao-parcial/SKILL.md`](skills/rendra-migracao-parcial/SKILL.md), lida por Claude Code, Codex e Cursor: migra um sistema existente em três níveis (tokens, padrões, componentes), escolhidos por você, usando `rendra auditar` e `rendra trocar` por baixo.
+
+### Códigos de modelo e de componente
+
+- **Código de modelo** (`T1-C4-M5`: tema, cores e menu): a tabela completa está no item 3.0 do [`docs/BRIEFING_MODELO.md`](docs/BRIEFING_MODELO.md) e em `src/config/presets.ts`. Diz de uma vez qual template, qual paleta e qual posição de menu usar.
+- **Código de componente** (`ABA-001`, `BTN-006`...): um por componente e por variante visual relevante, em `src/catalog/components.ts`. Aparece na vitrine (`/componentes`), no `data-rendra` do elemento raiz, no `registry.json` e na saída de `rendra codigos`.
 
 ---
 
@@ -364,7 +412,7 @@ Sim, de dois jeitos. No build: cada marca é uma entrada de 4 cores e um degrad�
 Sim. O [`AGENTS.md`](AGENTS.md) (e o `CLAUDE.md` e o `GEMINI.md`) conduz qualquer agente de IA por um briefing guiado, as regras de design e a ordem de migração; o [`docs/PROMPT_MIGRACAO.md`](docs/PROMPT_MIGRACAO.md) traz o prompt pronto.
 
 **Qual a diferença para um template admin comum?**
-As regras são verificadas por máquina: valor fora da escala, cor fixa, botão solto e texto de instrução no corpo da tela quebram o `check:rules`, e layout, acessibilidade e regressão visual rodam no CI a cada Pull Request.
+As regras são verificadas por máquina: valor fora da escala, cor fixa, botão solto e texto de instrução no corpo da tela ou orientação de campo acima do limite da largura quebram o `check:rules`, e layout, acessibilidade e regressão visual rodam no CI a cada Pull Request.
 
 ## Autor
 

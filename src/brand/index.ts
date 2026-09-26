@@ -24,5 +24,18 @@ export const availablePalettes: PaletteConfig[] = paletteSeeds.map((s) => ({
 export type { BrandConfig, FeedbackType, PaletteConfig, SvgComponent } from './types'
 export { applyPalette, contrast, createPalette, type PaletteSeeds } from './palette'
 export { paletteSeeds } from './palettes'
-export { BrandProvider } from './brand-provider'
+export { BrandProvider, type BrandStorage } from './brand-provider'
 export { useBrand } from './use-brand'
+export {
+  createTheme,
+  TOKEN_KEYS,
+  type ThemeMode,
+  type ThemeSeedInput,
+  type ThemeSemanticTokens,
+  type ThemeExplicitInput,
+  type ThemeInput,
+  type ThemeContrastCheck,
+  type ThemeAdjustment,
+  type ThemeResult,
+} from './theme'
+export { applyTheme, type ApplyThemeOptions } from './apply-theme'
