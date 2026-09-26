@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Menu } from 'lucide-react'
 import { useCurrentPath, useRendraLink } from '@/components/rendra-provider'
 import { TooltipProvider } from '@/components/ui/tooltip'
-import { useRouteMeta } from '@/hooks/use-route-meta'
 import { cn } from '@/lib/cn'
 import { CommandSearch } from './command-search'
 import { Header } from './header'
@@ -108,6 +107,8 @@ export interface AppShellProps {
  * Estrutura da aplicação. Uma única área de rolagem: o <main>.
  * Nunca importa @/config nem um roteador: recebe o menu, o layout, o usuário e as
  * notificações por prop; quem navega é o RendraProvider (useCurrentPath/useRendraLink).
+ * Título da aba e meta description (SEO) não são responsabilidade do AppShell: o
+ * boilerplate (src/app/app-layout.tsx) aplica isso com useRouteMeta, que lê @/config/seo.
  */
 export function AppShell({
   navigation,
@@ -129,7 +130,6 @@ export function AppShell({
   const [footerSlot, setFooterSlot] = useState<HTMLElement | null>(null)
   const [pageHelp, setPageHelp] = useState<ReactNode>(null)
   const pathname = useCurrentPath()
-  useRouteMeta()
   const mainRef = useRef<HTMLElement>(null)
 
   const layoutPropKey = JSON.stringify(layoutProp ?? {})
