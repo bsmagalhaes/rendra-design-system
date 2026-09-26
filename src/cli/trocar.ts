@@ -13,6 +13,7 @@
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import { join, relative, sep } from 'node:path'
 import type * as TSNamespace from 'typescript'
+import type { ComponentCatalogEntry } from '../catalog/components'
 import { getCatalogEntry } from '../catalog/components'
 
 export type TypeScriptModule = typeof TSNamespace
@@ -93,14 +94,21 @@ function findElements(
 
 type AttrLiteral =
   | { kind: 'absent' }
-  | { kind: 'shorthand' }
-  | { kind: 'literal'; value: string | number | boolean; node: TSNamespace.Node }
+  | { kind: 'shorthand'; attrNode: TSNamespace.JsxAttribute }
+  | {
+      kind: 'literal'
+      value: string | number | boolean
+      node: TSNamespace.Node
+      attrNode: TSNamespace.JsxAttribute
+    }
   | { kind: 'dynamic' }
 
 /**
  * Valor de um atributo JSX (`name`) do elemento: ausente, presente sem valor (shorthand,
  * `true` implícito), literal (`attr="x"` ou `attr={"x"}`/`attr={true}`/`attr={7}`) ou dinâmico
  * (qualquer outra expressão dentro de `{...}`, ex.: identificador, chamada, condicional).
+ * `attrNode` (o atributo inteiro, não só o valor) vai junto sempre que a prop existe de
+ * verdade no elemento: é o que uma troca para a variante padrão remove por completo.
  */
 function readAttrLiteral(
   ts: TypeScriptModule,
@@ -111,46 +119,85 @@ function readAttrLiteral(
     (p): p is TSNamespace.JsxAttribute => ts.isJsxAttribute(p) && p.name.getText() === name,
   )
   if (!attr) return { kind: 'absent' }
-  if (!attr.initializer) return { kind: 'shorthand' }
+  if (!attr.initializer) return { kind: 'shorthand', attrNode: attr }
   if (ts.isStringLiteral(attr.initializer)) {
-    return { kind: 'literal', value: attr.initializer.text, node: attr.initializer }
+    return { kind: 'literal', value: attr.initializer.text, node: attr.initializer, attrNode: attr }
   }
   if (ts.isJsxExpression(attr.initializer) && attr.initializer.expression) {
     const expr = attr.initializer.expression
-    if (ts.isStringLiteralLike(expr)) return { kind: 'literal', value: expr.text, node: expr }
-    if (expr.kind === ts.SyntaxKind.TrueKeyword) return { kind: 'literal', value: true, node: expr }
-    if (expr.kind === ts.SyntaxKind.FalseKeyword)
-      return { kind: 'literal', value: false, node: expr }
-    if (ts.isNumericLiteral(expr)) return { kind: 'literal', value: Number(expr.text), node: expr }
+    if (ts.isStringLiteralLike(expr)) {
+      return { kind: 'literal', value: expr.text, node: expr, attrNode: attr }
+    }
+    if (expr.kind === ts.SyntaxKind.TrueKeyword) {
+      return { kind: 'literal', value: true, node: expr, attrNode: attr }
+    }
+    if (expr.kind === ts.SyntaxKind.FalseKeyword) {
+      return { kind: 'literal', value: false, node: expr, attrNode: attr }
+    }
+    if (ts.isNumericLiteral(expr)) {
+      return { kind: 'literal', value: Number(expr.text), node: expr, attrNode: attr }
+    }
     return { kind: 'dynamic' }
   }
   return { kind: 'dynamic' }
 }
 
-type Classification =
-  | { status: 'dynamic' }
-  | { status: 'no-match' }
-  | { status: 'match'; edits: { key: string; node: TSNamespace.Node }[] }
+/**
+ * Uma prop a tratar depois de confirmado que o elemento usa a variante DE: `attrNode`
+ * ausente quer dizer que a prop nem existia no elemento (só possível quando DE é a variante
+ * padrão do componente, `isDefault`). Trocar para uma PARA que não é padrão precisa inserir
+ * a prop; trocar para uma PARA que também é padrão não precisa fazer nada.
+ */
+interface PropEdit {
+  key: string
+  node?: TSNamespace.Node
+  attrNode?: TSNamespace.JsxAttribute
+}
 
-/** O elemento usa a variante DE (todo variantProps bate, nenhum é dinâmico)? */
+type Classification =
+  { status: 'dynamic' } | { status: 'no-match' } | { status: 'match'; edits: PropEdit[] }
+
+/**
+ * O elemento usa a variante DE? Todo `variantProps` bate (ou, se `deEntry.isDefault`, a prop
+ * pode estar simplesmente ausente: o elemento sem a prop já é a variante padrão), e nenhum é
+ * dinâmico.
+ */
 function classifyElement(
   ts: TypeScriptModule,
   opening: OpeningLike,
-  variantProps: Record<string, string | number | boolean>,
+  deEntry: ComponentCatalogEntry,
 ): Classification {
-  const edits: { key: string; node: TSNamespace.Node }[] = []
-  for (const [key, expected] of Object.entries(variantProps)) {
+  const edits: PropEdit[] = []
+  for (const [key, expected] of Object.entries(deEntry.variantProps)) {
     const found = readAttrLiteral(ts, opening.attributes, key)
     if (found.kind === 'dynamic') return { status: 'dynamic' }
-    if (found.kind === 'absent') return { status: 'no-match' }
+    if (found.kind === 'absent') {
+      if (!deEntry.isDefault) return { status: 'no-match' }
+      edits.push({ key }) // Sem attrNode: a prop precisa ser inserida (ou nada, se PARA também for padrão).
+      continue
+    }
     if (found.kind === 'shorthand') {
       if (expected !== true) return { status: 'no-match' }
       continue // Shorthand (true implícito) já é o valor esperado: nada a reescrever nesta prop.
     }
     if (found.value !== expected) return { status: 'no-match' }
-    edits.push({ key, node: found.node })
+    edits.push({ key, node: found.node, attrNode: found.attrNode })
   }
   return { status: 'match', edits }
+}
+
+/**
+ * O trecho a remover para apagar `attrNode` por completo, inclusive o espaço (ou quebra de
+ * linha) logo antes dele: sem isso, remover só o atributo deixaria um espaço a mais entre a
+ * tag anterior e a próxima prop (ou o `>`/`/>` de fechamento).
+ */
+function attributeRemovalSpan(
+  sourceFile: TSNamespace.SourceFile,
+  attrNode: TSNamespace.JsxAttribute,
+): { start: number; end: number } {
+  let start = attrNode.getStart(sourceFile)
+  while (start > 0 && /\s/.test(sourceFile.text[start - 1]!)) start--
+  return { start, end: attrNode.getEnd() }
 }
 
 interface TextEdit {
@@ -210,7 +257,7 @@ export function trocar(options: TrocarOptions): TrocarResultado {
         continue
       }
 
-      const classification = classifyElement(ts, opening, deEntry.variantProps)
+      const classification = classifyElement(ts, opening, deEntry)
       if (classification.status === 'dynamic') {
         paraRevisao.push({ file: rel, line, motivo: 'prop-dinamica', source })
         continue
@@ -219,15 +266,40 @@ export function trocar(options: TrocarOptions): TrocarResultado {
 
       let editedAny = false
       for (const edit of classification.edits) {
+        // PARA é a variante padrão do componente: a prop sai por completo (decisão do
+        // Lote B, documentada no CHANGELOG e no README), nunca grava o valor padrão por
+        // extenso. Sem attrNode (a prop já não existia, DE também era padrão), não há nada a
+        // remover: o elemento já está no formato de PARA.
+        if (paraEntry.isDefault) {
+          if (edit.attrNode) {
+            const span = attributeRemovalSpan(sourceFile, edit.attrNode)
+            fileEdits.push({ start: span.start, end: span.end, replacement: '' })
+            editedAny = true
+          }
+          continue
+        }
+
         const novo = paraEntry.variantProps[edit.key]
         // Só reescreve prop de valor string (variant, type...): as únicas usadas para
         // distinguir variante no catálogo hoje. Boolean/número ficam fora deste lote.
         if (typeof novo !== 'string') continue
-        const start = edit.node.getStart(sourceFile)
-        const end = edit.node.getEnd()
-        const original = sourceFile.text.slice(start, end)
-        const quote = original[0] === '"' || original[0] === "'" ? original[0] : '"'
-        fileEdits.push({ start, end, replacement: `${quote}${novo}${quote}` })
+
+        if (!edit.node) {
+          // DE era a variante padrão (a prop não existia): insere a prop de PARA logo depois
+          // do nome da tag, antes de qualquer outro atributo existente.
+          const insertPos = opening.tagName.getEnd()
+          fileEdits.push({
+            start: insertPos,
+            end: insertPos,
+            replacement: ` ${edit.key}="${novo}"`,
+          })
+        } else {
+          const start = edit.node.getStart(sourceFile)
+          const end = edit.node.getEnd()
+          const original = sourceFile.text.slice(start, end)
+          const quote = original[0] === '"' || original[0] === "'" ? original[0] : '"'
+          fileEdits.push({ start, end, replacement: `${quote}${novo}${quote}` })
+        }
         editedAny = true
       }
       if (editedAny) reescritos.push({ file: rel, line })

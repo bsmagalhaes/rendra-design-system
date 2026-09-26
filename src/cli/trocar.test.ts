@@ -52,6 +52,45 @@ describe('trocar', () => {
     }
   })
 
+  it('elemento sem a prop (variante padrão implícita): ABA-001 -> ABA-002 insere a prop', () => {
+    const dir = copyFixture('troca-prop-ausente')
+    try {
+      const antes = readFileSync(join(dir, 'src/pagina.tsx'), 'utf8')
+      expect(antes).toContain('<Tabs>Conteúdo</Tabs>')
+
+      const resultado = trocar({ ts, cwd: dir, de: 'ABA-001', para: 'ABA-002' })
+
+      expect(resultado.reescritos).toEqual([{ file: 'src/pagina.tsx', line: 6 }])
+      expect(resultado.paraRevisao).toHaveLength(0)
+
+      const depois = readFileSync(join(dir, 'src/pagina.tsx'), 'utf8')
+      expect(depois).toContain('<Tabs variant="pill">Conteúdo</Tabs>')
+      expect(depois).toBe(antes.replace('<Tabs>', '<Tabs variant="pill">'))
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('troca para a variante padrão (ABA-002 -> ABA-001) remove a prop em vez de escrever o valor padrão', () => {
+    const dir = copyFixture('troca-para-padrao')
+    try {
+      const antes = readFileSync(join(dir, 'src/pagina.tsx'), 'utf8')
+      expect(antes).toContain('variant="pill"')
+
+      const resultado = trocar({ ts, cwd: dir, de: 'ABA-002', para: 'ABA-001' })
+
+      expect(resultado.reescritos).toEqual([{ file: 'src/pagina.tsx', line: 6 }])
+      expect(resultado.paraRevisao).toHaveLength(0)
+
+      const depois = readFileSync(join(dir, 'src/pagina.tsx'), 'utf8')
+      expect(depois).toContain('<Tabs>Conteúdo</Tabs>')
+      expect(depois).not.toContain('variant=')
+      expect(depois).toBe(antes.replace(' variant="pill"', ''))
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
   it('prop dinâmica (variant={x}) nunca é reescrita, só entra em paraRevisao', () => {
     const dir = join(FIXTURES, 'troca-prop-dinamica')
     const antes = readFileSync(join(dir, 'src/pagina.tsx'), 'utf8')

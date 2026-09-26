@@ -32,7 +32,7 @@ const ROOT = process.cwd()
 const SRC = join(ROOT, 'src')
 // src/cli entra na mesma exceção de src/brand e src/styles: não é tela nem componente, é onde
 // as próprias regras genéricas moram (src/cli/auditar.ts), com o nome e o texto de cada uma
-// escritos por extenso em regex e comentário (ex.: a palavra "100vh" no id da regra) — sem a
+// escritos por extenso em regex e comentário (ex.: a palavra "100vh" no id da regra). Sem a
 // exceção, o verificador acusaria a si mesmo.
 const ALLOWED_DIRS = [join(SRC, 'brand'), join(SRC, 'styles'), join(SRC, 'cli')]
 
