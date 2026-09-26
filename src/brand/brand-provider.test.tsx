@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { fireEvent, render, screen } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { brandConfig } from './brand.config'
 import { BrandProvider, type BrandStorage } from './brand-provider'
 import { createTheme } from './theme'
@@ -10,6 +10,17 @@ import type { BrandConfig, PaletteConfig } from './types'
 // Isolamento entre testes: várias descrições abaixo usam o localStorage real (sem `storage`
 // custom), e o provider persiste mesmo no modo controlado (ver setBrandId/setPaletteId/setMode).
 beforeEach(() => localStorage.clear())
+// O BrandProvider escreve direto em document.documentElement (data-brand, data-palette,
+// data-label, data-shape, classe dark): isso não é desfeito pelo cleanup do Testing Library
+// (que só desmonta a árvore React), então cada teste que confere esse efeito visível precisa
+// de um <html> limpo antes do próximo.
+afterEach(() => {
+  document.documentElement.className = ''
+  delete document.documentElement.dataset.brand
+  delete document.documentElement.dataset.shape
+  delete document.documentElement.dataset.label
+  delete document.documentElement.dataset.palette
+})
 
 /* Estilo do rótulo (etapa 1.2.0-alpha.5): o BrandProvider escreve data-label no <html>. */
 
@@ -49,6 +60,9 @@ const outraMarca: BrandConfig = { ...brandConfig, id: 'outra', productName: 'Out
 const palettesFixture: PaletteConfig[] = [
   { id: brandConfig.id, name: brandConfig.productName, sidebarLogo: brandConfig.sidebarLogo },
   { id: outraMarca.id, name: outraMarca.productName, sidebarLogo: outraMarca.sidebarLogo },
+  // Paleta sem correspondência em nenhuma marca: usada para provar o guard sem depender da
+  // coincidência de que trocar a marca também levaria a essa mesma paleta pelo fallback.
+  { id: 'parceiro-y', name: 'Parceiro Y', sidebarLogo: 'light' },
 ]
 
 /** Consumidor mínimo, com os dados e as ações do contexto expostos por texto e por botão. */
@@ -115,24 +129,24 @@ describe('theme (C5): aplica sem exigir id cadastrado em palettes.ts', () => {
 })
 
 describe('storage plugável (C5)', () => {
-  it('storage={false} não persiste nada (nem lê, nem escreve)', () => {
+  it('storage={false} não persiste nada (nem lê, nem escreve), mas o efeito visível continua (classe dark no html)', () => {
     const spy = vi.spyOn(Storage.prototype, 'setItem')
     render(
-      <BrandProvider
-        brands={[brandConfig]}
-        defaultBrand={brandConfig}
-        forcedMode="light"
-        storage={false}
-      >
+      <BrandProvider brands={[brandConfig]} defaultBrand={brandConfig} storage={false}>
         <Consumer />
       </BrandProvider>,
     )
     fireEvent.click(screen.getByText('modo escuro'))
+    // Efeito real, não só a chamada do spy: nada foi de fato escrito no localStorage.
     expect(spy).not.toHaveBeenCalled()
+    expect(localStorage.getItem('ui-mode')).toBeNull()
+    // A troca de modo continua visível (não é a persistência que liga a classe): sem
+    // forcedMode, depois de setMode('dark') o modo resolvido só pode ser 'dark'.
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
     spy.mockRestore()
   })
 
-  it('storage customizado é chamado na leitura inicial e nas trocas', () => {
+  it('storage customizado é chamado na leitura inicial e nas trocas, e o valor persistido reflete a troca de verdade', () => {
     const store = new Map<string, string>()
     const custom: BrandStorage = {
       get: vi.fn((key: string) => store.get(key) ?? null),
@@ -141,12 +155,7 @@ describe('storage plugável (C5)', () => {
       }),
     }
     render(
-      <BrandProvider
-        brands={[brandConfig]}
-        defaultBrand={brandConfig}
-        forcedMode="light"
-        storage={custom}
-      >
+      <BrandProvider brands={[brandConfig]} defaultBrand={brandConfig} storage={custom}>
         <Consumer />
       </BrandProvider>,
     )
@@ -155,6 +164,12 @@ describe('storage plugável (C5)', () => {
     expect(custom.get).toHaveBeenCalledWith('ui-palette')
     fireEvent.click(screen.getByText('modo escuro'))
     expect(custom.set).toHaveBeenCalledWith('ui-mode', 'dark')
+    // Efeito de verdade no backing store informado, não só a chamada do mock.
+    expect(store.get('ui-mode')).toBe('dark')
+    // E o efeito visível no <html>, na mesma troca.
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
+    // Nada foi escrito no localStorage real: o storage customizado substituiu, não somou.
+    expect(localStorage.getItem('ui-mode')).toBeNull()
   })
 })
 
@@ -177,27 +192,52 @@ describe('modo controlado (brandId, paletteId, mode)', () => {
     expect(onBrandIdChange).toHaveBeenCalledWith(outraMarca.id)
     // Continua no brand original: quem decide a mudança de verdade é o pai (prop controlada).
     expect(screen.getByTestId('brand-id').textContent).toBe(brandConfig.id)
+    // Efeito visível no <html>: data-brand também continua o original, não o pedido no clique.
+    expect(document.documentElement.dataset.brand).toBe(brandConfig.id)
   })
 
   it('paletteId controlado: setBrandId não zera a paleta por conta própria, só chama onPaletteIdChange', () => {
     const onPaletteIdChange = vi.fn()
-    render(
+    const { rerender } = render(
       <BrandProvider
         brands={[brandConfig, outraMarca]}
         palettes={palettesFixture}
         defaultBrand={brandConfig}
         forcedMode="light"
-        paletteId={outraMarca.id}
+        paletteId="parceiro-y"
         onPaletteIdChange={onPaletteIdChange}
       >
         <Consumer />
       </BrandProvider>,
     )
-    expect(screen.getByTestId('palette-id').textContent).toBe(outraMarca.id)
+    expect(screen.getByTestId('palette-id').textContent).toBe('parceiro-y')
+    expect(document.documentElement.dataset.palette).toBe('parceiro-y')
     fireEvent.click(screen.getByText('trocar marca'))
     expect(onPaletteIdChange).toHaveBeenCalledWith(null)
-    // A paleta controlada continua a que o pai informou: não foi zerada por dentro do provider.
-    expect(screen.getByTestId('palette-id').textContent).toBe(outraMarca.id)
+    // Efeito visível imediato: a paleta controlada continua a que o pai informou, não foi
+    // zerada por dentro do provider (isso sozinho já seria verdade mesmo com o guard quebrado,
+    // porque paletteId controlado sempre espelha a prop). data-palette no <html> também não mudou.
+    expect(screen.getByTestId('palette-id').textContent).toBe('parceiro-y')
+    expect(document.documentElement.dataset.palette).toBe('parceiro-y')
+
+    // Prova de verdade do guard: se o provider tivesse chamado setPaletteIdState(null) por
+    // dentro (guard quebrado), esse null ficaria "escondido" no estado interno enquanto
+    // controlado. Ao devolver o controle ao provider (o pai reage a onPaletteIdChange
+    // removendo a prop, como o padrão de "handoff" de componente controlado sugere), o estado
+    // interno voltaria a ficar visível: com o guard intacto, ele nunca foi tocado e continua
+    // "parceiro-y" (o valor lido na montagem, sem relação com nenhuma marca); com o guard
+    // quebrado, apareceria null e cairia no fallback da marca ("outra", divergente).
+    rerender(
+      <BrandProvider
+        brands={[brandConfig, outraMarca]}
+        palettes={palettesFixture}
+        defaultBrand={brandConfig}
+        forcedMode="light"
+      >
+        <Consumer />
+      </BrandProvider>,
+    )
+    expect(screen.getByTestId('palette-id').textContent).toBe('parceiro-y')
   })
 
   it('mode controlado: onModeChange é chamado; o modo exibido só muda se o pai atualizar a prop', () => {
@@ -215,6 +255,8 @@ describe('modo controlado (brandId, paletteId, mode)', () => {
     fireEvent.click(screen.getByText('modo escuro'))
     expect(onModeChange).toHaveBeenCalledWith('dark')
     expect(screen.getByTestId('mode').textContent).toBe('light')
+    // Efeito visível no <html>: sem o pai atualizar a prop `mode`, a classe dark não liga.
+    expect(document.documentElement.classList.contains('dark')).toBe(false)
   })
 
   it('sem controle, setPaletteId(null) volta às cores do próprio modelo', () => {
