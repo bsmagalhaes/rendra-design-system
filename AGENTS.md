@@ -66,7 +66,7 @@ Proponha um plano em etapas e espere a aprovação. A ordem de referência:
 
 **Projeto novo**
 
-1. Marca: `src/styles/theme.css`, `src/styles/themes.css`, `src/brand/brand.config.ts` e `src/brand/assets`, conforme o briefing (modelo, paleta, modo de cor). Confira `/tokens`: nenhum selo de contraste pode marcar "falha".
+1. Marca: `src/styles/theme.css`, `src/styles/themes.css`, `src/brand/palettes.ts`, `src/brand/brand.config.ts` e `src/brand/assets`, conforme o briefing (modelo, paleta, modo de cor). Confira `/tokens`: nenhum selo de contraste pode marcar "falha".
 2. Menu (`src/config/navigation.ts`) e layout do AppShell, nas props de `src/app/app-layout.tsx` (com cada valor escolhido no bloco 4 do briefing), montado dentro do `<RendraRouterBridge>` de `src/routes.tsx`; rotas em `src/routes.tsx` e `src/config/routes-list.ts`.
 3. Telas, em ordem de prioridade, partindo das telas base de `src/pages`.
 4. Limpeza do que é só demonstração (`src/mocks`, telas de exemplo sem uso, templates alternativos não usados).
