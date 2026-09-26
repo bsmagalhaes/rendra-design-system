@@ -19,6 +19,19 @@ describe('Field', () => {
     expect(container.querySelector('[data-rendra="FLD-002"]')).toBeInTheDocument()
   })
 
+  it('rótulo e ajuda usam os tokens de estilo do campo, com o asterisco visível', () => {
+    const { container } = renderApp(
+      <Field label="Nome" help="Como no documento." required>
+        <Input />
+      </Field>,
+    )
+    const label = container.querySelector('[data-rendra="FLD-002"]')
+    expect(label).toHaveClass('text-label', 'text-label-foreground', 'label-case')
+    expect(label).not.toHaveClass('text-sm')
+    expect(screen.getByText('*')).not.toHaveClass('sr-only')
+    expect(screen.getByText('Como no documento.')).toHaveClass('text-help', 'text-help-foreground')
+  })
+
   it('erro substitui a ajuda e marca o campo como inválido', () => {
     renderApp(
       <Field label="E-mail" help="Usado para entrar." error="E-mail inválido">
