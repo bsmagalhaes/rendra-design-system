@@ -1,7 +1,7 @@
 import { ChevronDown, ChevronRight, LogOut, X } from 'lucide-react'
 import { Collapsible, Dialog, VisuallyHidden } from 'radix-ui'
 import { useEffect, useRef, useState } from 'react'
-import { useBrand } from '@/brand'
+import { useBrand } from '@/brand/use-brand'
 import { useCurrentPath, useRendraLink } from '@/components/rendra-provider'
 import { Avatar } from '@/components/ui/avatar'
 import { BrandLogo } from '@/components/ui/brand-logo'

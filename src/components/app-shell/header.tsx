@@ -13,7 +13,7 @@ import {
   Sun,
 } from 'lucide-react'
 import { useLayoutEffect, useRef, useState } from 'react'
-import { useBrand } from '@/brand'
+import { useBrand } from '@/brand/use-brand'
 import type { ColorMode } from '@/brand/brand-context'
 import { useCurrentPath, useRendraBreadcrumbs, useRendraLink } from '@/components/rendra-provider'
 import { Avatar } from '@/components/ui/avatar'

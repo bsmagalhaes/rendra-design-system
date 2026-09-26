@@ -3,9 +3,55 @@
   "private": true,
   "version": "1.1.0",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
+  "bin": {},
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "dist/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./router-bridge": {
+      "types": "./dist/types/rendra-router-bridge.d.ts",
+      "import": "./dist/router-bridge.js"
+    },
+    "./document-viewer": {
+      "types": "./dist/types/document-viewer.d.ts",
+      "import": "./dist/document-viewer.js"
+    },
+    "./rich-text-editor": {
+      "types": "./dist/types/rich-text-editor.d.ts",
+      "import": "./dist/rich-text-editor.js"
+    },
+    "./chart": {
+      "types": "./dist/types/chart.d.ts",
+      "import": "./dist/chart.js"
+    },
+    "./widget-grid": {
+      "types": "./dist/types/widget-grid.d.ts",
+      "import": "./dist/widget-grid.js"
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./base.css": "./dist/base.css",
+    "./components.css": "./dist/components.css",
+    "./package.json": "./package.json"
+  },
+  "peerDependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "radix-ui": "^1.6.7"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:lib": "vite build --config vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/fix-dts-aliases.mjs && node scripts/build-lib.mjs",
+    "verify:pack": "node scripts/verify-pack.mjs",
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "lint": "eslint .",
@@ -29,7 +75,6 @@
     "palettes:build": "node scripts/build-palettes.mjs"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.9.1",
     "@tanstack/react-table": "^8.21.3",
     "@tiptap/extension-image": "^3.31.3",
     "@tiptap/extension-placeholder": "^3.31.3",
@@ -51,7 +96,6 @@
     "react-dom": "^19.3.0",
     "react-grid-layout": "^2.2.4",
     "react-hook-form": "^7.88.0",
-    "react-router": "^8.4.0",
     "recharts": "^3.10.1",
     "sonner": "^2.0.8",
     "tailwind-merge": "^3.7.0",
@@ -63,6 +107,7 @@
     "@fontsource/dm-sans": "^5.3.0",
     "@fontsource/inter": "^5.3.0",
     "@fontsource/poppins": "^5.3.0",
+    "@hookform/resolvers": "^5.9.1",
     "@playwright/test": "^1.63.0",
     "@storybook/addon-a11y": "^10.6.0",
     "@storybook/addon-docs": "^10.6.0",
@@ -84,6 +129,7 @@
     "jsdom": "^30.1.1",
     "prettier": "^3.9.9",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "react-router": "^8.4.0",
     "storybook": "^10.6.0",
     "tailwindcss": "^4.3.3",
     "tw-animate-css": "^1.4.0",

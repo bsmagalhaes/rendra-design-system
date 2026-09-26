@@ -1,6 +1,6 @@
 import { toast as sonner, Toaster as SonnerToaster } from 'sonner'
-import type { FeedbackType } from '@/brand'
-import { useBrand } from '@/brand'
+import type { FeedbackType } from '@/brand/types'
+import { useBrand } from '@/brand/use-brand'
 import { BrandFeedbackIcon } from '@/components/ui/brand-feedback-icon'
 import { useBreakpoint } from '@/hooks/use-breakpoint'
 import { cn } from '@/lib/cn'

@@ -1,7 +1,8 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 import { X } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { useBrand, type FeedbackType } from '@/brand'
+import { useBrand } from '@/brand/use-brand'
+import type { FeedbackType } from '@/brand/types'
 import { BrandFeedbackIcon } from '@/components/ui/brand-feedback-icon'
 import { cn } from '@/lib/cn'
 
