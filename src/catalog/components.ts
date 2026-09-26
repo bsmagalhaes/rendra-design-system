@@ -308,6 +308,15 @@ export const CATALOG: ComponentCatalogEntry[] = [
     variantProps: {},
     whenToUse: 'Para uma lista de opções fixas com "selecionar todos".',
   },
+  // ---------------------------------------------------------------- color-picker
+  {
+    code: 'COR-001',
+    name: 'Seletor de cor',
+    component: 'ColorPicker',
+    file: 'components/ui/color-picker.tsx',
+    variantProps: {},
+    whenToUse: 'Para escolher uma cor entre amostras da marca ou uma cor livre por hexadecimal.',
+  },
   // ---------------------------------------------------------------- data-toolbar
   {
     code: 'DTB-001',
@@ -577,6 +586,16 @@ export const CATALOG: ComponentCatalogEntry[] = [
     file: 'components/ui/slider.tsx',
     variantProps: {},
     whenToUse: 'Para escolher um número ou uma faixa dentro de um intervalo, arrastando.',
+  },
+  // ---------------------------------------------------------------- spinner
+  {
+    code: 'SPIN-001',
+    name: 'Indicador de carregamento',
+    component: 'Spinner',
+    file: 'components/ui/spinner.tsx',
+    variantProps: {},
+    whenToUse:
+      'Para um carregamento breve dentro de um botão, campo ou lista, sem barra de progresso.',
   },
   // ---------------------------------------------------------------- stat-card
   {

@@ -50,6 +50,11 @@
           "target": "src/hooks/use-lookup.ts"
         },
         {
+          "path": "src/hooks/use-reduced-motion.ts",
+          "type": "registry:file",
+          "target": "src/hooks/use-reduced-motion.ts"
+        },
+        {
           "path": "src/hooks/use-route-meta.ts",
           "type": "registry:file",
           "target": "src/hooks/use-route-meta.ts"
@@ -347,7 +352,7 @@
       "type": "registry:item",
       "title": "breadcrumb",
       "description": "Componente breadcrumb do Rendra Design System.",
-      "dependencies": ["lucide-react@^1.47.0", "react-router@^8.4.0"],
+      "dependencies": ["lucide-react@^1.47.0"],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
@@ -386,14 +391,11 @@
       "type": "registry:item",
       "title": "button",
       "description": "Componente button do Rendra Design System.",
-      "dependencies": [
-        "class-variance-authority@^0.7.1",
-        "lucide-react@^1.47.0",
-        "radix-ui@^1.6.7"
-      ],
+      "dependencies": ["class-variance-authority@^0.7.1", "radix-ui@^1.6.7"],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/spinner.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
       ],
       "files": [
@@ -516,6 +518,27 @@
       "meta": { "codes": ["CHK-001", "CHK-002"] }
     },
     {
+      "name": "color-picker",
+      "type": "registry:item",
+      "title": "color-picker",
+      "description": "Componente color-picker do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/picker-panel.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/color-picker.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/color-picker.tsx"
+        }
+      ],
+      "meta": { "codes": ["COR-001"] }
+    },
+    {
       "name": "data-toolbar",
       "type": "registry:item",
       "title": "data-toolbar",
@@ -629,7 +652,7 @@
       "type": "registry:item",
       "title": "error-page",
       "description": "Componente error-page do Rendra Design System.",
-      "dependencies": ["lucide-react@^1.47.0", "react-router@^8.4.0"],
+      "dependencies": ["lucide-react@^1.47.0"],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
@@ -735,7 +758,9 @@
       "description": "Componente input do Rendra Design System.",
       "dependencies": ["imask@^7.6.1", "lucide-react@^1.47.0"],
       "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/spinner.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
       ],
       "files": [
@@ -776,7 +801,7 @@
       "type": "registry:item",
       "title": "list",
       "description": "Componente list do Rendra Design System.",
-      "dependencies": ["lucide-react@^1.47.0", "react-router@^8.4.0"],
+      "dependencies": ["lucide-react@^1.47.0"],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
@@ -1007,6 +1032,7 @@
         "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/picker-panel.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/spinner.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
       ],
       "files": [
@@ -1076,6 +1102,25 @@
       "meta": { "codes": ["SLD-001"] }
     },
     {
+      "name": "spinner",
+      "type": "registry:item",
+      "title": "spinner",
+      "description": "Componente spinner do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/spinner.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/spinner.tsx"
+        }
+      ],
+      "meta": { "codes": ["SPIN-001"] }
+    },
+    {
       "name": "stat-card",
       "type": "registry:item",
       "title": "stat-card",
@@ -1124,8 +1169,7 @@
         "@tanstack/react-table@^8.21.3",
         "date-fns@^4.4.0",
         "lucide-react@^1.47.0",
-        "radix-ui@^1.6.7",
-        "react-router@^8.4.0"
+        "radix-ui@^1.6.7"
       ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/badge.json",
@@ -1625,6 +1669,29 @@
       ]
     },
     {
+      "name": "color-picker-test",
+      "type": "registry:item",
+      "title": "color-picker (teste)",
+      "description": "Testes de comportamento do color-picker, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/color-picker.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/color-picker.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/color-picker.test.tsx"
+        }
+      ]
+    },
+    {
       "name": "data-toolbar-test",
       "type": "registry:item",
       "title": "data-toolbar (teste)",
@@ -1727,7 +1794,11 @@
       "type": "registry:item",
       "title": "error-page (teste)",
       "description": "Testes de comportamento do error-page, com Vitest e Testing Library.",
-      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.1"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/error-page.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
@@ -1787,7 +1858,11 @@
       "type": "registry:item",
       "title": "image-viewer (teste)",
       "description": "Testes de comportamento do image-viewer, com Vitest e Testing Library.",
-      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.1"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/image-viewer.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
@@ -2115,6 +2190,24 @@
           "path": "src/components/ui/slider.test.tsx",
           "type": "registry:file",
           "target": "src/components/ui/slider.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "spinner-test",
+      "type": "registry:item",
+      "title": "spinner (teste)",
+      "description": "Testes de comportamento do spinner, com Vitest e Testing Library.",
+      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.1"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/spinner.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/spinner.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/spinner.test.tsx"
         }
       ]
     },

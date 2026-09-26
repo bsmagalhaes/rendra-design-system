@@ -10,4 +10,11 @@ describe('Progress', () => {
     expect(screen.getByText('40%')).toBeInTheDocument()
     expect(container.querySelector('[data-rendra="PROG-001"]')).toBeInTheDocument()
   })
+
+  it('indeterminado desliza (progress-slide) e não usa mais o animate-pulse', () => {
+    const { container } = renderApp(<Progress value={null} label="Importando" />)
+    const indicator = container.querySelector('[role="progressbar"] > *')
+    expect(indicator).toHaveClass('progress-slide')
+    expect(indicator).not.toHaveClass('animate-pulse')
+  })
 })

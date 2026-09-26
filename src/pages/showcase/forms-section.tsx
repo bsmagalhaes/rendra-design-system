@@ -5,7 +5,9 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Grid, Inline, Stack } from '@/components/layout'
 import { ActionBar } from '@/components/ui/action-bar'
+import { COLOR_PICKER_SWATCHES } from '@/brand/palette'
 import { Checkbox, CheckboxGroup } from '@/components/ui/checkbox'
+import { ColorPicker } from '@/components/ui/color-picker'
 import { DatePicker, type DateRange } from '@/components/ui/date-picker'
 import { Field, Label } from '@/components/ui/field'
 import { Form, FormField, FormSection } from '@/components/ui/form'
@@ -219,6 +221,9 @@ export function FormsSection() {
   const [band, setBand] = useState([1200, 6400])
   const [checks, setChecks] = useState<string[]>(['email'])
   const [radio, setRadio] = useState('mensal')
+  const [color, setColor] = useState(COLOR_PICKER_SWATCHES[0])
+  const [amountUnit, setAmountUnit] = useState('percent')
+  const [apiKeyEditing, setApiKeyEditing] = useState(false)
 
   return (
     <>
@@ -260,8 +265,8 @@ export function FormsSection() {
       <Demo
         id="input"
         title="Input"
-        description="Um único Input. Máscara, ícone, limpar e senha são props; a máscara já abre o teclado certo no celular (numérico, telefone, decimal)."
-        props="mask (cpf, cnpj, cpfCnpj, phone, cep, date, time, currency, percent), ddi, onDdiChange, ddiOptions, hideDdi, icon, suffix, clearable, type=password, size, invalid, disabled"
+        description="Um único Input. Máscara, ícone, limpar, senha, unidades e valor guardado são props; a máscara já abre o teclado certo no celular (numérico, telefone, decimal)."
+        props="mask (cpf, cnpj, cpfCnpj, phone, cep, date, time, currency, percent), ddi, onDdiChange, ddiOptions, hideDdi, icon, suffix, clearable, type=password, units, unit, onUnitChange, percentMax, variant=secret, size, invalid, disabled"
         code="CAMP-001"
       >
         <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="fields">
@@ -316,6 +321,46 @@ export function FormsSection() {
             <Input size="md" placeholder="Médio" />
             <Input size="lg" placeholder="Grande" />
           </Stack>
+          <Field label="Com unidades" help="Trocar de unidade limpa o valor.">
+            <Input
+              units={[
+                { id: 'percent', label: '%' },
+                { id: 'currency', label: 'R$' },
+                { id: 'kg', label: 'kg' },
+              ]}
+              unit={amountUnit}
+              onUnitChange={setAmountUnit}
+              percentMax={100}
+            />
+          </Field>
+          <Field label="Valor guardado (chave de API)" help="O valor salvo nunca aparece no campo.">
+            <Input
+              variant="secret"
+              hasValue
+              maskedHint="••••••a1b2c3"
+              isEditing={apiKeyEditing}
+              onStartEdit={() => setApiKeyEditing(true)}
+              onCancelEdit={() => setApiKeyEditing(false)}
+              onRemove={() => setApiKeyEditing(false)}
+            />
+          </Field>
+        </Grid>
+      </Demo>
+
+      <Demo
+        id="cor"
+        title="ColorPicker"
+        description="Amostras da marca e uma cor livre por hexadecimal, no mesmo painel do Select (popover no desktop, painel inferior no celular)."
+        props="value, onChange, swatches, disabled, aria-label"
+        code="COR-001"
+      >
+        <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="fields">
+          <Field label="Cor de destaque">
+            <ColorPicker aria-label="Cor de destaque" value={color} onChange={setColor} />
+          </Field>
+          <Field label="Desabilitado">
+            <ColorPicker aria-label="Cor de destaque" value={color} disabled />
+          </Field>
         </Grid>
       </Demo>
 
