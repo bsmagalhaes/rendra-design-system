@@ -15,6 +15,9 @@ import { cn } from '@/lib/cn'
 // pdfjs-dist é grande e só entra no bundle de quem realmente usa o DocumentViewer: os tipos
 // abaixo são só de compilação (import de tipo), o import de valor é sempre dinâmico (import()).
 type PdfDocumentProxy = import('pdfjs-dist').PDFDocumentProxy
+// destroy() vive na tarefa de carregamento (o que getDocument devolve antes do .promise),
+// não no documento já resolvido: é ela que precisa ser guardada para liberar depois.
+type PdfLoadingTask = import('pdfjs-dist').PDFDocumentLoadingTask
 
 type Status = 'empty' | 'loading' | 'ready' | 'error'
 
@@ -57,7 +60,6 @@ export function DocumentViewer({
   nextPageLabel = 'Próxima página',
 }: DocumentViewerProps) {
   const [status, setStatus] = useState<Status>(url ? 'loading' : 'empty')
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [page, setPage] = useState(1)
   const [numPages, setNumPages] = useState(0)
   const [scale, setScale] = useState(1)
@@ -66,15 +68,17 @@ export function DocumentViewer({
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  // Carrega o documento (ou reinicia o estado vazio) sempre que a url muda.
+  // Carrega o documento (ou reinicia o estado vazio) sempre que a url muda. Libera a tarefa
+  // de carregamento (destroy) ao trocar de url e ao desmontar, para não vazar memória nem o
+  // worker que o pdfjs sobe para cada documento.
   useEffect(() => {
     let cancelled = false
+    let loadingTask: PdfLoadingTask | null = null
     pdfRef.current = null
     setPage(1)
     setNumPages(0)
     setFitToWidth(true)
     setScale(1)
-    setErrorMessage(null)
 
     if (!url) {
       setStatus('empty')
@@ -90,20 +94,22 @@ export function DocumentViewer({
           import('pdfjs-dist/build/pdf.worker.min.mjs?url'),
         ])
         pdfjsLib.GlobalWorkerOptions.workerSrc = workerModule.default
-        const doc = await pdfjsLib.getDocument({ url: targetUrl }).promise
+        if (cancelled) return
+        loadingTask = pdfjsLib.getDocument({ url: targetUrl })
+        const doc = await loadingTask.promise
         if (cancelled) return
         pdfRef.current = doc
         setNumPages(doc.numPages)
         setStatus('ready')
-      } catch (e) {
+      } catch {
         if (cancelled) return
-        setErrorMessage(e instanceof Error ? e.message : 'Falha desconhecida ao abrir o PDF.')
         setStatus('error')
       }
     }
     void load()
     return () => {
       cancelled = true
+      void loadingTask?.destroy()
     }
   }, [url])
 
@@ -173,7 +179,7 @@ export function DocumentViewer({
         <EmptyState
           type="error"
           title={errorTitle}
-          description={`${errorDescription} ${errorMessage ?? ''}`.trim()}
+          description={errorDescription}
           className="m-auto"
           actions={
             url && (
@@ -201,9 +207,7 @@ export function DocumentViewer({
                 onClick={zoomOut}
               />
               <span className="w-12 text-center text-xs text-muted-foreground tabular-nums">
-                {Math.round(fitToWidth ? 100 : scale * 100) === 100 && fitToWidth
-                  ? 'Ajustar'
-                  : `${Math.round(scale * 100)}%`}
+                {fitToWidth ? 'Ajustar' : `${Math.round(scale * 100)}%`}
               </span>
               <Button
                 variant="ghost"
