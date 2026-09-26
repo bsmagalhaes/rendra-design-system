@@ -3,9 +3,55 @@
   "private": true,
   "version": "1.1.0",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
+  "bin": {},
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "dist/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./router-bridge": {
+      "types": "./dist/types/rendra-router-bridge.d.ts",
+      "import": "./dist/router-bridge.js"
+    },
+    "./document-viewer": {
+      "types": "./dist/types/document-viewer.d.ts",
+      "import": "./dist/document-viewer.js"
+    },
+    "./rich-text-editor": {
+      "types": "./dist/types/rich-text-editor.d.ts",
+      "import": "./dist/rich-text-editor.js"
+    },
+    "./chart": {
+      "types": "./dist/types/chart.d.ts",
+      "import": "./dist/chart.js"
+    },
+    "./widget-grid": {
+      "types": "./dist/types/widget-grid.d.ts",
+      "import": "./dist/widget-grid.js"
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./base.css": "./dist/base.css",
+    "./components.css": "./dist/components.css",
+    "./package.json": "./package.json"
+  },
+  "peerDependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "radix-ui": "^1.6.7"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:lib": "vite build --config vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/fix-dts-aliases.mjs && node scripts/build-lib.mjs",
+    "verify:pack": "node scripts/verify-pack.mjs",
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "lint": "eslint .",
