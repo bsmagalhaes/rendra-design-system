@@ -102,13 +102,15 @@ describe('Header', () => {
     expect(screen.queryByText('Meu perfil')).not.toBeInTheDocument()
   })
 
-  it('onLogout vem da prop, chamado ao selecionar Sair', async () => {
+  it('onLogout vem da prop, chamado ao selecionar Sair, e o menu fecha (efeito visível)', async () => {
     const onLogout = vi.fn()
     renderHeader({ onLogout })
     const user = userEvent.setup()
     await user.click(screen.getByLabelText('Menu de Marina Alves'))
-    await user.click(await screen.findByText('Sair'))
+    const sair = await screen.findByText('Sair')
+    await user.click(sair)
     expect(onLogout).toHaveBeenCalledTimes(1)
+    expect(screen.queryByText('Sair')).not.toBeInTheDocument()
   })
 
   it('homeLabel (prop) aparece na trilha quando o primeiro item não é a raiz', () => {
