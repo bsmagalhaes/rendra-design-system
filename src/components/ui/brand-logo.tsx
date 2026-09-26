@@ -1,5 +1,5 @@
 import { cva } from 'class-variance-authority'
-import { useBrand } from '@/brand'
+import { useBrand } from '@/brand/use-brand'
 import { cn } from '@/lib/cn'
 
 /*
