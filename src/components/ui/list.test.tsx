@@ -68,6 +68,38 @@ describe('List', () => {
     expect(screen.getAllByText('Neutro')).toHaveLength(1)
   })
 
+  it('título e descrição longos, com selo de tom e à direita: linha e item encolhem (min-w-0), sem depender só da vitrine', () => {
+    const { container } = renderApp(
+      <List
+        items={[
+          {
+            id: '1',
+            title: 'Clínica Vida Plena Unidade Centro',
+            description: 'Florianópolis, SC · Saúde e bem-estar corporativo, atendimento 24 horas',
+            tone: 'success',
+            trailing: <span>Ativo</span>,
+          },
+        ]}
+      />,
+    )
+    // A lista (<ul>) também precisa disto: quando a vitrine ou qualquer tela coloca a List
+    // dentro de uma linha flex (o Row/Inline da vitrine, por exemplo), sem min-w-0 e w-full
+    // na própria <ul> ela vira um item flex que não encolhe e estoura a tela, mesmo com o
+    // <li> e a linha internos já corretos.
+    const ul = container.querySelector('ul')
+    expect(ul).toHaveClass('min-w-0')
+    expect(ul).toHaveClass('w-full')
+    const li = container.querySelector('li')
+    expect(li).toHaveClass('min-w-0')
+    // A linha (o elemento que junta início, texto, selo, fim) também precisa encolher: sem
+    // min-w-0 nela, o texto longo (mesmo com truncate/line-clamp) estoura a largura da tela.
+    const row = li?.firstElementChild
+    expect(row).toHaveClass('min-w-0')
+    // O selo de tom continua visível inteiro: ele não quebra nem encolhe, só o texto ao lado.
+    expect(screen.getByText('Sucesso')).toBeInTheDocument()
+    expect(screen.getByText('Ativo')).toBeInTheDocument()
+  })
+
   it('sem onReorder, a lista é só leitura e a alça não aparece', () => {
     renderApp(<List items={[{ id: '1', title: 'Cliente A' }]} />)
     expect(screen.queryByRole('button', { name: /Reordenar/ })).not.toBeInTheDocument()

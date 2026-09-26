@@ -77,7 +77,10 @@ export function List({
 
   if (items.length === 0 && empty) return <>{empty}</>
   return (
-    <ul data-rendra={code} className={cn('flex flex-col', divided && 'divide-y', className)}>
+    <ul
+      data-rendra={code}
+      className={cn('flex w-full min-w-0 flex-col', divided && 'divide-y', className)}
+    >
       {items.map((it) => {
         const interactive = Boolean(it.to || it.onClick)
         const body = (
@@ -101,7 +104,7 @@ export function List({
           </>
         )
         const cls = cn(
-          'flex min-h-touch w-full items-center gap-3 py-3 text-left',
+          'flex min-h-touch w-full min-w-0 items-center gap-3 py-3 text-left',
           interactive && '-mx-2 rounded-item px-2 transition-colors hover:bg-accent',
         )
         const label = itemLabel(it)
@@ -112,7 +115,10 @@ export function List({
           <li
             key={it.id}
             {...(sortableEnabled ? sortable.itemProps(it.id) : {})}
-            className={cn('flex items-center gap-1', sortable.draggingId === it.id && 'opacity-50')}
+            className={cn(
+              'flex min-w-0 items-center gap-1',
+              sortable.draggingId === it.id && 'opacity-50',
+            )}
           >
             {handle}
             {it.to ? (

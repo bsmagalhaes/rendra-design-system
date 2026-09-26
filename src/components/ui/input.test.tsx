@@ -27,6 +27,14 @@ describe('Input', () => {
     expect(onValueChange).toHaveBeenLastCalledWith('12345678901', '123.456.789-01')
   })
 
+  it('telefone: o seletor de DDI tem pelo menos 44px de largura, mesmo com o texto curto', () => {
+    render(<Input aria-label="Telefone" mask="phone" />)
+    const select = screen.getByLabelText(/Código do país \(DDI\)/)
+    // O select ocupa toda a área clicável (absolute inset-0 do wrapper relative): o alvo de
+    // toque de verdade é o wrapper, que precisa da largura mínima, não só a altura.
+    expect(select.parentElement).toHaveClass('min-w-touch')
+  })
+
   it('moeda: entrega centavos inteiros', async () => {
     const onCentsChange = vi.fn()
     render(<Input aria-label="Valor" mask="currency" onCentsChange={onCentsChange} />)
@@ -146,6 +154,12 @@ describe('Input com unidades (A9)', () => {
     expect(screen.getByLabelText('Unidade: kg')).toBeInTheDocument()
     await userEvent.selectOptions(screen.getByLabelText('Unidade: kg'), 'cm')
     expect(screen.getByLabelText('Unidade: cm')).toBeInTheDocument()
+  })
+
+  it('o seletor de unidade tem pelo menos 44px de largura, mesmo com o rótulo curto ("%")', () => {
+    render(<Input aria-label="Desconto" units={[{ id: 'percent', label: '%' }]} />)
+    const select = screen.getByLabelText('Unidade: %')
+    expect(select.parentElement).toHaveClass('min-w-touch')
   })
 
   it('trocar de unidade limpa o valor do campo', async () => {

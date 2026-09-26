@@ -49,6 +49,18 @@ describe('RepeatableField', () => {
     expect(container.querySelector('[data-rendra="REP-001"]')).toBeInTheDocument()
   })
 
+  it('a linha de cada item quebra (flex-wrap) e o campo tem piso de largura (min-w-24), para as ações não espremerem um campo com seletor embutido (ex.: telefone) abaixo de 44px', async () => {
+    renderApp(<Demo initial={[]} />)
+    await userEvent.click(screen.getByRole('button', { name: 'Adicionar telefone' }))
+    const field = screen.getByRole('textbox', { name: 'Telefone 1' })
+    // field -> div "data-rendra=CAMP-001" do Input (a moldura do campo) -> o wrapper
+    // min-w-24/flex-1 -> a linha flex-wrap.
+    const fieldWrapper = field.closest('[data-rendra="CAMP-001"]')?.parentElement
+    expect(fieldWrapper).toHaveClass('min-w-24')
+    expect(fieldWrapper).toHaveClass('flex-1')
+    expect(fieldWrapper?.parentElement).toHaveClass('flex-wrap')
+  })
+
   it('adicionar faz a nova linha aparecer na tela (e some o texto vazio)', async () => {
     renderApp(<Demo initial={[]} />)
     await userEvent.click(screen.getByRole('button', { name: 'Adicionar telefone' }))

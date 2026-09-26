@@ -73,8 +73,10 @@ export function RepeatableField<T extends RepeatableItem>({
       {items.length === 0 && <p className="text-sm text-muted-foreground">{emptyLabel}</p>}
       {items.map((item, index) => (
         <div key={item.id} className="flex flex-col gap-3 rounded-control border bg-card p-4">
-          <div className="flex items-start gap-3">
-            <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-start gap-3">
+            {/* min-w-24: piso de largura para o campo nunca ficar espremido pelas ações ao
+                lado (ex.: telefone com o seletor de DDI); sem espaço, as ações quebram a linha. */}
+            <div className="min-w-24 flex-1">
               {renderField(item, (patch) => update(item.id, patch), index)}
             </div>
             <div className="flex shrink-0 items-center gap-1 pt-1">

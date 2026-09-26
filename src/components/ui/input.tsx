@@ -307,7 +307,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     >
       {showDdi && (
         // Seletor nativo transparente sobre o "+55": no celular abre a lista do sistema.
-        <span className="relative -ml-1 flex h-full shrink-0 items-center gap-1 border-r pr-2 text-sm font-medium">
+        <span className="relative -ml-1 flex h-full min-w-touch shrink-0 items-center gap-1 border-r pr-2 text-sm font-medium">
           <span aria-hidden>+{ddi}</span>
           <ChevronDown className="size-icon-sm text-muted-foreground" aria-hidden />
           <select
@@ -377,7 +377,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       )}
       {hasUnits && (
         // Mesmo padrão do seletor de DDI, à direita: rótulo visível e select nativo por cima.
-        <span className="relative -mr-1 flex h-full shrink-0 items-center gap-1 border-l pl-2 text-sm font-medium">
+        <span className="relative -mr-1 flex h-full min-w-touch shrink-0 items-center gap-1 border-l pl-2 text-sm font-medium">
           <span aria-hidden>{units?.find((u) => u.id === unit)?.label ?? unit}</span>
           <ChevronDown className="size-icon-sm text-muted-foreground" aria-hidden />
           <select
