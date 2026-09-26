@@ -85,6 +85,7 @@ const groups = [
     items: [
       ['icone-feedback', 'Ícone de feedback'],
       ['logotipo', 'Logotipo da marca'],
+      ['credito', 'Crédito Feito com Rendra'],
       ['alert', 'Alert'],
       ['toast', 'Toast'],
       ['modal', 'Modal'],
