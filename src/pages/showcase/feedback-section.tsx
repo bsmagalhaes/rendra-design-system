@@ -18,6 +18,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Progress } from '@/components/ui/progress'
 import { RendraCredit } from '@/components/ui/rendra-credit'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Spinner } from '@/components/ui/spinner'
 import { toast } from '@/components/ui/toast'
 import { Tooltip } from '@/components/ui/tooltip'
 import { CatalogCode, Demo, GroupTitle, Row, wait } from './demo'
@@ -383,9 +384,9 @@ export function FeedbackSection() {
 
       <Demo
         id="progress-skeleton"
-        title="Progress e Skeleton"
-        description="Progresso determinado ou indeterminado; skeleton com a mesma estrutura do conteúdo final."
-        props="Progress (value, tone, size, showValue, label) · Skeleton (className)"
+        title="Progress, Skeleton e Spinner"
+        description="Progresso determinado ou indeterminado; skeleton com a mesma estrutura do conteúdo final; carregamento breve dentro de um botão, campo ou lista."
+        props="Progress (value, tone, size, showValue, label) · Skeleton (className) · Spinner (size, label)"
       >
         <Stack gap="4">
           <Inline gap="2" align="center">
@@ -425,6 +426,17 @@ export function FeedbackSection() {
             </Stack>
           </Inline>
           <Skeleton className="h-chart-sm w-full rounded-surface" />
+        </Stack>
+        <Stack gap="3">
+          <Inline gap="2" align="center">
+            <span className="text-sm font-medium">Spinner</span>
+            <CatalogCode code="SPIN-001" />
+          </Inline>
+          <Inline gap="4" align="center">
+            <Spinner size="sm" label="Carregando, pequeno" />
+            <Spinner size="md" label="Carregando, médio" />
+            <Spinner size="lg" label="Carregando, grande" />
+          </Inline>
         </Stack>
       </Demo>
 

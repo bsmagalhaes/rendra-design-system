@@ -12,7 +12,6 @@
         "class-variance-authority@^0.7.1",
         "clsx@^2.1.1",
         "imask@^7.6.1",
-        "react-router@^8.4.0",
         "tailwind-merge@^3.7.0",
         "zod@^4.6.5"
       ],
@@ -23,6 +22,11 @@
         { "path": "src/lib/control.ts", "type": "registry:file", "target": "src/lib/control.ts" },
         { "path": "src/lib/lookup.ts", "type": "registry:file", "target": "src/lib/lookup.ts" },
         { "path": "src/lib/masks.ts", "type": "registry:file", "target": "src/lib/masks.ts" },
+        {
+          "path": "src/lib/qr-encode.ts",
+          "type": "registry:file",
+          "target": "src/lib/qr-encode.ts"
+        },
         { "path": "src/lib/shape.ts", "type": "registry:file", "target": "src/lib/shape.ts" },
         { "path": "src/lib/sortable.ts", "type": "registry:file", "target": "src/lib/sortable.ts" },
         {
@@ -49,6 +53,11 @@
           "path": "src/hooks/use-lookup.ts",
           "type": "registry:file",
           "target": "src/hooks/use-lookup.ts"
+        },
+        {
+          "path": "src/hooks/use-reduced-motion.ts",
+          "type": "registry:file",
+          "target": "src/hooks/use-reduced-motion.ts"
         },
         {
           "path": "src/hooks/use-route-meta.ts",
@@ -148,13 +157,8 @@
       "name": "app-shell",
       "type": "registry:item",
       "title": "AppShell",
-      "description": "Casca da aplicação: sidebar, header, menu superior, mega menu, busca, notificações e barra inferior. Lê o menu e o layout de src/config, que é do projeto.",
-      "dependencies": [
-        "cmdk@^1.1.1",
-        "lucide-react@^1.47.0",
-        "radix-ui@^1.6.7",
-        "react-router@^8.4.0"
-      ],
+      "description": "Casca da aplicação: sidebar, header, menu superior, mega menu, busca, notificações e barra inferior. Recebe o menu, o layout, o usuário e as notificações por prop; não lê src/config.",
+      "dependencies": ["cmdk@^1.1.1", "lucide-react@^1.47.0", "radix-ui@^1.6.7"],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/avatar.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
@@ -185,9 +189,19 @@
           "target": "src/components/app-shell/header.tsx"
         },
         {
+          "path": "src/components/app-shell/layout.ts",
+          "type": "registry:file",
+          "target": "src/components/app-shell/layout.ts"
+        },
+        {
           "path": "src/components/app-shell/mega-menu.tsx",
           "type": "registry:file",
           "target": "src/components/app-shell/mega-menu.tsx"
+        },
+        {
+          "path": "src/components/app-shell/navigation-utils.ts",
+          "type": "registry:file",
+          "target": "src/components/app-shell/navigation-utils.ts"
         },
         {
           "path": "src/components/app-shell/notifications.tsx",
@@ -203,6 +217,11 @@
           "path": "src/components/app-shell/sidebar.tsx",
           "type": "registry:file",
           "target": "src/components/app-shell/sidebar.tsx"
+        },
+        {
+          "path": "src/components/app-shell/types.ts",
+          "type": "registry:file",
+          "target": "src/components/app-shell/types.ts"
         }
       ]
     },
@@ -387,14 +406,11 @@
       "type": "registry:item",
       "title": "button",
       "description": "Componente button do Rendra Design System.",
-      "dependencies": [
-        "class-variance-authority@^0.7.1",
-        "lucide-react@^1.47.0",
-        "radix-ui@^1.6.7"
-      ],
+      "dependencies": ["class-variance-authority@^0.7.1", "radix-ui@^1.6.7"],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/spinner.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
       ],
       "files": [
@@ -517,6 +533,49 @@
       "meta": { "codes": ["CHK-001", "CHK-002"] }
     },
     {
+      "name": "checklist",
+      "type": "registry:item",
+      "title": "checklist",
+      "description": "Componente checklist do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/checkbox.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/checklist.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/checklist.tsx"
+        }
+      ],
+      "meta": { "codes": ["CKLT-001"] }
+    },
+    {
+      "name": "color-picker",
+      "type": "registry:item",
+      "title": "color-picker",
+      "description": "Componente color-picker do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/picker-panel.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/color-picker.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/color-picker.tsx"
+        }
+      ],
+      "meta": { "codes": ["COR-001"] }
+    },
+    {
       "name": "data-toolbar",
       "type": "registry:item",
       "title": "data-toolbar",
@@ -564,6 +623,27 @@
         }
       ],
       "meta": { "codes": ["DTP-001"] }
+    },
+    {
+      "name": "document-viewer",
+      "type": "registry:item",
+      "title": "document-viewer",
+      "description": "Componente document-viewer do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/empty-state.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/document-viewer.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/document-viewer.tsx"
+        }
+      ],
+      "meta": { "codes": ["DOC-001"] }
     },
     {
       "name": "drawer",
@@ -759,7 +839,9 @@
       "description": "Componente input do Rendra Design System.",
       "dependencies": ["imask@^7.6.1", "lucide-react@^1.47.0"],
       "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/spinner.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
       ],
       "files": [
@@ -958,6 +1040,26 @@
       "meta": { "codes": ["PROG-001"] }
     },
     {
+      "name": "qr-code",
+      "type": "registry:item",
+      "title": "qr-code",
+      "description": "Componente qr-code do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/empty-state.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/qr-code.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/qr-code.tsx"
+        }
+      ],
+      "meta": { "codes": ["QRC-001"] }
+    },
+    {
       "name": "radio-group",
       "type": "registry:item",
       "title": "radio-group",
@@ -978,6 +1080,26 @@
       "meta": { "codes": ["RDO-001", "RDO-002"] }
     },
     {
+      "name": "rating",
+      "type": "registry:item",
+      "title": "rating",
+      "description": "Componente rating do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/rating.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/rating.tsx"
+        }
+      ],
+      "meta": { "codes": ["RTG-001", "RTG-002"] }
+    },
+    {
       "name": "rendra-credit",
       "type": "registry:item",
       "title": "rendra-credit",
@@ -995,6 +1117,26 @@
         }
       ],
       "meta": { "codes": ["CRED-001"] }
+    },
+    {
+      "name": "repeatable-field",
+      "type": "registry:item",
+      "title": "repeatable-field",
+      "description": "Componente repeatable-field do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/repeatable-field.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/repeatable-field.tsx"
+        }
+      ],
+      "meta": { "codes": ["REP-001"] }
     },
     {
       "name": "rich-text-editor",
@@ -1035,6 +1177,7 @@
         "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/picker-panel.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/spinner.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
       ],
       "files": [
@@ -1121,6 +1264,25 @@
         }
       ],
       "meta": { "codes": [] }
+    },
+    {
+      "name": "spinner",
+      "type": "registry:item",
+      "title": "spinner",
+      "description": "Componente spinner do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/spinner.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/spinner.tsx"
+        }
+      ],
+      "meta": { "codes": ["SPIN-001"] }
     },
     {
       "name": "stat-card",
@@ -1674,6 +1836,51 @@
       ]
     },
     {
+      "name": "checklist-test",
+      "type": "registry:item",
+      "title": "checklist (teste)",
+      "description": "Testes de comportamento do checklist, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/checklist.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/checklist.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/checklist.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "color-picker-test",
+      "type": "registry:item",
+      "title": "color-picker (teste)",
+      "description": "Testes de comportamento do color-picker, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/color-picker.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/color-picker.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/color-picker.test.tsx"
+        }
+      ]
+    },
+    {
       "name": "data-toolbar-test",
       "type": "registry:item",
       "title": "data-toolbar (teste)",
@@ -1706,6 +1913,28 @@
           "path": "src/components/ui/date-picker.test.tsx",
           "type": "registry:file",
           "target": "src/components/ui/date-picker.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "document-viewer-test",
+      "type": "registry:item",
+      "title": "document-viewer (teste)",
+      "description": "Testes de comportamento do document-viewer, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/document-viewer.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/document-viewer.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/document-viewer.test.tsx"
         }
       ]
     },
@@ -1858,7 +2087,11 @@
       "type": "registry:item",
       "title": "image-viewer (teste)",
       "description": "Testes de comportamento do image-viewer, com Vitest e Testing Library.",
-      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.1"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/image-viewer.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
@@ -1905,6 +2138,7 @@
       ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/field.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/input.json"
       ],
       "files": [
@@ -2062,6 +2296,25 @@
       ]
     },
     {
+      "name": "qr-code-test",
+      "type": "registry:item",
+      "title": "qr-code (teste)",
+      "description": "Testes de comportamento do qr-code, com Vitest e Testing Library.",
+      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.1"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/qr-code.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/qr-code.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/qr-code.test.tsx"
+        }
+      ]
+    },
+    {
       "name": "radio-group-test",
       "type": "registry:item",
       "title": "radio-group (teste)",
@@ -2084,6 +2337,28 @@
       ]
     },
     {
+      "name": "rating-test",
+      "type": "registry:item",
+      "title": "rating (teste)",
+      "description": "Testes de comportamento do rating, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/rating.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/rating.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/rating.test.tsx"
+        }
+      ]
+    },
+    {
       "name": "rendra-credit-test",
       "type": "registry:item",
       "title": "rendra-credit (teste)",
@@ -2099,6 +2374,29 @@
           "path": "src/components/ui/rendra-credit.test.tsx",
           "type": "registry:file",
           "target": "src/components/ui/rendra-credit.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "repeatable-field-test",
+      "type": "registry:item",
+      "title": "repeatable-field (teste)",
+      "description": "Testes de comportamento do repeatable-field, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/repeatable-field.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/repeatable-field.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/repeatable-field.test.tsx"
         }
       ]
     },
@@ -2190,6 +2488,24 @@
           "path": "src/components/ui/slider.test.tsx",
           "type": "registry:file",
           "target": "src/components/ui/slider.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "spinner-test",
+      "type": "registry:item",
+      "title": "spinner (teste)",
+      "description": "Testes de comportamento do spinner, com Vitest e Testing Library.",
+      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.1"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/spinner.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/spinner.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/spinner.test.tsx"
         }
       ]
     },

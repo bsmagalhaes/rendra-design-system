@@ -3,6 +3,7 @@ import { Handshake, ThumbsDown } from 'lucide-react'
 import { useState } from 'react'
 import { Calendar } from '@/components/ui/calendar'
 import { ChatComposer, ChatThread } from '@/components/ui/chat'
+import { DocumentViewer } from '@/components/ui/document-viewer'
 import {
   Kanban,
   moveKanbanCard,
@@ -100,3 +101,22 @@ function ChatDemo() {
 }
 
 export const Chat: Story = { render: () => <ChatDemo /> }
+
+// PDF mínimo válido, embutido como data: URL, para a story funcionar sem depender de rede.
+const SAMPLE_PDF =
+  'data:application/pdf;base64,JVBERi0xLjEKMSAwIG9iajw8L1R5cGUvQ2F0YWxvZy9QYWdlcyAyIDAgUj4+ZW5kb2JqCjIgMCBvYmo8PC9UeXBlL1BhZ2VzL0tpZHNbMyAwIFJdL0NvdW50IDE+PmVuZG9iagozIDAgb2JqPDwvVHlwZS9QYWdlL1BhcmVudCAyIDAgUi9NZWRpYUJveFswIDAgMjAwIDIwMF0+PmVuZG9iagp0cmFpbGVyPDwvU2l6ZSA0L1Jvb3QgMSAwIFI+PgolJUVPRg=='
+
+export const VisualizadorDeDocumentos: Story = {
+  name: 'DocumentViewer',
+  render: () => <DocumentViewer url={SAMPLE_PDF} title="Contrato de exemplo" />,
+}
+export const VisualizadorVazio: Story = {
+  name: 'DocumentViewer: vazio',
+  render: () => <DocumentViewer url={null} title="Contrato de exemplo" />,
+}
+export const VisualizadorComFalha: Story = {
+  name: 'DocumentViewer: falha declarada',
+  render: () => (
+    <DocumentViewer url="https://exemplo.invalido/nao-existe.pdf" title="Contrato de exemplo" />
+  ),
+}

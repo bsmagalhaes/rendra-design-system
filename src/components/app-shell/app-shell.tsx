@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Menu } from 'lucide-react'
-import { NavLink, Outlet, useLocation } from 'react-router'
+import { useCurrentPath, useRendraLink } from '@/components/rendra-provider'
 import { TooltipProvider } from '@/components/ui/tooltip'
-import { defaultShellLayout, type ShellLayout } from '@/config/layout'
-import { useRouteMeta } from '@/hooks/use-route-meta'
-import { bottomNavItems, resolveActiveTo } from '@/config/navigation'
 import { cn } from '@/lib/cn'
 import { CommandSearch } from './command-search'
 import { Header } from './header'
-import { ShellContext, type ShellContextValue } from './shell-context'
+import { defaultShellLayout, type ShellLayout } from './layout'
+import { getBottomNavItems, getNavigationTargets, resolveActiveTo } from './navigation-utils'
+import { ShellContext, useShell, type ShellContextValue } from './shell-context'
 import { Sidebar } from './sidebar'
+import type { NavGroup, ShellMenuItem, ShellNotificationsConfig, ShellUser } from './types'
 
 const LAYOUT_KEY = 'ui-shell-layout'
 
@@ -21,22 +21,25 @@ function readUserLayout(): Partial<ShellLayout> {
   }
 }
 
+const defaultUser: ShellUser = { name: 'Usuário' }
+
 /**
  * Barra inferior do celular: até 4 atalhos e, no centro, o botão redondo do menu, subindo
  * metade acima da linha da barra, ao alcance do polegar. Com ela, o header não precisa do
  * botão de menu e sobra espaço para a seta de voltar.
  */
 function BottomNav({ onMenu }: { onMenu: () => void }) {
-  const { pathname } = useLocation()
-  const active = resolveActiveTo(pathname)
+  const pathname = useCurrentPath()
+  const Link = useRendraLink()
+  const { bottomNavItems, navigationTargets } = useShell()
+  const active = resolveActiveTo(navigationTargets, pathname)
   const item = (entry: (typeof bottomNavItems)[number]) => {
     const to = entry.to ?? entry.children?.[0]?.to ?? '/'
     const Icon = entry.icon
     return (
       <li key={entry.title}>
-        <NavLink
+        <Link
           to={to}
-          end={to === '/'}
           className={cn(
             'flex min-h-touch flex-col items-center justify-center gap-1 py-2 text-xs font-medium transition-colors',
             to === active || entry.children?.some((c) => c.to === active)
@@ -46,7 +49,7 @@ function BottomNav({ onMenu }: { onMenu: () => void }) {
         >
           <Icon className="size-icon-md" aria-hidden />
           <span className="max-w-full truncate px-1">{entry.shortTitle ?? entry.title}</span>
-        </NavLink>
+        </Link>
       </li>
     )
   }
@@ -74,20 +77,51 @@ function BottomNav({ onMenu }: { onMenu: () => void }) {
   )
 }
 
-export type AppShellProps = Partial<ShellLayout> & {
+export interface AppShellProps {
+  /** Menu do sistema: sidebar, barra inferior e busca global. Único obrigatório. */
+  navigation: NavGroup[]
+  /** Sobrescreve o padrão interno (defaultShellLayout), chave a chave. */
+  layout?: Partial<ShellLayout>
+  /** Usuário exibido no menu do avatar e no rodapé da sidebar. */
+  user?: ShellUser
+  /** Itens do menu do avatar (ex.: "Meu perfil", "Configurações"). Padrão: nenhum. */
+  userMenuItems?: ShellMenuItem[]
+  /** Chamado ao selecionar "Sair", na sidebar e no menu do avatar. */
+  onLogout?: () => void
+  /** Rótulo do destino inicial na trilha do header. */
+  homeLabel?: string
+  /** Ações rápidas da busca global (Ctrl+K), além do atalho de tema. Padrão: nenhuma. */
+  quickActions?: ShellMenuItem[]
+  /** Notificações do sino do header. Sem esta prop, o sino não aparece. */
+  notifications?: ShellNotificationsConfig
   /**
    * Permite que o usuário troque o layout pelo menu do avatar (guardado no navegador).
    * Desligue em produção se o layout do projeto for fixo.
    */
   userConfigurable?: boolean
+  /** Tela atual. O boilerplate passa o <Outlet /> do react-router. */
+  children?: ReactNode
 }
 
 /**
  * Estrutura da aplicação. Uma única área de rolagem: o <main>.
- * Layout = padrão de src/config/layout.ts, sobrescrito pelas props e, se permitido,
- * pela escolha do usuário.
+ * Nunca importa @/config nem um roteador: recebe o menu, o layout, o usuário e as
+ * notificações por prop; quem navega é o RendraProvider (useCurrentPath/useRendraLink).
+ * Título da aba e meta description (SEO) não são responsabilidade do AppShell: o
+ * boilerplate (src/app/app-layout.tsx) aplica isso com useRouteMeta, que lê @/config/seo.
  */
-export function AppShell({ userConfigurable = true, ...props }: AppShellProps) {
+export function AppShell({
+  navigation,
+  layout: layoutProp,
+  user = defaultUser,
+  userMenuItems = [],
+  onLogout,
+  homeLabel = 'Início',
+  quickActions = [],
+  notifications,
+  userConfigurable = true,
+  children,
+}: AppShellProps) {
   const [userLayout, setUserLayout] = useState<Partial<ShellLayout>>(() =>
     userConfigurable ? readUserLayout() : {},
   )
@@ -95,19 +129,21 @@ export function AppShell({ userConfigurable = true, ...props }: AppShellProps) {
   const [searchOpen, setSearchOpen] = useState(false)
   const [footerSlot, setFooterSlot] = useState<HTMLElement | null>(null)
   const [pageHelp, setPageHelp] = useState<ReactNode>(null)
-  const { pathname } = useLocation()
-  useRouteMeta()
+  const pathname = useCurrentPath()
   const mainRef = useRef<HTMLElement>(null)
 
-  const propsKey = JSON.stringify(props)
+  const layoutPropKey = JSON.stringify(layoutProp ?? {})
   const layout = useMemo<ShellLayout>(
     () => ({
       ...defaultShellLayout,
-      ...(JSON.parse(propsKey) as Partial<ShellLayout>),
+      ...(JSON.parse(layoutPropKey) as Partial<ShellLayout>),
       ...userLayout,
     }),
-    [propsKey, userLayout],
+    [layoutPropKey, userLayout],
   )
+
+  const bottomNavItems = useMemo(() => getBottomNavItems(navigation), [navigation])
+  const navigationTargets = useMemo(() => getNavigationTargets(navigation), [navigation])
 
   // Troca de tela: fecha a gaveta e volta a rolagem ao topo.
   useEffect(() => {
@@ -147,8 +183,33 @@ export function AppShell({ userConfigurable = true, ...props }: AppShellProps) {
       footerSlot,
       pageHelp,
       setPageHelp,
+      navigation,
+      bottomNavItems,
+      navigationTargets,
+      user,
+      userMenuItems,
+      onLogout,
+      homeLabel,
+      quickActions,
+      notifications,
     }
-  }, [layout, userLayout, mobileNavOpen, searchOpen, footerSlot, pageHelp])
+  }, [
+    layout,
+    userLayout,
+    mobileNavOpen,
+    searchOpen,
+    footerSlot,
+    pageHelp,
+    navigation,
+    bottomNavItems,
+    navigationTargets,
+    user,
+    userMenuItems,
+    onLogout,
+    homeLabel,
+    quickActions,
+    notifications,
+  ])
 
   return (
     <ShellContext.Provider value={value}>
@@ -172,7 +233,7 @@ export function AppShell({ userConfigurable = true, ...props }: AppShellProps) {
               // link com #âncora rola a página inteira, deixando um vão em branco embaixo.
               className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain outline-none"
             >
-              <Outlet />
+              {children}
             </main>
             {/* Rodapé fixo das telas de formulário (ActionBar sticky). Vazio, não ocupa espaço. */}
             <div ref={setFooterSlot} className="shrink-0 empty:hidden" />

@@ -14,7 +14,10 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Chart } from '@/components/ui/chart'
+import { Field } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
 import { List } from '@/components/ui/list'
+import { QrCode } from '@/components/ui/qr-code'
 import { Select } from '@/components/ui/select'
 import { StatCard } from '@/components/ui/stat-card'
 import { Table } from '@/components/ui/table'
@@ -68,6 +71,7 @@ export function DataSection() {
   const [status, setStatus] = useState<string[]>([])
   const [state, setState] = useState<'data' | 'loading' | 'empty' | 'error'>('data')
   const [density, setDensity] = useState<'compact' | 'default' | 'comfortable'>('default')
+  const [qrValue, setQrValue] = useState('https://rendra.example.com/clientes/42')
   const data =
     state === 'empty' ? [] : clients.filter((c) => !status.length || status.includes(c.status))
 
@@ -572,6 +576,23 @@ export function DataSection() {
                 { label: 'Fechados', value: 96 },
               ]}
             />
+          </Stack>
+        </Grid>
+      </Demo>
+
+      <Demo
+        id="qrcode"
+        title="QrCode"
+        description="Código QR gerado por um codificador próprio, sem serviço externo. Valor vazio mostra o estado vazio; um valor grande demais para o nível de correção escolhido mostra a falha, sem quebrar a tela."
+        props="value, size, errorCorrection (low, medium, quartile, high), aria-label"
+        code="QRC-001"
+      >
+        <Grid cols={{ base: 1, md: 2 }} gap="8">
+          <Field label="Valor codificado" help="O QR muda ao digitar.">
+            <Input value={qrValue} onChange={setQrValue} />
+          </Field>
+          <Stack gap="2" align="center">
+            <QrCode value={qrValue} size={160} aria-label="Código QR de exemplo" />
           </Stack>
         </Grid>
       </Demo>

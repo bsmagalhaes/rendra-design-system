@@ -56,10 +56,18 @@ export interface Palette {
 
 type Rgb = [number, number, number]
 
-const WHITE = '#ffffff'
+/**
+ * Branco e tinta escura de referência. Exportados para o ColorPicker (A1) escolher, por
+ * contraste, a cor do check sobre uma amostra livre do usuário (que não é do tema, então
+ * não tem um par claro/escuro pronto): nenhum componente de fora de src/brand pode ter um
+ * hexadecimal literal, então a comparação usa estas constantes em vez de repetir a cor.
+ * O mesmo par vive em CSS como --rendra-swatch-check-light e --rendra-swatch-check-dark
+ * (src/styles/globals.css); mude os dois lados juntos.
+ */
+export const WHITE = '#ffffff'
 const BLACK = '#000000'
 /** Texto escuro padrão (o mesmo --foreground do theme.css). */
-const INK = '#0b1d37'
+export const INK = '#0b1d37'
 /** Neutros fixos do modo claro, contra os quais a paleta é conferida. */
 const LIGHT = { background: '#f5f6f7', card: '#ffffff' }
 /** Texto claro padrão do modo escuro. */
@@ -92,6 +100,26 @@ export function mix(a: string, b: string, t: number) {
   const y = toRgb(b)
   return toHex([0, 1, 2].map((i) => x[i]! + (y[i]! - x[i]!) * t) as Rgb)
 }
+
+/**
+ * Amostras padrão do ColorPicker (A1): um ponto de partida variado, sem relação com a
+ * paleta da marca. Hexadecimal fixo só pode existir aqui dentro (src/brand); o componente
+ * (fora daqui) sempre recebe a lista por import, nunca com a cor escrita nele.
+ */
+export const COLOR_PICKER_SWATCHES: string[] = [
+  '#0ea5e9',
+  '#6366f1',
+  '#8b5cf6',
+  '#ec4899',
+  '#ef4444',
+  '#f97316',
+  '#f59e0b',
+  '#84cc16',
+  '#10b981',
+  '#14b8a6',
+  '#64748b',
+  '#0f172a',
+]
 
 function luminance(hex: string) {
   const lin = (c: number) => {

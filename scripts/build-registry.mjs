@@ -81,7 +81,7 @@ const appShell = {
   name: 'app-shell',
   title: 'AppShell',
   description:
-    'Casca da aplicação: sidebar, header, menu superior, mega menu, busca, notificações e barra inferior. Lê o menu e o layout de src/config, que é do projeto.',
+    'Casca da aplicação: sidebar, header, menu superior, mega menu, busca, notificações e barra inferior. Recebe o menu, o layout, o usuário e as notificações por prop; não lê src/config.',
   files: ls('src/components/app-shell', ['.ts', '.tsx']),
 }
 /**
