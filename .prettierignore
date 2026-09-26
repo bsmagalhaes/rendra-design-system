@@ -5,5 +5,8 @@ test-results
 screenshots
 node_modules
 coverage
+# Fixtures da CLI (fase 3, Lote B): código de exemplo com violação de propósito, nunca
+# reformatado (o teste de rendra trocar confere o byte exato do arquivo antes e depois).
+test/fixtures
 # Verificação do Google Search Console: o conteúdo precisa ficar exatamente como veio
 public/google*.html

@@ -3,12 +3,14 @@
  *  - uma página estática por rota (dist/clientes/index.html etc.), com título, descrição,
  *    canonical e Open Graph da rota. Assim o GitHub Pages responde 200 em link direto, em vez
  *    do 404.html, e o buscador indexa cada tela;
- *  - sitemap.xml, robots.txt (liberado também para os robôs de IA) e llms.txt.
+ *  - sitemap.xml, robots.txt (liberado para busca, bloqueado para os robôs de IA,
+ *    scripts/lib/robots.ts) e llms.txt.
  * Textos em src/config/seo.ts. Endereço público em SITE_URL (padrão: o demo no GitHub Pages).
  */
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { routeSeo, siteSeo } from '../src/config/seo.ts'
+import { buildRobotsTxt } from './lib/robots.ts'
 
 const DIST = 'dist'
 const SITE = (process.env.SITE_URL ?? siteSeo.url).replace(/\/?$/, '/')
@@ -82,15 +84,7 @@ ${indexable
 `,
 )
 
-writeFileSync(
-  join(DIST, 'robots.txt'),
-  `# Tudo liberado, inclusive para assistentes de IA (GPTBot, ClaudeBot, PerplexityBot, Google-Extended).
-User-agent: *
-Allow: /
-
-Sitemap: ${SITE}sitemap.xml
-`,
-)
+writeFileSync(join(DIST, 'robots.txt'), buildRobotsTxt(SITE))
 
 // llms.txt: resumo em Markdown para assistentes de IA (https://llmstxt.org).
 writeFileSync(
