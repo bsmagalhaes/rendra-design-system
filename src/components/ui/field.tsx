@@ -27,7 +27,7 @@ export function Label({
   return (
     <L.Root
       data-rendra="FLD-002"
-      className={cn('text-sm font-medium text-foreground', className)}
+      className={cn('text-label text-label-foreground label-case', className)}
       {...props}
     >
       {children}
@@ -139,8 +139,8 @@ export function Field({
             id={messageId}
             role={invalid ? 'alert' : undefined}
             className={cn(
-              '-mt-1 min-h-4 text-xs',
-              invalid ? 'font-medium text-destructive' : 'text-muted-foreground',
+              '-mt-1 min-h-4 text-help',
+              invalid ? 'font-medium text-destructive' : 'text-help-foreground',
             )}
           >
             {message}

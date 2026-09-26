@@ -86,6 +86,7 @@ export function BrandProvider({
     const root = document.documentElement
     root.dataset.brand = brand.id
     root.dataset.shape = shape
+    root.dataset.label = brand.labelStyle ?? 'discreto'
     root.dataset.palette = palette.id
     root.classList.toggle('dark', resolvedMode === 'dark')
     // O título da aba vem de useRouteMeta (tela | produto).

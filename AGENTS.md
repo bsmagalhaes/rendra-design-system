@@ -86,7 +86,7 @@ Ao fim de **cada etapa**:
 - **Contêiner certo:** modal até 3 campos, drawer até cerca de 12, página em seções ou wizard acima disso. Nunca modal dentro de modal.
 - **Botões pela `ActionBar`:** 1 botão com 100%, 2 botões com 30% e 70%, a partir de 3 as extras vão para o menu.
 - **Nunca botão solto:** cada ação tem lugar previsto (rodapé fixo, barra da tabela, `PageHeader actions`, `CardHeader actions`, menu da linha).
-- **Texto orientativo nunca no corpo da tela:** vai em `help` (ícone de informação ao lado do título, no `PageHeader`, `CardTitle` ou `FormSection`), que abre um modal. Subtítulo descreve, não instrui.
+- **Texto orientativo nunca solto no corpo da tela:** vai em `help` (ícone de informação ao lado do título, no `PageHeader`, `CardTitle` ou `FormSection`), que abre um modal. A exceção é a orientação curta abaixo do campo (`Field help`), com limite pela largura (full 150, xl 100, lg 70, md 40, sm 30, xs 20 caracteres) e em no máximo metade dos campos da seção. Subtítulo descreve, não instrui.
 - **Header sempre fixo**, título da página no header com a trilha abaixo, uma única área de rolagem (o `<main>`).
 - **Sidebar sempre colorida**, fundo da tela e dos campos cinza bem claro #f5f6f7 com cards brancos, respiro de página de 24px igual em todos os lados, contraste AA.
 - **Formulário:** 3 campos por linha (nunca 2 por padrão), CEP e CNPJ primeiro com 25% e o que eles preenchem abaixo, 16px entre campos, salvar no rodapé fixo (no wizard, junto do card).
