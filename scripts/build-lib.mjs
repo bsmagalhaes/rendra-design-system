@@ -13,23 +13,30 @@
  * explica por quê) e o host não precisa ter o Tailwind instalado.
  *
  * Saída em dist/:
- *   tokens.css      @theme (escala) e o tema padrão (sistema) e a paleta padrão (a primeira
- *                   de src/brand/palettes.ts), claro e escuro, sem a fonte da marca
- *                   (correção do Opus, item 2 da validação do plano: sem @font-face;
- *                   --rendra-brand-font cai na pilha de fontes do sistema). Não sai a
- *                   camada @theme inline (--color-*, --radius-*, --font-sans, --font-mono,
- *                   --shadow-*, --text-label, --text-help): como esse bloco é `inline`, o
- *                   Tailwind já resolve cada uso direto para --rendra-* (ou para o valor
- *                   literal, como em --font-mono) na hora de compilar `components.css`, e
- *                   deixar essas variáveis também no tokens.css só serviria para colidir
- *                   com o @theme de um host que também use Tailwind v4 (correção do Fable,
- *                   item 2: risco 2 do plano). A única exceção provada por uso real é
- *                   --font-sans, que a camada rendra.base referencia direto
- *                   (`html { font-family: var(--font-sans) }`, escrito à mão em
- *                   globals.css, fora de qualquer utility gerada); por isso o texto
- *                   `var(--font-sans)` de rendra.base é reescrito para `var(--rendra-brand-
- *                   font)` (a variável que --font-sans só espelhava) antes de --font-sans
- *                   sair do tokens.css.
+ *   tokens.css      o tema padrão (sistema) e a paleta padrão (a primeira de
+ *                   src/brand/palettes.ts), claro e escuro, sem a fonte da marca (correção do
+ *                   Opus, item 2 da validação do plano: sem @font-face; --rendra-brand-font
+ *                   cai na pilha de fontes do sistema). Nenhuma variável fora de --rendra- e
+ *                   --tw- sai daqui (correção do risco residual apontado depois da entrega do
+ *                   Lote A: o namespace inteiro do Tailwind, --color-*, --radius-*, --shadow-*,
+ *                   --font-sans/mono, --text-label/help, e também --spacing-*, --text-* da
+ *                   escala, --font-weight-*, --tracking-*, --container-*, --ease-*, --animate-*
+ *                   e --default-* do preset embutido, colidiria com o @theme de um host que
+ *                   também use Tailwind v4, e alguns mudam o padrão dele, como
+ *                   --default-font-family e --ease-out/--ease-in-out). Duas saídas para essas
+ *                   variáveis, decididas por renameResponsiveThemeVars/collectInlineMap:
+ *                     - as dez que mudam de valor a partir de md (spacing-control-sm/md/lg,
+ *                       spacing-header, text-xl/2xl/3xl e suas --line-height) continuam
+ *                       variável em tempo de execução, só que renomeada para --rendra-*;
+ *                     - todo o resto (nunca muda em tempo de execução) é inlineado: o valor
+ *                       literal entra direto na declaração de cada utility compilada
+ *                       (components.css/base.css), a variável nunca chega a existir no host.
+ *                   A exceção já conhecida (--font-sans, que rendra.base referencia direto,
+ *                   escrito à mão em `html { font-family: var(--font-sans) }` fora de
+ *                   qualquer utility gerada) continua reescrita à parte para
+ *                   `var(--rendra-brand-font)`, porque --font-sans é `@theme inline` e nunca
+ *                   chega a ser declarada (nada a inlinear: o Tailwind já resolve sozinho todo
+ *                   uso dentro de uma utility gerada).
  *   base.css        preflight do Tailwind + @layer rendra.base (reset do Rendra).
  *   components.css  @layer properties (fallback das --tw-* para navegador sem @property,
  *                   correção do Fable, item 3: mantido aqui, nunca descartado), @utility do
@@ -166,27 +173,127 @@ function extractFirstRule(text) {
 }
 
 /**
- * Remove do miolo de `:root, :host { ... }` (a camada "theme" do Tailwind) as variáveis da
- * ponte `@theme inline` de globals.css (--color-*, --radius-*, --font-sans, --font-mono,
- * --shadow-* e --text-label/--text-help com os sufixos --line-height/--letter-spacing/
- * --font-weight): nenhuma delas é lida por nenhuma utility compilada (o inline já resolveu
- * cada uma para --rendra-* ou para o valor literal), e deixá-las no tokens.css só colidiria
- * com o @theme de um host que também use Tailwind v4 (correção do Fable, item 2).
+ * Variáveis do namespace padrão do Tailwind (tipografia e controles) que mudam de valor a
+ * partir de md (48rem, o `@media` de globals.css fora do `@theme`, preservado em "rest"):
+ * essas dez precisam continuar sendo variável em tempo de execução (não dá para inlinear um
+ * valor único), mas sob o prefixo `--rendra-`, para nunca colidir com o `@theme` de um host
+ * que também use Tailwind v4. A troca é só textual (declaração e toda referência var(...)),
+ * feita de uma vez no CSS inteiro compilado, antes de qualquer outra coisa: o `@media` de
+ * "rest" referencia os mesmos nomes originais, então sai renomeado junto.
  */
-function stripInlineThemeNamespace(themeLayerText) {
+const RESPONSIVE_THEME_VARS = [
+  '--spacing-control-sm',
+  '--spacing-control-md',
+  '--spacing-control-lg',
+  '--spacing-header',
+  '--text-xl',
+  '--text-xl--line-height',
+  '--text-2xl',
+  '--text-2xl--line-height',
+  '--text-3xl',
+  '--text-3xl--line-height',
+]
+
+function renameResponsiveThemeVars(css) {
+  let out = css
+  for (const name of RESPONSIVE_THEME_VARS) {
+    const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const renamed = `--rendra-${name.slice(2)}`
+    out = out.replace(new RegExp(`(?<![\\w-])${escaped}(?![\\w-])`, 'g'), renamed)
+  }
+  return out
+}
+
+/** Declarações (nome -> valor) do miolo de `:root, :host { ... }` da camada "theme". */
+function collectThemeDeclarations(themeLayerText) {
   const rule = extractFirstRule(themeLayerText)
-  if (!rule) return themeLayerText
-  const REMOVE_PREFIXES = ['--color-', '--radius-', '--shadow-', '--text-label', '--text-help']
-  const REMOVE_EXACT = new Set(['--font-sans', '--font-mono'])
+  const map = new Map()
+  if (!rule) return map
+  for (const decl of rule.inner.split(';')) {
+    const trimmed = decl.trim()
+    if (!trimmed) continue
+    const idx = trimmed.indexOf(':')
+    if (idx === -1) continue
+    map.set(trimmed.slice(0, idx).trim(), trimmed.slice(idx + 1).trim())
+  }
+  return map
+}
+
+/**
+ * Troca cada `var(--nome)` (ou `var(--nome, alternativa)`, inclusive aninhado) por um valor
+ * literal, quando `resolve(nome)` devolve algo; sem resolução, mantém `var(...)` como estava
+ * (variável do próprio componente, como --progress ou --delay, nunca entra no mapa). Parênteses
+ * balanceados: valores como cubic-bezier(...) ou calc(...) não confundem o fim da expressão.
+ */
+function replaceVarReferences(text, resolve) {
+  let out = ''
+  let i = 0
+  while (i < text.length) {
+    if (text.startsWith('var(', i)) {
+      let depth = 1
+      let j = i + 4
+      while (depth > 0 && j < text.length) {
+        if (text[j] === '(') depth++
+        else if (text[j] === ')') depth--
+        j++
+      }
+      const inner = replaceVarReferences(text.slice(i + 4, j - 1), resolve)
+      let parenDepth = 0
+      let commaIdx = -1
+      for (let k = 0; k < inner.length; k++) {
+        if (inner[k] === '(') parenDepth++
+        else if (inner[k] === ')') parenDepth--
+        else if (inner[k] === ',' && parenDepth === 0) {
+          commaIdx = k
+          break
+        }
+      }
+      const name = (commaIdx === -1 ? inner : inner.slice(0, commaIdx)).trim()
+      const resolved = resolve(name)
+      out += resolved !== undefined ? resolved : `var(${inner})`
+      i = j
+      continue
+    }
+    out += text[i]
+    i++
+  }
+  return out
+}
+
+/**
+ * Mapa (nome -> valor literal) de tudo que a camada "theme" declara fora de --rendra-* e
+ * --tw-*: o namespace padrão do Tailwind inteiro (spacing, text, font-weight, tracking,
+ * container, ease, animate, default-*, leading), nenhum deles lido por nenhuma variável
+ * própria do Rendra (as dez de RESPONSIVE_THEME_VARS já saíram renomeadas antes disso rodar,
+ * então nunca entram aqui). Correção do risco residual: o dist/tokens.css não pode gravar
+ * nada desse namespace no host, e as utilities compiladas usam o valor direto.
+ */
+function collectInlineMap(themeLayerText) {
+  const map = collectThemeDeclarations(themeLayerText)
+  for (const name of [...map.keys()]) {
+    if (name.startsWith('--rendra-') || name.startsWith('--tw-')) map.delete(name)
+  }
+  return map
+}
+
+/**
+ * Do miolo de `:root, :host { ... }` da camada "theme", mantém só o que começa com --rendra-
+ * (as dez variáveis renomeadas) ou --tw- (não deveria aparecer aqui, mantido por segurança);
+ * tudo o mais já foi inlineado no CSS inteiro por collectInlineMap/replaceVarReferences.
+ * Sem nada para manter, devolve string vazia: o `@layer theme { ... }` some do tokens.css.
+ */
+function keepOnlyRendraDeclarations(themeLayerText) {
+  const rule = extractFirstRule(themeLayerText)
+  if (!rule) return ''
   const kept = rule.inner
     .split(';')
     .map((d) => d.trim())
     .filter(Boolean)
     .filter((decl) => {
       const name = decl.split(':')[0]?.trim() ?? ''
-      if (REMOVE_EXACT.has(name)) return false
-      return !REMOVE_PREFIXES.some((prefix) => name.startsWith(prefix))
+      return name.startsWith('--rendra-') || name.startsWith('--tw-')
     })
+  if (kept.length === 0) return ''
   return `${rule.before}\n${kept.map((d) => `    ${d};`).join('\n')}\n  ${rule.after}`
 }
 
@@ -232,9 +339,27 @@ async function main() {
 
   // 5) Compila. onDependency é ignorado: não gravamos observador de arquivo, é um build único.
   const result = await compile(packageEntryCss, { base: ROOT, onDependency: () => {} })
-  const built = result.build(candidates).replace(/^\/\*![^*]*\*\/\s*/, '')
+  const builtRaw = result.build(candidates).replace(/^\/\*![^*]*\*\/\s*/, '')
 
-  const { layers, rest } = extractLayers(built)
+  // 5a) As dez variáveis responsivas (mudam a partir de md) saem renomeadas para --rendra-*
+  //     antes de qualquer outra coisa, para nunca entrarem na lista de inlineamento a seguir.
+  const builtRenamed = renameResponsiveThemeVars(builtRaw)
+
+  // 5b) Todo o resto do namespace padrão do Tailwind (spacing, text, font-weight, tracking,
+  //     container, ease, animate, default-*, leading) nunca muda em tempo de execução: em vez
+  //     de ficar declarado (o que colidiria com o @theme de um host Tailwind v4), o valor
+  //     entra direto na utility compilada. Várias passadas: um valor pode citar outro (ex.:
+  //     --animate-draw cita var(--ease-out)), então uma passada só deixaria a referência solta.
+  const inlineMap = collectInlineMap(extractLayers(builtRenamed).layers.theme ?? '')
+  const resolve = (name) => inlineMap.get(name)
+  let builtInlined = builtRenamed
+  for (let pass = 0; pass < 5; pass++) {
+    const next = replaceVarReferences(builtInlined, resolve)
+    if (next === builtInlined) break
+    builtInlined = next
+  }
+
+  const { layers, rest } = extractLayers(builtInlined)
 
   // rendra.base referencia var(--font-sans) direto (html { font-family: var(--font-sans) },
   // escrito à mão em globals.css); --font-sans só espelhava --rendra-brand-font (@theme
@@ -250,11 +375,9 @@ async function main() {
   // não tem função no tokens.css e sai (correção do Fable, item 3).
   const tokensRest = rest.replace(/@layer properties;\s*/, '').trim()
 
-  const tokensCss = [
-    BANNER,
-    tokensRest,
-    layers.theme ? `@layer theme {\n${stripInlineThemeNamespace(layers.theme)}}` : '',
-  ]
+  const themeKept = layers.theme ? keepOnlyRendraDeclarations(layers.theme) : ''
+
+  const tokensCss = [BANNER, tokensRest, themeKept ? `@layer theme {\n${themeKept}}` : '']
     .filter(Boolean)
     .join('\n\n')
 
