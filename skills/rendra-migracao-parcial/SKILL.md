@@ -11,15 +11,15 @@ Esta skill leva o Rendra Design System para um sistema que já existe, sem exigi
 2. **Padrões**: rótulo, orientação, espaçamento de formulário e respiro de página.
 3. **Componentes**: troca por código de catálogo (`BTN-001`, `ABA-002`...), tela a tela.
 
-Antes de tudo, confirme com o usuário **qual dos três níveis** ele quer (pode ser mais de um, nesta ordem: tokens, depois padrões, depois componentes — nunca ao contrário, porque padrões e componentes partem da escala de tokens já certa) e **em qual pasta** do projeto de destino (`cwd`). Nunca decida sozinho o nível nem o escopo.
+Antes de tudo, confirme com o usuário **qual dos três níveis** ele quer (pode ser mais de um, nesta ordem: tokens, depois padrões, depois componentes; nunca ao contrário, porque padrões e componentes partem da escala de tokens já certa) e **em qual pasta** do projeto de destino (`cwd`). Nunca decida sozinho o nível nem o escopo.
 
-Os comandos `rendra auditar` e `rendra trocar` vêm da CLI publicada junto com o pacote (`npx rendra <comando>`, ou `rendra` direto se instalado global). Os dois precisam do `typescript` do próprio projeto de destino instalado (`rendra trocar` sai com mensagem clara e código de saída diferente de zero quando não encontra); se faltar, peça para instalar (`npm install --save-dev typescript`) antes de continuar.
+Os comandos `rendra auditar` e `rendra trocar` vêm da CLI publicada junto com o pacote (`npx rendra <comando>`, ou `rendra` direto se instalado global). Só `rendra trocar` precisa do `typescript` do projeto de destino instalado, para ler e reescrever o JSX (`rendra auditar` não usa o parser, só regex por linha); sem o `typescript`, `rendra trocar` sai com mensagem clara e código de saída diferente de zero, e a saída pede para instalar (`npm install --save-dev typescript`) antes de continuar.
 
 ## Nível 1: tokens
 
 Escala de espaço, tipografia, raio e sombra (`DESIGN_RULES.md`, "Tokens estruturais"): o objetivo é o projeto de destino parar de usar valor solto (`padding: 13px`, `border-radius: 6px`, cor hexadecimal direto no componente) e passar a usar a escala e as variáveis de tema do Rendra.
 
-1. Rode `rendra auditar <cwd>` (o caminho do projeto de destino) e leia a lista: cada linha é `arquivo:linha [regra] mensagem`, com sete regras genéricas (`cor-fixa`, `valor-arbitrario`, `fora-da-escala`, `fonte-fixa`, `100vh`, `raio-fixo`) mais o texto do trecho encontrado.
+1. Rode `rendra auditar <cwd>` (o caminho do projeto de destino) e leia a lista: cada linha é `arquivo:linha [regra] mensagem`, com sete regras genéricas (`cor-fixa`, `valor-arbitrario`, `estilo-inline`, `fonte-fixa`, `100vh`, `fora-da-escala`, `raio-fixo`) mais o texto do trecho encontrado.
 2. Corrija uma regra de cada vez, começando pela mais frequente. `cor-fixa` e `fonte-fixa` viram token semântico ou variável de tema; `valor-arbitrario` e `fora-da-escala` viram um degrau da escala (0, 1, 2, 3, 4, 6, 8, 12, 16, 24) ou um token nomeado; `100vh` vira `100dvh`; `raio-fixo` vira um token de raio por papel.
 3. Rode `rendra auditar <cwd>` de novo depois de cada lote de correções, até a lista sair vazia. Relate ao usuário quantas violações havia, quantas foram corrigidas e o que ficou pendente (ex.: um valor que depende de decisão de design, marcado para revisão humana).
 
@@ -41,7 +41,7 @@ Confira, tela por tela, contra o checklist do `DESIGN_RULES.md`:
 Troca o componente antigo pelo equivalente do Rendra, por código de catálogo (`rendra codigos` lista todos), tela a tela:
 
 1. Para cada tela, identifique o código atual (se o projeto já usa Rendra numa variante) ou o componente que vai virar Rendra, e o código de destino.
-2. Rode `rendra trocar <DE> <PARA> --dry-run` primeiro, sempre: ele mostra quantos trechos seriam reescritos e lista, em "para revisão", todo local que não pode ser trocado sozinho — prop dinâmica (`variant={x}`, nunca reescrita: o valor pode ser qualquer coisa em tempo de execução) ou troca entre componentes diferentes (nunca edita, só aponta onde o componente antigo aparece, porque virar outro componente não é troca de prop, é reescrita de estrutura, manual).
+2. Rode `rendra trocar <DE> <PARA> --dry-run` primeiro, sempre: ele mostra quantos trechos seriam reescritos e lista, em "para revisão", todo local que não pode ser trocado sozinho: prop dinâmica (`variant={x}`, nunca reescrita: o valor pode ser qualquer coisa em tempo de execução) ou troca entre componentes diferentes (nunca edita, só aponta onde o componente antigo aparece, porque virar outro componente não é troca de prop, é reescrita de estrutura, manual). Cobre 100% das telas: um elemento sem a prop, quando DE é a variante padrão do componente (a que ele usa sem nenhuma prop escrita), também conta como usando DE, e trocar para uma variante padrão remove a prop em vez de escrever o valor por extenso.
 3. Confirme o resultado da simulação com o usuário antes de rodar sem `--dry-run`. Depois de rodar de verdade, releia os arquivos reescritos e resolva um a um os itens de "para revisão".
 4. Relate por tela: quantos trechos foram reescritos automaticamente, quantos ficaram para revisão manual e o motivo de cada um.
 
