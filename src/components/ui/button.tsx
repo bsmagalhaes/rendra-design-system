@@ -1,8 +1,8 @@
 import { cva, type VariantProps } from 'class-variance-authority'
-import { Loader2 } from 'lucide-react'
 import { Slot } from 'radix-ui'
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react'
 import { resolveCatalogCode } from '@/catalog/components'
+import { Spinner } from '@/components/ui/spinner'
 import { cn } from '@/lib/cn'
 
 /**
@@ -97,7 +97,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     )
   }
 
-  const leading = loading ? <Loader2 className="animate-spin" aria-hidden /> : icon
+  // Ícone dentro do botão segue o tamanho do próprio botão (sm/md -> sm, lg -> md, como o
+  // [&_svg]:size-icon-* de buttonVariants já fazia com o Loader2 solto).
+  const leading = loading ? <Spinner size={size === 'lg' ? 'md' : 'sm'} /> : icon
   return (
     <button
       ref={ref}
