@@ -58,7 +58,7 @@ A fonte da verdade dos códigos é `src/config/presets.ts` (também aplica o có
 
 - Código informado:
 
-Cada resposta vira um valor em `src/config/layout.ts` (entre parênteses). No celular, qualquer escolha vira gaveta mais barra inferior.
+Cada resposta vira um valor da prop `layout` do `<AppShell>`, montada em `src/app/app-layout.tsx` (o padrão interno fica em `src/components/app-shell/layout.ts`; `src/config/layout.ts` reexporta para o boilerplate). No celular, qualquer escolha vira gaveta mais barra inferior.
 
 **3.1 Posição do menu** (`navigation`)
 
@@ -108,6 +108,9 @@ _Para os dois:_
 - Itens em grupos (título do grupo; ícone de cada item; no mega menu, uma descrição curta):
 - Até 4 atalhos da barra inferior (se 3.6 = sim):
 - No header, manter busca global (Ctrl+K), notificações e troca de tema? Tirar algum?
+- Itens do menu do avatar, além de Sair (ex.: Meu perfil, Configurações; vira `userMenuItems` do `AppShell`):
+- Ações rápidas da busca global, se houver (ex.: "Novo cliente"; vira `quickActions`):
+- Notificações: o sino aparece? De onde vêm os itens, id, tipo, título, hora e lida (vira `notifications`)?
 
 ## 4. Tema (fluxo guiado)
 
@@ -177,7 +180,7 @@ Uma paleta é só **4 cores e o degradê da marca**. Pergunte apenas isto:
 
 1. **Não**: uma marca só, definida no build. Padrão.
 2. **Sim, marcas conhecidas no build**: cada uma vira uma entrada em `src/brand/palettes.ts`.
-3. **Sim, marcas cadastradas em tempo de execução** (o parceiro escolhe as cores num painel): as 4 cores e o degradê vêm da API ou da configuração do tenant, e o app chama `applyPalette(sementes)` na entrada. Pergunte de onde vêm as cores e quem as cadastra.
+3. **Sim, marcas cadastradas em tempo de execução** (o parceiro escolhe as cores num painel): as 4 cores e o degradê vêm da API ou da configuração do tenant, e o app chama `applyPalette(sementes)` na entrada. Pergunte de onde vêm as cores e quem as cadastra. Para o modo explícito (tokens já prontos, sem recalcular) ou misto, para escopar mais de uma marca na mesma página, ou para deixar o estado (`brandId`, `paletteId`, `mode`) controlado por fora, troque `applyPalette` por `createTheme`/`applyTheme(theme, { target })` e as props de controle do `BrandProvider` (detalhe em `docs/COMO_APLICAR.md`, "createTheme/applyTheme: os três modos").
 
 - Referências visuais que o cliente admira (aberta, opcional):
 
@@ -193,7 +196,7 @@ Para cada tela: nome, objetivo, contêiner (página, drawer ou modal) e priorida
 
 Cada componente do design system, e cada variante visual dele (não tamanho, não tom, formato), tem um **código de catálogo**: três ou quatro letras, hífen, três dígitos (`BTN-001`, `ABA-002`). É diferente do código de modelo do bloco 3.0 (`T1-C4-M5`): aquele escolhe tema, cores e menu; este escolhe **qual variante de cada componente** a tela usa.
 
-Veja todos com `npm run dev`, abra `/componentes` e olhe o selo ao lado de cada exemplo: todo código do catálogo tem selo na vitrine. Diga, para cada situação abaixo, qual código quer (ou "não sei, sugira": o padrão já é uma sugestão fundamentada). O que não estiver na tabela é porque o componente **só tem um código** (é a variante única dele, sem escolha a fazer); ainda assim vale conferir o exemplo na vitrine.
+Veja todos com `npm run dev`, abra `/componentes` e olhe o selo ao lado de cada exemplo (ou rode `rendra codigos`, se o pacote com a CLI estiver instalado): todo código do catálogo tem selo na vitrine, e a lista completa e sempre atualizada é `src/catalog/components.ts`, nunca este documento. Diga, para cada situação abaixo, qual código quer (ou "não sei, sugira": o padrão já é uma sugestão fundamentada). O que não estiver na tabela é porque o componente **só tem um código** (é a variante única dele, sem escolha a fazer); ainda assim vale conferir o exemplo na vitrine.
 
 | Situação                                          | Código padrão                                                                   | Outras opções do mesmo componente                                                                                      |
 | ------------------------------------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
@@ -205,8 +208,14 @@ Veja todos com `npm run dev`, abra `/componentes` e olhe o selo ao lado de cada 
 | Escolher uma entre poucas opções simples          | `RDO-001` (lista, com bolinha)                                                  | `RDO-002` cartões (com ícone e descrição, mais destaque)                                                               |
 | Trilha de navegação dentro do corpo da página     | `BRD-001` (responsiva: trilha no desktop, botão voltar no celular)              | `BRD-002` sempre em texto (usada no header do AppShell, não é escolha de tela)                                         |
 | Gráfico de um indicador                           | `CHT-001` linha                                                                 | `CHT-002` barras, `CHT-003` área, `CHT-004` pizza, `CHT-005` combinado, `CHT-006` velocímetro de meta, `CHT-007` funil |
+| Mostrar uma pessoa, ou várias sobrepostas         | `AVT-001` (avatar)                                                              | `AVT-002` em grupo (com contador do excedente)                                                                         |
+| Uma escolha independente, ligada ou desligada     | `CHK-001` (caixa de seleção)                                                    | `CHK-002` grupo de caixas (com "selecionar todos")                                                                     |
+| Linhas simples, com título, descrição e ação      | `LIST-001` (lista)                                                              | `LIST-002` reordenável (arraste e teclado, com `onReorder`)                                                            |
+| Nota rápida de satisfação                         | `RTG-001` (estrelas)                                                            | `RTG-002` em escala (0 a 10, tipo NPS)                                                                                 |
+| Arrastar e soltar ou escolher arquivos            | `UPL-001` (lista)                                                               | `UPL-002` em galeria (miniaturas, para fotos e vídeos)                                                                 |
+| Quadro kanban                                     | `KANB-001` (padrão)                                                             | `KANB-002` com destinos de arraste, além das colunas (`dropTargets`)                                                   |
 
-Componentes com um código só (exemplos comuns, veja o resto na vitrine): `CAMP-001` campo de texto, `SEL-001` select, `DTP-001` seletor de data, `TAB-001` tabela, `GAV-001` gaveta (drawer), `UPL-001` upload, `KANB-001` kanban, `CAL-001` calendário, `WIZ-001` wizard (`WIZ-002` para o indicador de etapas sozinho).
+Componentes com um código só (exemplos comuns, veja o resto na vitrine): `CAMP-001` campo de texto, `SEL-001` select, `DTP-001` seletor de data, `TAB-001` tabela, `GAV-001` gaveta (drawer), `CAL-001` calendário, `WIZ-001` wizard (`WIZ-002` para o indicador de etapas sozinho), `FLD-001` campo com rótulo e ajuda (`FLD-002` para um rótulo avulso), `FORM-001` formulário (`FORM-002` para uma seção de formulário), `CHAT-001` lista de conversas, `CHAT-002` linha do tempo da conversa e `CHAT-003` campo de mensagem, `COR-001` seletor de cor, `CROP-001` recorte de imagem, `DOC-001` visualizador de documentos, `QRC-001` código QR, `CKLT-001` lista de verificação, `REP-001` campo repetível e `SPIN-001` indicador de carregamento.
 
 - Código escolhido por situação (preencha as linhas que fizerem sentido para este projeto):
 

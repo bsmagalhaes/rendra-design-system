@@ -5,7 +5,11 @@ Regras obrigatórias de interface deste repositório. Foram escritas para serem 
 Três verificações automáticas garantem boa parte destas regras. Rode as três antes de entregar:
 
 ```bash
-npm run check:rules   # cor fixa, valor arbitrário, fora da escala, estilo inline, fonte, 100vh, arquivos duplicados
+npm run check:rules   # cor fixa, valor arbitrário, fora da escala, estilo inline, fonte fixa, 100vh,
+                       # var(--color-*) inline, SVG de marca fora de lugar, classe dinâmica, texto largo
+                       # demais, primária como texto, componente duplicado, variável sem --rendra-,
+                       # CSS fora do lugar (15 regras), mais texto orientativo (checkGuidance) e o
+                       # prefixo --rendra- (checkVarPrefix); lista completa no scripts/check-design-rules.mjs
 npm run lint          # TypeScript, React Hooks e acessibilidade (jsx-a11y)
 npm run test:layout   # todas as rotas, 5 larguras, 3 templates: rolagem, largura e toque de 44px
 ```
@@ -26,7 +30,9 @@ Existe **um** Select, **uma** Table, **um** Modal, **um** Drawer, **um** Input, 
 
 Antes de criar um componente, procure em `src/components/ui` um que resolva o caso com uma prop a mais. Se existir, **acrescente a prop**. Componente duplicado é erro de revisão. O `check:rules` barra nomes de arquivo como `*-mobile`, `*Simples`, `*Grande`, `*ComBusca`.
 
-Componentes existentes (`src/components/ui`): accordion, action-bar, alert, avatar (e AvatarGroup), badge, brand-feedback-icon, breadcrumb, button, button-group, card, chart, checkbox (e CheckboxGroup), data-toolbar, date-picker, drawer, dropdown-menu, empty-state, error-page, field (Label, Field), form (Form, FormField, FormSection), input, list, modal, otp-input, pagination, popover, progress, radio-group, select, separator, skeleton, slider, stat-card, switch, table, tabs, textarea, timeline, toast, tooltip, upload, wizard (Wizard e Stepper). Internos, sem uso direto em tela: overlay-shell, picker-panel.
+Cada componente de `src/components/ui`, e cada variante visual relevante, tem um código de catálogo (`ABA-001`, `BTN-006`...), escrito no atributo `data-rendra` do elemento raiz via `resolveCatalogCode()`. **A lista de referência é o catálogo, não este documento**: `src/catalog/components.ts`, a vitrine `/componentes` ou (quando o pacote com a CLI estiver instalado) `rendra codigos`; copiar a lista para cá fica desatualizado a cada componente novo. Internos, sem uso direto em tela e fora do catálogo: `overlay-shell`, `picker-panel`, `sortable-handle`.
+
+Componente de `src/components/ui` **nunca importa um roteador direto** (`react-router` ou outro): usa `useRendraLink()`, `useCurrentPath()` e `useRendraNavigate()`, de `@/components/rendra-provider`. A ligação com o roteador real é só a ponte, `RendraRouterBridge` (`src/components/rendra-router-bridge.tsx`, subcaminho `rendra-ui/router-bridge` no pacote), o único lugar do app que sabe qual roteador está em uso.
 
 ## 2. Regra mestra 2: mobile-first real, sem exceção
 
@@ -43,11 +49,12 @@ O sistema precisa **funcionar** 100% no celular, e não só "não quebrar".
 
 ## 3. A marca fica isolada
 
-Tudo o que é da marca mora em dois arquivos e numa pasta:
+Tudo o que é da marca mora em três arquivos e numa pasta:
 
-1. `src/styles/theme.css`: cores, fonte, raio, sombras e degradês, como variáveis CSS.
-2. `src/brand/brand.config.ts`: nome do produto, logotipos (claro e escuro), símbolo, favicon, formato e ícones de feedback.
-3. `src/brand/assets/`: os SVGs e as fontes da marca.
+1. `src/styles/theme.css`: formato e fonte do modelo, mais os neutros e as cores fixas do sistema (erro, sucesso, alerta, informação), como variáveis CSS.
+2. `src/brand/palettes.ts`: as sementes da paleta da marca (4 cores e o degradê); `npm run palettes:build` gera o resto em `src/styles/palettes.css`, com AA conferido.
+3. `src/brand/brand.config.ts`: nome do produto, logotipos (claro e escuro), símbolo, favicon, formato (`shape`), estilo do rótulo dos campos (`labelStyle`) e ícones de feedback.
+4. `src/brand/assets/`: os SVGs e as fontes da marca.
 
 **Nenhum componente pode conter** cor hexadecimal, `rgb()`, nome de fonte, logotipo ou ícone de marca fixo. Componentes leem a marca por `useBrand()` e as cores pelos nomes semânticos (`bg-primary`, `text-muted-foreground`). Em JavaScript, como nos gráficos, use as variáveis do tema, por exemplo `var(--rendra-chart-1)` e `var(--rendra-primary)`. As `--color-*` do Tailwind são inline e não existem no CSS.
 
@@ -84,6 +91,10 @@ São três modelos, cada um com formato, fonte e símbolo fixos:
 - **A paleta pode ser trocada.** Qualquer modelo pode usar a paleta de outro: no `<html>`, `data-brand` define o modelo e `data-palette` define as cores.
 - Todo template define `primary`, `primary-hover`, `secondary`, `secondary-hover`, os `*-foreground` correspondentes e os `*-hover-foreground`. A cor de hover pode ser outra cor da marca: o texto sobre ela usa o `*-hover-foreground`.
 - **Primária como preenchimento e como texto são tokens diferentes.** `bg-primary` é o preenchimento (botão, selo). Para link, ícone ou destaque em texto sobre o fundo, use `text-primary-text`, nunca `text-primary`: no modo escuro a primária costuma ficar escura demais para texto, e o `--rendra-primary-text` é o tom que passa AA. Todo tema define `--rendra-primary-text` no claro e no escuro, e a página `/tokens` mostra o contraste dele.
+
+### CSS em camadas
+
+`src/styles/globals.css` declara `@layer theme, base, rendra.base, components, rendra.components, utilities`: `rendra.base` é o reset do Rendra, depois de `base` e mais fraco que qualquer componente do host ou do próprio Rendra; `rendra.components` é o estilo de componente do Rendra, depois de `components` e antes de `utilities`, para uma classe utilitária do host sempre conseguir sobrescrever. Para aplicar um tema (`createTheme`/`applyTheme`) num contêiner específico em vez do documento inteiro (mais de uma marca na mesma página), o escopo é o seletor `[data-rendra-root]` em vez de `:root`, via `applyTheme(theme, { target: elemento })`.
 
 ## 4. Tokens
 
@@ -243,10 +254,22 @@ Rótulo **sempre acima** do campo; obrigatório marcado no rótulo (`required`);
 
 ### Kanban, painel e atendimento
 
-- **Kanban:** o quadro ocupa a altura que sobra na tela e nunca passa dela; cada etapa rola por dentro e mostra mais cards ao chegar no fim (rolagem infinita, `pageSize` e `onLoadMore`). O **(+) de adicionar fica no título da etapa**. Com `valueFields`, o card mostra os valores (ex.: P&S e MRR) e a etapa mostra o total de cada um; no card, a data fica à esquerda e o avatar do responsável à direita, abaixo de uma divisória. Muitas etapas rolam na horizontal dentro do quadro.
+- **Kanban:** o quadro ocupa a altura que sobra na tela e nunca passa dela; cada etapa rola por dentro e mostra mais cards ao chegar no fim (rolagem infinita, `pageSize` e `onLoadMore`). O **(+) de adicionar fica no título da etapa**. Com `valueFields`, o card mostra os valores (ex.: P&S e MRR) e a etapa mostra o total de cada um; no card, a data fica à esquerda e o avatar do responsável à direita, abaixo de uma divisória. Muitas etapas rolam na horizontal dentro do quadro. Com `dropTargets`, o arraste também mostra uma barra de destinos além das colunas (ex.: "Marcar como ganho"), disponível também no menu "Mover para" do card (`KANB-002`).
+- **List:** cada `ListItem` pode ter `tone` (`success`, `error`, `warning`, `neutral`), um selo textual de status, nunca só cor. Com `onReorder`, a lista reordena por arraste (mouse e toque) e por teclado (setas na alça), que só aparece quando `onReorder` existe (`LIST-002`).
+- **Upload:** `layout="gallery"` troca a linha de lista por miniaturas, para fotos e vídeos (`UPL-002`); `crop` (com `aspects`) abre o `ImageCropper` antes de confirmar o envio, numa proporção fixa.
+- **Input:** `units` mostra um seletor de unidade dentro do campo (ex.: kg/lb); `variant="secret"` esconde o valor com opção de revelar, sem alternar para `type="password"` simples.
+- **Timeline:** cada evento tem `tone` (semântico) e pode ter `status` (`succeeded`, `failed`, `skipped`) para o passo de um fluxo (ex.: etapas de uma importação).
 - **Painel em widgets (`WidgetGrid`):** "Ajustar dashboard" libera arrastar e redimensionar; os outros widgets se encaixam sozinhos e a arrumação fica salva no navegador. No celular, os widgets empilham e não se editam.
 - **Gráficos:** velocímetro de meta em meio círculo com degradê vermelho, amarelo e verde (`--rendra-meter-*`), percentual grande e meta e realizado em texto. Funil com etapas que afunilam, o valor e o nome dentro de cada faixa e a conversão entre elas, com a maior queda destacada.
 - **Atendimento (chat):** lista, conversa e dados do contato lado a lado na altura da tela; no celular, a lista e a conversa em tela cheia. O campo de mensagem tem 2 linhas, cresce com o texto, e aceita anexos por botão, arrastar e soltar ou colar (Ctrl+V de arquivo, print ou imagem).
+- **ColorPicker:** amostras da marca (`swatches`, recebidas por prop, nunca escritas no componente) antes da cor livre por hexadecimal.
+- **ImageCropper:** recorta numa proporção fixa (`aspects`) antes de enviar (foto de perfil, capa); só confirma (`onConfirm`) com o recorte válido.
+- **DocumentViewer:** abre um PDF (contrato, nota fiscal, comprovante) sem sair da tela, com os estados vazio (`url: null`), carregando e erro previstos por prop.
+- **QrCode:** gera o código (link, código de acesso) no próprio cliente, sem depender de serviço externo.
+- **Rating:** `variant="stars"` para uma nota rápida de satisfação; `variant="scale"` para 0 a 10 (NPS), com rótulo nas pontas (`lowLabel`, `highLabel`).
+- **RepeatableField:** lista de campos do mesmo tipo (telefones, e-mails, endereços), com `createItem`, `renderField` e, quando fizer sentido, `showPrimary` para marcar um item como principal.
+- **Checklist:** itens que a pessoa cria, renomeia, marca e remove, tudo por teclado, sem depender de arraste.
+- **Spinner:** carregamento breve dentro de um botão, campo ou lista; `label` só quando o carregamento precisar de anúncio para leitor de tela (padrão é decorativo).
 - **Barras de rolagem internas** usam `scrollbar-subtle`: finas, sem trilho, na cor da borda.
 
 ### Rolagem
@@ -276,17 +299,25 @@ Cada componente se reconstrói sozinho, com a mesma API:
 
 ## 7. AppShell e layout
 
-Tudo é prop do `<AppShell>`, com o padrão em `src/config/layout.ts`:
+O `<AppShell>` nunca importa `@/config`: tudo entra por prop, montada por quem monta a aplicação (o `AppLayout` do boilerplate, `src/app/app-layout.tsx`, elemento das rotas dentro do `<RendraRouterBridge>` de `src/routes.tsx`). Este documento é a fonte única do contrato:
 
-- `navigation`: `sidebar` (lateral) ou `topbar` (superior).
-- `sidebar`: `collapsed` (padrão, só ícones) ou `expanded`.
-- `expandOnHover`: com a sidebar recolhida, abre por cima do conteúdo ao passar o mouse ou focar pelo teclado.
-- `submenu`: `panel` (segunda barra lateral) ou `inline` (dentro da sidebar).
-- `topbarSubmenu`: `dropdown` (navegável) ou `mega` (mega menu com seções e descrições).
-- `bottomNav`: barra inferior no celular.
-- `userConfigurable`: permite que o usuário troque o layout (menu do avatar e Configurações).
+- `navigation`: os grupos e itens do menu (`NavGroup[]`, de `src/config/navigation.ts`).
+- `layout`: posição e comportamento do menu (`Partial<ShellLayout>`, com o padrão em `src/components/app-shell/layout.ts` e a escolha do projeto em `src/config/layout.ts`):
+  - `navigation`: `sidebar` (lateral) ou `topbar` (superior).
+  - `sidebar`: `collapsed` (padrão, só ícones) ou `expanded`.
+  - `expandOnHover`: com a sidebar recolhida, abre por cima do conteúdo ao passar o mouse ou focar pelo teclado.
+  - `submenu`: `panel` (segunda barra lateral) ou `inline` (dentro da sidebar).
+  - `topbarSubmenu`: `dropdown` (navegável) ou `mega` (mega menu com seções e descrições).
+  - `bottomNav`: barra inferior no celular.
+- `user`: nome, e-mail e foto no rodapé da sidebar e no menu do avatar (`ShellUser`).
+- `userMenuItems`: itens do menu do avatar (perfil, configurações...).
+- `onLogout`: ação do item de sair do menu do avatar.
+- `homeLabel`: rótulo do item raiz da trilha (padrão "Início").
+- `quickActions`: ações rápidas oferecidas na busca global (Ctrl+K).
+- `notifications`: itens do sino de notificações (`items`, `onMarkAllRead`, `onItemClick`).
+- `userConfigurable`: permite que o usuário troque o layout (menu do avatar e Configurações); `false` trava o layout do projeto.
 
-A sidebar tem z-index maior que o header. O menu vem de `src/config/navigation.ts`, e o item ativo é sempre o destino mais específico que combina com o endereço.
+A sidebar tem z-index maior que o header. O item ativo do menu é sempre o destino mais específico que combina com o endereço atual.
 
 ## 8. Feedback com a marca
 

@@ -16,8 +16,11 @@ Obrigado pelo interesse. Este repositório é mantido por [Bruno Magalhaes](http
    npm run test:a11y
    npm run registry:build   # se criou ou renomeou componente; faça commit do registry.json
    npm run palettes:build   # se mexeu nas sementes de src/brand/palettes.ts; faça commit do palettes.css
+   npm run build:lib        # se mexeu na superfície pública (src/index.ts) ou no CSS publicado
+   npm run verify:pack      # idem: confere o pacote publicável (npm pack e instalação num projeto à parte)
    ```
    **Componente novo ou alterado entra com teste de comportamento** ao lado dele (`nome.test.tsx`, com `// @vitest-environment jsdom` na primeira linha e `renderApp` de `src/test/render.tsx`) e ganha um piso de cobertura em `vite.config.ts`. Teste o que a pessoa faz (clicar, digitar, escolher) e o que o componente entrega, não detalhes de implementação.
+   **Componente ou variante nova também entra com uma entrada em `src/catalog/components.ts`** (o teste de integridade do catálogo barra código duplicado, fora do formato ou sem cobrir o arquivo) e, se fizer parte da superfície pública do pacote, com o export em `src/index.ts`.
 4. Abra o Pull Request explicando o que mudou e por quê, com capturas em 360px e 1280px quando houver mudança visual.
 5. O CI roda tudo de novo, mais o build, o Storybook e a regressão visual. O merge só é liberado com tudo verde.
 6. **Mudança visual intencional:** a regressão visual vai falhar, como esperado. O mantenedor aplica no Pull Request o rótulo `atualizar-visual`: o GitHub gera as capturas novas no Linux e faz commit no branch. Quem revisa confere as imagens no próprio PR.
@@ -35,7 +38,7 @@ Nunca afirme que a licença MIT obriga crédito visível na interface: ela não 
 
 ## Versões
 
-O projeto segue [versionamento semântico](https://semver.org/lang/pt-BR/): correção sobe o último número (1.0.1), recurso novo compatível sobe o do meio (1.1.0), e mudança que exige ajuste nos projetos, como prop renomeada ou token novo obrigatório, sobe o primeiro (2.0.0). Cada versão vira uma tag `vX.Y.Z` e um release no GitHub, com o trecho do CHANGELOG.
+O projeto segue [versionamento semântico](https://semver.org/lang/pt-BR/): correção sobe o último número (1.0.1), recurso novo compatível sobe o do meio (1.1.0), e mudança que exige ajuste nos projetos, como prop renomeada ou token novo obrigatório, sobe o primeiro (2.0.0). Renomear uma variável `--rendra-*` (contrato público de tema) ou uma prop pública de componente é sempre mudança major, mesmo que pareça pequena. Cada versão vira uma tag `vX.Y.Z` e um release no GitHub, com o trecho do CHANGELOG.
 
 ## Contato
 

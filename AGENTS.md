@@ -6,13 +6,14 @@ Este é o **Rendra Design System**: um design system completo e boilerplate Reac
 
 ## Em um minuto
 
-- **O que é:** design system e boilerplate React (Vite, TypeScript, Tailwind v4, Radix e shadcn/ui copiados para `src/components/ui`). Serve para três coisas: **começar um sistema novo** a partir deste repositório, **migrar o layout** de um sistema existente, ou **trazer componentes** para outro projeto pelo registry (`npx shadcn@latest add`).
+- **O que é:** design system e boilerplate React (Vite, TypeScript, Tailwind v4, Radix e shadcn/ui copiados para `src/components/ui`). Serve para quatro coisas: **começar um sistema novo** a partir deste repositório, **migrar o layout** de um sistema existente, **trazer componentes** para outro projeto pelo registry (`npx shadcn@latest add`) ou pelo **pacote npm** (import direto dos componentes e do CSS, mais a CLI `rendra` para o catálogo de códigos, a auditoria das regras e a troca de variante por código; detalhe completo no `README.md`).
 - **Cor em três camadas** (a parte que mais confunde; leia a seção "Cor: três camadas" do `DESIGN_RULES.md`):
   1. **Modelo**: formato e fonte. São só três: Safira (quadrado), Equilíbrio (intermediário) e Aurora (arredondado).
   2. **Paleta**: a cor da marca, que é só **4 cores** (primária, hover da primária, secundária, hover da secundária) e o **degradê da marca**. Todo o resto é gerado com AA por `createPalette`; nunca edite `palettes.css` à mão.
   3. **Sistema**: neutros e cores de erro, sucesso, alerta e informação. Fixos, iguais em todas as paletas.
-- **Onde mexer:** marca em `src/brand/palettes.ts` (cores), `src/styles/theme.css` (modelo) e `src/brand/brand.config.ts` e `src/brand/assets` (nome, logotipo); menu em `src/config/navigation.ts`; layout do AppShell em `src/config/layout.ts`; rotas em `src/routes.tsx` e `src/config/routes-list.ts`.
-- **O que não se faz:** componente paralelo (`SelectSimples`), valor fora da escala, cor fixa, estilo inline, botão solto, texto de instrução no corpo da tela. O `npm run check:rules` barra tudo isso.
+- **Onde mexer:** marca em `src/brand/palettes.ts` (cores), `src/styles/theme.css` (modelo) e `src/brand/brand.config.ts` (nome, logotipo, `labelStyle` do rótulo) e `src/brand/assets`; menu em `src/config/navigation.ts`; layout, usuário, menu do avatar, ações rápidas e notificações do AppShell, todos por prop, em `src/app/app-layout.tsx` (o padrão de `layout` fica em `src/components/app-shell/layout.ts`, reexportado por `src/config/layout.ts`); rotas em `src/routes.tsx` e `src/config/routes-list.ts`.
+- **O que não se faz:** componente paralelo (`SelectSimples`), valor fora da escala, cor fixa, estilo inline, botão solto, texto de instrução no corpo da tela, variável CSS do Rendra sem o prefixo `--rendra-`. O `npm run check:rules` barra tudo isso; a lista completa das verificações está no `DESIGN_RULES.md`.
+- **Catálogo de códigos:** cada componente e cada variante visual relevante têm um código (`ABA-001`, `BTN-006`...), no atributo `data-rendra` do elemento raiz. Lista sempre atualizada em `src/catalog/components.ts`, na vitrine `/componentes` ou em `rendra codigos`, nunca copiada para outro documento.
 - **Como saber que terminou:** `npm run typecheck`, `npm run lint`, `npm run check:rules`, `npm test` (unitários e de componente, com cobertura mínima por arquivo), `npm run test:layout` e `npm run test:a11y` passando.
 
 ## Leitura obrigatória
@@ -20,6 +21,7 @@ Este é o **Rendra Design System**: um design system completo e boilerplate Reac
 1. Este arquivo, inteiro.
 2. [`DESIGN_RULES.md`](DESIGN_RULES.md): as regras de interface. Elas valem mais do que qualquer hábito seu. Uma alteração que não as segue está errada, mesmo que funcione.
 3. [`README.md`](README.md) e, quando for aplicar em outro projeto, [`docs/COMO_APLICAR.md`](docs/COMO_APLICAR.md).
+4. Se o trabalho seguir a matriz de modelos (levantamento, plano, validação e execução por papéis diferentes), leia também o [`CLAUDE.md`](CLAUDE.md): a matriz de modelos e as regras de operação.
 
 ## Fluxo de início (siga antes de qualquer alteração)
 
@@ -65,11 +67,11 @@ Proponha um plano em etapas e espere a aprovação. A ordem de referência:
 **Projeto novo**
 
 1. Marca: `src/styles/theme.css`, `src/styles/themes.css`, `src/brand/brand.config.ts` e `src/brand/assets`, conforme o briefing (modelo, paleta, modo de cor). Confira `/tokens`: nenhum selo de contraste pode marcar "falha".
-2. Menu (`src/config/navigation.ts`), layout do AppShell (`src/config/layout.ts`, com cada valor escolhido no bloco 4 do briefing) e rotas (`src/routes.tsx` e `src/config/routes-list.ts`).
+2. Menu (`src/config/navigation.ts`) e layout do AppShell, nas props de `src/app/app-layout.tsx` (com cada valor escolhido no bloco 4 do briefing), montado dentro do `<RendraRouterBridge>` de `src/routes.tsx`; rotas em `src/routes.tsx` e `src/config/routes-list.ts`.
 3. Telas, em ordem de prioridade, partindo das telas base de `src/pages`.
 4. Limpeza do que é só demonstração (`src/mocks`, telas de exemplo sem uso, templates alternativos não usados).
 
-**Migração de layout**: siga a "Ordem de migração" de [`docs/COMO_APLICAR.md`](docs/COMO_APLICAR.md): tokens e tema, depois AppShell, formulários e ações, listagens, feedback, telas e limpeza.
+**Migração de layout**: siga a "Ordem de migração" de [`docs/COMO_APLICAR.md`](docs/COMO_APLICAR.md): tokens e tema, depois o `AppShell` (via `RendraRouterBridge` e o `AppLayout` do projeto), formulários e ações, listagens, feedback, telas e limpeza.
 
 Ao fim de **cada etapa**:
 
@@ -105,9 +107,14 @@ npm run typecheck               # TypeScript
 npm run lint                    # ESLint (TS, hooks, acessibilidade)
 npm run check:rules             # regras de design
 npm test                        # unitários (Vitest)
+npm run test:coverage           # idem, com o piso de cobertura por arquivo (o CI usa este)
 npm run test:layout             # Playwright: rotas x larguras x modelos, claro e escuro
 npm run test:a11y               # acessibilidade (axe-core, WCAG 2.1 AA)
 npm run test:visual             # regressão visual (referências do Linux, geradas no CI)
+npm run palettes:build          # gera src/styles/palettes.css das sementes de src/brand/palettes.ts
+npm run registry:build          # gera o registry.json (novo componente ou variante)
+npm run build:lib               # build do pacote npm (dist/, com os subcaminhos e o CSS)
+npm run verify:pack             # confere o pacote publicável (npm pack e instalação num projeto à parte)
 ```
 
 ## Crédito "Feito com Rendra" e licença
