@@ -1909,6 +1909,7 @@
       ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/field.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/input.json"
       ],
       "files": [

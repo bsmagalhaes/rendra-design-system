@@ -59,6 +59,15 @@ describe('ColorPicker', () => {
     expect(screen.getByRole('button', { name: 'Cor' })).toHaveTextContent(red!)
   })
 
+  it('hex sem "#" no campo livre também é aceito, normalizado para #rrggbb', async () => {
+    renderApp(<ControlledColorPicker aria-label="Cor" swatches={[blue!]} />)
+    await openPicker()
+    const hexField = await screen.findByLabelText('Cor: cor livre (hexadecimal)')
+    await userEvent.clear(hexField)
+    await userEvent.type(hexField, red!.slice(1))
+    expect(screen.getByRole('button', { name: 'Cor' })).toHaveTextContent(red!)
+  })
+
   it('o check da amostra selecionada usa uma cor de contraste com a própria amostra', async () => {
     const onChange = vi.fn()
     renderApp(

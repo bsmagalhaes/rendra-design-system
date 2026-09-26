@@ -483,16 +483,22 @@
 /*
  * Amostra de cor livre do ColorPicker, via variável CSS (nunca estilo inline). A cor da
  * amostra vem do usuário, não do tema, então o check sobre ela usa branco ou tinta fixos
- * (nunca um token de marca), escolhidos pelo contraste com a própria amostra.
+ * (nunca um token de marca), escolhidos pelo contraste com a própria amostra. Mesmo par que
+ * src/brand/palette.ts exporta como WHITE e INK (usado ali para o cálculo de contraste);
+ * o valor mora só aqui, e o token evita repetir o hexadecimal numa segunda regra CSS.
  */
+:root {
+  --rendra-swatch-check-light: #ffffff;
+  --rendra-swatch-check-dark: #0b1d37;
+}
 @utility bg-swatch {
   background-color: var(--rendra-swatch, transparent);
 }
 @utility swatch-check-light {
-  color: #ffffff;
+  color: var(--rendra-swatch-check-light);
 }
 @utility swatch-check-dark {
-  color: #0b1d37;
+  color: var(--rendra-swatch-check-dark);
 }
 
 /* Caixas do OtpInput: quantidade vem da variável --otp */

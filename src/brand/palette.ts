@@ -61,6 +61,8 @@ type Rgb = [number, number, number]
  * contraste, a cor do check sobre uma amostra livre do usuário (que não é do tema, então
  * não tem um par claro/escuro pronto): nenhum componente de fora de src/brand pode ter um
  * hexadecimal literal, então a comparação usa estas constantes em vez de repetir a cor.
+ * O mesmo par vive em CSS como --rendra-swatch-check-light e --rendra-swatch-check-dark
+ * (src/styles/globals.css); mude os dois lados juntos.
  */
 export const WHITE = '#ffffff'
 const BLACK = '#000000'
