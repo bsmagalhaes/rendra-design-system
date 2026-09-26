@@ -12,10 +12,13 @@ const PALETTE_KEY = 'ui-palette'
 /**
  * Armazenamento plugável (C5, docs/specs/v2-plano.md seção 2.6/4.2): get/set simples, para
  * trocar o localStorage padrão por outra fonte (cookie, backend...), ou desligar com `false`.
+ * `remove` é opcional: quando ausente (armazenamento customizado antigo, sem essa peça),
+ * `clearKey` cai de volta em `set(key, '')`, para não quebrar quem já implementou só get/set.
  */
 export interface BrandStorage {
   get(key: string): string | null
   set(key: string, value: string): void
+  remove?(key: string): void
 }
 
 const localStorageAdapter: BrandStorage = {
@@ -33,13 +36,26 @@ const localStorageAdapter: BrandStorage = {
       // Armazenamento indisponível (aba anônima, bloqueio): segue só em memória.
     }
   },
+  remove(key) {
+    try {
+      localStorage.removeItem(key)
+    } catch {
+      // Armazenamento indisponível: segue só em memória.
+    }
+  },
 }
 
-const noopStorage: BrandStorage = { get: () => null, set: () => {} }
+const noopStorage: BrandStorage = { get: () => null, set: () => {}, remove: () => {} }
 
 function resolveStorage(storage: BrandStorage | false | undefined): BrandStorage {
   if (storage === false) return noopStorage
   return storage ?? localStorageAdapter
+}
+
+/** Zera a chave de verdade (removeItem) quando o storage implementa `remove`; senão, `set('')`. */
+function clearKey(storage: BrandStorage, key: string) {
+  if (storage.remove) storage.remove(key)
+  else storage.set(key, '')
 }
 
 const darkQuery = '(prefers-color-scheme: dark)'
@@ -192,7 +208,8 @@ export function BrandProvider({
           : palette.sidebarLogo,
       setPaletteId: (id) => {
         if (!paletteControlled) setPaletteIdState(id)
-        storage.set(PALETTE_KEY, id ?? '')
+        if (id) storage.set(PALETTE_KEY, id)
+        else clearKey(storage, PALETTE_KEY)
         onPaletteIdChange?.(id)
       },
       setMode: (next) => {
@@ -208,7 +225,7 @@ export function BrandProvider({
         storage.set(BRAND_KEY, id)
         onBrandIdChange?.(id)
         if (!paletteControlled) setPaletteIdState(null)
-        storage.set(PALETTE_KEY, '')
+        clearKey(storage, PALETTE_KEY)
         onPaletteIdChange?.(null)
       },
     }),

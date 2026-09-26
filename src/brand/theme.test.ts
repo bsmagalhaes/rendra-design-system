@@ -82,6 +82,21 @@ describe('createTheme, modo gerado', () => {
   it('exige seed no modo gerado', () => {
     expect(() => createTheme({ id: 'x', name: 'X', mode: 'gerado' })).toThrow(/seed/)
   })
+
+  it('semente inválida lança "Cor inválida", com o rótulo do campo e o valor recebido', () => {
+    expect(() =>
+      createTheme({
+        id: 'x',
+        name: 'X',
+        mode: 'gerado',
+        seed: {
+          primary: 'azul-marinho', // não é hex, rgb(), hsl() nem tripleta HSL
+          secondary: safira.secondary,
+          gradient: safira.gradient,
+        },
+      }),
+    ).toThrow('Cor inválida em seed.primary: azul-marinho (use hex, rgb(), hsl() ou "H S% L%")')
+  })
 })
 
 describe('createTheme, modo explícito', () => {

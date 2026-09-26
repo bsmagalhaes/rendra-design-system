@@ -171,6 +171,60 @@ describe('storage plugável (C5)', () => {
     // Nada foi escrito no localStorage real: o storage customizado substituiu, não somou.
     expect(localStorage.getItem('ui-mode')).toBeNull()
   })
+
+  it('storage.remove (quando existe) é chamado para zerar a paleta, em vez de set com string vazia', () => {
+    const store = new Map<string, string>()
+    const custom: BrandStorage = {
+      get: (key) => store.get(key) ?? null,
+      set: vi.fn((key: string, value: string) => {
+        store.set(key, value)
+      }),
+      remove: vi.fn((key: string) => {
+        store.delete(key)
+      }),
+    }
+    render(
+      <BrandProvider
+        brands={[brandConfig, outraMarca]}
+        palettes={palettesFixture}
+        defaultBrand={brandConfig}
+        storage={custom}
+      >
+        <Consumer />
+      </BrandProvider>,
+    )
+    fireEvent.click(screen.getByText('trocar paleta'))
+    expect(store.get('ui-palette')).toBe(outraMarca.id)
+    fireEvent.click(screen.getByText('zerar paleta'))
+    expect(custom.remove).toHaveBeenCalledWith('ui-palette')
+    expect(store.has('ui-palette')).toBe(false)
+    // set nunca foi chamado com string vazia para essa chave: remove sempre que existir.
+    expect(custom.set).not.toHaveBeenCalledWith('ui-palette', '')
+  })
+
+  it('storage sem remove (adaptador antigo, só get/set) cai de volta em set(key, ""), sem quebrar', () => {
+    const store = new Map<string, string>()
+    const semRemove: BrandStorage = {
+      get: (key) => store.get(key) ?? null,
+      set: (key, value) => {
+        store.set(key, value)
+      },
+    }
+    render(
+      <BrandProvider
+        brands={[brandConfig, outraMarca]}
+        palettes={palettesFixture}
+        defaultBrand={brandConfig}
+        storage={semRemove}
+      >
+        <Consumer />
+      </BrandProvider>,
+    )
+    fireEvent.click(screen.getByText('trocar paleta'))
+    fireEvent.click(screen.getByText('zerar paleta'))
+    expect(store.get('ui-palette')).toBe('')
+    expect(screen.getByTestId('palette-id').textContent).toBe(brandConfig.id)
+  })
 })
 
 describe('modo controlado (brandId, paletteId, mode)', () => {
@@ -272,7 +326,12 @@ describe('modo controlado (brandId, paletteId, mode)', () => {
     )
     fireEvent.click(screen.getByText('trocar paleta'))
     expect(screen.getByTestId('palette-id').textContent).toBe(outraMarca.id)
+    expect(localStorage.getItem('ui-palette')).toBe(outraMarca.id)
     fireEvent.click(screen.getByText('zerar paleta'))
     expect(screen.getByTestId('palette-id').textContent).toBe(brandConfig.id)
+    // clearKey usa removeItem (BrandStorage.remove), não deixa "ui-palette" gravado como
+    // string vazia: a chave some de vez do localStorage, não fica lá dentro com valor ''.
+    expect(localStorage.getItem('ui-palette')).toBeNull()
+    expect('ui-palette' in localStorage).toBe(false)
   })
 })

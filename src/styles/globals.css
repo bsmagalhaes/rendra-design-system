@@ -9,10 +9,13 @@
  */
 /*
  * Ordem de camadas (C4, docs/specs/v2-plano.md 2.4 e 6.2.8): declarada antes de tudo, para as
- * utilities do host sempre vencerem qualquer camada do Rendra. rendra.base fica entre base e
- * components (reset do Rendra, mais fraco que qualquer componente do host); rendra.components
- * fica entre components e utilities (estilo de componente do Rendra, mais fraco que qualquer
- * utility do host, inclusive as do próprio Tailwind).
+ * utilities do host sempre vencerem qualquer camada do Rendra. A ordem é
+ * theme, base, rendra.base, components, rendra.components, utilities:
+ *   - rendra.base fica depois de base e antes de components (reset do Rendra, mais fraco que
+ *     qualquer componente do host);
+ *   - rendra.components fica depois de components e antes de utilities (estilo de componente
+ *     do Rendra, mais fraco que qualquer utility do host, inclusive as do próprio Tailwind).
+ * utilities continua por último e vencendo tudo, sempre.
  */
 @layer theme, base, rendra.base, components, rendra.components, utilities;
 
