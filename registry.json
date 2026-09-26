@@ -12,7 +12,6 @@
         "class-variance-authority@^0.7.1",
         "clsx@^2.1.1",
         "imask@^7.6.1",
-        "react-router@^8.4.0",
         "tailwind-merge@^3.7.0",
         "zod@^4.6.5"
       ],
@@ -147,13 +146,8 @@
       "name": "app-shell",
       "type": "registry:item",
       "title": "AppShell",
-      "description": "Casca da aplicação: sidebar, header, menu superior, mega menu, busca, notificações e barra inferior. Lê o menu e o layout de src/config, que é do projeto.",
-      "dependencies": [
-        "cmdk@^1.1.1",
-        "lucide-react@^1.47.0",
-        "radix-ui@^1.6.7",
-        "react-router@^8.4.0"
-      ],
+      "description": "Casca da aplicação: sidebar, header, menu superior, mega menu, busca, notificações e barra inferior. Recebe o menu, o layout, o usuário e as notificações por prop; não lê src/config.",
+      "dependencies": ["cmdk@^1.1.1", "lucide-react@^1.47.0", "radix-ui@^1.6.7"],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/avatar.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
@@ -184,9 +178,19 @@
           "target": "src/components/app-shell/header.tsx"
         },
         {
+          "path": "src/components/app-shell/layout.ts",
+          "type": "registry:file",
+          "target": "src/components/app-shell/layout.ts"
+        },
+        {
           "path": "src/components/app-shell/mega-menu.tsx",
           "type": "registry:file",
           "target": "src/components/app-shell/mega-menu.tsx"
+        },
+        {
+          "path": "src/components/app-shell/navigation-utils.ts",
+          "type": "registry:file",
+          "target": "src/components/app-shell/navigation-utils.ts"
         },
         {
           "path": "src/components/app-shell/notifications.tsx",
@@ -202,6 +206,11 @@
           "path": "src/components/app-shell/sidebar.tsx",
           "type": "registry:file",
           "target": "src/components/app-shell/sidebar.tsx"
+        },
+        {
+          "path": "src/components/app-shell/types.ts",
+          "type": "registry:file",
+          "target": "src/components/app-shell/types.ts"
         }
       ]
     },
@@ -347,7 +356,7 @@
       "type": "registry:item",
       "title": "breadcrumb",
       "description": "Componente breadcrumb do Rendra Design System.",
-      "dependencies": ["lucide-react@^1.47.0", "react-router@^8.4.0"],
+      "dependencies": ["lucide-react@^1.47.0"],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
@@ -629,7 +638,7 @@
       "type": "registry:item",
       "title": "error-page",
       "description": "Componente error-page do Rendra Design System.",
-      "dependencies": ["lucide-react@^1.47.0", "react-router@^8.4.0"],
+      "dependencies": ["lucide-react@^1.47.0"],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
@@ -776,7 +785,7 @@
       "type": "registry:item",
       "title": "list",
       "description": "Componente list do Rendra Design System.",
-      "dependencies": ["lucide-react@^1.47.0", "react-router@^8.4.0"],
+      "dependencies": ["lucide-react@^1.47.0"],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
@@ -1124,8 +1133,7 @@
         "@tanstack/react-table@^8.21.3",
         "date-fns@^4.4.0",
         "lucide-react@^1.47.0",
-        "radix-ui@^1.6.7",
-        "react-router@^8.4.0"
+        "radix-ui@^1.6.7"
       ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/badge.json",
@@ -1727,7 +1735,11 @@
       "type": "registry:item",
       "title": "error-page (teste)",
       "description": "Testes de comportamento do error-page, com Vitest e Testing Library.",
-      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.1"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.1"
+      ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/error-page.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"

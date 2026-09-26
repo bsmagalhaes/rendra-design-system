@@ -1,9 +1,8 @@
 import { Command } from 'cmdk'
-import { Moon, Plus, Search, Sun, X } from 'lucide-react'
+import { Moon, Search, Sun, X } from 'lucide-react'
 import { Dialog, VisuallyHidden } from 'radix-ui'
 import { useBrand } from '@/brand'
 import { useRendraNavigate } from '@/components/rendra-provider'
-import { navigationTargets } from '@/config/navigation'
 import { cn } from '@/lib/cn'
 import { useShell } from './shell-context'
 
@@ -19,7 +18,7 @@ const groupClass =
   '[&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground'
 
 export function CommandSearch() {
-  const { searchOpen, setSearchOpen } = useShell()
+  const { searchOpen, setSearchOpen, navigationTargets, quickActions } = useShell()
   const { resolvedMode, setMode } = useBrand()
   const { navigate } = useRendraNavigate()
 
@@ -71,13 +70,21 @@ export function CommandSearch() {
                 Nada encontrado para essa busca.
               </Command.Empty>
               <Command.Group heading="Ações" className={groupClass}>
-                <Command.Item
-                  className={itemClass}
-                  onSelect={() => run(() => navigate('/clientes/novo'))}
-                >
-                  <Plus aria-hidden />
-                  Novo cliente
-                </Command.Item>
+                {quickActions.map((action) => {
+                  const Icon = action.icon
+                  return (
+                    <Command.Item
+                      key={action.label}
+                      className={itemClass}
+                      onSelect={() =>
+                        run(() => (action.to ? navigate(action.to) : action.onSelect?.()))
+                      }
+                    >
+                      {Icon && <Icon aria-hidden />}
+                      {action.label}
+                    </Command.Item>
+                  )
+                })}
                 <Command.Item
                   className={itemClass}
                   onSelect={() => run(() => setMode(resolvedMode === 'dark' ? 'light' : 'dark'))}
