@@ -118,7 +118,12 @@ describe('storage plugável (C5)', () => {
   it('storage={false} não persiste nada (nem lê, nem escreve)', () => {
     const spy = vi.spyOn(Storage.prototype, 'setItem')
     render(
-      <BrandProvider brands={[brandConfig]} defaultBrand={brandConfig} forcedMode="light" storage={false}>
+      <BrandProvider
+        brands={[brandConfig]}
+        defaultBrand={brandConfig}
+        forcedMode="light"
+        storage={false}
+      >
         <Consumer />
       </BrandProvider>,
     )
@@ -136,7 +141,12 @@ describe('storage plugável (C5)', () => {
       }),
     }
     render(
-      <BrandProvider brands={[brandConfig]} defaultBrand={brandConfig} forcedMode="light" storage={custom}>
+      <BrandProvider
+        brands={[brandConfig]}
+        defaultBrand={brandConfig}
+        forcedMode="light"
+        storage={custom}
+      >
         <Consumer />
       </BrandProvider>,
     )
@@ -193,7 +203,12 @@ describe('modo controlado (brandId, paletteId, mode)', () => {
   it('mode controlado: onModeChange é chamado; o modo exibido só muda se o pai atualizar a prop', () => {
     const onModeChange = vi.fn()
     render(
-      <BrandProvider brands={[brandConfig]} defaultBrand={brandConfig} mode="light" onModeChange={onModeChange}>
+      <BrandProvider
+        brands={[brandConfig]}
+        defaultBrand={brandConfig}
+        mode="light"
+        onModeChange={onModeChange}
+      >
         <Consumer />
       </BrandProvider>,
     )
