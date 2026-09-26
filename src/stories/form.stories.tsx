@@ -2,11 +2,14 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Lock, Mail, Search } from 'lucide-react'
 import { useState } from 'react'
 import { Checkbox, CheckboxGroup } from '@/components/ui/checkbox'
+import { Checklist, type ChecklistItem } from '@/components/ui/checklist'
 import { DatePicker, type DateRange } from '@/components/ui/date-picker'
 import { Field } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { OtpInput } from '@/components/ui/otp-input'
 import { RadioGroup } from '@/components/ui/radio-group'
+import { Rating } from '@/components/ui/rating'
+import { RepeatableField, type RepeatableItem } from '@/components/ui/repeatable-field'
 import { Select, type SelectOption } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
@@ -278,3 +281,69 @@ export const UploadArquivos: Story = {
     </Field>
   ),
 }
+
+/* ------------------------------------------------ Rating, RepeatableField, Checklist */
+
+function RatingStarsDemo() {
+  const [v, setV] = useState<number | null>(4)
+  return <Rating variant="stars" value={v} onChange={setV} aria-label="Satisfação" />
+}
+export const AvaliacaoEstrelas: Story = {
+  name: 'Rating: estrelas',
+  render: () => <RatingStarsDemo />,
+}
+
+function RatingScaleDemo() {
+  const [v, setV] = useState<number | null>(null)
+  return (
+    <Rating
+      variant="scale"
+      value={v}
+      onChange={setV}
+      lowLabel="Nada provável"
+      highLabel="Muito provável"
+      aria-label="Qual a chance de você nos recomendar?"
+    />
+  )
+}
+export const AvaliacaoEscala: Story = {
+  name: 'Rating: escala (NPS)',
+  render: () => <RatingScaleDemo />,
+}
+
+interface DemoPhone extends RepeatableItem {
+  number: string
+}
+function RepeatableFieldDemo() {
+  const [items, setItems] = useState<DemoPhone[]>([
+    { id: 'p1', number: '(11) 99999-0001', isPrimary: true },
+  ])
+  return (
+    <RepeatableField<DemoPhone>
+      items={items}
+      onChange={setItems}
+      createItem={() => ({ id: crypto.randomUUID(), number: '' })}
+      renderField={(item, update, index) => (
+        <Field label={`Telefone ${index + 1}`}>
+          <Input mask="phone" value={item.number} onChange={(v) => update({ number: v })} />
+        </Field>
+      )}
+      showPrimary
+      addLabel="Adicionar telefone"
+      emptyLabel="Nenhum telefone ainda."
+    />
+  )
+}
+export const CampoRepetivel: Story = {
+  name: 'RepeatableField',
+  render: () => <RepeatableFieldDemo />,
+}
+
+function ChecklistDemo() {
+  const [value, setValue] = useState<ChecklistItem[]>([
+    { id: 'c1', label: 'Enviar contrato assinado', checked: true },
+    { id: 'c2', label: 'Confirmar dados bancários', checked: false },
+  ])
+  return <Checklist value={value} onChange={setValue} aria-label="Pendências do fechamento" />
+}
+export const ListaDeVerificacao: Story = { name: 'Checklist', render: () => <ChecklistDemo /> }

@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Chart } from '@/components/ui/chart'
 import { List } from '@/components/ui/list'
 import { Pagination } from '@/components/ui/pagination'
+import { QrCode } from '@/components/ui/qr-code'
 import { StatCard } from '@/components/ui/stat-card'
 import { Table } from '@/components/ui/table'
 import { Tabs } from '@/components/ui/tabs'
@@ -316,4 +317,15 @@ export const GraficoPizza: Story = {
       series={[{ key: 'clientes', label: 'Clientes' }]}
     />
   ),
+}
+
+export const CodigoQR: Story = {
+  name: 'QrCode',
+  render: () => (
+    <QrCode value="https://rendra.example.com/clientes/42" aria-label="Código QR de exemplo" />
+  ),
+}
+export const CodigoQRVazio: Story = {
+  name: 'QrCode: vazio',
+  render: () => <QrCode value="" />,
 }

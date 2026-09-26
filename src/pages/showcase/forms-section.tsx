@@ -7,11 +7,14 @@ import { Grid, Inline, Stack } from '@/components/layout'
 import { ActionBar } from '@/components/ui/action-bar'
 import { Checkbox, CheckboxGroup } from '@/components/ui/checkbox'
 import { DatePicker, type DateRange } from '@/components/ui/date-picker'
+import { Checklist, type ChecklistItem } from '@/components/ui/checklist'
 import { Field, Label } from '@/components/ui/field'
 import { Form, FormField, FormSection } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { OtpInput } from '@/components/ui/otp-input'
 import { RadioGroup } from '@/components/ui/radio-group'
+import { Rating } from '@/components/ui/rating'
+import { RepeatableField, type RepeatableItem } from '@/components/ui/repeatable-field'
 import { Select, type SelectOption } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
@@ -65,6 +68,10 @@ const schema = z.object({
   aceite: z.literal(true, { error: 'É preciso aceitar os termos.' }),
 })
 type FormValues = z.infer<typeof schema>
+
+interface DemoPhone extends RepeatableItem {
+  number: string
+}
 
 function ValidatedForm() {
   const form = useForm<FormValues>({
@@ -219,6 +226,16 @@ export function FormsSection() {
   const [band, setBand] = useState([1200, 6400])
   const [checks, setChecks] = useState<string[]>(['email'])
   const [radio, setRadio] = useState('mensal')
+  const [stars, setStars] = useState<number | null>(4)
+  const [nps, setNps] = useState<number | null>(null)
+  const [phones, setPhones] = useState<DemoPhone[]>([
+    { id: 'p1', number: '(11) 99999-0001', isPrimary: true },
+    { id: 'p2', number: '(11) 99999-0002' },
+  ])
+  const [checklist, setChecklist] = useState<ChecklistItem[]>([
+    { id: 'c1', label: 'Enviar contrato assinado', checked: true },
+    { id: 'c2', label: 'Confirmar dados bancários', checked: false },
+  ])
 
   return (
     <>
@@ -590,6 +607,69 @@ export function FormsSection() {
             onComplete={(v) => toast.success(`Código ${v} conferido`)}
           />
         </Field>
+      </Demo>
+
+      <Demo
+        id="avaliacao"
+        title="Rating"
+        description="Avaliação em estrelas (satisfação rápida) ou em escala numérica (NPS e pesquisas). Clicar de novo na opção marcada desmarca e devolve null: nenhuma resposta ainda, nunca zero."
+        props="variant (stars, scale), value (number | null), onChange, max, min, lowLabel, highLabel"
+      >
+        <Row label="Estrelas" code="RTG-001">
+          <Rating
+            variant="stars"
+            value={stars}
+            onChange={setStars}
+            aria-label="Satisfação com o atendimento"
+          />
+        </Row>
+        <Row label="Escala (NPS)" code="RTG-002" block>
+          <Rating
+            variant="scale"
+            value={nps}
+            onChange={setNps}
+            lowLabel="Nada provável"
+            highLabel="Muito provável"
+            aria-label="Qual a chance de você nos recomendar?"
+          />
+        </Row>
+      </Demo>
+
+      <Demo
+        id="campo-repetivel"
+        title="RepeatableField"
+        description="Uma lista de campos do mesmo tipo, como telefones ou e-mails. Marcar um como principal desmarca os outros; remover o principal passa o papel para o primeiro que restar."
+        props="items, onChange, createItem, renderField, showPrimary, maxItems, addLabel, emptyLabel"
+        code="REP-001"
+      >
+        <RepeatableField<DemoPhone>
+          items={phones}
+          onChange={setPhones}
+          createItem={() => ({ id: crypto.randomUUID(), number: '' })}
+          renderField={(item, update, index) => (
+            <Field label={`Telefone ${index + 1}`}>
+              <Input mask="phone" value={item.number} onChange={(v) => update({ number: v })} />
+            </Field>
+          )}
+          showPrimary
+          maxItems={4}
+          addLabel="Adicionar telefone"
+          emptyLabel="Nenhum telefone ainda."
+        />
+      </Demo>
+
+      <Demo
+        id="checklist"
+        title="Checklist"
+        description="Uma lista de verificação editável: criar, renomear, marcar e remover, tudo por teclado, sem gesto especial."
+        props="value (id, label, checked), onChange, addLabel, disabled"
+        code="CKLT-001"
+      >
+        <Checklist
+          value={checklist}
+          onChange={setChecklist}
+          aria-label="Pendências do fechamento"
+        />
       </Demo>
 
       <Demo

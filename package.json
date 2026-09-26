@@ -44,6 +44,7 @@
     "date-fns": "^4.4.0",
     "imask": "^7.6.1",
     "lucide-react": "^1.47.0",
+    "pdfjs-dist": "^6.3.289",
     "radix-ui": "^1.6.7",
     "react": "^19.3.0",
     "react-day-picker": "^10.0.1",

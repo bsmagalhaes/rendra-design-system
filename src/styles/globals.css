@@ -40,6 +40,7 @@
   --spacing-header: 3.5rem;
   --spacing-chart-sm: 12rem;
   --spacing-chart-md: 16rem;
+  --spacing-viewer: 28rem;
 
   /* Larguras de estrutura */
   --container-sidebar: 16rem;
@@ -760,4 +761,11 @@
 /* Altura por variável (ondas do áudio no chat). */
 @utility h-var {
   height: var(--h, 100%);
+}
+
+/* Largura e altura iguais por variável (ex.: o tamanho em pixels do QrCode, escolhido pelo
+   projeto que consome o componente, fora da escala fixa de espaço). */
+@utility size-var {
+  width: var(--size, 10rem);
+  height: var(--size, 10rem);
 }
