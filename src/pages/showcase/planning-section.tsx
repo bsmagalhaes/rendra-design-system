@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react'
-import { Stack } from '@/components/layout'
+import { Inline, Stack } from '@/components/layout'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { ChatComposer, ChatThread, ConversationList, type ChatMessage } from '@/components/ui/chat'
+import { DocumentViewer } from '@/components/ui/document-viewer'
 import { ImageViewer } from '@/components/ui/image-viewer'
 import { Kanban, moveKanbanCard, type KanbanCard } from '@/components/ui/kanban'
 import { toast } from '@/components/ui/toast'
@@ -10,11 +11,16 @@ import { demoTickets } from '@/mocks/chat'
 import { demoCards, demoEvents, pipelineColumns } from '@/mocks/planning'
 import { Demo, Row } from './demo'
 
-/* Vitrine: calendário, kanban, atendimento (chat) e visualizador de imagens. */
+// PDF mínimo válido, embutido como data: URL, para a vitrine funcionar sem depender de rede.
+const SAMPLE_PDF =
+  'data:application/pdf;base64,JVBERi0xLjEKMSAwIG9iajw8L1R5cGUvQ2F0YWxvZy9QYWdlcyAyIDAgUj4+ZW5kb2JqCjIgMCBvYmo8PC9UeXBlL1BhZ2VzL0tpZHNbMyAwIFJdL0NvdW50IDE+PmVuZG9iagozIDAgb2JqPDwvVHlwZS9QYWdlL1BhcmVudCAyIDAgUi9NZWRpYUJveFswIDAgMjAwIDIwMF0+PmVuZG9iagp0cmFpbGVyPDwvU2l6ZSA0L1Jvb3QgMSAwIFI+PgolJUVPRg=='
+
+/* Vitrine: calendário, kanban, atendimento (chat), visualizador de imagens e de documentos. */
 export function PlanningSection() {
   const events = useMemo(() => demoEvents(), [])
   const [cards, setCards] = useState<KanbanCard[]>(() => demoCards())
   const [image, setImage] = useState<number | null>(null)
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null)
   const tickets = useMemo(() => demoTickets().slice(0, 3), [])
   const [activeTicket, setActiveTicket] = useState<string | null>(tickets[0]?.id ?? null)
   const [messages, setMessages] = useState<ChatMessage[]>(
@@ -100,6 +106,32 @@ export function PlanningSection() {
           Abrir galeria de exemplo
         </Button>
         <ImageViewer images={images} index={image} onIndexChange={setImage} />
+      </Demo>
+
+      <Demo
+        id="documentos"
+        title="DocumentViewer"
+        description="Abre um PDF sem sair da tela: ajusta à largura, tem zoom e navegação de página (some quando o documento só tem uma). url null é o estado vazio; uma falha (CORS, arquivo inválido) aparece declarada, com o link para abrir em nova aba."
+        props="url (string | null), title, emptyTitle, errorTitle, openInNewTabLabel"
+        code="DOC-001"
+      >
+        <Stack gap="3">
+          <Inline gap="2">
+            <Button variant="outline" onClick={() => setPdfUrl(SAMPLE_PDF)}>
+              Abrir PDF de exemplo
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setPdfUrl('https://exemplo.invalido/nao-existe.pdf')}
+            >
+              Simular falha
+            </Button>
+            <Button variant="ghost" onClick={() => setPdfUrl(null)}>
+              Limpar
+            </Button>
+          </Inline>
+          <DocumentViewer url={pdfUrl} title="Contrato de exemplo" />
+        </Stack>
       </Demo>
     </>
   )
