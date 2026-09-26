@@ -54,6 +54,15 @@ export const masks: Record<
   },
 }
 
+/** Máscara de percentual com teto configurável (padrão 100), para o Input com unidades (A9). */
+export function percentMask(max = 100) {
+  return {
+    options: { mask: 'num %', lazy: false, blocks: { num: numberBlock(2, max) } } as FactoryArg,
+    inputMode: 'decimal' as InputMode,
+    placeholder: '0,00 %',
+  }
+}
+
 /** País para o seletor de DDI do telefone. */
 export interface PhoneCountry {
   /** DDI sem o "+", ex.: "55". */

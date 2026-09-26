@@ -40,7 +40,10 @@ export function Progress({ value, size = 'md', tone, showValue, label, className
         )}
       >
         <P.Indicator
-          className={cn(bar({ tone }), indeterminate ? 'w-1/3 animate-pulse' : 'w-progress')}
+          className={cn(
+            bar({ tone }),
+            indeterminate ? 'absolute inset-y-0 left-0 w-1/3 progress-slide' : 'w-progress',
+          )}
           style={
             indeterminate
               ? undefined

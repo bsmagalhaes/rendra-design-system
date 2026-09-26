@@ -308,6 +308,25 @@ export const CATALOG: ComponentCatalogEntry[] = [
     variantProps: {},
     whenToUse: 'Para uma lista de opções fixas com "selecionar todos".',
   },
+  // ---------------------------------------------------------------- checklist
+  {
+    code: 'CKLT-001',
+    name: 'Lista de verificação',
+    component: 'Checklist',
+    file: 'components/ui/checklist.tsx',
+    variantProps: {},
+    whenToUse:
+      'Para uma lista de itens que a pessoa cria, renomeia, marca e remove, tudo por teclado.',
+  },
+  // ---------------------------------------------------------------- color-picker
+  {
+    code: 'COR-001',
+    name: 'Seletor de cor',
+    component: 'ColorPicker',
+    file: 'components/ui/color-picker.tsx',
+    variantProps: {},
+    whenToUse: 'Para escolher uma cor entre amostras da marca ou uma cor livre por hexadecimal.',
+  },
   // ---------------------------------------------------------------- data-toolbar
   {
     code: 'DTB-001',
@@ -325,6 +344,15 @@ export const CATALOG: ComponentCatalogEntry[] = [
     file: 'components/ui/date-picker.tsx',
     variantProps: {},
     whenToUse: 'Para escolher uma data, um período ou um horário.',
+  },
+  // ---------------------------------------------------------------- document-viewer
+  {
+    code: 'DOC-001',
+    name: 'Visualizador de documentos',
+    component: 'DocumentViewer',
+    file: 'components/ui/document-viewer.tsx',
+    variantProps: {},
+    whenToUse: 'Para abrir um PDF (contrato, nota fiscal, comprovante) sem sair da tela.',
   },
   // ---------------------------------------------------------------- drawer
   {
@@ -505,6 +533,15 @@ export const CATALOG: ComponentCatalogEntry[] = [
     variantProps: {},
     whenToUse: 'Para o andamento de uma tarefa ou de um envio.',
   },
+  // ---------------------------------------------------------------- qr-code
+  {
+    code: 'QRC-001',
+    name: 'Código QR',
+    component: 'QrCode',
+    file: 'components/ui/qr-code.tsx',
+    variantProps: {},
+    whenToUse: 'Para gerar um código QR (link, código de acesso) sem depender de serviço externo.',
+  },
   // ---------------------------------------------------------------- radio-group
   {
     code: 'RDO-001',
@@ -522,6 +559,23 @@ export const CATALOG: ComponentCatalogEntry[] = [
     variantProps: { variant: 'cards' },
     whenToUse: 'Para opções com ícone e descrição, quando cada uma merece mais destaque.',
   },
+  // ---------------------------------------------------------------- rating
+  {
+    code: 'RTG-001',
+    name: 'Avaliação em estrelas',
+    component: 'Rating',
+    file: 'components/ui/rating.tsx',
+    variantProps: { variant: 'stars' },
+    whenToUse: 'Para uma nota rápida de satisfação, em estrelas.',
+  },
+  {
+    code: 'RTG-002',
+    name: 'Avaliação em escala',
+    component: 'Rating',
+    file: 'components/ui/rating.tsx',
+    variantProps: { variant: 'scale' },
+    whenToUse: 'Para uma nota de 0 a 10 (NPS e pesquisas parecidas), com rótulo nas pontas.',
+  },
   // ---------------------------------------------------------------- rendra-credit
   {
     code: 'CRED-001',
@@ -532,6 +586,16 @@ export const CATALOG: ComponentCatalogEntry[] = [
     whenToUse:
       'No rodapé da tela de login, discreto; pode ser removido (credit={false}) ou levado para ' +
       'outro lugar visível, como uma tela Sobre.',
+  },
+  // ---------------------------------------------------------------- repeatable-field
+  {
+    code: 'REP-001',
+    name: 'Campo repetível',
+    component: 'RepeatableField',
+    file: 'components/ui/repeatable-field.tsx',
+    variantProps: {},
+    whenToUse:
+      'Para uma lista de campos do mesmo tipo (telefones, e-mails, endereços), com um principal.',
   },
   // ---------------------------------------------------------------- rich-text-editor
   {
@@ -577,6 +641,16 @@ export const CATALOG: ComponentCatalogEntry[] = [
     file: 'components/ui/slider.tsx',
     variantProps: {},
     whenToUse: 'Para escolher um número ou uma faixa dentro de um intervalo, arrastando.',
+  },
+  // ---------------------------------------------------------------- spinner
+  {
+    code: 'SPIN-001',
+    name: 'Indicador de carregamento',
+    component: 'Spinner',
+    file: 'components/ui/spinner.tsx',
+    variantProps: {},
+    whenToUse:
+      'Para um carregamento breve dentro de um botão, campo ou lista, sem barra de progresso.',
   },
   // ---------------------------------------------------------------- stat-card
   {

@@ -1,7 +1,8 @@
 import { Command } from 'cmdk'
-import { Check, ChevronDown, Loader2, Plus, Search, X } from 'lucide-react'
+import { Check, ChevronDown, Plus, Search, X } from 'lucide-react'
 import { forwardRef, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 import { useBreakpoint } from '@/hooks/use-breakpoint'
 import { cn } from '@/lib/cn'
 import {
@@ -296,7 +297,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
       {busy && (
         <Command.Loading>
           <div className="flex items-center gap-2 px-3 py-4 text-sm text-muted-foreground">
-            <Loader2 className="size-icon-sm animate-spin" aria-hidden />
+            <Spinner size="sm" />
             Carregando opções...
           </div>
         </Command.Loading>

@@ -13,6 +13,7 @@ import { Modal, type ModalType } from '@/components/ui/modal'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Spinner } from '@/components/ui/spinner'
 import { toast } from '@/components/ui/toast'
 import { Tooltip } from '@/components/ui/tooltip'
 import { ClientDrawer } from '@/pages/app/client-drawer'
@@ -219,7 +220,7 @@ export const EstadoVazio: Story = {
 export const Erro404: Story = { name: 'ErrorPage 404', render: () => <ErrorPage code={404} /> }
 export const Erro500: Story = { name: 'ErrorPage 500', render: () => <ErrorPage code={500} /> }
 export const Carregamento: Story = {
-  name: 'Progress e Skeleton',
+  name: 'Progress, Skeleton e Spinner',
   render: () => (
     <div className="flex flex-col gap-4">
       <Progress value={64} showValue label="Importação" />
@@ -227,6 +228,11 @@ export const Carregamento: Story = {
       <Progress value={null} label="Indeterminado" />
       <Skeleton className="h-4 w-1/2" />
       <Skeleton className="h-chart-sm w-full rounded-surface" />
+      <div className="flex items-center gap-4">
+        <Spinner size="sm" label="Carregando, pequeno" />
+        <Spinner size="md" label="Carregando, médio" />
+        <Spinner size="lg" label="Carregando, grande" />
+      </div>
     </div>
   ),
 }
