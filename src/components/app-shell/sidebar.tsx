@@ -1,8 +1,8 @@
 import { ChevronDown, ChevronRight, LogOut, X } from 'lucide-react'
 import { Collapsible, Dialog, VisuallyHidden } from 'radix-ui'
 import { useEffect, useRef, useState } from 'react'
-import { Link, NavLink, useLocation, useNavigate } from 'react-router'
 import { useBrand } from '@/brand'
+import { useCurrentPath, useRendraLink } from '@/components/rendra-provider'
 import { Avatar } from '@/components/ui/avatar'
 import { BrandLogo } from '@/components/ui/brand-logo'
 import {
@@ -13,12 +13,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Tooltip } from '@/components/ui/tooltip'
-import { currentUser, navigation, resolveActiveTo, type NavItem } from '@/config/navigation'
 import { cn } from '@/lib/cn'
+import { resolveActiveTo } from './navigation-utils'
 import { useShell } from './shell-context'
+import type { NavItem } from './types'
 
 /*
- * Sidebar única, configurada pelo layout do AppShell (src/config/layout.ts):
+ * Sidebar única, configurada pelo layout do AppShell (prop `layout`):
  *   sidebar: collapsed | expanded     expandOnHover: abre por cima do conteúdo
  *   submenu: panel (segunda barra) | inline (dentro da sidebar)
  * Mobile (< 768px): a mesma navegação reconstruída como gaveta, com submenu inline.
@@ -55,8 +56,9 @@ function Badge({ value, compact }: { value: number; compact: boolean }) {
 }
 
 function useIsActive() {
-  const { pathname } = useLocation()
-  const active = resolveActiveTo(pathname)
+  const pathname = useCurrentPath()
+  const { navigationTargets } = useShell()
+  const active = resolveActiveTo(navigationTargets, pathname)
   return (to: string) => to === active
 }
 
@@ -82,6 +84,7 @@ function NavEntry({
   onNavigate,
 }: EntryProps) {
   const isActive = useIsActive()
+  const Link = useRendraLink()
   const Icon = item.icon
   const childActive = item.children?.some((c) => isActive(c.to)) ?? false
   const [open, setOpen] = useState(childActive)
@@ -164,9 +167,8 @@ function NavEntry({
           <ul className="flex flex-col gap-1 pt-1 pl-8">
             {item.children.map((c) => (
               <li key={c.to}>
-                <NavLink
+                <Link
                   to={c.to}
-                  end
                   onClick={onNavigate}
                   className={cn(
                     itemBase,
@@ -175,7 +177,7 @@ function NavEntry({
                   )}
                 >
                   <span className="truncate">{c.title}</span>
-                </NavLink>
+                </Link>
               </li>
             ))}
           </ul>
@@ -185,31 +187,20 @@ function NavEntry({
   }
 
   const to = item.to ?? '/'
+  const active = isActive(to)
   return (
     <Tooltip content={item.title} side="right" disabled={!compact || hoverExpands}>
-      <NavLink
+      <Link
         to={to}
-        end={to === '/'}
         onClick={onNavigate}
         aria-label={compact ? label : undefined}
-        className={cn(
-          itemBase,
-          compact && 'justify-center px-0',
-          isActive(to) ? itemActive : itemIdle,
-        )}
+        className={cn(itemBase, compact && 'justify-center px-0', active ? itemActive : itemIdle)}
       >
-        {() => {
-          const a = isActive(to)
-          return (
-            <>
-              {a && <ActiveIndicator />}
-              <Icon className="size-icon-md shrink-0" aria-hidden />
-              {!compact && <span className="truncate">{item.title}</span>}
-              {item.badge ? <Badge value={item.badge} compact={compact} /> : null}
-            </>
-          )
-        }}
-      </NavLink>
+        {active && <ActiveIndicator />}
+        <Icon className="size-icon-md shrink-0" aria-hidden />
+        {!compact && <span className="truncate">{item.title}</span>}
+        {item.badge ? <Badge value={item.badge} compact={compact} /> : null}
+      </Link>
     </Tooltip>
   )
 }
@@ -234,7 +225,8 @@ function SidebarBody({
   onClose,
 }: BodyProps) {
   const { brand } = useBrand()
-  const navigate = useNavigate()
+  const Link = useRendraLink()
+  const { navigation, user, onLogout } = useShell()
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -303,20 +295,20 @@ function SidebarBody({
           compact && 'flex-col',
         )}
       >
-        <Avatar name={currentUser.name} />
+        <Avatar name={user.name} src={user.avatarUrl} />
         {!compact && (
           <div className="flex min-w-0 flex-1 flex-col">
-            <span className="truncate text-sm font-medium">{currentUser.name}</span>
-            <span className="truncate text-xs text-sidebar-muted-foreground">
-              {currentUser.email}
-            </span>
+            <span className="truncate text-sm font-medium">{user.name}</span>
+            {user.email && (
+              <span className="truncate text-xs text-sidebar-muted-foreground">{user.email}</span>
+            )}
           </div>
         )}
         <Tooltip content="Sair" side="right">
           <button
             type="button"
             aria-label="Sair"
-            onClick={() => navigate('/login')}
+            onClick={() => onLogout?.()}
             className="flex size-touch shrink-0 items-center justify-center rounded-item text-sidebar-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground md:size-control-md"
           >
             <LogOut className="size-icon-sm" aria-hidden />
@@ -329,6 +321,8 @@ function SidebarBody({
 
 /** Segunda barra lateral com os subitens do item escolhido. */
 function SubmenuPanel({ item, onClose }: { item: NavItem; onClose: () => void }) {
+  const isActive = useIsActive()
+  const Link = useRendraLink()
   return (
     <div
       id="submenu-painel"
@@ -350,20 +344,17 @@ function SubmenuPanel({ item, onClose }: { item: NavItem; onClose: () => void })
       <ul className="flex flex-col gap-1 p-3">
         {item.children?.map((c) => (
           <li key={c.to}>
-            <NavLink
+            <Link
               to={c.to}
-              end
-              className={({ isActive }) =>
-                cn(
-                  'flex h-control-md items-center rounded-item px-3 text-sm transition-colors',
-                  isActive
-                    ? 'bg-primary-soft font-medium text-primary-soft-foreground'
-                    : 'hover:bg-accent hover:text-accent-foreground',
-                )
-              }
+              className={cn(
+                'flex h-control-md items-center rounded-item px-3 text-sm transition-colors',
+                isActive(c.to)
+                  ? 'bg-primary-soft font-medium text-primary-soft-foreground'
+                  : 'hover:bg-accent hover:text-accent-foreground',
+              )}
             >
               <span className="truncate">{c.title}</span>
-            </NavLink>
+            </Link>
           </li>
         ))}
       </ul>
@@ -373,7 +364,7 @@ function SubmenuPanel({ item, onClose }: { item: NavItem; onClose: () => void })
 
 export function Sidebar() {
   const { layout, mobileNavOpen, setMobileNavOpen } = useShell()
-  const { pathname } = useLocation()
+  const pathname = useCurrentPath()
   const close = () => setMobileNavOpen(false)
 
   const collapsed = layout.sidebar === 'collapsed'

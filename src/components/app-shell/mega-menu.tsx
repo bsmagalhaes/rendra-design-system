@@ -1,13 +1,15 @@
 import { ChevronDown } from 'lucide-react'
 import { NavigationMenu as N } from 'radix-ui'
-import { Link, useLocation } from 'react-router'
-import { navigation, type NavItem } from '@/config/navigation'
+import { useCurrentPath, useRendraLink } from '@/components/rendra-provider'
 import { cn } from '@/lib/cn'
+import { useShell } from './shell-context'
+import type { NavItem } from './types'
 
 /*
- * Mega menu do layout topbar (a partir de 1024px). Cada seção é um grupo do navigation.ts;
- * o painel abre abaixo do header, na largura do conteúdo, com os menus e seus subitens.
- * Abre por clique, toque ou teclado (Radix NavigationMenu); o hover só antecipa.
+ * Mega menu do layout topbar (a partir de 1024px). Cada seção é um grupo do `navigation`
+ * (prop do AppShell); o painel abre abaixo do header, na largura do conteúdo, com os menus
+ * e seus subitens. Abre por clique, toque ou teclado (Radix NavigationMenu); o hover só
+ * antecipa.
  */
 
 const trigger =
@@ -18,7 +20,8 @@ function isActive(pathname: string, to: string) {
 }
 
 function MegaItem({ item }: { item: NavItem }) {
-  const { pathname } = useLocation()
+  const pathname = useCurrentPath()
+  const Link = useRendraLink()
   const Icon = item.icon
   const active = item.to ? isActive(pathname, item.to) : false
   const head = (
@@ -79,7 +82,8 @@ function MegaItem({ item }: { item: NavItem }) {
 }
 
 export function MegaMenu() {
-  const { pathname } = useLocation()
+  const pathname = useCurrentPath()
+  const { navigation } = useShell()
   return (
     <N.Root className="hidden lg:block" delayDuration={150}>
       <N.List className="flex items-center gap-1">

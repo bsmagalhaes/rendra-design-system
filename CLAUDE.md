@@ -49,13 +49,13 @@ npm run build         # build de produção
 
 ## Matriz de modelos (inegociável)
 
-| Etapa                | Modelo | Confronta código    |
-| -------------------- | ------ | ------------------- |
-| Levantamento         | Fable  | Sim                 |
-| Plano e spec         | Sonnet | Não, usa o briefing |
-| Validação do plano   | Opus   | Sim                 |
-| Execução             | Sonnet | Não                 |
-| Validação da entrega | Fable  | Sim                 |
+| Etapa                | Modelo | Confronta código                     |
+| -------------------- | ------ | ------------------------------------ |
+| Levantamento         | Fable  | Sim                                  |
+| Plano e spec         | Sonnet | Não, usa o briefing e o levantamento |
+| Validação do plano   | Opus   | Sim                                  |
+| Execução             | Sonnet | Não                                  |
+| Validação da entrega | Fable  | Sim                                  |
 
 Nenhum modelo valida o que ele mesmo escreveu.
 
@@ -64,6 +64,25 @@ Escopo obrigatório: Fable e Opus recebem apenas os arquivos do escopo mais o co
 Briefing com mais de 24 horas ou com commits no meio é refeito, não reaproveitado.
 
 Fluxo curto, para bug pequeno e correção óbvia: Sonnet escreve o teste que reproduz, corrige, e o Fable valida apenas os bloqueadores. Duas etapas.
+
+### Regras de operação (inegociáveis, junto com a matriz)
+
+1. **Levantamento antes de todo plano.** Nenhum plano é escrito sem um levantamento do Fable feito no código do escopo daquele lote. Plano que não parte de um levantamento é recusado. Reaproveitar um plano antigo para um lote novo não dispensa o levantamento do lote.
+2. **Uma rodada de validação por plano.** O Opus valida o plano uma vez. O que ele apontar, o executor corrige durante a execução, e o que sobrar o Fable pega na validação da entrega. Não há segunda rodada de validação do plano.
+3. **Um lote por vez.** Um lote só começa depois que o anterior foi validado e juntado na branch principal do trabalho. Nada de lotes em paralelo em branches separadas: evita retrabalho de junção e gasta menos.
+4. **Teste confere o resultado, não a chamada.**
+   - No servidor: a entrada chega pelo caminho real (webhook, fila, rota de recepção) e o teste afirma o que ficou gravado no banco ou o que foi respondido.
+   - Na tela: o teste afirma o efeito que o usuário vê (classe ou atributo no `<html>`, texto na tela, item na lista, foco, elemento que some), e não apenas que o `onChange` ou outro callback foi chamado.
+   - Espionar uma chamada só vale como complemento, nunca como a única prova.
+5. **Pré-validação obrigatória do executor.** Antes de relatar a entrega, o executor cumpre esta lista e diz no relatório, item a item, que cumpriu:
+   1. Rodou todos os comandos do critério de pronto e colou a última linha de cada um.
+   2. Conferiu `git diff --stat`: só há arquivos do escopo declarado; cada arquivo fora da lista está justificado.
+   3. Provou que cada teste novo falha sem a mudança (desfez a mudança, viu falhar, refez).
+   4. Conferiu que os testes afirmam o resultado (regra 4), não a chamada.
+   5. Releu o próprio diff procurando TODO, código morto, travessão, valor arbitrário, cor fixa, estilo inline e texto fora do português do Brasil.
+   6. Listou o que não fez ou deixou pendente, sem omitir.
+
+   Entrega sem a pré-validação volta para o executor sem passar pelo Fable.
 
 ### Checklist bloqueador (100 por cento, sem exceção)
 

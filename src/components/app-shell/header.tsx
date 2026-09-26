@@ -10,14 +10,12 @@ import {
   PanelLeft,
   Palette,
   Search,
-  Settings,
   Sun,
-  User,
 } from 'lucide-react'
 import { useLayoutEffect, useRef, useState } from 'react'
-import { Link, NavLink, useLocation, useMatches, useNavigate, type UIMatch } from 'react-router'
 import { useBrand } from '@/brand'
 import type { ColorMode } from '@/brand/brand-context'
+import { useCurrentPath, useRendraBreadcrumbs, useRendraLink } from '@/components/rendra-provider'
 import { Avatar } from '@/components/ui/avatar'
 import { BrandLogo } from '@/components/ui/brand-logo'
 import { Breadcrumb, type BreadcrumbItem } from '@/components/ui/breadcrumb'
@@ -38,37 +36,19 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { InfoHint } from '@/components/ui/info-hint'
 import { Tooltip } from '@/components/ui/tooltip'
-import { layoutOptions, type ShellLayout } from '@/config/layout'
-import { currentUser, navigation } from '@/config/navigation'
 import { cn } from '@/lib/cn'
 import { shapeLabels } from '@/lib/shape'
+import { layoutOptions, type ShellLayout } from './layout'
 import { MegaMenu } from './mega-menu'
 import { Notifications } from './notifications'
 import { useShell } from './shell-context'
-
-/** Metadados de rota lidos pelo header: handle: { crumb: 'Clientes' }. */
-export interface RouteHandle {
-  crumb?: string | ((params: Record<string, string | undefined>) => string)
-}
-
-function useCrumbs(): BreadcrumbItem[] {
-  const matches = useMatches() as UIMatch<unknown, RouteHandle | undefined>[]
-  return matches
-    .filter((m) => m.handle?.crumb)
-    .map((m, i, all) => {
-      const c = m.handle!.crumb!
-      return {
-        label: typeof c === 'function' ? c(m.params) : c,
-        to: i < all.length - 1 ? m.pathname : undefined,
-      }
-    })
-}
 
 /**
  * Voltar das telas de segundo nível (ex.: Novo cliente, Detalhe do cliente): leva à tela-pai
  * da trilha, não ao histórico, para ser previsível mesmo quando a pessoa chegou por um link.
  */
 function BackButton({ crumbs }: { crumbs: BreadcrumbItem[] }) {
+  const Link = useRendraLink()
   const parent = crumbs.length >= 2 ? crumbs[crumbs.length - 2] : undefined
   if (!parent?.to) return null
   return (
@@ -163,33 +143,42 @@ function LayoutItems() {
 }
 
 function UserMenu() {
-  const navigate = useNavigate()
+  const Link = useRendraLink()
+  const { user, userMenuItems, onLogout } = useShell()
   const { brand, brands, setBrandId, palette, palettes, setPaletteId } = useBrand()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" iconOnly aria-label={`Menu de ${currentUser.name}`}>
-          <Avatar name={currentUser.name} />
+        <Button variant="ghost" iconOnly aria-label={`Menu de ${user.name}`}>
+          <Avatar name={user.name} src={user.avatarUrl} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-foreground">{currentUser.name}</span>
-          <span className="font-normal">{currentUser.email}</span>
+          <span className="text-sm font-medium text-foreground">{user.name}</span>
+          {user.email && <span className="font-normal">{user.email}</span>}
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link to="/configuracoes">
-            <User aria-hidden />
-            Meu perfil
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/configuracoes">
-            <Settings aria-hidden />
-            Configurações
-          </Link>
-        </DropdownMenuItem>
+        {userMenuItems.length > 0 && (
+          <>
+            <DropdownMenuSeparator />
+            {userMenuItems.map((item) => {
+              const Icon = item.icon
+              return item.to ? (
+                <DropdownMenuItem key={item.label} asChild>
+                  <Link to={item.to}>
+                    {Icon && <Icon aria-hidden />}
+                    {item.label}
+                  </Link>
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem key={item.label} onSelect={item.onSelect}>
+                  {Icon && <Icon aria-hidden />}
+                  {item.label}
+                </DropdownMenuItem>
+              )
+            })}
+          </>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
@@ -244,7 +233,7 @@ function UserMenu() {
           </DropdownMenuSubContent>
         </DropdownMenuSub>
         <DropdownMenuSeparator />
-        <DropdownMenuItem destructive onSelect={() => navigate('/login')}>
+        <DropdownMenuItem destructive onSelect={() => onLogout?.()}>
           <LogOut aria-hidden />
           Sair
         </DropdownMenuItem>
@@ -253,13 +242,14 @@ function UserMenu() {
   )
 }
 
-/** Menu superior (layout topbar), a partir de 1024px. */
 /**
  * Menu superior. Os itens que não cabem na largura vão para o botão "Mais", no fim da
  * barra: o menu nunca passa por cima da busca e dos ícones, com qualquer número de itens.
  */
 function TopNav() {
-  const { pathname } = useLocation()
+  const pathname = useCurrentPath()
+  const Link = useRendraLink()
+  const { navigation } = useShell()
   const items = navigation.flatMap((g) => g.items)
   const navRef = useRef<HTMLElement>(null)
   const widths = useRef<number[]>([])
@@ -337,14 +327,10 @@ function TopNav() {
           const to = item.to ?? '/'
           return (
             <li key={item.title} data-item className={cn(hidden && 'hidden')}>
-              <NavLink
-                to={to}
-                end={to === '/'}
-                className={({ isActive: on }) => cn(link, on ? active : idle)}
-              >
+              <Link to={to} className={cn(link, isActive(item) ? active : idle)}>
                 <Icon aria-hidden />
                 {item.title}
-              </NavLink>
+              </Link>
             </li>
           )
         })}
@@ -389,14 +375,16 @@ function TopNav() {
 }
 
 export function Header() {
-  const { layout, setLayout, setMobileNavOpen, setSearchOpen, pageHelp } = useShell()
+  const { layout, setLayout, setMobileNavOpen, setSearchOpen, pageHelp, homeLabel, notifications } =
+    useShell()
   const { brand, resolvedMode } = useBrand()
-  const crumbs = useCrumbs()
-  // Trilha do header: sempre começa em Início.
+  const Link = useRendraLink()
+  const crumbs = useRendraBreadcrumbs()
+  // Trilha do header: sempre começa no destino inicial (homeLabel).
   const trail =
     crumbs[0]?.to === '/' || crumbs.length === 0
       ? crumbs
-      : [{ label: 'Início', to: '/' }, ...crumbs]
+      : [{ label: homeLabel, to: '/' }, ...crumbs]
   const ModeIcon = resolvedMode === 'dark' ? Moon : Sun
   const topbar = layout.navigation === 'topbar'
   const hasParent = Boolean(crumbs.length >= 2 && crumbs[crumbs.length - 2]?.to)
@@ -499,7 +487,7 @@ export function Header() {
           <Search aria-hidden />
         </Button>
 
-        <Notifications />
+        {notifications && <Notifications />}
 
         <DropdownMenu>
           <Tooltip content="Tema" side="bottom">
