@@ -26,6 +26,8 @@ export default defineConfig({
     { name: 'layout', testMatch: 'layout.spec.ts' },
     { name: 'a11y', testMatch: 'a11y.spec.ts' },
     { name: 'visual', testMatch: 'visual.spec.ts' },
+    // CSS em camadas (C4, etapa 2.0.0-alpha.8): tests/css-layers.spec.ts.
+    { name: 'css-layers', testMatch: 'css-layers.spec.ts' },
   ],
   webServer: {
     command: 'npm run dev',

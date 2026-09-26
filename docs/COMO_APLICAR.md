@@ -68,6 +68,86 @@ document.documentElement.dataset.palette = tenant.id
 
 `applyPalette` gera exatamente o que o build geraria (claro, escuro e AA conferido) e devolve os ajustes feitos, para o painel de cadastro mostrar ao parceiro quando uma cor precisou ser escurecida.
 
+#### `createTheme`/`applyTheme`: os três modos (C5)
+
+`applyPalette` continua existindo e funcionando como acima; `createTheme` é a mesma ideia, só que como uma função pura (sem tocar o DOM, compatível com SSR) e com mais controle sobre o resultado. Três modos de entrada:
+
+- **gerado**: as mesmas 4 cores e o degradê de sempre; passa por `createPalette` por baixo, com o contraste AA corrigido automaticamente. É o modo equivalente ao `applyPalette` do exemplo acima.
+- **explícito**: você já tem os tokens prontos (por exemplo, migrando de outro design system) e informa cada um deles, pelo nome semântico, sem o prefixo `--rendra-` (`primary`, `primaryForeground`, `sidebar`...). Nada é recalculado; o contraste só é relatado. Use `enforceContrast: true` para o `createTheme` ajustar sozinho os pares que falham.
+- **misto**: sementes (como no gerado) mais sobrescritas pontuais; a sobrescrita sempre vence.
+
+```ts
+import { applyTheme, createTheme } from '@/brand'
+
+const tenant = await carregarTenant()
+const theme = createTheme({
+  id: tenant.id,
+  name: tenant.nome,
+  mode: 'gerado',
+  seed: {
+    primary: tenant.cores.primaria, // aceita hex, rgb(), hsl() ou "H S% L%"
+    primaryHover: tenant.cores.primariaHover,
+    secondary: tenant.cores.secundaria,
+    secondaryHover: tenant.cores.secundariaHover,
+    gradient: tenant.cores.degrade,
+  },
+})
+
+applyTheme(theme) // reproduz applyPalette: <style> em document.head, :root[data-palette]
+document.documentElement.dataset.palette = theme.id
+
+// theme.report: um item por par de contraste conferido (token, background, foreground,
+// ratio, passesAA, mode). theme.adjustments: os ajustes de fato aplicados, claro e escuro.
+```
+
+Passar `theme` direto para o `<BrandProvider theme={theme}>` faz a mesma coisa (aplica e mantém atualizado quando o tema mudar), sem exigir que `tenant.id` esteja cadastrado em `src/brand/palettes.ts`. Para aplicar o tema num contêiner específico em vez do documento inteiro (mais de uma marca na mesma página), use `applyTheme(theme, { target: elemento })`, que escopa por `[data-rendra-root]` em vez de `:root` (mesma peça que o CSS em camadas usa, seção seguinte).
+
+O `BrandProvider` também aceita `mode`/`onModeChange`, `brandId`/`onBrandIdChange` e `paletteId`/`onPaletteIdChange` para controlar o estado por fora (o mesmo padrão de um componente controlado do React), e `storage` para trocar onde a preferência é guardada (`{ get(key), set(key, valor) }`, ou `false` para desligar a persistência). Sem nenhuma dessas props, o comportamento é o de sempre: estado próprio, com `localStorage`.
+
+#### Variáveis `--rendra-*` semânticas: contrato público
+
+Toda variável abaixo é o nome final, versionado: renomear qualquer uma delas é mudança major (`CHANGELOG.md`). São as mesmas chaves que `createPalette`, `createTheme` e `palettes.css` emitem; o modo explícito de `createTheme` aceita o mesmo nome, sem o prefixo `--rendra-` e em camelCase (`primaryForeground` em vez de `--rendra-primary-foreground`).
+
+| Variável                                  | Papel                                                              |
+| ----------------------------------------- | ------------------------------------------------------------------ |
+| `--rendra-primary`                        | Preenchimento da cor primária                                      |
+| `--rendra-primary-foreground`             | Texto sobre a primária                                             |
+| `--rendra-primary-hover`                  | Primária no hover                                                  |
+| `--rendra-primary-hover-foreground`       | Texto sobre a primária no hover                                    |
+| `--rendra-secondary`                      | Preenchimento da cor secundária                                    |
+| `--rendra-secondary-foreground`           | Texto sobre a secundária                                           |
+| `--rendra-secondary-hover`                | Secundária no hover                                                |
+| `--rendra-secondary-hover-foreground`     | Texto sobre a secundária no hover                                  |
+| `--rendra-primary-soft`                   | Fundo suave da primária (alert, badge, linha selecionada)          |
+| `--rendra-primary-soft-foreground`        | Texto sobre o fundo suave                                          |
+| `--rendra-primary-text`                   | Primária usada como cor de texto (link, destaque)                  |
+| `--rendra-ring`                           | Anel de foco                                                       |
+| `--rendra-accent` / `-foreground`         | Destaque neutro e o texto sobre ele                                |
+| `--rendra-sidebar`                        | Fundo sólido da sidebar                                            |
+| `--rendra-sidebar-image`                  | Degradê da sidebar                                                 |
+| `--rendra-sidebar-foreground`             | Texto sobre a sidebar                                              |
+| `--rendra-sidebar-muted-foreground`       | Texto secundário sobre a sidebar                                   |
+| `--rendra-sidebar-border`                 | Borda sobre a sidebar                                              |
+| `--rendra-sidebar-accent`                 | Fundo do hover de um item da sidebar                               |
+| `--rendra-sidebar-active` / `-foreground` | Fundo e texto do item ativo da sidebar                             |
+| `--rendra-sidebar-indicator`              | Indicador do item ativo                                            |
+| `--rendra-gradient-brand` / `-foreground` | Degradê forte (sidebar, painel do login, erro) e o texto sobre ele |
+| `--rendra-gradient-soft`                  | Degradê suave (destaque de superfície)                             |
+| `--rendra-gradient-accent`                | Degradê fino (barra de progresso, linha de gráfico)                |
+| `--rendra-chart-1` a `--rendra-chart-5`   | Paleta de gráficos                                                 |
+| `--rendra-shadow-color`                   | Cor da sombra, sempre tripleta RGB (`R G B`), nunca cor completa   |
+| `--rendra-background` / `-image`          | Fundo da tela (o `-image` só existe no escuro)                     |
+| `--rendra-foreground`                     | Texto principal                                                    |
+| `--rendra-card` / `-foreground`           | Card e o texto sobre ele                                           |
+| `--rendra-popover` / `-foreground`        | Painel flutuante e o texto sobre ele                               |
+| `--rendra-muted` / `-foreground`          | Fundo neutro discreto e o texto sobre ele                          |
+| `--rendra-border`                         | Borda padrão                                                       |
+| `--rendra-input`                          | Borda de campo                                                     |
+| `--rendra-field`                          | Fundo de campo                                                     |
+| `--rendra-overlay`                        | Fundo escurecido atrás de modal/drawer                             |
+
+As cores de sistema (`--rendra-destructive`, `--rendra-success`, `--rendra-warning`, `--rendra-info`, cada uma com `-hover`, `-foreground`, `-soft` e `-soft-foreground`) e os tokens de forma/rótulo (`--rendra-shape-*`, `--rendra-label-*`, `--rendra-help-*`, `--rendra-elevation-*`, `--rendra-meter-*`) são fixos do sistema (`src/styles/theme.css` e `src/styles/globals.css`), iguais em todas as paletas: não fazem parte do contrato de `createTheme`.
+
 ## Ordem de migração
 
 Migre de fora para dentro, com uma verificação ao fim de cada passo:
