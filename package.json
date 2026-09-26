@@ -81,6 +81,11 @@
       "optional": true
     }
   },
+  "overrides": {
+    "eslint-plugin-jsx-a11y": {
+      "eslint": "$eslint"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

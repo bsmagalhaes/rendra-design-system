@@ -36,6 +36,10 @@ Se o usuário pedir para tirar o crédito "Feito com Rendra" (componente `Rendra
 
 Nunca afirme que a licença MIT obriga crédito visível na interface: ela não obriga. Aviso de copyright no código (obrigatório) e crédito na tela (opcional) são coisas diferentes; misturar as duas é o erro que esta orientação existe para evitar.
 
+## Dependências e `overrides`
+
+`package.json` não aceita comentário, então a razão de cada entrada em `"overrides"` fica aqui: `eslint-plugin-jsx-a11y` força a versão real do `eslint` do projeto (`$eslint`) porque a versão mais recente publicada do plugin ainda declara `peerDependencies` só até `eslint@^9` (o plugin funciona normal sob o ESLint 10; é só o metadado que está atrasado), e sem o override o `npm ci` sem flag falha com ERESOLVE. Prefira sempre um override restrito ao pacote com o problema a `legacy-peer-deps` no `.npmrc`, que desligaria a checagem de peers do repositório inteiro.
+
 ## Versões
 
 O projeto segue [versionamento semântico](https://semver.org/lang/pt-BR/): correção sobe o último número (1.0.1), recurso novo compatível sobe o do meio (1.1.0), e mudança que exige ajuste nos projetos, como prop renomeada ou token novo obrigatório, sobe o primeiro (2.0.0). Renomear uma variável `--rendra-*` (contrato público de tema) ou uma prop pública de componente é sempre mudança major, mesmo que pareça pequena. Cada versão vira uma tag `vX.Y.Z` e um release no GitHub, com o trecho do CHANGELOG.

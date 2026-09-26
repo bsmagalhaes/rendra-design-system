@@ -24,6 +24,7 @@ Pacote publicável pronto para uso externo (`import { Button } from '@rendra-ui/
 ### Dependências
 
 - `vite` 8.3.1, `vitest`/`@vitest/coverage-v8` 5.0.2, `@types/node` 26.6.3, `lucide-react` 1.48.0 e `react-hook-form` 7.89.0 (patch/minor). `eslint` 10.11.0 com `@eslint/js` 10.0.1, sem alterar `eslint.config.js` nem desativar regra do projeto.
+- **`overrides` no `package.json`, restrito a `eslint-plugin-jsx-a11y`:** essa é a versão mais recente publicada do plugin e o `peerDependencies` dele ainda só declara suporte até `eslint@^9`, então um `npm ci` sem flag falhava com ERESOLVE depois do bump para o ESLint 10 (o plugin funciona normal sob o ESLint 10; é só o `peerDependencies` publicado que está desatualizado). O override força a versão real do `eslint` do projeto (`$eslint`) só nessa dependência, sem usar `.npmrc` com `legacy-peer-deps` (que desligaria a checagem de peers do repositório inteiro).
 
 ### Pendências
 
