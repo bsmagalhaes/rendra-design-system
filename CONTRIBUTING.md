@@ -40,6 +40,8 @@ Nunca afirme que a licença MIT obriga crédito visível na interface: ela não 
 
 O projeto segue [versionamento semântico](https://semver.org/lang/pt-BR/): correção sobe o último número (1.0.1), recurso novo compatível sobe o do meio (1.1.0), e mudança que exige ajuste nos projetos, como prop renomeada ou token novo obrigatório, sobe o primeiro (2.0.0). Renomear uma variável `--rendra-*` (contrato público de tema) ou uma prop pública de componente é sempre mudança major, mesmo que pareça pequena. Cada versão vira uma tag `vX.Y.Z` e um release no GitHub, com o trecho do CHANGELOG.
 
+A tag dispara `.github/workflows/publish.yml`: builda o pacote, roda o `verify:pack` e publica no npm. Com o _trusted publishing_ do npm configurado para este repositório, o segredo `NPM_TOKEN` não é necessário; sem ele configurado, o workflow usa esse segredo como alternativa.
+
 ## Contato
 
 - Site: https://www.brunomagalhaes.me

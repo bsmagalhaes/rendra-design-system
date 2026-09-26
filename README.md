@@ -341,7 +341,7 @@ O registry nunca traz marca nem configuração: `theme.css`, `themes.css`, `pale
 
 ### Pacote npm
 
-Para um projeto que já tem o próprio roteador e a própria estrutura de telas, e só quer os componentes prontos como dependência. O pacote é `@rendra-ui/web`, escopado na organização npm `rendra-ui` (publicar exige acesso a essa organização; enquanto o pacote não estiver publicado, o repositório continua `private` e o build local funciona normalmente):
+Para um projeto que já tem o próprio roteador e a própria estrutura de telas, e só quer os componentes prontos como dependência. O pacote é `@rendra-ui/web`, escopado na organização npm `rendra-ui`:
 
 ```bash
 npm install @rendra-ui/web react react-dom radix-ui
@@ -355,6 +355,8 @@ import '@rendra-ui/web/components.css'
 ```
 
 O CSS já sai compilado (estratégia A: o host recebe `tokens.css`, `base.css` e `components.css` prontos, sem precisar ter o Tailwind instalado, e sem nenhuma variável do namespace do Tailwind vazar para o seu tema). `react-router` fica fora das dependências: quem usa React Router importa a ponte, `@rendra-ui/web/router-bridge`; quem não usa, não precisa dela. Os componentes pesados (`document-viewer`, `rich-text-editor`, `chart`, `widget-grid`) são subcaminhos próprios, para não engordar quem não usa.
+
+**Publicação:** uma tag `vX.Y.Z` empurrada para o repositório (`git push origin vX.Y.Z`) dispara o `.github/workflows/publish.yml`, que builda o pacote, roda o `verify:pack` e publica com `npm publish --provenance --access public`, depois de conferir que a tag bate com a `version` do `package.json`. Com o _trusted publishing_ do npm configurado para este repositório, o workflow dispensa o segredo `NPM_TOKEN`.
 
 ### CLI (`rendra`)
 

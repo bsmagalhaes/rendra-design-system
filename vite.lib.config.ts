@@ -103,10 +103,10 @@ export default defineConfig({
         'rich-text-editor': 'src/rich-text-editor.ts',
         chart: 'src/chart.ts',
         'widget-grid': 'src/widget-grid.ts',
-        // CLI (fase 3, Lote B): bin/rendra.mjs importa daqui, nunca de src/cli/*.ts (correção
-        // do Opus, item 3 da validação do plano). "typescript" nunca entra no bundle: o import
-        // em src/cli/trocar.ts é só de tipo (import type), apagado na compilação; quem carrega
-        // a instância de verdade é src/cli/typescript-loader.ts, por import dinâmico.
+        // CLI: bin/rendra.mjs importa sempre daqui, nunca de src/cli/*.ts direto. "typescript"
+        // nunca entra no bundle: o import em src/cli/trocar.ts é só de tipo (import type),
+        // apagado na compilação; quem carrega a instância de verdade é
+        // src/cli/typescript-loader.ts, por import dinâmico.
         'cli/codigos': 'src/cli/codigos.ts',
         'cli/auditar': 'src/cli/auditar.ts',
         'cli/trocar': 'src/cli/trocar.ts',
