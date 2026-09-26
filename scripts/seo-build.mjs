@@ -10,6 +10,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { routeSeo, siteSeo } from '../src/config/seo.ts'
+import { buildLlmsTxt } from './lib/llms-txt.ts'
 import { buildRobotsTxt } from './lib/robots.ts'
 
 const DIST = 'dist'
@@ -86,44 +87,17 @@ ${indexable
 
 writeFileSync(join(DIST, 'robots.txt'), buildRobotsTxt(SITE))
 
-// llms.txt: resumo em Markdown para assistentes de IA (https://llmstxt.org).
 writeFileSync(
   join(DIST, 'llms.txt'),
-  `# ${siteSeo.name}
-
-> ${siteSeo.description}
-
-Código aberto (licença MIT): ${siteSeo.repository}
-
-## O que é
-
-Template de sistema e design system em React 19, TypeScript, Vite e Tailwind CSS v4, com Radix e
-shadcn/ui copiados para o projeto. Serve para criar sistemas novos e para migrar o layout de
-sistemas existentes. Três modelos de layout (Safira, Equilíbrio e Aurora), quatro paletas, seis
-tipos de menu e um código para cada combinação.
-
-## Regras de interface
-
-- Um componente por finalidade: diferenças por props, nunca um arquivo parecido.
-- Mobile-first real: tudo escrito para 360 px, sem rolagem horizontal, toque de 44 px.
-- Marca isolada em theme.css, brand.config.ts e src/brand/assets (white label).
-- Só a escala de espaço e tokens nomeados; sem valor arbitrário nem estilo inline.
-- Ações sempre em lugares previstos (rodapé fixo, barra da tabela, cabeçalho); texto
-  orientativo em modal aberto por um ícone de informação.
-- Interface em português do Brasil, datas em DD/MM/AAAA e valores em R$ 1.250,00.
-
-## Telas do demo
-
-${indexable.map(([route, s]) => `- [${s.title}](${urlFor(route)}): ${s.description}`).join('\n')}
-- [Storybook](${SITE}storybook/): todos os componentes com as props.
-
-## Documentação
-
-- [README](${siteSeo.repository}#readme)
-- [Regras de design](${siteSeo.repository}/blob/main/DESIGN_RULES.md)
-- [Como aplicar em outro projeto](${siteSeo.repository}/blob/main/docs/COMO_APLICAR.md)
-- [Instruções para agentes de IA](${siteSeo.repository}/blob/main/AGENTS.md)
-`,
+  buildLlmsTxt({
+    site: siteSeo,
+    pages: indexable.map(([route, s]) => ({
+      title: s.title,
+      description: s.description,
+      url: urlFor(route),
+    })),
+    storybookUrl: `${SITE}storybook/`,
+  }),
 )
 
 console.log(

@@ -1,0 +1,38 @@
+# Publica @rendra-ui/web no npm quando uma tag v* é empurrada (ex.: v2.1.0). A tag precisa
+# bater com "version" do package.json, checado abaixo antes de publicar.
+name: Publicar pacote (npm)
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm run build:lib
+      - run: npm run verify:pack
+      - name: Tag bate com a version do package.json
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG="$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "$PKG" ]; then
+            echo "Tag v$TAG não bate com a version $PKG do package.json." >&2
+            exit 1
+          fi
+      # O trusted publishing do npm (registro configurado para este repositório e este
+      # workflow) dispensa o segredo NPM_TOKEN; sem ele configurado, o publish usa o token.
+      - run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

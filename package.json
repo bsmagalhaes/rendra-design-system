@@ -1,6 +1,5 @@
 {
   "name": "@rendra-ui/web",
-  "private": true,
   "version": "2.1.0",
   "type": "module",
   "description": "Design system e boilerplate React (Vite, TypeScript, Tailwind v4, Radix), com CLI de catálogo, auditoria e troca de variante.",
@@ -106,6 +105,7 @@
     "test:a11y": "playwright test --project=a11y",
     "test:visual": "playwright test --project=visual",
     "test:visual:update": "playwright test --project=visual --update-snapshots",
+    "test:css-layers": "playwright test --project=css-layers",
     "registry:build": "node scripts/build-registry.mjs",
     "palettes:build": "node scripts/build-palettes.mjs"
   },

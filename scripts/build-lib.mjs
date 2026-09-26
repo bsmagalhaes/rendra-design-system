@@ -4,14 +4,13 @@
  * `npm run build:lib` chama este script por último, depois de `vite build` (o JS) e do
  * `tsc` (os .d.ts): ver a cadeia completa no `package.json` (script `build:lib`).
  *
- * Estratégia A (CSS pré-compilado, escolhida em vez de exigir o Tailwind instalado no host):
- * roda o Tailwind (a mesma
- * engine de `src/styles/globals.css`, via @tailwindcss/node, já usada por @tailwindcss/vite)
- * com o @theme zerado e as @utility do projeto, escaneando só os arquivos que o pacote
- * publica (nunca src/app, src/pages, src/mocks ou src/stories, que são do boilerplate).
- * O host recebe só variáveis --rendra-* e as camadas rendra.base/rendra.components: nenhuma
- * classe do Tailwind do host é sobrescrita (o comentário de ordem de camadas em globals.css
- * explica por quê) e o host não precisa ter o Tailwind instalado.
+ * Estratégia A: CSS pré-compilado aqui, para o host nunca precisar ter o Tailwind instalado.
+ * Roda o Tailwind (a mesma engine de `src/styles/globals.css`, via @tailwindcss/node, já
+ * usada por @tailwindcss/vite) com o @theme zerado e as @utility do projeto, escaneando só
+ * os arquivos que o pacote publica (nunca src/app, src/pages, src/mocks ou src/stories, que
+ * são do boilerplate). O host recebe só variáveis --rendra-* e as camadas
+ * rendra.base/rendra.components: nenhuma classe do Tailwind do host é sobrescrita (o
+ * comentário de ordem de camadas em globals.css explica por quê).
  *
  * Saída em dist/:
  *   tokens.css      o tema padrão (sistema) e a paleta padrão (a primeira de

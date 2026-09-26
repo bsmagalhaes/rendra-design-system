@@ -48,6 +48,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { packageBanner } from './lib/pkg-banner.ts'
+import { privateFieldError } from './lib/verify-pack-checks.ts'
 
 const ROOT = process.cwd()
 const DIST = join(ROOT, 'dist')
@@ -73,6 +74,11 @@ if (!existsSync(join(DIST, 'index.js'))) {
 
 const realPkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'))
 const BANNER = packageBanner(realPkg.version)
+
+// Fecha o risco descrito no levantamento (o npm pack, usado abaixo, empacota um pacote
+// "private" normalmente e não acusa nada): falha explícito antes de empacotar.
+const privateError = privateFieldError(realPkg)
+if (privateError) fail(privateError)
 
 // Roda dentro do projeto instalado (ou do tarball descompactado): renderiza Button (sem
 // hook) e Checkbox (usa useId), pelo react/react-dom desse mesmo lugar. Um marcador único

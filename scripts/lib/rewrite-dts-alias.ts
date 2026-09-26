@@ -7,9 +7,9 @@
  * `.d.ts` publicados teriam `import ... from '@/lib/shape'`, que não existe fora deste
  * repositório.
  *
- * Pura (só matemática de caminho, `node:path`, sem tocar disco), para dar teste de verdade
- * a esta reescrita (validação do Fable no Lote A): scripts/fix-dts-aliases.mjs é só a casca
- * de E/S, que lê e grava os arquivos de dist/types.
+ * Pura (só matemática de caminho, `node:path`, sem tocar disco), para dar teste de verdade a
+ * esta reescrita: scripts/fix-dts-aliases.mjs é só a casca de E/S, que lê e grava os arquivos
+ * de dist/types.
  */
 import { dirname, relative } from 'node:path'
 
