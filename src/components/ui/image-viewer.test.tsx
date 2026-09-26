@@ -1,15 +1,40 @@
 // @vitest-environment jsdom
 import { fireEvent, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { renderApp } from '@/test/render'
-import { ImageViewer } from './image-viewer'
+import { ImageViewer, type ViewerImage } from './image-viewer'
 
 const images = [
   { src: '/a.png', alt: 'Fachada da loja' },
   { src: '/b.png', alt: 'Vitrine' },
   { src: '/c.png', alt: 'Interior' },
 ]
+
+/** Envolve o ImageViewer com o estado que a tela real mantém, para o teste ver a imagem
+ * exibida trocar de verdade (não só a chamada do onIndexChange). */
+function ControlledViewer({
+  initialIndex,
+  onIndexChangeSpy,
+  images: imgs = images,
+}: {
+  initialIndex: number | null
+  onIndexChangeSpy?: (index: number | null) => void
+  images?: ViewerImage[]
+}) {
+  const [index, setIndex] = useState(initialIndex)
+  return (
+    <ImageViewer
+      images={imgs}
+      index={index}
+      onIndexChange={(i) => {
+        onIndexChangeSpy?.(i)
+        setIndex(i)
+      }}
+    />
+  )
+}
 
 describe('ImageViewer', () => {
   it('aberto usa o código do catálogo', () => {
@@ -49,49 +74,59 @@ describe('ImageViewer', () => {
     expect(anterior.closest('div')).toHaveClass('hidden')
   })
 
-  it('com mais de uma imagem, a seta do teclado troca e roda no início/fim', async () => {
-    const onIndexChange = vi.fn()
-    renderApp(<ImageViewer images={images} index={0} onIndexChange={onIndexChange} />)
+  it('com mais de uma imagem, a seta do teclado troca a imagem exibida e roda no início/fim', async () => {
+    const onIndexChangeSpy = vi.fn()
+    renderApp(<ControlledViewer initialIndex={0} onIndexChangeSpy={onIndexChangeSpy} />)
     expect(screen.getByText('1 de 3')).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Fachada da loja' })).toBeInTheDocument()
     await userEvent.keyboard('{ArrowRight}')
-    expect(onIndexChange).toHaveBeenLastCalledWith(1)
-    // Da primeira imagem (índice 0), a seta esquerda roda para a última.
+    expect(screen.getByText('2 de 3')).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Vitrine' })).toBeInTheDocument()
+    expect(onIndexChangeSpy).toHaveBeenLastCalledWith(1)
+    // Volta para a primeira; da primeira, a seta esquerda roda para a última.
     await userEvent.keyboard('{ArrowLeft}')
-    expect(onIndexChange).toHaveBeenLastCalledWith(2)
+    await userEvent.keyboard('{ArrowLeft}')
+    expect(screen.getByText('3 de 3')).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Interior' })).toBeInTheDocument()
   })
 
-  it('os botões Anterior e Próxima trocam de imagem', async () => {
-    const onIndexChange = vi.fn()
-    renderApp(<ImageViewer images={images} index={1} onIndexChange={onIndexChange} />)
+  it('os botões Anterior e Próxima trocam a imagem exibida', async () => {
+    renderApp(<ControlledViewer initialIndex={1} />)
+    expect(screen.getByRole('img', { name: 'Vitrine' })).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: /Próxima/ }))
-    expect(onIndexChange).toHaveBeenLastCalledWith(2)
+    expect(screen.getByText('3 de 3')).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Interior' })).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: /Anterior/ }))
-    expect(onIndexChange).toHaveBeenLastCalledWith(0)
+    await userEvent.click(screen.getByRole('button', { name: /Anterior/ }))
+    expect(screen.getByText('1 de 3')).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Fachada da loja' })).toBeInTheDocument()
   })
 
-  it('fechar chama onIndexChange(null)', async () => {
-    const onIndexChange = vi.fn()
-    renderApp(<ImageViewer images={images} index={0} onIndexChange={onIndexChange} />)
+  it('fechar tira o visualizador da árvore (fecha o diálogo)', async () => {
+    const onIndexChangeSpy = vi.fn()
+    renderApp(<ControlledViewer initialIndex={0} onIndexChangeSpy={onIndexChangeSpy} />)
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'Fechar' }))
-    expect(onIndexChange).toHaveBeenCalledWith(null)
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(onIndexChangeSpy).toHaveBeenCalledWith(null)
   })
 
   it('arrastar para o lado (mobile) troca de imagem como um swipe', () => {
-    const onIndexChange = vi.fn()
-    renderApp(<ImageViewer images={images} index={0} onIndexChange={onIndexChange} />)
+    renderApp(<ControlledViewer initialIndex={0} />)
     const area = screen.getByRole('img', { name: 'Fachada da loja' }).parentElement!
     fireEvent.pointerDown(area, { clientX: 200 })
     fireEvent.pointerUp(area, { clientX: 100 })
-    expect(onIndexChange).toHaveBeenLastCalledWith(1)
+    expect(screen.getByText('2 de 3')).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Vitrine' })).toBeInTheDocument()
   })
 
   it('arrastar de menos de 48px não troca de imagem', () => {
-    const onIndexChange = vi.fn()
-    renderApp(<ImageViewer images={images} index={0} onIndexChange={onIndexChange} />)
+    renderApp(<ControlledViewer initialIndex={0} />)
     const area = screen.getByRole('img', { name: 'Fachada da loja' }).parentElement!
     fireEvent.pointerDown(area, { clientX: 200 })
     fireEvent.pointerUp(area, { clientX: 190 })
-    expect(onIndexChange).not.toHaveBeenCalled()
+    expect(screen.getByText('1 de 3')).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Fachada da loja' })).toBeInTheDocument()
   })
 
   it('index null: o visualizador fica fechado', () => {

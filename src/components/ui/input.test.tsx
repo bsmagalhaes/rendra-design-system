@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { LookupResult } from '@/hooks/use-lookup'
 import { Input } from './input'
@@ -108,7 +109,7 @@ describe('Input com unidades (A9)', () => {
     expect(numeric).toBeLessThanOrEqual(50)
   })
 
-  it('moeda: entrega centavos inteiros (R$ 1.250,00)', async () => {
+  it('moeda: mostra R$ 1.250,50 no campo e entrega centavos inteiros', async () => {
     const onCentsChange = vi.fn()
     render(
       <Input
@@ -117,7 +118,8 @@ describe('Input com unidades (A9)', () => {
         onCentsChange={onCentsChange}
       />,
     )
-    await userEvent.type(screen.getByLabelText('Valor'), '1250,5')
+    await userEvent.type(screen.getByLabelText('Valor'), '1250,50')
+    expect(screen.getByLabelText('Valor')).toHaveValue('R$ 1.250,50')
     expect(onCentsChange).toHaveBeenLastCalledWith(125050)
   })
 
@@ -157,6 +159,34 @@ describe('Input com unidades (A9)', () => {
   })
 })
 
+/** Envolve o Input secret com o estado que a tela real mantém, para o teste ver a troca de tela real (máscara <-> campo vazio), não só a chamada do callback. */
+function SecretField({
+  initialHasValue = true,
+  onRemoveSpy,
+}: {
+  initialHasValue?: boolean
+  onRemoveSpy?: () => void
+}) {
+  const [hasValue, setHasValue] = useState(initialHasValue)
+  const [isEditing, setIsEditing] = useState(false)
+  return (
+    <Input
+      aria-label="Chave de API"
+      variant="secret"
+      hasValue={hasValue}
+      maskedHint="••••••a1b2c3"
+      isEditing={isEditing}
+      onStartEdit={() => setIsEditing(true)}
+      onCancelEdit={() => setIsEditing(false)}
+      onRemove={() => {
+        onRemoveSpy?.()
+        setHasValue(false)
+        setIsEditing(false)
+      }}
+    />
+  )
+}
+
 describe('Input variant="secret" (A10)', () => {
   it('com valor salvo, mostra a dica mascarada e nunca o campo real', () => {
     render(<Input aria-label="Chave de API" variant="secret" hasValue maskedHint="••••••a1b2c3" />)
@@ -170,19 +200,15 @@ describe('Input variant="secret" (A10)', () => {
     expect(screen.getByText('Nenhum valor salvo')).toBeInTheDocument()
   })
 
-  it('"Trocar" chama onStartEdit', async () => {
-    const onStartEdit = vi.fn()
-    render(
-      <Input
-        aria-label="Chave de API"
-        variant="secret"
-        hasValue
-        maskedHint="••••••a1b2c3"
-        onStartEdit={onStartEdit}
-      />,
-    )
+  it('"Trocar" troca a dica mascarada por um campo vazio e editável', async () => {
+    render(<SecretField />)
+    expect(screen.getByText('••••••a1b2c3')).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'Trocar' }))
-    expect(onStartEdit).toHaveBeenCalledTimes(1)
+    expect(screen.queryByText('••••••a1b2c3')).not.toBeInTheDocument()
+    const input = screen.getByLabelText('Chave de API')
+    expect(input).toHaveValue('')
+    await userEvent.type(input, 'nova-chave')
+    expect(input).toHaveValue('nova-chave')
   })
 
   it('em edição, o campo abre vazio e o valor salvo não aparece no DOM', () => {
@@ -200,33 +226,37 @@ describe('Input variant="secret" (A10)', () => {
     expect(input).toHaveValue('')
   })
 
-  it('"Cancelar" chama onCancelEdit e volta para a máscara', async () => {
-    const onCancelEdit = vi.fn()
-    render(
-      <Input
-        aria-label="Chave de API"
-        variant="secret"
-        hasValue
-        isEditing
-        onCancelEdit={onCancelEdit}
-      />,
-    )
+  it('"Cancelar" descarta o campo aberto e volta a mostrar a máscara', async () => {
+    render(<SecretField />)
+    await userEvent.click(screen.getByRole('button', { name: 'Trocar' }))
+    expect(screen.getByLabelText('Chave de API')).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'Cancelar' }))
-    expect(onCancelEdit).toHaveBeenCalledTimes(1)
+    expect(screen.getByText('••••••a1b2c3')).toBeInTheDocument()
+    expect(screen.queryByLabelText('Chave de API')).not.toBeInTheDocument()
+  })
+
+  it('"Remover" tira a dica mascarada e mostra "Nenhum valor salvo"', async () => {
+    const onRemoveSpy = vi.fn()
+    render(<SecretField onRemoveSpy={onRemoveSpy} />)
+    await userEvent.click(screen.getByRole('button', { name: 'Remover' }))
+    expect(onRemoveSpy).toHaveBeenCalledTimes(1)
+    expect(screen.queryByText('••••••a1b2c3')).not.toBeInTheDocument()
+    expect(screen.getByText('Nenhum valor salvo')).toBeInTheDocument()
   })
 
   it('"Remover" com removing mostra o carregamento e desabilita o botão', () => {
-    const onRemove = vi.fn()
     render(
       <Input
         aria-label="Chave de API"
         variant="secret"
         hasValue
         maskedHint="••••••a1b2c3"
-        onRemove={onRemove}
+        onRemove={() => {}}
         removing
       />,
     )
-    expect(screen.getByRole('button', { name: 'Remover' })).toBeDisabled()
+    const button = screen.getByRole('button', { name: 'Remover' })
+    expect(button).toBeDisabled()
+    expect(button).toHaveAttribute('aria-busy', 'true')
   })
 })
