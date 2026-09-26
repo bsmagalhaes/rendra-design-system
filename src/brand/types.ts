@@ -5,6 +5,9 @@ export type SvgComponent = ComponentType<SVGProps<SVGSVGElement>>
 
 export type FeedbackType = 'success' | 'error' | 'warning' | 'info'
 
+/** Estilo do rótulo dos campos. */
+export type LabelStyle = 'discreto' | 'normal'
+
 /** Paleta de cores combinável com qualquer modelo (atributo data-palette no <html>). */
 export interface PaletteConfig {
   id: string
@@ -40,6 +43,11 @@ export interface BrandConfig {
   feedbackIcons?: Partial<Record<FeedbackType, SvgComponent>>
   /** Formato padrão de todos os componentes: square, rounded ou pill. */
   shape: Shape
+  /**
+   * Estilo do rótulo dos campos (atributo data-label no <html>): discreto (padrão; 11px,
+   * maiúsculo, cinza delicado) ou normal (14px, cor do texto).
+   */
+  labelStyle?: LabelStyle
   /**
    * themed (padrão): o logotipo é montado com o símbolo e as cores da paleta ativa,
    * e acompanha o tema. image: usa os SVGs de logo como estão (arte oficial que não

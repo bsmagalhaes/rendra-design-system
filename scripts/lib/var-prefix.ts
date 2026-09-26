@@ -78,6 +78,8 @@ export const RENDRA_VAR_PREFIXES = [
   'elevation-',
   'shape-',
   'meter-',
+  'label-',
+  'help-',
 ]
 
 // "tracking" (--tracking-tight etc.) é a escala de letter-spacing do próprio Tailwind v4,

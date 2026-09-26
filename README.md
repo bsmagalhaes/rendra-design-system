@@ -35,7 +35,7 @@ Duas regras mestras guiam tudo:
 1. **Um componente por finalidade.** Existe um Select, uma Table, um Modal, um Drawer, um Input. Diferenças são props, nunca arquivos novos.
 2. **Mobile-first real.** Tudo é desenhado primeiro para 360px, sem rolagem horizontal, sem ação que dependa de hover e com toque mínimo de 44px.
 
-E duas de boas práticas, verificadas pelo `npm run check:rules`: **nunca botão solto** (cada ação tem lugar previsto: rodapé fixo, barra da tabela, cabeçalho da tela ou do card, menu da linha) e **texto orientativo nunca no corpo da tela** (vai num ícone de informação ao lado do título, que abre um modal).
+E duas de boas práticas, verificadas pelo `npm run check:rules`: **nunca botão solto** (cada ação tem lugar previsto: rodapé fixo, barra da tabela, cabeçalho da tela ou do card, menu da linha) e **texto orientativo nunca solto no corpo da tela** (vai num ícone de informação ao lado do título, que abre um modal; só a orientação curta abaixo do campo fica visível, com limite de caracteres pela largura dele).
 
 ---
 
@@ -364,7 +364,7 @@ Sim, de dois jeitos. No build: cada marca é uma entrada de 4 cores e um degrad�
 Sim. O [`AGENTS.md`](AGENTS.md) (e o `CLAUDE.md` e o `GEMINI.md`) conduz qualquer agente de IA por um briefing guiado, as regras de design e a ordem de migração; o [`docs/PROMPT_MIGRACAO.md`](docs/PROMPT_MIGRACAO.md) traz o prompt pronto.
 
 **Qual a diferença para um template admin comum?**
-As regras são verificadas por máquina: valor fora da escala, cor fixa, botão solto e texto de instrução no corpo da tela quebram o `check:rules`, e layout, acessibilidade e regressão visual rodam no CI a cada Pull Request.
+As regras são verificadas por máquina: valor fora da escala, cor fixa, botão solto e texto de instrução no corpo da tela ou orientação de campo acima do limite da largura quebram o `check:rules`, e layout, acessibilidade e regressão visual rodam no CI a cada Pull Request.
 
 ## Autor
 

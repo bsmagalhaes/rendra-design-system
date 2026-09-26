@@ -124,6 +124,13 @@ O tema define forma e fonte (`src/brand/brand.config.ts` e `src/styles/theme.css
 1. **A do modelo**: padrão.
 2. **Outra**: qual (Google Fonts ou arquivo próprio)?
 
+**4.3 Rótulo dos campos**: rótulo discreto (maiúsculo, cinza) ou normal?
+
+1. **Discreto**: 11px, maiúsculo, espaçado, cinza delicado. Formulário mais leve, com o foco no que se digita. Padrão.
+2. **Normal**: 14px, na cor do texto. Bom para público que lê com dificuldade ou para formulários curtos.
+
+Vai em `labelStyle` no `src/brand/brand.config.ts` (`'discreto'` ou `'normal'`). A orientação abaixo do campo é sempre 12px, nos dois estilos.
+
 ## 5. Cores (fluxo guiado)
 
 **5.1 De onde vêm as cores**
