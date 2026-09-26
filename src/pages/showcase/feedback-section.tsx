@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Modal, type ModalType } from '@/components/ui/modal'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Progress } from '@/components/ui/progress'
+import { RendraCredit } from '@/components/ui/rendra-credit'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from '@/components/ui/toast'
 import { Tooltip } from '@/components/ui/tooltip'
@@ -85,6 +86,19 @@ export function FeedbackSection() {
           <BrandLogo />
           <BrandLogo size="sm" />
           <BrandLogo symbolOnly />
+        </Inline>
+      </Demo>
+
+      <Demo
+        id="credito"
+        title="Crédito Feito com Rendra"
+        description="Crédito discreto no rodapé da tela de login, ligado por padrão. Texto e link são substituíveis, e credit={false} remove; no AuthLayout, as props são credit, creditText e creditHref."
+        props="credit, text, href"
+        code="CRED-001"
+      >
+        <Inline gap="8" align="center">
+          <RendraCredit />
+          <RendraCredit text="Feito pela Acme" href="https://acme.com.br/sobre" />
         </Inline>
       </Demo>
 

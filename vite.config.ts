@@ -48,6 +48,7 @@ export default defineConfig({
         'src/hooks/use-lookup.ts': { lines: 90 },
         'scripts/lib/var-prefix.ts': { lines: 90 },
         'src/catalog/components.ts': { lines: 90 },
+        'src/components/ui/rendra-credit.tsx': { lines: 90 },
         'src/components/ui/{input,select,modal,alert,accordion,checkbox,field,radio-group,switch,tabs,textarea}.tsx':
           { lines: 85 },
         'src/components/ui/{table,drawer,button}.tsx': { lines: 75 },
