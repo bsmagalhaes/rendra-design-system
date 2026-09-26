@@ -1,0 +1,197 @@
+// @vitest-environment jsdom
+import { LayoutDashboard, Settings } from 'lucide-react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { describe, expect, it, vi } from 'vitest'
+import { activeBrand, availableBrands, availablePalettes, BrandProvider } from '@/brand'
+import { RendraProvider, type RendraBreadcrumbItem } from '@/components/rendra-provider'
+import { TooltipProvider } from '@/components/ui/tooltip'
+import { Header } from './header'
+import { ShellContext, type ShellContextValue } from './shell-context'
+import type { NavGroup } from './types'
+
+/*
+ * Header sem @/config e sem react-router: os itens do menu do usuário, o logout, o
+ * rótulo do destino inicial e as notificações vêm todos do ShellContext (prop do
+ * AppShell), nunca de literal dentro do componente. Os valores usados aqui são
+ * diferentes dos antigos ("Meu perfil", "/configuracoes", "Início"), para provar que
+ * vêm mesmo da prop, e não de um resquício do código anterior.
+ */
+const baseLayout: ShellContextValue['layout'] = {
+  navigation: 'sidebar',
+  sidebar: 'collapsed',
+  expandOnHover: true,
+  submenu: 'panel',
+  topbarSubmenu: 'dropdown',
+  bottomNav: true,
+}
+
+function fakeShellValue(overrides: Partial<ShellContextValue> = {}): ShellContextValue {
+  return {
+    layout: baseLayout,
+    setLayout: () => {},
+    applyLayout: () => {},
+    resetLayout: () => {},
+    mobileNavOpen: false,
+    setMobileNavOpen: () => {},
+    footerSlot: null,
+    pageHelp: null,
+    setPageHelp: () => {},
+    searchOpen: false,
+    setSearchOpen: () => {},
+    navigation: [],
+    bottomNavItems: [],
+    navigationTargets: [],
+    user: { name: 'Marina Alves' },
+    userMenuItems: [],
+    onLogout: undefined,
+    homeLabel: 'Painel inicial',
+    quickActions: [],
+    notifications: undefined,
+    ...overrides,
+  }
+}
+
+function renderHeader(
+  overrides: Partial<ShellContextValue> = {},
+  breadcrumbs: RendraBreadcrumbItem[] = [],
+) {
+  render(
+    <BrandProvider
+      brands={availableBrands}
+      palettes={availablePalettes}
+      defaultBrand={activeBrand}
+      forcedMode="light"
+    >
+      <RendraProvider
+        linkComponent={({ to, children, ...rest }) => (
+          <a href={to} {...rest}>
+            {children}
+          </a>
+        )}
+        useCurrentPath={() => '/relatorio-mensal'}
+        navigate={() => {}}
+        goBack={() => {}}
+        useBreadcrumbs={() => breadcrumbs}
+      >
+        <TooltipProvider>
+          <ShellContext.Provider value={fakeShellValue(overrides)}>
+            <Header />
+          </ShellContext.Provider>
+        </TooltipProvider>
+      </RendraProvider>
+    </BrandProvider>,
+  )
+}
+
+describe('Header', () => {
+  it('mostra os itens de userMenuItems (prop), não um literal fixo', async () => {
+    renderHeader({
+      userMenuItems: [{ label: 'Minha conta', to: '/minha-conta', icon: Settings }],
+    })
+    const user = userEvent.setup()
+    await user.click(screen.getByLabelText('Menu de Marina Alves'))
+    expect(await screen.findByText('Minha conta')).toBeInTheDocument()
+  })
+
+  it('sem userMenuItems (padrão vazio), o menu não mostra itens de navegação além do próprio usuário', async () => {
+    renderHeader()
+    const user = userEvent.setup()
+    await user.click(screen.getByLabelText('Menu de Marina Alves'))
+    expect(await screen.findByText('Sair')).toBeInTheDocument()
+    expect(screen.queryByText('Meu perfil')).not.toBeInTheDocument()
+  })
+
+  it('onLogout vem da prop, chamado ao selecionar Sair, e o menu fecha (efeito visível)', async () => {
+    const onLogout = vi.fn()
+    renderHeader({ onLogout })
+    const user = userEvent.setup()
+    await user.click(screen.getByLabelText('Menu de Marina Alves'))
+    const sair = await screen.findByText('Sair')
+    await user.click(sair)
+    expect(onLogout).toHaveBeenCalledTimes(1)
+    expect(screen.queryByText('Sair')).not.toBeInTheDocument()
+  })
+
+  it('homeLabel (prop) aparece na trilha quando o primeiro item não é a raiz', () => {
+    renderHeader({ homeLabel: 'Painel inicial' }, [
+      { label: 'Relatório mensal', to: '/relatorio-mensal' },
+    ])
+    expect(screen.getAllByText('Painel inicial').length).toBeGreaterThan(0)
+  })
+
+  it('sem a prop notifications, o sino não aparece', () => {
+    renderHeader()
+    expect(screen.queryByLabelText(/Notificações/)).not.toBeInTheDocument()
+  })
+
+  it('com a prop notifications, o sino aparece', () => {
+    renderHeader({
+      notifications: {
+        items: [{ id: '1', type: 'info', title: 'Aviso', time: 'agora', read: false }],
+      },
+    })
+    expect(screen.getByLabelText('Notificações, 1 não lidas')).toBeInTheDocument()
+  })
+
+  it('mostra a seta de voltar para o item-pai da trilha', () => {
+    renderHeader({}, [
+      { label: 'Relatórios', to: '/relatorios' },
+      { label: 'Detalhe do relatório' },
+    ])
+    expect(screen.getByLabelText('Voltar para Relatórios')).toBeInTheDocument()
+  })
+
+  it('recolhe/expande a sidebar pelo botão do header (layout vem do ShellContext)', async () => {
+    const setLayout = vi.fn()
+    renderHeader({ setLayout })
+    const user = userEvent.setup()
+    await user.click(screen.getByLabelText('Expandir menu'))
+    expect(setLayout).toHaveBeenCalledWith('sidebar', 'expanded')
+  })
+
+  it('abre a busca (Ctrl K) pelo botão de ícone', async () => {
+    const setSearchOpen = vi.fn()
+    renderHeader({ setSearchOpen })
+    const user = userEvent.setup()
+    await user.click(screen.getByLabelText('Buscar'))
+    expect(setSearchOpen).toHaveBeenCalledWith(true)
+  })
+
+  it('abre a gaveta de navegação pelo botão de menu', async () => {
+    const setMobileNavOpen = vi.fn()
+    renderHeader({ setMobileNavOpen })
+    const user = userEvent.setup()
+    await user.click(screen.getByLabelText('Abrir menu'))
+    expect(setMobileNavOpen).toHaveBeenCalledWith(true)
+  })
+
+  it('troca o modo de cor pelo menu Tema do header', async () => {
+    renderHeader()
+    const user = userEvent.setup()
+    await user.click(screen.getByLabelText('Tema'))
+    expect(await screen.findByText('Escuro')).toBeInTheDocument()
+  })
+
+  it('layout topbar com submenu dropdown renderiza o menu a partir da prop navigation', () => {
+    const navigation: NavGroup[] = [
+      {
+        title: 'Grupo',
+        items: [
+          { title: 'Painel de indicadores', to: '/indicadores', icon: LayoutDashboard },
+          {
+            title: 'Registros',
+            icon: Settings,
+            children: [{ title: 'Novo registro', to: '/registros/novo' }],
+          },
+        ],
+      },
+    ]
+    renderHeader({
+      layout: { ...baseLayout, navigation: 'topbar', topbarSubmenu: 'dropdown' },
+      navigation,
+    })
+    expect(screen.getAllByText('Painel de indicadores').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Registros').length).toBeGreaterThan(0)
+  })
+})

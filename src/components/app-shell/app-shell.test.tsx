@@ -12,8 +12,19 @@ import type { NavGroup } from './types'
 /*
  * O AppShell não importa @/config nem react-router: este teste monta um menu e um
  * usuário falsos e um RendraProvider falso (sem MemoryRouter nenhum), para provar que
- * o componente funciona só com as props documentadas.
+ * o componente funciona só com as props documentadas. Os três mocks abaixo travam
+ * (lançam) se algo no grafo de import do AppShell tentar carregar @/config/*; se
+ * acontecer, o arquivo inteiro falha ao importar, antes de qualquer teste rodar.
  */
+vi.mock('@/config/seo', () => {
+  throw new Error('AppShell não pode depender de @/config/seo (use-route-meta é do boilerplate)')
+})
+vi.mock('@/config/navigation', () => {
+  throw new Error('AppShell não pode depender de @/config/navigation')
+})
+vi.mock('@/config/layout', () => {
+  throw new Error('AppShell não pode depender de @/config/layout')
+})
 const navigation: NavGroup[] = [
   {
     title: 'Geral',
