@@ -78,6 +78,9 @@ const EXTERNAL_PACKAGES = [
 ]
 
 function isExternal(id: string) {
+  // Módulos nativos do Node (node:fs, node:path...): só a CLI (src/cli) os usa, em tempo de
+  // execução no Node, nunca no navegador; sempre externo, nunca no bundle.
+  if (id.startsWith('node:')) return true
   return EXTERNAL_PACKAGES.some((name) => id === name || id.startsWith(`${name}/`))
 }
 
@@ -102,6 +105,14 @@ export default defineConfig({
         'rich-text-editor': 'src/rich-text-editor.ts',
         chart: 'src/chart.ts',
         'widget-grid': 'src/widget-grid.ts',
+        // CLI (fase 3, Lote B): bin/rendra.mjs importa daqui, nunca de src/cli/*.ts (correção
+        // do Opus, item 3 da validação do plano). "typescript" nunca entra no bundle: o import
+        // em src/cli/trocar.ts é só de tipo (import type), apagado na compilação; quem carrega
+        // a instância de verdade é src/cli/typescript-loader.ts, por import dinâmico.
+        'cli/codigos': 'src/cli/codigos.ts',
+        'cli/auditar': 'src/cli/auditar.ts',
+        'cli/trocar': 'src/cli/trocar.ts',
+        'cli/typescript-loader': 'src/cli/typescript-loader.ts',
       },
       formats: ['es'],
       fileName: (_format, entryName) => `${entryName}.js`,

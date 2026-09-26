@@ -27,6 +27,16 @@ export interface ComponentCatalogEntry {
   variantProps: Record<string, string | number | boolean>
   /** Frase curta de quando usar esta variante, para o BRIEFING_MODELO. */
   whenToUse: string
+  /**
+   * Esta é a variante que o componente usa quando a prop não é passada (o valor padrão de
+   * `variantProps` no próprio componente React, ex.: `variant = 'line'` em `tabs.tsx`)? No
+   * máximo uma por componente (nenhuma, para o componente sem variante ou sem um padrão real,
+   * como `Chart`, cuja prop `type` é obrigatória); um componente com mais de uma variante tem
+   * exatamente uma marcada `true` (teste de integridade, `assertCatalogIntegrity`). Usada por
+   * `rendra trocar` (fase 3, Lote B): um elemento sem a prop conta como esta variante, e
+   * trocar para uma variante `isDefault` remove a prop em vez de escrever o valor por extenso.
+   */
+  isDefault?: true
 }
 
 /** Formato do código: de 3 a 4 letras maiúsculas, hífen, três dígitos. */
@@ -124,6 +134,7 @@ export const CATALOG: ComponentCatalogEntry[] = [
     file: 'components/ui/breadcrumb.tsx',
     variantProps: { variant: 'responsive' },
     whenToUse: 'Dentro do corpo da página: trilha no desktop e botão voltar no celular.',
+    isDefault: true,
   },
   {
     code: 'BRD-002',
@@ -141,6 +152,7 @@ export const CATALOG: ComponentCatalogEntry[] = [
     file: 'components/ui/button.tsx',
     variantProps: { variant: 'primary' },
     whenToUse: 'Para a ação principal da tela, do formulário ou da barra de ações.',
+    isDefault: true,
   },
   {
     code: 'BTN-002',
@@ -218,6 +230,10 @@ export const CATALOG: ComponentCatalogEntry[] = [
     file: 'components/ui/chart.tsx',
     variantProps: { type: 'line' },
     whenToUse: 'Para mostrar a evolução de um valor ao longo do tempo.',
+    // A prop `type` do Chart é obrigatória (sem valor padrão no componente): marcado aqui só
+    // para satisfazer o teste de integridade (um padrão por componente com mais de uma
+    // variante); "rendra trocar" nunca encontra um <Chart> sem `type`, porque não compila.
+    isDefault: true,
   },
   {
     code: 'CHT-002',
@@ -470,6 +486,7 @@ export const CATALOG: ComponentCatalogEntry[] = [
     file: 'components/ui/kanban.tsx',
     variantProps: {},
     whenToUse: 'Para um funil de etapas com cartões que se movem entre colunas.',
+    isDefault: true,
   },
   {
     code: 'KANB-002',
@@ -489,6 +506,7 @@ export const CATALOG: ComponentCatalogEntry[] = [
     file: 'components/ui/list.tsx',
     variantProps: {},
     whenToUse: 'Para linhas simples com início, título, descrição e fim, navegáveis ou não.',
+    isDefault: true,
   },
   {
     code: 'LIST-002',
@@ -508,6 +526,7 @@ export const CATALOG: ComponentCatalogEntry[] = [
     whenToUse:
       'Para confirmar uma ação com uma principal e uma de cancelar; type="destructive" usa o ' +
       'mesmo código, porque só muda a cor.',
+    isDefault: true,
   },
   {
     code: 'MOD-002',
@@ -579,6 +598,7 @@ export const CATALOG: ComponentCatalogEntry[] = [
     file: 'components/ui/radio-group.tsx',
     variantProps: { variant: 'list' },
     whenToUse: 'Para poucas opções simples, uma escolha só, em lista com bolinha e texto.',
+    isDefault: true,
   },
   {
     code: 'RDO-002',
@@ -596,6 +616,7 @@ export const CATALOG: ComponentCatalogEntry[] = [
     file: 'components/ui/rating.tsx',
     variantProps: { variant: 'stars' },
     whenToUse: 'Para uma nota rápida de satisfação, em estrelas.',
+    isDefault: true,
   },
   {
     code: 'RTG-002',
@@ -716,6 +737,7 @@ export const CATALOG: ComponentCatalogEntry[] = [
     file: 'components/ui/tabs.tsx',
     variantProps: { variant: 'line' },
     whenToUse: 'Padrão para dividir o conteúdo de uma tela em seções, com sublinhado na aba ativa.',
+    isDefault: true,
   },
   {
     code: 'ABA-002',
@@ -769,6 +791,7 @@ export const CATALOG: ComponentCatalogEntry[] = [
     file: 'components/ui/upload.tsx',
     variantProps: {},
     whenToUse: 'Para arrastar e soltar ou escolher arquivos, com lista e progresso por arquivo.',
+    isDefault: true,
   },
   {
     code: 'UPL-002',
@@ -878,7 +901,43 @@ export function filesMissingCatalogEntry(
   return files.filter((file) => !covered.has(file))
 }
 
-/** Lança se houver código duplicado, fora do formato, ou colidindo com um código de modelo. */
+/** Componente (nome) com mais de uma variante no catálogo, agrupadas na ordem cadastrada. */
+function groupByComponentWithMultipleVariants(
+  entries: ComponentCatalogEntry[],
+): Map<string, ComponentCatalogEntry[]> {
+  const byComponent = new Map<string, ComponentCatalogEntry[]>()
+  for (const entry of entries) {
+    const list = byComponent.get(entry.component) ?? []
+    list.push(entry)
+    byComponent.set(entry.component, list)
+  }
+  for (const [component, list] of byComponent) if (list.length <= 1) byComponent.delete(component)
+  return byComponent
+}
+
+/**
+ * Componente com mais de uma variante que não tem nenhuma marcada `isDefault` (fase 3, Lote
+ * B: `rendra trocar` precisa saber qual variante um elemento sem a prop representa).
+ */
+export function findComponentsWithoutDefault(entries: ComponentCatalogEntry[]): string[] {
+  const groups = groupByComponentWithMultipleVariants(entries)
+  return [...groups]
+    .filter(([, list]) => !list.some((entry) => entry.isDefault))
+    .map(([component]) => component)
+}
+
+/** Componente com mais de uma variante marcada `isDefault` ao mesmo tempo (só pode uma). */
+export function findComponentsWithMultipleDefaults(entries: ComponentCatalogEntry[]): string[] {
+  const groups = groupByComponentWithMultipleVariants(entries)
+  return [...groups]
+    .filter(([, list]) => list.filter((entry) => entry.isDefault).length > 1)
+    .map(([component]) => component)
+}
+
+/**
+ * Lança se houver código duplicado, fora do formato, colidindo com um código de modelo, ou
+ * componente com mais de uma variante sem exatamente uma marcada `isDefault`.
+ */
 export function assertCatalogIntegrity(): void {
   const duplicates = findDuplicateCodes(CATALOG)
   if (duplicates.length > 0) {
@@ -892,6 +951,18 @@ export function assertCatalogIntegrity(): void {
   if (collisions.length > 0) {
     throw new Error(
       `Catálogo: código colide com um código de modelo (T/C/M): ${collisions.join(', ')}.`,
+    )
+  }
+  const semPadrao = findComponentsWithoutDefault(CATALOG)
+  if (semPadrao.length > 0) {
+    throw new Error(
+      `Catálogo: componente com mais de uma variante sem nenhuma marcada isDefault: ${semPadrao.join(', ')}.`,
+    )
+  }
+  const padraoDuplicado = findComponentsWithMultipleDefaults(CATALOG)
+  if (padraoDuplicado.length > 0) {
+    throw new Error(
+      `Catálogo: componente com mais de uma variante marcada isDefault: ${padraoDuplicado.join(', ')}.`,
     )
   }
 }
