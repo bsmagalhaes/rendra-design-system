@@ -39,6 +39,7 @@ export const COMPONENT_CODE_PATTERN = /^[A-Z]{3,4}-\d{3}$/
 export const CATALOG_EXCLUDED_FILES = [
   'components/ui/overlay-shell.tsx',
   'components/ui/picker-panel.tsx',
+  'components/ui/sortable-handle.tsx',
 ]
 
 export const CATALOG: ComponentCatalogEntry[] = [

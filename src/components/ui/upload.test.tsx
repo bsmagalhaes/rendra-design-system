@@ -73,17 +73,35 @@ describe('Upload', () => {
     expect(container.querySelector('input[type="file"]')).not.toBeInTheDocument()
   })
 
-  it('remover chama onRemove e o arquivo some da tela', async () => {
+  it('remover chama onRemove, o arquivo some da tela e a miniatura é revogada', async () => {
     const onRemove = vi.fn()
     const { container } = renderApp(<Upload onRemove={onRemove} />)
     const input = container.querySelector('input[type="file"]') as HTMLInputElement
     fireEvent.change(input, {
-      target: { files: [new File(['a'], 'doc.pdf', { type: 'application/pdf' })] },
+      target: { files: [new File(['a'], 'foto.png', { type: 'image/png' })] },
     })
-    await screen.findByText('doc.pdf')
-    fireEvent.click(screen.getByRole('button', { name: 'Remover doc.pdf' }))
+    await screen.findByText('foto.png')
+    fireEvent.click(screen.getByRole('button', { name: 'Remover foto.png' }))
     expect(onRemove).toHaveBeenCalledTimes(1)
-    expect(screen.queryByText('doc.pdf')).not.toBeInTheDocument()
+    expect(screen.queryByText('foto.png')).not.toBeInTheDocument()
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:mock')
+  })
+
+  it('multiple=false: escolher outro arquivo substitui o anterior e revoga a miniatura dele', async () => {
+    const { container } = renderApp(<Upload multiple={false} />)
+    const input = container.querySelector('input[type="file"]') as HTMLInputElement
+    fireEvent.change(input, {
+      target: { files: [new File(['a'], 'um.png', { type: 'image/png' })] },
+    })
+    await screen.findByText('um.png')
+    expect(URL.revokeObjectURL).not.toHaveBeenCalled()
+
+    fireEvent.change(input, {
+      target: { files: [new File(['b'], 'dois.png', { type: 'image/png' })] },
+    })
+    await screen.findByText('dois.png')
+    expect(screen.queryByText('um.png')).not.toBeInTheDocument()
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:mock')
   })
 
   it('tentar de novo chama onRetry e, ao terminar, o sucesso fica visível (não repete o erro)', async () => {
@@ -140,7 +158,8 @@ describe('Upload', () => {
 
   it('com crop, a imagem só vira item visível da lista depois de confirmada no recorte', async () => {
     const original = HTMLCanvasElement.prototype.getContext
-    HTMLCanvasElement.prototype.getContext = (() => ({ drawImage: () => {} })) as typeof original
+    // @ts-expect-error simula só o que o componente usa do CanvasRenderingContext2D
+    HTMLCanvasElement.prototype.getContext = () => ({ drawImage: () => {} })
     HTMLCanvasElement.prototype.toBlob = function (cb, type) {
       cb(new Blob(['x'], { type: type ?? 'image/png' }))
     }
@@ -166,6 +185,46 @@ describe('Upload', () => {
 
     expect(await screen.findByText('foto.png')).toBeInTheDocument()
     expect(container.querySelector('[data-rendra="CROP-001"]')).not.toBeInTheDocument()
+    HTMLCanvasElement.prototype.getContext = original
+  })
+
+  it('com crop e multiple=false, confirmar o segundo recorte substitui o primeiro e revoga a miniatura dele', async () => {
+    const original = HTMLCanvasElement.prototype.getContext
+    // @ts-expect-error simula só o que o componente usa do CanvasRenderingContext2D
+    HTMLCanvasElement.prototype.getContext = () => ({ drawImage: () => {} })
+    HTMLCanvasElement.prototype.toBlob = function (cb, type) {
+      cb(new Blob(['x'], { type: type ?? 'image/png' }))
+    }
+    Object.defineProperty(HTMLElement.prototype, 'clientWidth', { configurable: true, value: 200 })
+    Object.defineProperty(HTMLElement.prototype, 'clientHeight', { configurable: true, value: 200 })
+
+    const crop = async (container: HTMLElement, name: string) => {
+      const input = container.querySelector('input[type="file"]') as HTMLInputElement
+      fireEvent.change(input, {
+        target: { files: [new File(['a'], name, { type: 'image/png' })] },
+      })
+      const img = container.querySelector('[data-rendra="CROP-001"] img')!
+      Object.defineProperty(img, 'naturalWidth', { value: 400, configurable: true })
+      Object.defineProperty(img, 'naturalHeight', { value: 400, configurable: true })
+      fireEvent.load(img)
+      fireEvent.click(await screen.findByRole('button', { name: 'Recortar' }))
+      await screen.findByText(name)
+    }
+
+    const { container } = renderApp(
+      <Upload
+        multiple={false}
+        crop={{ aspects: [{ id: 'quadrado', label: 'Quadrado', ratio: 1 }] }}
+      />,
+    )
+    await crop(container, 'um.png')
+    // O próprio ImageCropper revoga a URL dele ao desmontar: guarda a contagem antes do
+    // segundo recorte para isolar só a revogação do item substituído.
+    const revokesBefore = vi.mocked(URL.revokeObjectURL).mock.calls.length
+
+    await crop(container, 'dois.png')
+    expect(screen.queryByText('um.png')).not.toBeInTheDocument()
+    expect(vi.mocked(URL.revokeObjectURL).mock.calls.length).toBeGreaterThan(revokesBefore)
     HTMLCanvasElement.prototype.getContext = original
   })
 })

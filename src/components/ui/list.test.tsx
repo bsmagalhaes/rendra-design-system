@@ -45,7 +45,7 @@ describe('List', () => {
     )
   })
 
-  it('tone mostra um selo textual (nunca só cor); neutral não mostra selo', () => {
+  it('tone mostra um selo textual nos quatro tons (nunca só cor), inclusive neutral', () => {
     renderApp(
       <List
         items={[
@@ -53,16 +53,19 @@ describe('List', () => {
           { id: '2', title: 'Cliente B', tone: 'warning' },
           { id: '3', title: 'Cliente C', tone: 'error' },
           { id: '4', title: 'Cliente D', tone: 'neutral' },
+          { id: '5', title: 'Cliente E' },
         ]}
       />,
     )
     expect(screen.getByText('Sucesso')).toBeInTheDocument()
     expect(screen.getByText('Atenção')).toBeInTheDocument()
     expect(screen.getByText('Erro')).toBeInTheDocument()
-    // Cliente D (neutral) não ganha nenhum dos três selos: só um de cada aparece na tela.
+    expect(screen.getByText('Neutro')).toBeInTheDocument()
+    // Cada selo aparece uma única vez; Cliente E, sem tone nenhum, não ganha selo algum.
     expect(screen.getAllByText('Sucesso')).toHaveLength(1)
     expect(screen.getAllByText('Atenção')).toHaveLength(1)
     expect(screen.getAllByText('Erro')).toHaveLength(1)
+    expect(screen.getAllByText('Neutro')).toHaveLength(1)
   })
 
   it('sem onReorder, a lista é só leitura e a alça não aparece', () => {

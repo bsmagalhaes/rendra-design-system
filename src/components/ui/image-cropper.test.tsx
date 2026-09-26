@@ -209,4 +209,26 @@ describe('ImageCropper', () => {
     // Sem o teto, sairia 600x600; com maxOutputWidth=300, sai 300x300 (mesma proporção 1:1).
     expect(lastCanvasSize).toEqual({ width: 300, height: 300 })
   })
+
+  it('toBlob nulo declara a falha (mesma mensagem visível) e nunca chama onConfirm', async () => {
+    HTMLCanvasElement.prototype.toBlob = function (cb) {
+      cb(null)
+    }
+    const file = new File(['a'], 'foto.png', { type: 'image/png' })
+    const onConfirm = vi.fn()
+    const { container } = renderApp(
+      <ImageCropper file={file} aspects={[square]} onConfirm={onConfirm} onCancel={vi.fn()} />,
+    )
+    const img = container.querySelector('img')!
+    Object.defineProperty(img, 'naturalWidth', { value: 800, configurable: true })
+    Object.defineProperty(img, 'naturalHeight', { value: 600, configurable: true })
+    fireEvent.load(img)
+
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Recortar' })).toBeEnabled())
+    fireEvent.click(screen.getByRole('button', { name: 'Recortar' }))
+
+    expect(await screen.findByText('Não é possível recortar aqui')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Recortar' })).not.toBeInTheDocument()
+    expect(onConfirm).not.toHaveBeenCalled()
+  })
 })

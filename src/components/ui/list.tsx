@@ -1,8 +1,9 @@
-import { ChevronRight, GripVertical } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { resolveCatalogCode } from '@/catalog/components'
 import { useRendraLink } from '@/components/rendra-provider'
 import { Badge } from '@/components/ui/badge'
+import { SortableHandle } from '@/components/ui/sortable-handle'
 import { cn } from '@/lib/cn'
 import { useSortable } from '@/lib/sortable'
 
@@ -40,7 +41,7 @@ const toneLabel: Record<NonNullable<ListItem['tone']>, string> = {
   success: 'Sucesso',
   warning: 'Atenção',
   error: 'Erro',
-  neutral: '',
+  neutral: 'Neutro',
 }
 
 const toneBadge: Record<
@@ -88,7 +89,7 @@ export function List({
                 <span className="line-clamp-2 text-sm text-muted-foreground">{it.description}</span>
               )}
             </span>
-            {it.tone && it.tone !== 'neutral' && (
+            {it.tone && (
               <Badge tone={toneBadge[it.tone]} className="shrink-0">
                 {toneLabel[it.tone]}
               </Badge>
@@ -105,26 +106,7 @@ export function List({
         )
         const label = itemLabel(it)
         const handle = sortableEnabled && (
-          <button
-            type="button"
-            aria-label={`Reordenar ${label}`}
-            className={cn(
-              'flex size-touch shrink-0 cursor-grab items-center justify-center rounded-item text-muted-foreground active:cursor-grabbing',
-              sortable.handleProps(it.id).className,
-            )}
-            onPointerDown={sortable.handleProps(it.id).onPointerDown}
-            onKeyDown={(e) => {
-              if (e.key === 'ArrowUp') {
-                e.preventDefault()
-                sortable.moveBy(it.id, -1)
-              } else if (e.key === 'ArrowDown') {
-                e.preventDefault()
-                sortable.moveBy(it.id, 1)
-              }
-            }}
-          >
-            <GripVertical className="size-icon-sm" aria-hidden />
-          </button>
+          <SortableHandle id={it.id} label={`Reordenar ${label}`} sortable={sortable} />
         )
         return (
           <li

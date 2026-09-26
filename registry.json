@@ -806,6 +806,7 @@
         "https://bsmagalhaes.github.io/rendra-design-system/r/badge.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/sortable-handle.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
       ],
       "files": [
@@ -1103,6 +1104,25 @@
       "meta": { "codes": ["SLD-001"] }
     },
     {
+      "name": "sortable-handle",
+      "type": "registry:item",
+      "title": "sortable-handle",
+      "description": "Componente sortable-handle do Rendra Design System.",
+      "dependencies": ["lucide-react@^1.47.0"],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/sortable-handle.tsx",
+          "type": "registry:file",
+          "target": "src/components/ui/sortable-handle.tsx"
+        }
+      ],
+      "meta": { "codes": [] }
+    },
+    {
       "name": "stat-card",
       "type": "registry:item",
       "title": "stat-card",
@@ -1288,6 +1308,7 @@
         "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/image-cropper.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/progress.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/sortable-handle.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
       ],
       "files": [

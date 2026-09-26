@@ -111,6 +111,9 @@ export function ImageCropper({
   className,
 }: ImageCropperProps) {
   const canvasSupported = useMemo(detectCanvasSupport, [])
+  // toBlob pode devolver null (rarissimo, mas acontece): a falha entra aqui e vira a
+  // mesma tela declarada de "não é possível recortar", em vez de sair calada.
+  const [blobFailed, setBlobFailed] = useState(false)
   const [aspectId, setAspectId] = useState(aspects[0]?.id ?? '')
   const aspect = aspects.find((a) => a.id === aspectId) ?? aspects[0]
   const [zoom, setZoom] = useState(1)
@@ -143,7 +146,7 @@ export function ImageCropper({
     setOffset({ x: 0, y: 0 })
   }, [aspectId])
 
-  if (!canvasSupported) {
+  if (!canvasSupported || blobFailed) {
     return (
       <div data-rendra="CROP-001" className={cn('flex flex-col gap-4', className)}>
         <Alert
@@ -197,7 +200,10 @@ export function ImageCropper({
     )
     const type = file.type || 'image/png'
     canvas.toBlob((blob) => {
-      if (!blob) return
+      if (!blob) {
+        setBlobFailed(true)
+        return
+      }
       onConfirm(new File([blob], file.name, { type }))
     }, type)
   }

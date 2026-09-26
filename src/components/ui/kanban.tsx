@@ -26,13 +26,14 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Tabs } from '@/components/ui/tabs'
 import { useBreakpoint } from '@/hooks/use-breakpoint'
 import { useFillHeight } from '@/hooks/use-fill-height'
 import { cn } from '@/lib/cn'
-import { bindPointerDrag, findDragTarget } from '@/lib/sortable'
+import { bindPointerDrag, findDragTarget, resolveDropIndex } from '@/lib/sortable'
 
 /*
  * Kanban único: colunas e cards por props; a tela guarda o estado e recebe onCardMove.
@@ -331,36 +332,45 @@ export function Kanban({
   }
 
   const startTouchDrag = (card: KanbanCard, e: ReactPointerEvent<HTMLElement>) => {
-    if (!onCardMove && !(dropTargets?.length && onDropTarget)) return
+    const hasTargets = Boolean(dropTargets?.length && onDropTarget)
+    if (!onCardMove && !hasTargets) return
+    // Variável comum (não estado): guarda o destino sob o dedo para o onEnd ler direto,
+    // sem efeito colateral dentro do updater do setState (StrictMode chamaria duas vezes).
+    let overTargetId: string | null = null
     setTouchDrag({ cardId: card.id, overTargetId: null })
     bindPointerDrag(e.currentTarget, e, {
       onMove: (x, y) => {
-        if (dropTargets?.length) {
-          const found = findDragTarget(x, y, 'data-kanban-target')
-          setTouchDrag({ cardId: card.id, overTargetId: found?.id ?? null })
+        // A barra de destinos continua reconhecendo colunas por baixo: o toque só usa
+        // a barra quando o dedo está de fato sobre ela, nunca no lugar da coluna.
+        const targetHit = hasTargets ? findDragTarget(x, y, 'data-kanban-target') : null
+        overTargetId = targetHit?.id ?? null
+        if (targetHit) {
+          setTouchDrag({ cardId: card.id, overTargetId: targetHit.id })
           return
         }
+        if (hasTargets) setTouchDrag({ cardId: card.id, overTargetId: null })
+        if (!onCardMove) return
         const found = findDragTarget(x, y, 'data-kanban-card')
         if (found && found.id !== card.id) {
           const list = inColumn(card.columnId)
-          let toIndex = list.findIndex((c) => c.id === found.id)
-          if (toIndex === -1) toIndex = list.length
-          if (!found.before) toIndex += 1
-          onCardMove?.(card.id, card.columnId, toIndex)
+          const toIndex = resolveDropIndex(
+            list.map((c) => c.id),
+            found,
+          )
+          onCardMove(card.id, card.columnId, toIndex)
         }
       },
       onEnd: () => {
-        setTouchDrag((state) => {
-          if (state?.overTargetId) dropOnTarget(card.id, state.overTargetId)
-          return null
-        })
+        setTouchDrag(null)
+        if (overTargetId) dropOnTarget(card.id, overTargetId)
       },
     })
   }
 
   const moveMenu = (card: KanbanCard) => {
-    const hasTargets = Boolean(dropTargets?.length)
-    if (!onCardMove && !(hasTargets && onDropTarget)) return null
+    const hasTargets = Boolean(dropTargets?.length && onDropTarget)
+    const otherColumns = onCardMove ? columns.filter((c) => c.id !== card.columnId) : []
+    if (otherColumns.length === 0 && !hasTargets) return null
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -375,36 +385,39 @@ export function Kanban({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Mover para</DropdownMenuLabel>
-          {hasTargets
-            ? dropTargets!.map((t) => (
+          {otherColumns.length > 0 && (
+            <>
+              <DropdownMenuLabel>Mover para</DropdownMenuLabel>
+              {otherColumns.map((c) => (
                 <DropdownMenuItem
-                  key={t.id}
-                  disabled={t.disabled}
-                  onSelect={() => dropOnTarget(card.id, t.id)}
+                  key={c.id}
+                  onSelect={() => onCardMove?.(card.id, c.id, inColumn(c.id).length)}
                 >
-                  {t.icon ?? <ArrowRightLeft />}
-                  <span className="flex min-w-0 flex-col">
-                    <span className="truncate">{t.label}</span>
-                    {t.disabled && t.disabledReason && (
-                      <span className="truncate text-xs text-muted-foreground">
-                        {t.disabledReason}
-                      </span>
-                    )}
-                  </span>
+                  <ArrowRightLeft />
+                  {c.title}
                 </DropdownMenuItem>
-              ))
-            : columns
-                .filter((c) => c.id !== card.columnId)
-                .map((c) => (
-                  <DropdownMenuItem
-                    key={c.id}
-                    onSelect={() => onCardMove?.(card.id, c.id, inColumn(c.id).length)}
-                  >
-                    <ArrowRightLeft />
-                    {c.title}
-                  </DropdownMenuItem>
-                ))}
+              ))}
+            </>
+          )}
+          {otherColumns.length > 0 && hasTargets && <DropdownMenuSeparator />}
+          {hasTargets &&
+            dropTargets!.map((t) => (
+              <DropdownMenuItem
+                key={t.id}
+                disabled={t.disabled}
+                onSelect={() => dropOnTarget(card.id, t.id)}
+              >
+                {t.icon ?? <ArrowRightLeft />}
+                <span className="flex min-w-0 flex-col">
+                  <span className="truncate">{t.label}</span>
+                  {t.disabled && t.disabledReason && (
+                    <span className="truncate text-xs text-muted-foreground">
+                      {t.disabledReason}
+                    </span>
+                  )}
+                </span>
+              </DropdownMenuItem>
+            ))}
         </DropdownMenuContent>
       </DropdownMenu>
     )
