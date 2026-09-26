@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Link } from 'react-router'
 import { resolveCatalogCode } from '@/catalog/components'
+import { useRendraLink } from '@/components/rendra-provider'
 import { cn } from '@/lib/cn'
 
 export interface BreadcrumbItem {
@@ -23,6 +23,7 @@ interface BreadcrumbProps {
  * voltar para o nível anterior com o nome da tela atual (mesmo componente, mesma API).
  */
 export function Breadcrumb({ items, variant = 'responsive', className }: BreadcrumbProps) {
+  const Link = useRendraLink()
   if (items.length === 0) return null
   const code = resolveCatalogCode('Breadcrumb', { variant })
   if (variant === 'trail') {

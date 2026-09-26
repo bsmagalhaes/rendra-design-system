@@ -1,5 +1,5 @@
 import { ArrowLeft, Home, RotateCw } from 'lucide-react'
-import { Link, useNavigate } from 'react-router'
+import { useRendraLink, useRendraNavigate } from '@/components/rendra-provider'
 import { BrandFeedbackIcon } from '@/components/ui/brand-feedback-icon'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/cn'
@@ -32,7 +32,8 @@ export interface ErrorPageProps {
  * Ações seguem a regra 30/70: secundária à esquerda, principal à direita.
  */
 export function ErrorPage({ code, title, description, fullScreen = false }: ErrorPageProps) {
-  const navigate = useNavigate()
+  const Link = useRendraLink()
+  const { goBack } = useRendraNavigate()
   const c = content[code]
 
   return (
@@ -60,7 +61,7 @@ export function ErrorPage({ code, title, description, fullScreen = false }: Erro
             variant="outline"
             icon={<ArrowLeft />}
             className="col-span-3"
-            onClick={() => navigate(-1)}
+            onClick={goBack}
             aria-label="Voltar"
           >
             <span className="hidden sm:inline">Voltar</span>
