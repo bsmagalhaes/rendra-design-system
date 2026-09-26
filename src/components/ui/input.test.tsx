@@ -98,3 +98,135 @@ describe('Input', () => {
     )
   })
 })
+
+describe('Input com unidades (A9)', () => {
+  it('percentual: aplica a máscara com teto configurável (percentMax)', async () => {
+    render(<Input aria-label="Desconto" units={[{ id: 'percent', label: '%' }]} percentMax={50} />)
+    const input = screen.getByLabelText('Desconto') as HTMLInputElement
+    await userEvent.type(input, '9999')
+    const numeric = Number(input.value.replace(/[^\d,]/g, '').replace(',', '.'))
+    expect(numeric).toBeLessThanOrEqual(50)
+  })
+
+  it('moeda: entrega centavos inteiros (R$ 1.250,00)', async () => {
+    const onCentsChange = vi.fn()
+    render(
+      <Input
+        aria-label="Valor"
+        units={[{ id: 'currency', label: 'R$' }]}
+        onCentsChange={onCentsChange}
+      />,
+    )
+    await userEvent.type(screen.getByLabelText('Valor'), '1250,5')
+    expect(onCentsChange).toHaveBeenLastCalledWith(125050)
+  })
+
+  it('unidade livre (sem máscara): troca só o rótulo do seletor', async () => {
+    render(
+      <Input
+        aria-label="Peso"
+        units={[
+          { id: 'kg', label: 'kg' },
+          { id: 'cm', label: 'cm' },
+        ]}
+      />,
+    )
+    expect(screen.getByLabelText('Unidade: kg')).toBeInTheDocument()
+    await userEvent.selectOptions(screen.getByLabelText('Unidade: kg'), 'cm')
+    expect(screen.getByLabelText('Unidade: cm')).toBeInTheDocument()
+  })
+
+  it('trocar de unidade limpa o valor do campo', async () => {
+    const onChange = vi.fn()
+    render(
+      <Input
+        aria-label="Peso"
+        units={[
+          { id: 'kg', label: 'kg' },
+          { id: 'cm', label: 'cm' },
+        ]}
+        onChange={onChange}
+      />,
+    )
+    const input = screen.getByLabelText('Peso')
+    await userEvent.type(input, '150')
+    expect(input).toHaveValue('150')
+    await userEvent.selectOptions(screen.getByLabelText('Unidade: kg'), 'cm')
+    expect(screen.getByLabelText('Peso')).toHaveValue('')
+    expect(onChange).toHaveBeenLastCalledWith('')
+  })
+})
+
+describe('Input variant="secret" (A10)', () => {
+  it('com valor salvo, mostra a dica mascarada e nunca o campo real', () => {
+    render(<Input aria-label="Chave de API" variant="secret" hasValue maskedHint="••••••a1b2c3" />)
+    expect(screen.getByText('••••••a1b2c3')).toBeInTheDocument()
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Chave de API')).not.toBeInTheDocument()
+  })
+
+  it('sem valor salvo, avisa que não há nada guardado', () => {
+    render(<Input aria-label="Chave de API" variant="secret" hasValue={false} />)
+    expect(screen.getByText('Nenhum valor salvo')).toBeInTheDocument()
+  })
+
+  it('"Trocar" chama onStartEdit', async () => {
+    const onStartEdit = vi.fn()
+    render(
+      <Input
+        aria-label="Chave de API"
+        variant="secret"
+        hasValue
+        maskedHint="••••••a1b2c3"
+        onStartEdit={onStartEdit}
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Trocar' }))
+    expect(onStartEdit).toHaveBeenCalledTimes(1)
+  })
+
+  it('em edição, o campo abre vazio e o valor salvo não aparece no DOM', () => {
+    const { container } = render(
+      <Input
+        aria-label="Chave de API"
+        variant="secret"
+        hasValue
+        isEditing
+        maskedHint="••••••a1b2c3"
+      />,
+    )
+    expect(container.innerHTML).not.toContain('a1b2c3')
+    const input = screen.getByLabelText('Chave de API')
+    expect(input).toHaveValue('')
+  })
+
+  it('"Cancelar" chama onCancelEdit e volta para a máscara', async () => {
+    const onCancelEdit = vi.fn()
+    render(
+      <Input
+        aria-label="Chave de API"
+        variant="secret"
+        hasValue
+        isEditing
+        onCancelEdit={onCancelEdit}
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Cancelar' }))
+    expect(onCancelEdit).toHaveBeenCalledTimes(1)
+  })
+
+  it('"Remover" com removing mostra o carregamento e desabilita o botão', () => {
+    const onRemove = vi.fn()
+    render(
+      <Input
+        aria-label="Chave de API"
+        variant="secret"
+        hasValue
+        maskedHint="••••••a1b2c3"
+        onRemove={onRemove}
+        removing
+      />,
+    )
+    expect(screen.getByRole('button', { name: 'Remover' })).toBeDisabled()
+  })
+})

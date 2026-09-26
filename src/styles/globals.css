@@ -463,6 +463,38 @@
   width: var(--progress, 0%);
 }
 
+/* Progress indeterminado: barra que desliza da esquerda para a direita, no lugar do
+   animate-pulse antigo. Para no prefers-reduced-motion (fica parada, sem sumir). */
+@keyframes rd-progress-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+@utility progress-slide {
+  animation: rd-progress-slide 1.1s ease-in-out infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+/*
+ * Amostra de cor livre do ColorPicker, via variável CSS (nunca estilo inline). A cor da
+ * amostra vem do usuário, não do tema, então o check sobre ela usa branco ou tinta fixos
+ * (nunca um token de marca), escolhidos pelo contraste com a própria amostra.
+ */
+@utility bg-swatch {
+  background-color: var(--rendra-swatch, transparent);
+}
+@utility swatch-check-light {
+  color: #ffffff;
+}
+@utility swatch-check-dark {
+  color: #0b1d37;
+}
+
 /* Caixas do OtpInput: quantidade vem da variável --otp */
 @utility grid-cols-otp {
   grid-template-columns: repeat(var(--otp, 6), minmax(0, 1fr));
