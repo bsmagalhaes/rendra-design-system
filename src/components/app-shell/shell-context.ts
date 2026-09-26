@@ -1,8 +1,10 @@
 import { createContext, useContext, type ReactNode } from 'react'
-import type { ShellLayout } from '@/config/layout'
+import type { ShellLayout } from './layout'
+import type { NavigationTarget } from './navigation-utils'
+import type { NavGroup, NavItem, ShellMenuItem, ShellNotificationsConfig, ShellUser } from './types'
 
 export interface ShellContextValue {
-  /** Layout efetivo: padrão do projeto + props do AppShell + escolha do usuário. */
+  /** Layout efetivo: padrão interno + prop `layout` do AppShell + escolha do usuário. */
   layout: ShellLayout
   /** Altera uma opção de layout (guardada no navegador do usuário). */
   setLayout: <K extends keyof ShellLayout>(key: K, value: ShellLayout[K]) => void
@@ -24,6 +26,24 @@ export interface ShellContextValue {
   /** Busca global (Ctrl+K). */
   searchOpen: boolean
   setSearchOpen: (open: boolean) => void
+  /** Menu do sistema, recebido pela prop `navigation` do AppShell (obrigatória). */
+  navigation: NavGroup[]
+  /** Até 4 itens marcados `bottomNav`, calculados a partir de `navigation`. */
+  bottomNavItems: NavItem[]
+  /** Lista plana de destinos: busca global e cálculo do item ativo. */
+  navigationTargets: NavigationTarget[]
+  /** Usuário exibido no menu do avatar e no rodapé da sidebar. */
+  user: ShellUser
+  /** Itens do menu do avatar (ex.: "Meu perfil", "Configurações"). */
+  userMenuItems: ShellMenuItem[]
+  /** Chamado ao selecionar "Sair". Sem ele, o botão não faz nada. */
+  onLogout?: () => void
+  /** Rótulo do destino inicial na trilha do header. */
+  homeLabel: string
+  /** Ações rápidas da busca global (ex.: "Novo cliente"). */
+  quickActions: ShellMenuItem[]
+  /** Notificações do sino do header. Sem esta prop, o sino não aparece. */
+  notifications?: ShellNotificationsConfig
 }
 
 export const ShellContext = createContext<ShellContextValue | null>(null)
