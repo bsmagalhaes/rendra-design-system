@@ -28,7 +28,15 @@ function makeDoc(numPages: number) {
   return { numPages, getPage: vi.fn(async () => fakePage()) }
 }
 
-let getDocumentMock: (...args: unknown[]) => { promise: Promise<unknown> }
+/** getDocument() devolve a tarefa de carregamento: é ela que tem destroy(), não o documento. */
+function makeLoadingTask(promise: Promise<unknown>) {
+  return { promise, destroy: vi.fn(async () => undefined) }
+}
+
+let getDocumentMock: (...args: unknown[]) => {
+  promise: Promise<unknown>
+  destroy: () => Promise<void>
+}
 
 vi.mock('pdfjs-dist', () => ({
   GlobalWorkerOptions: {},
@@ -53,11 +61,13 @@ describe('DocumentViewer: vazio', () => {
 describe('DocumentViewer: carregando', () => {
   it('mostra o texto de carregamento antes do PDF resolver', () => {
     let resolveDoc: (doc: unknown) => void = () => {}
-    getDocumentMock = vi.fn(() => ({
-      promise: new Promise((resolve) => {
-        resolveDoc = resolve
-      }),
-    }))
+    getDocumentMock = vi.fn(() =>
+      makeLoadingTask(
+        new Promise((resolve) => {
+          resolveDoc = resolve
+        }),
+      ),
+    )
     renderApp(<DocumentViewer url="https://exemplo.com/a.pdf" title="Contrato" />)
     expect(screen.getByText('Carregando documento...')).toBeInTheDocument()
     // Libera a promessa para não vazar entre testes.
@@ -66,23 +76,61 @@ describe('DocumentViewer: carregando', () => {
 })
 
 describe('DocumentViewer: erro declarado', () => {
-  it('CORS ou arquivo inválido mostra a falha e o link para abrir em nova aba', async () => {
-    getDocumentMock = vi.fn(() => ({ promise: Promise.reject(new Error('Bloqueado por CORS')) }))
+  it('CORS ou arquivo inválido mostra a falha em português e o link para abrir em nova aba', async () => {
+    // A mensagem crua do pdfjs (em inglês) nunca aparece para quem usa a tela.
+    getDocumentMock = vi.fn(() =>
+      makeLoadingTask(Promise.reject(new Error('Failed to fetch dynamically imported module'))),
+    )
     renderApp(<DocumentViewer url="https://exemplo.com/a.pdf" title="Contrato" />)
 
     await waitFor(() =>
       expect(screen.getByText('Não foi possível abrir o documento')).toBeInTheDocument(),
     )
-    expect(screen.getByText(/Bloqueado por CORS/)).toBeInTheDocument()
+    expect(
+      screen.getByText('O arquivo pode estar indisponível, corrompido ou bloqueado por CORS.'),
+    ).toBeInTheDocument()
+    expect(screen.queryByText(/Failed to fetch/)).not.toBeInTheDocument()
     const link = screen.getByRole('link', { name: /Abrir em nova aba/ })
     expect(link).toHaveAttribute('href', 'https://exemplo.com/a.pdf')
     expect(link).toHaveAttribute('target', '_blank')
   })
 })
 
+describe('DocumentViewer: libera a tarefa de carregamento (destroy)', () => {
+  it('chama destroy() na tarefa anterior ao trocar de url', async () => {
+    const firstTask = makeLoadingTask(Promise.resolve(makeDoc(1)))
+    const secondTask = makeLoadingTask(Promise.resolve(makeDoc(1)))
+    getDocumentMock = vi.fn().mockReturnValueOnce(firstTask).mockReturnValueOnce(secondTask)
+
+    const { rerender } = renderApp(
+      <DocumentViewer url="https://exemplo.com/a.pdf" title="Contrato" />,
+    )
+    await waitFor(() => expect(screen.getByLabelText('Aumentar zoom')).toBeInTheDocument())
+    expect(firstTask.destroy).not.toHaveBeenCalled()
+
+    rerender(<DocumentViewer url="https://exemplo.com/b.pdf" title="Contrato" />)
+    await waitFor(() => expect(firstTask.destroy).toHaveBeenCalledTimes(1))
+    expect(secondTask.destroy).not.toHaveBeenCalled()
+  })
+
+  it('chama destroy() na tarefa ao desmontar', async () => {
+    const task = makeLoadingTask(Promise.resolve(makeDoc(1)))
+    getDocumentMock = vi.fn(() => task)
+
+    const { unmount } = renderApp(
+      <DocumentViewer url="https://exemplo.com/a.pdf" title="Contrato" />,
+    )
+    await waitFor(() => expect(screen.getByLabelText('Aumentar zoom')).toBeInTheDocument())
+    expect(task.destroy).not.toHaveBeenCalled()
+
+    unmount()
+    await waitFor(() => expect(task.destroy).toHaveBeenCalledTimes(1))
+  })
+})
+
 describe('DocumentViewer: uma página', () => {
   it('não mostra navegação de página quando o documento tem uma página só', async () => {
-    getDocumentMock = vi.fn(() => ({ promise: Promise.resolve(makeDoc(1)) }))
+    getDocumentMock = vi.fn(() => makeLoadingTask(Promise.resolve(makeDoc(1))))
     renderApp(<DocumentViewer url="https://exemplo.com/a.pdf" title="Contrato" />)
 
     await waitFor(() => expect(screen.getByLabelText('Aumentar zoom')).toBeInTheDocument())
@@ -94,7 +142,7 @@ describe('DocumentViewer: uma página', () => {
 describe('DocumentViewer: várias páginas', () => {
   it('mostra navegação e avança de página ao clicar em Próxima página', async () => {
     const doc = makeDoc(3)
-    getDocumentMock = vi.fn(() => ({ promise: Promise.resolve(doc) }))
+    getDocumentMock = vi.fn(() => makeLoadingTask(Promise.resolve(doc)))
     renderApp(<DocumentViewer url="https://exemplo.com/a.pdf" title="Contrato" />)
 
     await waitFor(() => expect(screen.getByText('1 de 3')).toBeInTheDocument())
@@ -104,7 +152,7 @@ describe('DocumentViewer: várias páginas', () => {
   })
 
   it('os botões de zoom têm o gesto no nome acessível', async () => {
-    getDocumentMock = vi.fn(() => ({ promise: Promise.resolve(makeDoc(2)) }))
+    getDocumentMock = vi.fn(() => makeLoadingTask(Promise.resolve(makeDoc(2))))
     renderApp(<DocumentViewer url="https://exemplo.com/a.pdf" title="Contrato" />)
     await waitFor(() => expect(screen.getByLabelText('Aumentar zoom')).toBeInTheDocument())
     expect(screen.getByLabelText('Diminuir zoom')).toBeInTheDocument()

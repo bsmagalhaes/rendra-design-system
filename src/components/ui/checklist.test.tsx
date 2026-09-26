@@ -2,9 +2,11 @@
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { renderApp } from '@/test/render'
 import { Checklist, type ChecklistItem } from './checklist'
+
+afterEach(() => vi.unstubAllGlobals())
 
 /** Componente controlado: a lista renderizada precisa refletir a mudança, não só chamar onChange. */
 function Demo({ initial, disabled }: { initial: ChecklistItem[]; disabled?: boolean }) {
@@ -69,6 +71,20 @@ describe('Checklist', () => {
     expect(screen.queryByDisplayValue('Um')).not.toBeInTheDocument()
     expect(screen.getByRole('textbox', { name: 'Nome do item 1' })).toHaveValue('Dois')
     expect(screen.getAllByRole('textbox')).toHaveLength(1)
+  })
+
+  it('adiciona itens mesmo sem crypto.randomUUID (HTTP sem contexto seguro)', async () => {
+    vi.stubGlobal('crypto', {})
+    renderApp(<Demo initial={[]} />)
+
+    const addButton = screen.getByRole('button', { name: 'Adicionar item' })
+    await userEvent.click(addButton)
+    await userEvent.click(addButton)
+
+    const campos = screen.getAllByRole('textbox')
+    expect(campos).toHaveLength(2)
+    // Ids únicos: os dois "name" (id na label) não colidem no DOM.
+    expect(campos[0]).not.toBe(campos[1])
   })
 
   it('disabled desabilita marcar, renomear e remover', () => {

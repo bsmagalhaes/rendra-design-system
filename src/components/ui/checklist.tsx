@@ -1,5 +1,5 @@
 import { Plus, Trash2 } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
@@ -37,6 +37,10 @@ export function Checklist({
   className,
   ...aria
 }: ChecklistProps) {
+  // Id de verdade, não crypto.randomUUID(): esse método só existe em contexto seguro
+  // (HTTPS ou localhost) e quebra em produção atrás de HTTP puro.
+  const baseId = useId()
+  const nextIndex = useRef(0)
   const pendingFocusId = useRef<string | null>(null)
 
   useEffect(() => {
@@ -55,7 +59,8 @@ export function Checklist({
   const remove = (itemId: string) => onChange(value.filter((item) => item.id !== itemId))
 
   const add = () => {
-    const newId = crypto.randomUUID()
+    nextIndex.current += 1
+    const newId = `${baseId}item${nextIndex.current}`
     pendingFocusId.current = newId
     onChange([...value, { id: newId, label: '', checked: false }])
   }
