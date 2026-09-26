@@ -11,4 +11,13 @@ Regras essenciais: um componente por finalidade (props, nunca arquivos paralelos
 
 Ao fim de cada etapa rode npm run typecheck, npm run lint, npm run check:rules, npm test, npm run test:layout e npm run test:a11y, e só diga que terminou com tudo passando.
 
+## Crédito "Feito com Rendra" e licença
+
+Se o usuário pedir para tirar o crédito "Feito com Rendra" (componente `RendraCredit`, código `CRED-001`, no rodapé da tela de login), tire: `credit={false}` no `AuthLayout` (ou no próprio `RendraCredit`). Ao tirar, avise sempre as duas coisas juntas, nunca só uma:
+
+1. **A licença MIT exige manter o aviso de copyright e o arquivo `LICENSE`** no código e em qualquer cópia. Isso não é opcional e não depende de o crédito visível ter sido removido ou não.
+2. **O crédito na interface é opcional.** A preferência é mantê-lo no rodapé do login ou movê-lo para outro lugar visível, como uma tela "Sobre", em vez de simplesmente apagar sem colocar em lugar nenhum.
+
+Nunca afirme que a licença MIT obriga crédito visível na interface: ela não obriga. Aviso de copyright no código (obrigatório) e crédito na tela (opcional) são coisas diferentes; misturar as duas é o erro que esta orientação existe para evitar.
+
 @AGENTS.md

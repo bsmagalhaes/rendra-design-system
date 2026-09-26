@@ -45,6 +45,7 @@ npm run build         # build de produção
 - Nunca use valor arbitrário, degrau fora da escala, cor fixa ou estilo inline. Se faltar um tamanho, crie o token em `globals.css`.
 - Toda tela nova: entre em `routes.tsx` e `routes-list.ts`, passe no `test:layout` e tenha story em `src/stories/pages.stories.tsx`.
 - Textos da interface em português do Brasil.
+- Crédito "Feito com Rendra" (`RendraCredit`, rodapé do login): se pedirem para tirar, tire (`credit={false}`), mas avise as duas coisas juntas: a licença MIT exige manter o aviso de copyright e o arquivo `LICENSE` no código e nas cópias, com ou sem crédito visível; e o crédito na tela é opcional, com preferência por mantê-lo no rodapé do login ou movê-lo para outro lugar visível, como uma tela "Sobre". Nunca diga que a MIT obriga crédito visível na interface: não obriga. Detalhes no `AGENTS.md`.
 
 ## Matriz de modelos (inegociável)
 
