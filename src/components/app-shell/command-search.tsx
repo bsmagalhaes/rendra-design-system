@@ -1,8 +1,8 @@
 import { Command } from 'cmdk'
 import { Moon, Plus, Search, Sun, X } from 'lucide-react'
 import { Dialog, VisuallyHidden } from 'radix-ui'
-import { useNavigate } from 'react-router'
 import { useBrand } from '@/brand'
+import { useRendraNavigate } from '@/components/rendra-provider'
 import { navigationTargets } from '@/config/navigation'
 import { cn } from '@/lib/cn'
 import { useShell } from './shell-context'
@@ -21,7 +21,7 @@ const groupClass =
 export function CommandSearch() {
   const { searchOpen, setSearchOpen } = useShell()
   const { resolvedMode, setMode } = useBrand()
-  const navigate = useNavigate()
+  const { navigate } = useRendraNavigate()
 
   const run = (fn: () => void) => {
     setSearchOpen(false)

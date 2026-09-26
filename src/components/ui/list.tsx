@@ -1,6 +1,6 @@
 import { ChevronRight } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { Link } from 'react-router'
+import { useRendraLink } from '@/components/rendra-provider'
 import { cn } from '@/lib/cn'
 
 export interface ListItem {
@@ -26,6 +26,7 @@ export interface ListProps {
 
 /** Lista única: linhas com início, título, descrição e fim; navegável por prop. */
 export function List({ items, divided = true, empty, className }: ListProps) {
+  const Link = useRendraLink()
   if (items.length === 0 && empty) return <>{empty}</>
   return (
     <ul data-rendra="LIST-001" className={cn('flex flex-col', divided && 'divide-y', className)}>
