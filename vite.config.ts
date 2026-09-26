@@ -33,6 +33,8 @@ export default defineConfig({
       include: [
         'src/lib/**',
         'src/brand/palette.ts',
+        'src/brand/theme.ts',
+        'src/brand/apply-theme.ts',
         'src/hooks/**',
         'src/components/ui/**',
         'src/components/rendra-provider.tsx',
@@ -48,6 +50,8 @@ export default defineConfig({
       thresholds: {
         'src/lib/{masks,lookup,validators}.ts': { lines: 85 },
         'src/brand/palette.ts': { lines: 90 },
+        'src/brand/theme.ts': { lines: 90 },
+        'src/brand/apply-theme.ts': { lines: 90 },
         'src/hooks/use-lookup.ts': { lines: 90 },
         'scripts/lib/var-prefix.ts': { lines: 90 },
         'src/catalog/components.ts': { lines: 90 },
