@@ -14,6 +14,11 @@ export default tseslint.config(
       'test-results',
       'screenshots',
       'coverage',
+      // Fixtures da CLI (fase 3, Lote B, src/cli/*.test.ts): código de exemplo com violação de
+      // propósito (valor arbitrário, prop dinâmica...), nunca compilado nem executado, só lido
+      // pelo parser em teste. Mesma razão de scripts/check-design-rules.mjs nunca escanear
+      // test/: não é produto, é a "vítima" que o teste audita.
+      'test/fixtures',
     ],
   },
   {
