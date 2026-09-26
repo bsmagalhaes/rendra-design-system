@@ -7,6 +7,18 @@
  * As escalas padrão do Tailwind são zeradas de propósito: classes fora da escala
  * (p-5, text-4xl, bg-blue-500, shadow-2xl, font-bold) simplesmente não existem.
  */
+/*
+ * Ordem de camadas (C4, docs/specs/v2-plano.md 2.4 e 6.2.8): declarada antes de tudo, para as
+ * utilities do host sempre vencerem qualquer camada do Rendra. A ordem é
+ * theme, base, rendra.base, components, rendra.components, utilities:
+ *   - rendra.base fica depois de base e antes de components (reset do Rendra, mais fraco que
+ *     qualquer componente do host);
+ *   - rendra.components fica depois de components e antes de utilities (estilo de componente
+ *     do Rendra, mais fraco que qualquer utility do host, inclusive as do próprio Tailwind).
+ * utilities continua por último e vencendo tudo, sempre.
+ */
+@layer theme, base, rendra.base, components, rendra.components, utilities;
+
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import './themes.css';
@@ -239,9 +251,11 @@
  * (14px, cor do texto). O padrão vem de labelStyle no brand.config (atributo data-label no
  * <html>). A cor do discreto é neutro do sistema, em theme.css (claro e escuro), com AA sobre
  * o card e sobre o fundo (src/styles/label-contrast.test.ts). A orientação abaixo do campo é
- * sempre 12px (text-xs), na cor de texto secundário. Fora de camada, como o theme.css.
+ * sempre 12px (text-xs), na cor de texto secundário. Fora de camada, como o theme.css. Escopo
+ * também em [data-rendra-root] (C4), para um contêiner com tema próprio ler os mesmos tokens.
  */
-:root {
+:root,
+[data-rendra-root] {
   --rendra-label-size: 0.6875rem;
   --rendra-label-leading: 1rem;
   --rendra-label-weight: 500;
@@ -251,7 +265,8 @@
   --rendra-help-leading: var(--text-xs--line-height);
   --rendra-help-color: var(--rendra-muted-foreground);
 }
-:root[data-label='normal'] {
+:root[data-label='normal'],
+[data-rendra-root][data-label='normal'] {
   --rendra-label-size: var(--text-sm);
   --rendra-label-leading: var(--text-sm--line-height);
   --rendra-label-weight: 500;
@@ -271,51 +286,55 @@
  * Controle e item em pill usam 1,75rem (28px), não 9999px: o navegador limita o raio à
  * metade da altura, então tudo que tem até 56px (botão, campo, chip, item de menu) fica
  * 100% redondo, e o que é mais alto (área de texto, cartão, aviso, item de lista com duas
- * linhas) ganha cantos de 28px em vez de virar círculo.
+ * linhas) ganha cantos de 28px em vez de virar círculo. Variáveis fora de camada (C4), como o
+ * theme.css; escopo também em [data-rendra-root], além do :root.
  */
-@layer base {
+:root,
+[data-rendra-root],
+[data-shape='rounded'] {
+  --rendra-shape-control: calc(var(--rendra-radius) - 2px);
+  --rendra-shape-surface: var(--rendra-radius);
+  --rendra-shape-item: calc(var(--rendra-radius) - 4px);
+  --rendra-shape-block: calc(var(--rendra-radius) - 4px);
+  --rendra-shape-avatar: 9999px;
+}
+[data-shape='square'] {
+  --rendra-shape-control: 0px;
+  --rendra-shape-surface: 0px;
+  --rendra-shape-item: 0px;
+  --rendra-shape-block: 0px;
+  --rendra-shape-avatar: 0px;
+}
+[data-shape='pill'] {
+  --rendra-shape-control: 1.75rem;
+  --rendra-shape-surface: calc(var(--rendra-radius) + 0.75rem);
+  --rendra-shape-item: 1.75rem;
+  /* Arredondado a 100% vale para controles; cards e blocos de informação têm canto pequeno. */
+  --rendra-shape-block: var(--rendra-radius);
+  --rendra-shape-avatar: 9999px;
+}
+
+/* A partir de md: controles compactos (mouse) e títulos no tamanho cheio. Variáveis fora de
+   camada (C4); escopo também em [data-rendra-root]. */
+@media (width >= 48rem) {
   :root,
-  [data-shape='rounded'] {
-    --rendra-shape-control: calc(var(--rendra-radius) - 2px);
-    --rendra-shape-surface: var(--rendra-radius);
-    --rendra-shape-item: calc(var(--rendra-radius) - 4px);
-    --rendra-shape-block: calc(var(--rendra-radius) - 4px);
-    --rendra-shape-avatar: 9999px;
-  }
-  [data-shape='square'] {
-    --rendra-shape-control: 0px;
-    --rendra-shape-surface: 0px;
-    --rendra-shape-item: 0px;
-    --rendra-shape-block: 0px;
-    --rendra-shape-avatar: 0px;
-  }
-  [data-shape='pill'] {
-    --rendra-shape-control: 1.75rem;
-    --rendra-shape-surface: calc(var(--rendra-radius) + 0.75rem);
-    --rendra-shape-item: 1.75rem;
-    /* Arredondado a 100% vale para controles; cards e blocos de informação têm canto pequeno. */
-    --rendra-shape-block: var(--rendra-radius);
-    --rendra-shape-avatar: 9999px;
+  [data-rendra-root] {
+    --spacing-control-sm: 2rem;
+    --spacing-control-md: 2.5rem;
+    --spacing-control-lg: 3rem;
+    --spacing-header: 4rem;
+    --text-xl: 1.25rem;
+    --text-xl--line-height: 1.75rem;
+    --text-2xl: 1.5rem;
+    --text-2xl--line-height: 2rem;
+    --text-3xl: 1.875rem;
+    --text-3xl--line-height: 2.375rem;
   }
 }
 
-/* A partir de md: controles compactos (mouse) e títulos no tamanho cheio. */
-@layer base {
-  @media (width >= 48rem) {
-    :root {
-      --spacing-control-sm: 2rem;
-      --spacing-control-md: 2.5rem;
-      --spacing-control-lg: 3rem;
-      --spacing-header: 4rem;
-      --text-xl: 1.25rem;
-      --text-xl--line-height: 1.75rem;
-      --text-2xl: 1.5rem;
-      --text-2xl--line-height: 2rem;
-      --text-3xl: 1.875rem;
-      --text-3xl--line-height: 2.375rem;
-    }
-  }
-
+/* Reset do Rendra (rendra.base): mais fraco que qualquer componente do host ou do próprio
+   Rendra (components, rendra.components), nunca vence uma classe utilitária. */
+@layer rendra.base {
   html {
     font-family: var(--font-sans);
     -webkit-text-size-adjust: 100%;
@@ -557,7 +576,7 @@
  * Conteúdo do RichTextEditor (.rich-text): tipografia, listas, tabela e imagem com as
  * alças de redimensionar nos 4 cantos. Mesmos tokens do sistema; nada de cor fixa.
  */
-@layer components {
+@layer rendra.components {
   .rich-text {
     & > * + * {
       margin-top: var(--spacing-3);
@@ -704,14 +723,17 @@
 
 /*
  * Cores do medidor (velocímetro): vermelho, amarelo e verde de sinal, iguais em todos os
- * temas. São só do gráfico: o valor e o percentual aparecem em texto ao lado.
+ * temas. São só do gráfico: o valor e o percentual aparecem em texto ao lado. Escopo também
+ * em [data-rendra-root], além do :root (C4).
  */
-:root {
+:root,
+[data-rendra-root] {
   --rendra-meter-low: #dc2626;
   --rendra-meter-mid: #f5b400;
   --rendra-meter-high: #16a34a;
 }
-.dark {
+.dark,
+[data-rendra-root].dark {
   --rendra-meter-low: #f05252;
   --rendra-meter-mid: #facc15;
   --rendra-meter-high: #34d399;
@@ -732,7 +754,7 @@
 }
 
 /* WidgetGrid em modo de ajuste: contorno tracejado, prévia na cor da marca e canto de redimensionar visível. */
-@layer components {
+@layer rendra.components {
   .widget-grid .react-grid-item.react-grid-placeholder {
     border-radius: var(--rendra-shape-surface);
     background: var(--rendra-primary-soft);

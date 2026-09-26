@@ -16,11 +16,22 @@ const STYLES = dirname(fileURLToPath(import.meta.url))
 const theme = readFileSync(join(STYLES, 'theme.css'), 'utf8')
 const globals = readFileSync(join(STYLES, 'globals.css'), 'utf8')
 
-/** Corpo do bloco que começa numa linha com exatamente `selector {`. */
+/**
+ * Corpo do bloco cujo seletor é `selector`, sozinho (`selector {`) ou como um dos itens de uma
+ * lista de seletores em várias linhas (C4: `selector,\n[data-rendra-root] {`, escopo também no
+ * contêiner além do :root). Encontra a linha do seletor e, a partir dela, a primeira chave que
+ * abre o bloco (na mesma linha ou numa linha seguinte da mesma lista de seletores).
+ */
 function block(css: string, selector: string): string {
-  const start = css.split('\n').findIndex((l) => l.trim() === `${selector} {`)
+  const allLines = css.split('\n')
+  const start = allLines.findIndex((l) => {
+    const t = l.trim()
+    return t === `${selector} {` || t === `${selector},`
+  })
   if (start === -1) throw new Error(`Bloco ${selector} não encontrado`)
-  const lines = css.split('\n').slice(start + 1)
+  let braceLine = start
+  while (!allLines[braceLine]!.includes('{')) braceLine++
+  const lines = allLines.slice(braceLine + 1)
   return lines
     .slice(
       0,
