@@ -30,5 +30,5 @@
  * que combina com qualquer modelo. */
 :root[data-brand='equilibrio'] {
   --rendra-brand-font: 'Equilibrio Sans', ui-sans-serif, system-ui, sans-serif;
-  --rendra-radius: 0.625rem;
+  --rendra-radius: 0.5rem;
 }
