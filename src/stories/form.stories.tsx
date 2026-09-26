@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Lock, Mail, Search } from 'lucide-react'
 import { useState } from 'react'
+import { COLOR_PICKER_SWATCHES } from '@/brand/palette'
 import { Checkbox, CheckboxGroup } from '@/components/ui/checkbox'
+import { ColorPicker } from '@/components/ui/color-picker'
 import { DatePicker, type DateRange } from '@/components/ui/date-picker'
 import { Field } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
@@ -76,6 +78,55 @@ export const Senha: Story = {
 }
 export const ComErro: Story = { args: { invalid: true, icon: <Mail />, defaultValue: 'ana@' } }
 export const Desabilitado: Story = { args: { disabled: true, defaultValue: 'Não editável' } }
+
+/* ------------------------------------------------ Input: unidades e valor guardado */
+
+function InputUnidadesDemo() {
+  const [unit, setUnit] = useState('percent')
+  return (
+    <Field label="Desconto" help="Trocar de unidade limpa o valor.">
+      <Input
+        units={[
+          { id: 'percent', label: '%' },
+          { id: 'currency', label: 'R$' },
+          { id: 'kg', label: 'kg' },
+        ]}
+        unit={unit}
+        onUnitChange={setUnit}
+        percentMax={100}
+      />
+    </Field>
+  )
+}
+export const InputUnidades: Story = {
+  name: 'Input: unidades (percentual, moeda ou livre)',
+  render: () => <InputUnidadesDemo />,
+}
+
+function InputSegredoDemo() {
+  const [hasValue, setHasValue] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
+  return (
+    <Field label="Chave de API" help="O valor salvo nunca aparece no campo.">
+      <Input
+        variant="secret"
+        hasValue={hasValue}
+        maskedHint="••••••a1b2c3"
+        isEditing={isEditing}
+        onStartEdit={() => setIsEditing(true)}
+        onCancelEdit={() => setIsEditing(false)}
+        onRemove={() => {
+          setHasValue(false)
+          setIsEditing(false)
+        }}
+      />
+    </Field>
+  )
+}
+export const InputValorGuardado: Story = {
+  name: 'Input: variant="secret" (valor guardado)',
+  render: () => <InputSegredoDemo />,
+}
 
 /* ------------------------------------------------ Textarea, OTP */
 
@@ -176,6 +227,18 @@ export const SelectCarregando: Story = {
   name: 'Select: loading',
   render: () => <SelectDemo loading />,
 }
+
+/* ------------------------------------------------ ColorPicker */
+
+function ColorPickerDemo() {
+  const [color, setColor] = useState(COLOR_PICKER_SWATCHES[0])
+  return (
+    <Field label="Cor de destaque">
+      <ColorPicker aria-label="Cor de destaque" value={color} onChange={setColor} />
+    </Field>
+  )
+}
+export const SeletorDeCor: Story = { name: 'ColorPicker', render: () => <ColorPickerDemo /> }
 
 /* ------------------------------------------------ Checkbox, Radio, Switch */
 
