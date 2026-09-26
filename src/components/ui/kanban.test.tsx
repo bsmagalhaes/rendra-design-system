@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { fireEvent, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { useState } from 'react'
+import { StrictMode, useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { renderApp } from '@/test/render'
 import {
@@ -149,6 +149,21 @@ describe('Kanban', () => {
     expect(screen.queryByText('Empresa X')).not.toBeInTheDocument()
   })
 
+  it('com dropTargets, "Mover para" ainda lista as colunas: mover para outra coluna pelo menu funciona (card aparece na coluna)', async () => {
+    const dropTargets: KanbanDropTarget[] = [{ id: 'ganho-acao', label: 'Marcar como ganho' }]
+    renderApp(<ControlledKanban initial={cards} dropTargets={dropTargets} />)
+    await userEvent.click(screen.getByRole('button', { name: 'Ações do card Empresa X' }))
+    // As duas seções aparecem juntas: a coluna "Ganho" (mover de coluna) e o destino
+    // "Marcar como ganho" (ação), separados.
+    expect(await screen.findByRole('menuitem', { name: 'Ganho' })).toBeInTheDocument()
+    expect(screen.getByRole('menuitem', { name: 'Marcar como ganho' })).toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('menuitem', { name: 'Ganho' }))
+    expect(
+      within(screen.getByRole('list', { name: 'Cards em Ganho' })).getByText('Empresa X'),
+    ).toBeInTheDocument()
+  })
+
   it('durante o arraste (mouse), a barra de destinos aparece e soltar no habilitado remove o card da tela', () => {
     const dropTargets: KanbanDropTarget[] = [{ id: 'ganho', label: 'Marcar como ganho' }]
     const onDropTarget = vi.fn()
@@ -244,5 +259,60 @@ describe('Kanban', () => {
 
     expect(onDropTarget).toHaveBeenCalledWith('1', 'ganho')
     expect(screen.queryByText('Empresa X')).not.toBeInTheDocument()
+  })
+
+  it('no celular, com dropTargets o toque ainda reordena dentro da coluna quando o dedo não está na barra', () => {
+    setViewportWidth(360)
+    const twoCards: KanbanCard[] = [
+      { id: '1', columnId: 'novo', title: 'Empresa X' },
+      { id: '2', columnId: 'novo', title: 'Empresa Y' },
+    ]
+    const dropTargets: KanbanDropTarget[] = [{ id: 'ganho', label: 'Marcar como ganho' }]
+    renderApp(<ControlledKanban initial={twoCards} dropTargets={dropTargets} />)
+    const list = screen.getByRole('list', { name: 'Cards em Novo' })
+    expect(
+      within(list)
+        .getAllByText(/Empresa/)
+        .map((el) => el.textContent),
+    ).toEqual(['Empresa X', 'Empresa Y'])
+
+    const targetRow = screen.getByText('Empresa Y').closest('[data-kanban-card]')!
+    targetRow.getBoundingClientRect = () => ({ top: 100, height: 40, bottom: 140 }) as DOMRect
+    document.elementFromPoint = (() => targetRow) as typeof document.elementFromPoint
+
+    const handle = screen.getByRole('button', { name: 'Arrastar Empresa X' })
+    fireEvent.pointerDown(handle, { pointerId: 3 })
+    fireEvent.pointerMove(window, { clientX: 0, clientY: 105, pointerId: 3 })
+    fireEvent.pointerUp(window, { pointerId: 3 })
+
+    expect(
+      within(list)
+        .getAllByText(/Empresa/)
+        .map((el) => el.textContent),
+    ).toEqual(['Empresa Y', 'Empresa X'])
+  })
+
+  it('StrictMode: soltar no destino pelo toque chama onDropTarget uma vez e o card some da tela uma vez', () => {
+    setViewportWidth(360)
+    const dropTargets: KanbanDropTarget[] = [{ id: 'ganho', label: 'Marcar como ganho' }]
+    const onDropTarget = vi.fn()
+    renderApp(
+      <StrictMode>
+        <ControlledKanban initial={cards} dropTargets={dropTargets} onDropTarget={onDropTarget} />
+      </StrictMode>,
+    )
+    const handle = screen.getByRole('button', { name: 'Arrastar Empresa X' })
+    fireEvent.pointerDown(handle, { pointerId: 4 })
+    const targetChip = screen
+      .getByLabelText('Soltar em')
+      .querySelector('[data-kanban-target="ganho"]')!
+    ;(targetChip as HTMLElement).getBoundingClientRect = () =>
+      ({ top: 500, height: 40, bottom: 540 }) as DOMRect
+    document.elementFromPoint = (() => targetChip) as typeof document.elementFromPoint
+    fireEvent.pointerMove(window, { clientX: 0, clientY: 505, pointerId: 4 })
+    fireEvent.pointerUp(window, { pointerId: 4 })
+
+    expect(onDropTarget).toHaveBeenCalledTimes(1)
+    expect(screen.queryAllByText('Empresa X')).toHaveLength(0)
   })
 })

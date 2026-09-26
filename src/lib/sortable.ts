@@ -1,4 +1,10 @@
-import { useCallback, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import {
+  useCallback,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type PointerEvent as ReactPointerEvent,
+} from 'react'
 
 /**
  * Motor de reordenação por pointer events (etapa A6 do plano da v2), reaproveitado pela
@@ -23,9 +29,15 @@ export interface UseSortableOptions<T> {
 export interface UseSortableResult {
   /** Id do item sendo arrastado no momento, ou null fora de um arraste. */
   draggingId: string | null
-  /** Espalhe no elemento (um <button>) que serve de alça do arraste. */
+  /**
+   * Espalhe no elemento (um <button>) que serve de alça do arraste: pointer down inicia o
+   * arraste (mouse e toque) e as setas ↑/↓ movem uma posição pelo teclado. Usada pelo
+   * componente SortableHandle (src/components/ui/sortable-handle.tsx), reaproveitado pela
+   * List e pelo Upload, para não duplicar a alça inteira em cada um.
+   */
   handleProps: (id: string) => {
     onPointerDown: (e: ReactPointerEvent<HTMLElement>) => void
+    onKeyDown: (e: ReactKeyboardEvent<HTMLElement>) => void
     className: string
   }
   /** Espalhe no elemento da linha, para o motor localizar o alvo do arraste sob o ponteiro. */
@@ -53,6 +65,22 @@ export function findDragTarget(
   const rect = target.getBoundingClientRect()
   const before = y < rect.top + rect.height / 2
   return { id, before }
+}
+
+/**
+ * A partir do resultado de findDragTarget (id do alvo e se o ponto está antes do meio
+ * dele), calcula a posição de inserção numa lista de ids na mesma ordem em que aparecem
+ * na tela. Usada pelo useSortable (List e Upload) e diretamente pelo Kanban, para os dois
+ * nunca recalcularem essa conta cada um do seu jeito.
+ */
+export function resolveDropIndex(
+  ids: string[],
+  found: { id: string; before: boolean } | null,
+): number {
+  if (!found) return ids.length
+  const at = ids.indexOf(found.id)
+  if (at === -1) return ids.length
+  return found.before ? at : at + 1
 }
 
 /**
@@ -108,9 +136,10 @@ export function useSortable<T>({ items, onReorder }: UseSortableOptions<T>): Use
       if (from === -1) return
       const [moved] = list.splice(from, 1)
       if (!moved) return
-      let to = list.findIndex((i) => i.id === targetId)
-      if (to === -1) to = list.length
-      if (!before) to += 1
+      const to = resolveDropIndex(
+        list.map((i) => i.id),
+        { id: targetId, before },
+      )
       list.splice(to, 0, moved)
       onReorder?.(list)
     },
@@ -147,8 +176,17 @@ export function useSortable<T>({ items, onReorder }: UseSortableOptions<T>): Use
           onEnd: () => setDraggingId(null),
         })
       },
+      onKeyDown: (e: ReactKeyboardEvent<HTMLElement>) => {
+        if (e.key === 'ArrowUp') {
+          e.preventDefault()
+          moveBy(id, -1)
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault()
+          moveBy(id, 1)
+        }
+      },
     }),
-    [onReorder, reorderTo],
+    [onReorder, reorderTo, moveBy],
   )
 
   const itemProps = useCallback((id: string) => ({ [DEFAULT_ATTR]: id }), [])

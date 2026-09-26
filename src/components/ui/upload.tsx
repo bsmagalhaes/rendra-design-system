@@ -1,18 +1,11 @@
-import {
-  FileText,
-  GripVertical,
-  ImageIcon,
-  RotateCw,
-  Trash2,
-  UploadCloud,
-  VideoIcon,
-} from 'lucide-react'
+import { FileText, ImageIcon, RotateCw, Trash2, UploadCloud, VideoIcon } from 'lucide-react'
 import { useEffect, useId, useRef, useState, type DragEvent } from 'react'
 import { resolveCatalogCode } from '@/catalog/components'
 import { BrandFeedbackIcon } from '@/components/ui/brand-feedback-icon'
 import { Button } from '@/components/ui/button'
 import { ImageCropper, type ImageCropperAspect } from '@/components/ui/image-cropper'
 import { Progress } from '@/components/ui/progress'
+import { SortableHandle } from '@/components/ui/sortable-handle'
 import { cn } from '@/lib/cn'
 import { useSortable } from '@/lib/sortable'
 
@@ -128,6 +121,18 @@ export function Upload({
       }),
     )
 
+  /**
+   * Acrescenta os itens novos (multiple) ou substitui o que já existia (multiple=false),
+   * revogando a miniatura do que sai: o object URL nunca fica pendurado sem tela nenhuma
+   * usando ele.
+   */
+  const insertItems = (created: UploadItem[]) =>
+    update((all) => {
+      if (multiple) return [...all, ...created]
+      all.forEach((it) => it.previewUrl && URL.revokeObjectURL(it.previewUrl))
+      return created
+    })
+
   const send = (item: UploadItem) => {
     if (!onUpload) {
       patch(item.id, { progress: 100, status: 'done' })
@@ -169,13 +174,13 @@ export function Upload({
       if (toCrop.length > 0) setPendingCrop((q) => [...q, ...toCrop])
       if (rest.length > 0) {
         const created = rest.map(createItem)
-        update((all) => (multiple ? [...all, ...created] : created))
+        insertItems(created)
         created.filter((c) => c.status === 'uploading').forEach(send)
       }
       return
     }
     const created = limited.map(createItem)
-    update((all) => (multiple ? [...all, ...created] : created))
+    insertItems(created)
     created.filter((c) => c.status === 'uploading').forEach(send)
   }
 
@@ -263,26 +268,7 @@ export function Upload({
 
   const handle = (it: UploadItem) =>
     onReorder && (
-      <button
-        type="button"
-        aria-label={`Reordenar ${it.file.name}`}
-        className={cn(
-          'flex size-touch shrink-0 cursor-grab items-center justify-center rounded-item text-muted-foreground active:cursor-grabbing',
-          sortable.handleProps(it.id).className,
-        )}
-        onPointerDown={sortable.handleProps(it.id).onPointerDown}
-        onKeyDown={(e) => {
-          if (e.key === 'ArrowUp') {
-            e.preventDefault()
-            sortable.moveBy(it.id, -1)
-          } else if (e.key === 'ArrowDown') {
-            e.preventDefault()
-            sortable.moveBy(it.id, 1)
-          }
-        }}
-      >
-        <GripVertical className="size-icon-sm" aria-hidden />
-      </button>
+      <SortableHandle id={it.id} label={`Reordenar ${it.file.name}`} sortable={sortable} />
     )
 
   const listView = items.length > 0 && (
@@ -435,7 +421,7 @@ export function Upload({
           onConfirm={(cropped) => {
             setPendingCrop((q) => q.slice(1))
             const created = createItem(cropped)
-            update((all) => [...all, created])
+            insertItems([created])
             if (created.status === 'uploading') send(created)
           }}
         />

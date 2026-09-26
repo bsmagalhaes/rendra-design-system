@@ -249,7 +249,7 @@ function ListaReordenavelDemo() {
         id: c.id,
         title: c.name,
         description: c.city,
-        tone: c.status === 'ativo' ? 'success' : c.status === 'inadimplente' ? 'error' : 'neutral',
+        tone: c.status === 'Ativo' ? 'success' : c.status === 'Inadimplente' ? 'error' : 'neutral',
       }))}
       onReorder={(items) =>
         setOrder(items.map((it) => order.find((c) => c.id === it.id)!).filter(Boolean))
