@@ -58,9 +58,9 @@ export default defineConfig({
         'src/components/app-shell/app-shell.tsx': { lines: 65 },
         'src/components/app-shell/command-search.tsx': { lines: 85 },
         'src/components/app-shell/notifications.tsx': { lines: 55 },
-        'src/components/app-shell/sidebar.tsx': { lines: 45 },
-        'src/components/app-shell/header.tsx': { lines: 20 },
-        'src/components/app-shell/mega-menu.tsx': { lines: 5 },
+        'src/components/app-shell/sidebar.tsx': { lines: 60 },
+        'src/components/app-shell/header.tsx': { lines: 60 },
+        'src/components/app-shell/mega-menu.tsx': { lines: 60 },
         'scripts/lib/help-length.ts': { lines: 95 },
         'src/components/ui/rendra-credit.tsx': { lines: 90 },
         'src/components/ui/{input,select,modal,alert,accordion,checkbox,field,radio-group,switch,tabs,textarea}.tsx':
