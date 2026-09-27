@@ -9,7 +9,7 @@ Guia para levar o design system Rendra a um sistema novo ou a um sistema que já
 
 O resto depende do caminho:
 
-- **Pelo pacote npm** (caminho 1b, ou a alternativa do caminho 2): **React 19.3 ou mais recente**, `react-dom` na mesma versão e `radix-ui` 1.6.7 ou mais recente; `typescript` é opcional, só para o comando `rendra trocar`. Não exige Tailwind CSS no projeto de destino: o CSS já sai compilado.
+- **Pelo pacote npm** (caminho 1b, ou a alternativa do caminho 2): **React 19.3 ou mais recente**, `react-dom` na mesma versão e `radix-ui` 1.6.7 ou mais recente; `typescript` é opcional, só para o comando `npx @rendra-ui/web trocar`. Não exige Tailwind CSS no projeto de destino: o CSS já sai compilado.
 - **Clonando o repositório** (caminho 1a) ou **copiando os arquivos** (caminho 2): projeto em **React 18 ou 19 com TypeScript**. Com Vite, a adoção é direta. Em outros bundlers (Next.js, por exemplo), é preciso adaptar a importação de SVG como componente (hoje via `vite-plugin-svgr`) e o alias `@/`. Tailwind CSS **v4**; em projeto com Tailwind v3, a migração para a v4 vem antes (veja "Projeto existente").
 
 ## Caminho 1: projeto novo
@@ -197,9 +197,9 @@ Cada componente do design system, e cada variante visual relevante, tem um códi
 
 O pacote npm também traz a CLI `rendra`, com três comandos (uso, sem detalhe interno; completo no `README.md`). Sem instalar o pacote, use `npx @rendra-ui/web <comando>`; `npx rendra <comando>` só funciona com o pacote instalado neste projeto, porque o nome `rendra` no npm pertence a outro pacote:
 
-- `rendra codigos`: lista o catálogo de códigos.
-- `rendra auditar`: roda no projeto de destino as mesmas regras de design do `check:rules`.
-- `rendra trocar <DE> <PARA>`: troca a variante de um componente pelo código do catálogo em todas as telas do projeto (ex.: `rendra trocar ABA-001 ABA-002` reescreve `variant="line"` para `variant="pill"` em todo `<Tabs>`), com `--dry-run` para simular; prop dinâmica ou troca entre componentes diferentes só entram numa lista para revisão manual, nunca são reescritas sozinhas. Não troca modelo, paleta nem tema: isso é o código de modelo (`T1-C4-M5`, `?codigo=` e `applyModelCode`, seção 3.0 do `docs/BRIEFING_MODELO.md`).
+- `npx @rendra-ui/web codigos`: lista o catálogo de códigos.
+- `npx @rendra-ui/web auditar`: roda no projeto de destino as mesmas regras de design do `check:rules`.
+- `npx @rendra-ui/web trocar <DE> <PARA>`: troca a variante de um componente pelo código do catálogo em todas as telas do projeto (ex.: `npx @rendra-ui/web trocar ABA-001 ABA-002` reescreve `variant="line"` para `variant="pill"` em todo `<Tabs>`), com `--dry-run` para simular; prop dinâmica ou troca entre componentes diferentes só entram numa lista para revisão manual, nunca são reescritas sozinhas. Não troca modelo, paleta nem tema: isso é o código de modelo (`T1-C4-M5`, `?codigo=` e `applyModelCode`, seção 3.0 do `docs/BRIEFING_MODELO.md`).
 
 ## Testes de layout
 
