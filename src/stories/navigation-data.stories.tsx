@@ -2,14 +2,23 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Eye, Pencil, Trash2, Users, Wallet } from 'lucide-react'
 import { useState } from 'react'
 import { Accordion } from '@/components/ui/accordion'
+import { ActionBar } from '@/components/ui/action-bar'
 import { Avatar, AvatarGroup } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Chart } from '@/components/ui/chart'
 import { DataToolbar, type ToolbarColumn } from '@/components/ui/data-toolbar'
 import { Field } from '@/components/ui/field'
+import { ImageViewer, type ViewerImage } from '@/components/ui/image-viewer'
 import { Input } from '@/components/ui/input'
 import { List } from '@/components/ui/list'
 import { Pagination } from '@/components/ui/pagination'
@@ -294,6 +303,9 @@ export const Cartao: Story = {
       <CardContent>
         <p className="text-sm">Plano mensal.</p>
       </CardContent>
+      <CardFooter>
+        <ActionBar cancel={{ label: 'Ver histórico' }} primary={{ label: 'Renovar' }} />
+      </CardFooter>
     </Card>
   ),
 }
@@ -535,4 +547,35 @@ export const CodigoQR: Story = {
 export const CodigoQRVazio: Story = {
   name: 'QrCode: vazio',
   render: () => <QrCode value="" />,
+}
+
+// PNGs mínimos (1x1) em cores diferentes, embutidos como data: URL, para a story funcionar
+// sem depender de rede.
+const GALERIA: ViewerImage[] = [
+  {
+    src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+    alt: 'Foto da fachada',
+    caption: 'Fachada da loja',
+  },
+  {
+    src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYPhfz0AEYBxVSF+FABJDAwPgeGSvAAAAAElFTkSuQmCC',
+    alt: 'Foto do interior',
+    caption: 'Interior da loja',
+  },
+]
+
+function GaleriaDemo() {
+  const [index, setIndex] = useState<number | null>(null)
+  return (
+    <>
+      <Button variant="outline" onClick={() => setIndex(0)}>
+        Abrir galeria
+      </Button>
+      <ImageViewer images={GALERIA} index={index} onIndexChange={setIndex} />
+    </>
+  )
+}
+export const Galeria: Story = {
+  name: 'ImageViewer',
+  render: () => <GaleriaDemo />,
 }
