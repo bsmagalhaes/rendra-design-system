@@ -4,7 +4,9 @@ O que mudou em cada versão e o que um projeto derivado precisa fazer para atual
 
 ## Não publicado
 
-Nada ainda.
+### Dependências
+
+- **`@tanstack/react-table` 8.21.3 para 9.2.4**, em `src/components/ui/table.tsx`: `useReactTable` vira `useTable({ features, ... })`, com `features` declarado por `tableFeatures({...})` como constante de módulo (`rowSortingFeature`, `columnFilteringFeature`, `globalFilteringFeature`, `rowPaginationFeature`, `rowSelectionFeature`, `rowExpandingFeature`, `columnVisibilityFeature`, mais os quatro modelos de linha e os registros de `sortFn`/`filterFn`). A alternância entre local e remoto continua só pelas flags `manualSorting`/`manualFiltering`/`manualPagination` e por `rowCount`, sem UI nova. `@tanstack/react-store` entra como dependência transitiva do `@tanstack/react-table` (não é peer nesta versão). Nenhuma assinatura pública de `TableProps`, `TableColumn`, `RowAction`, `TableQuery`, `TablePage` ou `Table` mudou.
 
 ## 2.1.0 (26/09/2026)
 
