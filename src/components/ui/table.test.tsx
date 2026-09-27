@@ -131,6 +131,152 @@ describe('Table', () => {
     expect(screen.getByText('Bruno')).toBeInTheDocument()
   })
 
+  it('expande a linha e mostra o conteúdo; recolhe e ele some', async () => {
+    renderTable({ expandable: (row) => <p>Detalhes de {row.nome}</p> })
+    expect(screen.queryByText('Detalhes de Carla')).not.toBeInTheDocument()
+    await userEvent.click(screen.getAllByRole('button', { name: 'Expandir linha' })[0]!)
+    expect(screen.getByText('Detalhes de Carla')).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Recolher linha' }))
+    expect(screen.queryByText('Detalhes de Carla')).not.toBeInTheDocument()
+  })
+
+  it('coluna com hidden inicial não aparece, e o menu Colunas alterna a visibilidade', async () => {
+    renderTable({
+      columns: [columns[0]!, { ...columns[1]!, hidden: true }, columns[2]!],
+      columnVisibility: true,
+    })
+    expect(screen.queryByRole('columnheader', { name: 'Cidade' })).not.toBeInTheDocument()
+    expect(screen.queryByText('Recife')).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Colunas' }))
+    await userEvent.click(await screen.findByRole('menuitemcheckbox', { name: 'Cidade' }))
+    expect(screen.getByText('Recife')).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('menuitemcheckbox', { name: 'Cidade' }))
+    expect(screen.queryByText('Recife')).not.toBeInTheDocument()
+  })
+
+  it('selecionar todos marca só as linhas da página, e o contador reflete a página', async () => {
+    renderTable({ selectable: true, pageSize: 2, toolbar: {} })
+    const [selectAll] = screen.getAllByRole('checkbox', {
+      name: 'Selecionar todas as linhas da página',
+    })
+    await userEvent.click(selectAll!)
+    const rowCheckboxes = screen.getAllByRole('checkbox', { name: 'Selecionar linha' })
+    expect(rowCheckboxes).toHaveLength(2)
+    rowCheckboxes.forEach((c) => expect(c).toBeChecked())
+    expect(screen.getByText('2 selecionados')).toBeInTheDocument()
+  })
+
+  it('ordena numérico e data pelo valor, não pelo texto', async () => {
+    interface Item {
+      id: string
+      nome: string
+      idade: number
+      nascimento: Date
+    }
+    const itemRows: Item[] = [
+      { id: '1', nome: 'Dez', idade: 10, nascimento: new Date('2020-01-01') },
+      { id: '2', nome: 'Dois', idade: 2, nascimento: new Date('2021-06-15') },
+      { id: '3', nome: 'Cinco', idade: 5, nascimento: new Date('1999-03-10') },
+    ]
+    const itemColumns: TableColumn<Item>[] = [
+      { id: 'nome', header: 'Nome', accessor: (r) => r.nome },
+      { id: 'idade', header: 'Idade', accessor: (r) => r.idade, kind: 'number', sortable: true },
+      {
+        id: 'nascimento',
+        header: 'Nascimento',
+        accessor: (r) => r.nascimento,
+        kind: 'date',
+        sortable: true,
+      },
+    ]
+    renderApp(
+      <Table<Item>
+        aria-label="Itens"
+        data={itemRows}
+        columns={itemColumns}
+        getRowId={(r) => r.id}
+      />,
+    )
+    // Coluna numérica: o primeiro clique ordena decrescente (padrão do TanStack Table
+    // para valores não textuais); o segundo, crescente pelo valor, não pelo texto.
+    await userEvent.click(screen.getByRole('button', { name: /Idade/ }))
+    expect(names()).toEqual(['Dez', 'Cinco', 'Dois'])
+    await userEvent.click(screen.getByRole('button', { name: /Idade/ }))
+    expect(names()).toEqual(['Dois', 'Cinco', 'Dez'])
+    await userEvent.click(screen.getByRole('button', { name: /Nascimento/ }))
+    expect(names()).toEqual(['Dois', 'Dez', 'Cinco'])
+  })
+
+  it('remoto: ordenar troca a lista pela resposta simulada e volta para a primeira página', async () => {
+    const source = vi.fn(async (q: TableQuery) => {
+      const sorted = [...rows].sort((a, b) => {
+        if (!q.sort) return 0
+        const dir = q.sort.desc ? -1 : 1
+        return q.sort.id === 'nome' ? a.nome.localeCompare(b.nome) * dir : 0
+      })
+      const start = (q.page - 1) * q.pageSize
+      return { rows: sorted.slice(start, start + q.pageSize), total: sorted.length }
+    })
+    renderTable({ data: undefined, source, pageSize: 2 })
+    await waitFor(() => expect(names()).toEqual(['Carla', 'Ana']))
+    await userEvent.click(screen.getAllByRole('button', { name: /Próxima/ })[0]!)
+    await waitFor(() => expect(names()).toEqual(['Bruno']))
+    await userEvent.click(screen.getByRole('button', { name: /Nome/ }))
+    await waitFor(() => expect(names()).toEqual(['Ana', 'Bruno']))
+    expect(screen.getByText('Página 1 de 2')).toBeInTheDocument()
+  })
+
+  it('remoto: carregar mais soma linhas ao card, mantendo as que já apareciam', async () => {
+    setViewportWidth(360)
+    const many: Row[] = Array.from({ length: 5 }, (_, i) => ({
+      id: String(i + 1),
+      nome: `Cliente ${i + 1}`,
+      cidade: 'Recife',
+      valor: 10,
+    }))
+    const source = vi.fn(async (q: TableQuery) => {
+      const start = (q.page - 1) * q.pageSize
+      return { rows: many.slice(start, start + q.pageSize), total: many.length }
+    })
+    renderTable({ data: undefined, source, pageSize: 2, mobilePagination: 'loadMore' })
+    await waitFor(() => expect(screen.getByText('Cliente 1')).toBeInTheDocument())
+    expect(screen.getByText('Cliente 2')).toBeInTheDocument()
+    expect(screen.queryByText('Cliente 3')).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Carregar mais' }))
+    await waitFor(() => expect(screen.getByText('Cliente 3')).toBeInTheDocument())
+    expect(screen.getByText('Cliente 1')).toBeInTheDocument()
+    expect(screen.getByText('Cliente 2')).toBeInTheDocument()
+  })
+
+  it('mostra o erro remoto e recarrega ao tentar de novo', async () => {
+    const source = vi
+      .fn<(q: TableQuery) => Promise<{ rows: Row[]; total: number }>>()
+      .mockRejectedValueOnce(new Error('Falha de rede'))
+      .mockResolvedValueOnce({ rows, total: rows.length })
+    renderTable({ data: undefined, source })
+    await waitFor(() => expect(screen.getByText('Falha de rede')).toBeInTheDocument())
+    await userEvent.click(screen.getByRole('button', { name: 'Tentar de novo' }))
+    await waitFor(() => expect(screen.queryByText('Falha de rede')).not.toBeInTheDocument())
+    expect(names()).toEqual(['Carla', 'Ana', 'Bruno'])
+  })
+
+  it('local sem pageSize mostra todas as linhas, sem paginação', () => {
+    renderTable({ pageSize: 0 })
+    expect(names()).toEqual(['Carla', 'Ana', 'Bruno'])
+    expect(screen.queryByRole('navigation', { name: 'Paginação' })).not.toBeInTheDocument()
+  })
+
+  it('local no celular com loadMore mostra a primeira fatia e soma a seguinte', async () => {
+    setViewportWidth(360)
+    renderTable({ pageSize: 2, mobilePagination: 'loadMore' })
+    expect(screen.getByText('Carla')).toBeInTheDocument()
+    expect(screen.getByText('Ana')).toBeInTheDocument()
+    expect(screen.queryByText('Bruno')).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Carregar mais' }))
+    expect(screen.getByText('Bruno')).toBeInTheDocument()
+    expect(screen.getByText('Carla')).toBeInTheDocument()
+  })
+
   it('sem react-router: coluna com href usa o linkComponent do RendraProvider', () => {
     render(
       <RendraProvider
