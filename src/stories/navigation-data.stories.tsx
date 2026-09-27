@@ -5,11 +5,14 @@ import { Accordion } from '@/components/ui/accordion'
 import { Avatar, AvatarGroup } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Chart } from '@/components/ui/chart'
+import { DataToolbar, type ToolbarColumn } from '@/components/ui/data-toolbar'
 import { List } from '@/components/ui/list'
 import { Pagination } from '@/components/ui/pagination'
 import { QrCode } from '@/components/ui/qr-code'
+import { Switch } from '@/components/ui/switch'
 import { StatCard } from '@/components/ui/stat-card'
 import { Table } from '@/components/ui/table'
 import { Tabs } from '@/components/ui/tabs'
@@ -72,6 +75,75 @@ export const Expansivel: Story = {
   args: { expandable: (c: Client) => <p className="text-sm">{c.notes}</p> },
 }
 export const CarregarMaisNoMobile: Story = { args: { mobilePagination: 'loadMore' } }
+
+/* ------------------------------------------------ DataToolbar */
+
+function ToolbarDemo() {
+  const [search, setSearch] = useState('')
+  const [status, setStatus] = useState<string[]>([])
+  const [cols, setCols] = useState([
+    { id: 'email', label: 'E-mail', visible: true },
+    { id: 'telefone', label: 'Telefone', visible: true },
+  ])
+  const columns: ToolbarColumn[] = cols.map((c) => ({
+    ...c,
+    onToggle: (v: boolean) =>
+      setCols((prev) => prev.map((p) => (p.id === c.id ? { ...p, visible: v } : p))),
+  }))
+  const filtered = clients.filter(
+    (c) =>
+      c.name.toLowerCase().includes(search.toLowerCase()) &&
+      (!status.length || status.includes(c.status)),
+  )
+  return (
+    <Card>
+      <DataToolbar
+        search={{ value: search, onChange: setSearch, placeholder: 'Buscar cliente' }}
+        columns={columns}
+        filterCount={status.length}
+        onClearFilters={status.length ? () => setStatus([]) : undefined}
+        chips={status.map((s) => ({
+          id: s,
+          label: `Situação: ${s}`,
+          onRemove: () => setStatus(status.filter((x) => x !== s)),
+        }))}
+        filters={
+          <div className="flex flex-col gap-3">
+            {(['Ativo', 'Inadimplente'] as const).map((s) => (
+              <Switch
+                key={s}
+                label={s}
+                checked={status.includes(s)}
+                onCheckedChange={(v) =>
+                  setStatus(v ? [...status, s] : status.filter((x) => x !== s))
+                }
+              />
+            ))}
+          </div>
+        }
+        primaryAction={<Button>Novo cliente</Button>}
+      />
+      <CardContent>
+        <ul className="flex flex-col gap-2 text-sm">
+          {filtered.slice(0, 5).map((c) => (
+            <li key={c.id}>
+              {c.name}
+              {cols.find((col) => col.id === 'email')?.visible && ` · ${c.email}`}
+              {cols.find((col) => col.id === 'telefone')?.visible && ` · ${c.phone}`}
+            </li>
+          ))}
+          {!filtered.length && (
+            <li className="text-muted-foreground">Nenhum cliente encontrado.</li>
+          )}
+        </ul>
+      </CardContent>
+    </Card>
+  )
+}
+export const BarraDeFerramentas: Story = {
+  name: 'DataToolbar',
+  render: () => <ToolbarDemo />,
+}
 
 /* ------------------------------------------------ Navegação */
 
