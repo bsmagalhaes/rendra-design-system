@@ -6,14 +6,14 @@ Este é o **Rendra Design System**: um design system completo e boilerplate Reac
 
 ## Em um minuto
 
-- **O que é:** design system e boilerplate React (Vite, TypeScript, Tailwind v4, Radix e shadcn/ui copiados para `src/components/ui`). Serve para quatro coisas: **começar um sistema novo** a partir deste repositório, **migrar o layout** de um sistema existente, **trazer componentes** para outro projeto pelo registry (`npx shadcn@latest add`) ou pelo **pacote npm** (import direto dos componentes e do CSS, mais a CLI `rendra` para o catálogo de códigos, a auditoria das regras e a troca de variante por código; detalhe completo no `README.md`).
+- **O que é:** design system e boilerplate React (Vite, TypeScript, Tailwind v4, Radix e shadcn/ui copiados para `src/components/ui`). Serve para quatro coisas: **começar um sistema novo** a partir deste repositório, **migrar o layout** de um sistema existente, **trazer componentes** para outro projeto pelo registry (`npx shadcn@latest add`) ou pelo **pacote npm** (import direto dos componentes e do CSS, mais a CLI, sempre como `npx @rendra-ui/web <comando>` (o nome `rendra` no npm pertence a outro pacote), para o catálogo de códigos, a auditoria das regras e a troca de variante por código; detalhe completo no `README.md`).
 - **Cor em três camadas** (a parte que mais confunde; leia a seção "Cor: três camadas" do `DESIGN_RULES.md`):
   1. **Modelo**: formato e fonte. São só três: Safira (quadrado), Equilíbrio (intermediário) e Aurora (arredondado).
   2. **Paleta**: a cor da marca, que é só **4 cores** (primária, hover da primária, secundária, hover da secundária) e o **degradê da marca**. Todo o resto é gerado com AA por `createPalette`; nunca edite `palettes.css` à mão.
   3. **Sistema**: neutros e cores de erro, sucesso, alerta e informação. Fixos, iguais em todas as paletas.
 - **Onde mexer:** marca em `src/brand/palettes.ts` (cores), `src/styles/theme.css` (modelo) e `src/brand/brand.config.ts` (nome, logotipo, `labelStyle` do rótulo) e `src/brand/assets`; menu em `src/config/navigation.ts`; layout, usuário, menu do avatar, ações rápidas e notificações do AppShell, todos por prop, em `src/app/app-layout.tsx` (o padrão de `layout` fica em `src/components/app-shell/layout.ts`, reexportado por `src/config/layout.ts`); rotas em `src/routes.tsx` e `src/config/routes-list.ts`.
 - **O que não se faz:** componente paralelo (`SelectSimples`), valor fora da escala, cor fixa, estilo inline, botão solto, texto de instrução no corpo da tela, variável CSS do Rendra sem o prefixo `--rendra-`. O `npm run check:rules` barra tudo isso; a lista completa das verificações está no `DESIGN_RULES.md`.
-- **Catálogo de códigos:** cada componente e cada variante visual relevante têm um código (`ABA-001`, `BTN-006`...), no atributo `data-rendra` do elemento raiz. Lista sempre atualizada em `src/catalog/components.ts`, na vitrine `/componentes` ou em `rendra codigos`, nunca copiada para outro documento.
+- **Catálogo de códigos:** cada componente e cada variante visual relevante têm um código (`ABA-001`, `BTN-006`...), no atributo `data-rendra` do elemento raiz. Lista sempre atualizada em `src/catalog/components.ts`, na vitrine `/componentes` ou em `npx @rendra-ui/web codigos`, nunca copiada para outro documento.
 - **Como saber que terminou:** `npm run typecheck`, `npm run lint`, `npm run check:rules`, `npm test` (unitários e de componente, com cobertura mínima por arquivo), `npm run test:layout` e `npm run test:a11y` passando.
 
 ## Leitura obrigatória
@@ -27,9 +27,27 @@ Este é o **Rendra Design System**: um design system completo e boilerplate Reac
 
 ### Passo 1: descobrir o estado
 
-- Se **`docs/BRIEFING.md` não existir** ou estiver com status "rascunho", o projeto ainda não foi configurado: siga os passos 2 a 5.
-- Se existir e estiver "confirmado", leia o briefing e siga a partir do passo 5, na etapa em que o trabalho parou.
-- Se você foi apontado para este repositório a partir de **outro projeto** ("use este design system no meu sistema"), clone ou leia este repositório como referência e siga o fluxo de **migração**, trabalhando no projeto de destino.
+Descubra primeiro em qual dos três ramos você está.
+
+**(a) Você já está numa pasta de projeto** (um clone do Rendra que virou o projeto do usuário, ou este próprio repositório), sem que ninguém tenha apontado você para outro sistema.
+
+- Confira se **`docs/BRIEFING.md` existe na máquina** (é um arquivo fora do controle de versão, veja `.gitignore`: não aparece no `git status` nem no histórico, então a checagem é sempre no disco, nunca por comando de git).
+- Existindo e com status "confirmado": leia o briefing e siga a partir do passo 5, na etapa em que o trabalho parou.
+- Existindo e "rascunho": retome o briefing de onde parou.
+- Não existindo: siga o passo 2.
+
+**(b) Você foi apontado para começar um projeto novo a partir do link do repositório**, e o usuário ainda não tem uma pasta de projeto. Antes de perguntar qualquer coisa do briefing, faça a parte técnica por ele, nesta ordem:
+
+1. Clone https://github.com/bsmagalhaes/rendra-design-system (ou o link que o usuário passou) para uma pasta com o nome do projeto dele.
+2. Desligue o vínculo com o repositório do Rendra: apague a pasta `.git` e rode `git init`. Pergunte se o usuário quer ligar a pasta a um repositório dele no GitHub.
+3. Confira Node 22 ou mais recente (`node -v`).
+4. `npm install`.
+5. `npx playwright install chromium` (uma vez, para os testes de layout).
+6. `npm run dev` e informe ao usuário o endereço http://localhost:5173.
+
+Depois disso, siga os passos 3 a 5 deste arquivo.
+
+**(c) Você foi apontado a partir de outro sistema** ("use este design system no meu sistema", "migre meu sistema para o Rendra"), e está trabalhando na pasta desse sistema, onde este `AGENTS.md` não existe. Leia o repositório de referência pelos links, nesta ordem: [`AGENTS.md`](https://github.com/bsmagalhaes/rendra-design-system/blob/main/AGENTS.md), [`DESIGN_RULES.md`](https://github.com/bsmagalhaes/rendra-design-system/blob/main/DESIGN_RULES.md), [`docs/PROMPT_MIGRACAO.md`](https://github.com/bsmagalhaes/rendra-design-system/blob/main/docs/PROMPT_MIGRACAO.md) e [`docs/COMO_APLICAR.md`](https://github.com/bsmagalhaes/rendra-design-system/blob/main/docs/COMO_APLICAR.md). O `docs/PROMPT_MIGRACAO.md` decide: você analisa o projeto primeiro (versão do React, estrutura, se o código atual vale a pena aproveitar) e recomenda, numa frase simples, qual dos três caminhos seguir, pedindo só a confirmação do usuário, nunca perguntando o critério direto (ele não sabe responder isso sozinho): React 19.3 ou mais recente e o projeto quer se manter atualizado pelo pacote, o **caminho pacote npm**; React 18, ou uma estrutura que não recebe o pacote, mas vale aproveitar o projeto atual, o **caminho de cópia de arquivos-fonte**; sistema antigo que não vale a pena manter, o **caminho clone e refazer** (recomeça o histórico com `git init` limpo, sem vínculo com o repositório do Rendra, trazendo as regras de negócio do sistema atual: não é um projeto novo sem histórico de negócio). Cada caminho remete, ao final, a `docs/COMO_APLICAR.md` para o detalhe técnico e aos passos 3 e 4 deste arquivo para o briefing completo (o Passo 2 não se aplica aqui: você já sabe que é migração, não precisa perguntar o tipo de trabalho), com o bloco 10 do roteiro ("Somente para migração") preenchido e registrado em `docs/BRIEFING.md` com o status.
 
 ### Passo 2: perguntar o tipo de trabalho
 
@@ -39,7 +57,7 @@ Antes de qualquer outra coisa, pergunte ao usuário, em português do Brasil:
 >
 > 1. **Projeto novo** usando este boilerplate como base;
 > 2. **Migração de layout** de um sistema que já existe para este design system;
-> 3. **Contribuição** neste próprio repositório (componente, correção, documentação)?
+> 3. **Contribuição** neste próprio repositório (componente, correção, documentação; só faz sentido para quem vai mexer no código do Rendra em si, não no seu sistema)?
 
 Para **contribuição**, pule o briefing: leia o [`CONTRIBUTING.md`](CONTRIBUTING.md) e vá direto ao trabalho pedido.
 
@@ -66,10 +84,10 @@ Proponha um plano em etapas e espere a aprovação. A ordem de referência:
 
 **Projeto novo**
 
-1. Marca: `src/styles/theme.css`, `src/styles/themes.css`, `src/brand/palettes.ts`, `src/brand/brand.config.ts` e `src/brand/assets`, conforme o briefing (modelo, paleta, modo de cor). Confira `/tokens`: nenhum selo de contraste pode marcar "falha".
+1. Marca: `src/styles/theme.css`, `src/styles/themes.css`, `src/brand/palettes.ts`, `src/brand/brand.config.ts` e `src/brand/assets`, conforme o briefing (modelo, paleta, modo de cor). Suba o app você mesmo (`npm run dev`) antes de pedir ao usuário para abrir `/tokens` ou de tirar as capturas de tela, e informe o endereço http://localhost:5173. Confira `/tokens`: nenhum selo de contraste pode marcar "falha".
 2. Menu (`src/config/navigation.ts`) e layout do AppShell, nas props de `src/app/app-layout.tsx` (com cada valor escolhido no bloco 4 do briefing), montado dentro do `<RendraRouterBridge>` de `src/routes.tsx`; rotas em `src/routes.tsx` e `src/config/routes-list.ts`.
 3. Telas, em ordem de prioridade, partindo das telas base de `src/pages`.
-4. Limpeza do que é só demonstração (`src/mocks`, telas de exemplo sem uso, templates alternativos não usados).
+4. Limpeza do que é só demonstração (`src/mocks`, telas de exemplo sem uso, templates alternativos não usados). Se o projeto nasceu de um clone completo (ramo b do passo 1, ou o caminho "clone e refazer" da migração), inclua também a limpeza da identidade de pacote publicável: veja "Limpeza do clone" em `docs/COMO_APLICAR.md`.
 
 **Migração de layout**: siga a "Ordem de migração" de [`docs/COMO_APLICAR.md`](docs/COMO_APLICAR.md): tokens e tema, depois o `AppShell` (via `RendraRouterBridge` e o `AppLayout` do projeto), formulários e ações, listagens, feedback, telas e limpeza.
 

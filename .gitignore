@@ -26,3 +26,6 @@ docs/plans/
 docs/superpowers/
 .superpowers/
 .claude/worktrees/
+
+# Briefing do projeto (respostas do roteiro de docs/BRIEFING_MODELO.md): fica só na máquina
+docs/BRIEFING.md
