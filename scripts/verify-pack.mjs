@@ -40,12 +40,12 @@
  * renderizando com o React deste repositório, a única opção sem instalar nada). O relatório
  * final diz qual dos dois caminhos rodou.
  */
-import { execFileSync } from 'node:child_process'
+import { execFileSync, spawnSync } from 'node:child_process'
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { packageBanner } from './lib/pkg-banner.ts'
-import { privateFieldError } from './lib/verify-pack-checks.ts'
+import { binFieldError, privateFieldError } from './lib/verify-pack-checks.ts'
 
 const ROOT = process.cwd()
 const DIST = join(ROOT, 'dist')
@@ -76,6 +76,12 @@ const BANNER = packageBanner(realPkg.version)
 // falha explícito antes de empacotar.
 const privateError = privateFieldError(realPkg)
 if (privateError) fail(privateError)
+
+// package.json real tem que ter "bin.rendra" válido (sem "./", dentro de "files"): o npm
+// publish aceita "./bin/rendra.mjs" mas normaliza o campo em silêncio, avisando "was invalid
+// and removed" (ver scripts/lib/verify-pack-checks.ts).
+const binError = binFieldError(realPkg)
+if (binError) fail(binError)
 
 // Roda dentro do projeto instalado (ou do tarball descompactado): renderiza Button (sem
 // hook) e Checkbox (usa useId), pelo react/react-dom desse mesmo lugar. Um marcador único
@@ -115,13 +121,23 @@ rmSync(WORK, RM_RETRY)
 mkdirSync(PACK_OUT_DIR, { recursive: true })
 
 // 1) Empacota o package.json REAL (nunca um sintético): npm pack é o mesmo comando do
-//    npm publish, e lê o package.json e o "files" do próprio repositório.
-const packOutput = execFileSync(
-  'npm',
-  ['pack', ROOT, '--pack-destination', PACK_OUT_DIR, '--json'],
-  { cwd: ROOT, encoding: 'utf8', shell: process.platform === 'win32' },
+//    npm publish, e lê o package.json e o "files" do próprio repositório. Usa spawnSync (em
+//    vez de execFileSync) para capturar stdout E stderr: o npm avisa em stderr, nunca em
+//    stdout, quando normaliza um campo do package.json em silêncio (ex.: "bin" com "./"), e
+//    esse aviso só apareceria escondido no terminal se não for conferido aqui.
+const packRun = spawnSync('npm', ['pack', ROOT, '--pack-destination', PACK_OUT_DIR, '--json'], {
+  cwd: ROOT,
+  encoding: 'utf8',
+  shell: process.platform === 'win32',
+})
+if (packRun.status !== 0) {
+  fail(`npm pack falhou (código ${packRun.status}): ${packRun.stderr}`)
+}
+assert(
+  !packRun.stderr.includes('was invalid and removed'),
+  'npm pack não avisou campo inválido normalizado em silêncio (ex.: "bin" com "./").',
 )
-const [packResult] = JSON.parse(packOutput)
+const [packResult] = JSON.parse(packRun.stdout)
 const tarballPath = join(PACK_OUT_DIR, packResult.filename)
 assert(existsSync(tarballPath), `npm pack gerou o tarball (${packResult.filename}).`)
 
@@ -192,6 +208,17 @@ if (path === 'estrutural') {
 }
 
 console.log(`\nCaminho usado: ${path}.\n`)
+
+// bin.rendra continua presente no package.json de dentro do tarball (instalado ou
+// descompactado): o npm normaliza "./bin/rendra.mjs" para "bin/rendra.mjs" no publish em vez
+// de apagar o campo, mas confere aqui contra o package.json real, não contra suposição.
+assert(
+  typeof packageJsonForAssertions.bin === 'object' &&
+    packageJsonForAssertions.bin !== null &&
+    typeof packageJsonForAssertions.bin.rendra === 'string' &&
+    packageJsonForAssertions.bin.rendra !== '',
+  'package.json do pacote publicado ainda tem bin.rendra (comando `rendra` preservado).',
+)
 
 // Nome do pacote publicado: @rendra-ui/web, escopado na organização npm rendra-ui, e
 // publishConfig.access "public" (senão o npm recusaria a publicação de um escopo privado
