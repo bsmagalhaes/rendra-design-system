@@ -4,7 +4,7 @@ Guia para levar o design system Rendra a um sistema novo ou a um sistema que já
 
 ## Pré-requisitos
 
-- Node.js 20 ou mais recente e npm 10 ou mais recente.
+- Node.js 22 ou mais recente e npm 10 ou mais recente.
 - Para os testes de layout: `npx playwright install chromium`.
 
 O resto depende do caminho:
@@ -26,9 +26,9 @@ Dois jeitos de trazer o boilerplate: **clonar o repositório** (código-fonte in
    - Os templates alternativos, se não forem usados: a pasta `src/brand/examples`, os `@import` correspondentes em `src/styles/themes.css` e as importações em `src/brand/index.ts`.
    - Se o layout do projeto for fixo: `userConfigurable={false}` na prop do `<AppShell>`, em `src/app/app-layout.tsx`.
 5. Ajuste o menu em `src/config/navigation.ts` e as rotas em `src/routes.tsx` e `src/config/routes-list.ts`.
-6. Rode `npm run check:rules`, `npm run lint`, `npm run typecheck` e `npm run test:layout`.
+6. Rode `npm run typecheck`, `npm run lint`, `npm run check:rules`, `npm test`, `npm run test:layout` e `npm run test:a11y`.
 
-### 1b. Pelo pacote npm
+### 1b. Pelo pacote npm (serve também para o Caminho 2, projeto existente, sem copiar arquivos-fonte)
 
 1. Instale o pacote (`@rendra-ui/web`, escopado na organização npm `rendra-ui`) e os peers: `react`, `react-dom` e `radix-ui`.
 2. Importe o CSS uma vez, na entrada do app: `import '@rendra-ui/web/tokens.css'`, `import '@rendra-ui/web/base.css'` e `import '@rendra-ui/web/components.css'`.
@@ -41,9 +41,21 @@ A ideia é trazer a base e depois migrar tela por tela, sem parar o projeto.
 
 1. **Dependências.** Instale as do `package.json` deste repositório: Tailwind v4, Radix, class-variance-authority, tailwind-merge, clsx, lucide-react, React Hook Form, Zod, IMask, React Day Picker, date-fns, TanStack Table v8, Recharts, Sonner, cmdk e Playwright. Se o projeto usa Tailwind v3, rode antes o guia oficial de migração para a v4 (`npx @tailwindcss/upgrade`). Alternativa sem copiar o código-fonte: instalar o pacote npm (seção "Caminho 1: projeto novo", 1b).
 2. **Base visual.** Copie `src/styles`, `src/brand`, `src/lib`, `src/hooks`, `src/components` e `src/catalog` (componente de `src/components/ui` importa `resolveCatalogCode` de lá; copiar sem essa pasta quebra o build). Importe `src/styles/globals.css` na entrada do app, envolva o app com `BrandProvider` e coloque o `<Toaster />` na raiz (veja `src/app.tsx`). A montagem também precisa do roteador: com react-router, envolva as rotas com `<RendraRouterBridge>` (`src/components/rendra-router-bridge.tsx`); com outro roteador, escreva um `RendraProvider` próprio (mesma peça, outra ponte).
-3. **Regras e testes.** Copie `scripts/check-design-rules.mjs` com a pasta `scripts/lib` inteira (`help-length.ts` e `var-prefix.ts`; o script não roda sem eles), `playwright.config.ts`, `tests/`, `eslint.config.js`, `.prettierrc.json`, `DESIGN_RULES.md` e `CLAUDE.md`, e os scripts do `package.json`.
+3. **Regras e testes.** Copie `scripts/check-design-rules.mjs` com a pasta `scripts/lib` inteira (`help-length.ts` e `var-prefix.ts`; o script não roda sem eles), `playwright.config.ts`, `tests/`, `eslint.config.js`, `.prettierrc.json` e `DESIGN_RULES.md`, e os scripts do `package.json`. Não copie o `CLAUDE.md` deste repositório: ele traz a matriz de modelos e depende do `AGENTS.md` ao lado, que quebra sozinho num projeto que só recebeu os arquivos-fonte. Se este projeto também for seguir a matriz de modelos, adapte um arquivo de agente enxuto (o resumo do `.github/copilot-instructions.md` deste repositório é um bom ponto de partida) em vez de copiar o `CLAUDE.md` inteiro.
 4. **Convivência.** A escala do Tailwind foi zerada de propósito. Se o CSS antigo usa classes como `p-5` ou `bg-blue-500`, elas deixam de funcionar. Migre tela por tela e, se precisar, mantenha o CSS antigo isolado no arquivo de cada tela enquanto a migração acontece.
 5. **Migração** (seção "Ordem de migração").
+
+## Limpeza do clone
+
+Só se aplica a quem clonou o repositório inteiro (caminho 1a, ou o caminho "clone e refazer" de uma migração, `docs/PROMPT_MIGRACAO.md`). O clone nasce publicável como o pacote `@rendra-ui/web`: antes de considerar o projeto pronto, troque ou remova o que só faz sentido no repositório do Rendra.
+
+- **Identidade de pacote**, no `package.json` do projeto: `name`, `bin`, `exports`, `files`, `publishConfig` e `peerDependencies`.
+- **Publicação**: apague `.github/workflows/publish.yml`, `registry.json` e `scripts/build-registry.mjs`, e remova do `package.json` os scripts `verify:pack` e `build:lib` e o arquivo `vite.lib.config.ts`.
+- **Skill de migração parcial**: apague a pasta `skills/`, que só serve para migrar sistemas de terceiros para o Rendra.
+- **README e histórico**: troque o `README.md` pelo do projeto do usuário, mantendo a seção de crédito do Rendra; recomece o `CHANGELOG.md`.
+- **SEO**: adapte os textos de `src/config/seo.ts` e o `index.html` (título, descrição, Open Graph) para o produto do usuário.
+- **GitHub Pages**: ajuste ou remova `.github/workflows/pages.yml`, conforme o usuário queira publicar o próprio demo ali.
+- **Mantenha**: o `LICENSE`, o aviso de copyright e a autoria do Rendra (a licença MIT exige os dois; o crédito visível na interface é opcional, veja a seção "Crédito 'Feito com Rendra' e licença" do `AGENTS.md`).
 
 ## Troca de marca, passo a passo
 
@@ -174,7 +186,7 @@ Migre de fora para dentro, com uma verificação ao fim de cada passo:
 4. **Listagens.** Troque as tabelas pela `Table`, com `toolbar`, colunas com `mobile` e estados.
 5. **Feedback.** Troque alertas, toasts e modais antigos por `Alert`, `toast`, `Modal` e `Drawer`, e use o ícone de feedback da marca.
 6. **Telas.** Refaça cada tela com as primitivas (`Container`, `Stack`, `Grid`, `Section`, `PageHeader`), começando pelas mais usadas.
-7. **Limpeza.** Remova o CSS e os componentes antigos, depois rode `check:rules`, `lint` e `test:layout`.
+7. **Limpeza.** Remova o CSS e os componentes antigos, depois rode `check:rules`, `lint`, `test`, `test:layout` e `test:a11y`.
 
 Cada tela migrada entra em `src/routes.tsx` e em `src/config/routes-list.ts` e passa a ser verificada pelos testes.
 

@@ -218,7 +218,7 @@ React 19, TypeScript 5.9 (estrito), Vite 8, Tailwind CSS 4 (tema via `@theme`), 
 
 ## Começar com IA
 
-O repositório vem preparado para agentes de IA de desenvolvimento. Ao abrir o projeto, a IA lê as instruções sozinha, pergunta se é **projeto novo** ou **migração de layout**, conduz um **briefing** (negócio, usuários, menu, tema, cores, telas e dados; se você já tiver um **código de modelo** da galeria, ele pula essas escolhas), registra tudo em `docs/BRIEFING.md` e só então constrói, em etapas e com as verificações passando.
+O repositório vem preparado para agentes de IA de desenvolvimento. Ao abrir o projeto, a IA lê as instruções sozinha, pergunta se é **projeto novo**, **migração de layout** ou **contribuição**, conduz um **briefing** (negócio, usuários, menu, tema, cores, telas e dados; se você já tiver um **código de modelo** da galeria, ele pula essas escolhas), registra tudo em `docs/BRIEFING.md` e só então constrói, em etapas e com as verificações passando.
 
 | Ferramenta                                   | Arquivo lido automaticamente                                         |
 | -------------------------------------------- | -------------------------------------------------------------------- |
@@ -240,10 +240,10 @@ Clone https://github.com/bsmagalhaes/rendra-design-system e use como base do meu
 **Para migrar o layout de um sistema existente**, abra a IA na pasta do seu sistema e cole:
 
 ```text
-Aplique neste projeto o design system https://github.com/bsmagalhaes/rendra-design-system. Leia o AGENTS.md e o DESIGN_RULES.md dele e siga o fluxo de migração, começando pelo briefing.
+Aplique neste projeto o design system https://github.com/bsmagalhaes/rendra-design-system. Leia, nesta ordem: https://github.com/bsmagalhaes/rendra-design-system/blob/main/AGENTS.md, https://github.com/bsmagalhaes/rendra-design-system/blob/main/DESIGN_RULES.md, https://github.com/bsmagalhaes/rendra-design-system/blob/main/docs/PROMPT_MIGRACAO.md e https://github.com/bsmagalhaes/rendra-design-system/blob/main/docs/COMO_APLICAR.md, e siga o fluxo de migração, começando pelo briefing.
 ```
 
-A versão completa do prompt de migração, com todas as regras, está em [docs/PROMPT_MIGRACAO.md](docs/PROMPT_MIGRACAO.md). O roteiro do briefing está em [docs/BRIEFING_MODELO.md](docs/BRIEFING_MODELO.md).
+A versão completa do prompt de migração, que escolhe entre os três caminhos (pacote npm, cópia de arquivos-fonte ou clone e refazer) e aponta para as regras no repositório de referência, está em [docs/PROMPT_MIGRACAO.md](docs/PROMPT_MIGRACAO.md). O roteiro do briefing está em [docs/BRIEFING_MODELO.md](docs/BRIEFING_MODELO.md).
 
 ---
 
@@ -307,7 +307,7 @@ docs/            guia de aplicação, prompt de migração e imagens
 2. **Modelo e identidade:** fonte e raio em `src/styles/theme.css` (se o modelo mudar); nome, empresa, frase, formato (`square`, `rounded` ou `pill`) e logotipo na sidebar em `src/brand/brand.config.ts`.
 3. **Arte:** substitua os SVGs de `src/brand/assets`. O símbolo usa `fill="currentColor"`, porque os ícones de feedback o tingem.
 4. **Contraste:** abra `/tokens` nos modos claro e escuro. Nenhum selo pode marcar "falha".
-5. **Verificação:** rode `npm run check:rules && npm test && npm run test:layout`.
+5. **Verificação:** rode `npm run typecheck`, `npm run lint`, `npm run check:rules`, `npm test`, `npm run test:layout` e `npm run test:a11y`.
 
 Marca de cada cliente em tempo de execução (white label, sem build): `applyPalette(sementes)`. Exemplo em [docs/COMO_APLICAR.md](docs/COMO_APLICAR.md).
 
@@ -321,7 +321,7 @@ Um projeto criado a partir do Rendra não fica parado no tempo, e há mais de um
 
 ### Boilerplate
 
-Comece por este repositório (`degit`, `npx create-rendra` quando existir, ou clone e apague o `.git`) quando o projeto é novo: você recebe os três templates, as quatro paletas, o AppShell, as telas base e o Storybook, e edita a marca em `src/brand` como descrito em "Como trocar a marca em 5 passos", acima.
+Comece por este repositório (`degit`, ou clone e apague o `.git`) quando o projeto é novo: você recebe os três templates, as quatro paletas, o AppShell, as telas base e o Storybook, e edita a marca em `src/brand` como descrito em "Como trocar a marca em 5 passos", acima.
 
 ### Registry (shadcn/ui)
 
