@@ -2,7 +2,20 @@
 
 O que mudou em cada versão e o que um projeto derivado precisa fazer para atualizar. Segue o [versionamento semântico](https://semver.org/lang/pt-BR/). Datas em DD/MM/AAAA.
 
-## Não publicado
+## 2.2.0 (27/09/2026)
+
+Tabela na `@tanstack/react-table` 9, rede de testes de comportamento em todos os componentes antigos e orientação completa para quem chega pelo link sem saber programar. Nenhuma quebra: atualizar é só subir a versão.
+
+### Adicionado
+
+- **Jornada do leigo:** `AGENTS.md`, `README.md`, `docs/COMO_APLICAR.md`, `docs/PROMPT_MIGRACAO.md` e `docs/BRIEFING_MODELO.md` guiam a IA desde o link (clonar, instalar, subir o app, escolher entre pacote, cópia ou clone pelo React do projeto) até o briefing, com "não sei, sugira" nos blocos de marca. `docs/BRIEFING.md` passa a ser artefato local, fora do git.
+- **Registry:** itens `app-shell-test` (os sete testes da casca) e `layout-test` (`page-header` e `primitives`); `kanban-test` passa a levar `kanban.test.ts`. Mudança só aditiva, 127 para 129 itens.
+- **Stories:** DataToolbar, RichTextEditor, WidgetGrid, BrandLogo, Wizard com validação, ConversationList, Form com FormSection, ImageCropper, ImageViewer, CardFooter e subitens do DropdownMenu.
+
+### Testes
+
+- Testes de comportamento (efeito visível, não só chamada) para toast, card, date-picker, calendar, data-toolbar, chat, rich-text-editor, wizard, widget-grid, brand-logo, avatar, badge, brand-feedback-icon, action-bar, dropdown-menu, empty-state, tooltip, popover, button-group, error-page, chart, separator, slider, stat-card, skeleton, form, breadcrumb, otp-input, pagination, drawer, notifications, page-header e primitives.
+- Piso de cobertura com chave própria por arquivo em `vite.config.ts`; `src/components/layout` entra na medição. Cobertura de linhas de 82,8% para mais de 86%.
 
 ### Dependências
 
@@ -30,7 +43,7 @@ Pacote publicável pronto para uso externo (`import { Button } from '@rendra-ui/
 
 ### Pendências
 
-- **`@tanstack/react-table` fica em 8.x nesta versão.** A 9 muda a API de colunas e os tipos; subir exige revisar `src/components/ui/table.tsx` e os testes da tabela, o que fica para um lote futuro dedicado.
+- **`@tanstack/react-table` fica em 8.x nesta versão.** A 9 muda a API de colunas e os tipos; subir exige revisar `src/components/ui/table.tsx` e os testes da tabela, o que fica para um lote futuro dedicado (feito na 2.2.0).
 
 ## 2.0.0 (26/09/2026)
 
