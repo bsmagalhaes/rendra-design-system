@@ -16,7 +16,7 @@ O resto depende do caminho:
 
 Dois jeitos de trazer o boilerplate: **clonar o repositório** (código-fonte inteiro, para mexer em qualquer coisa) ou **instalar o pacote npm** (`import` dos componentes já compilados, sem o boilerplate em volta). Use o pacote quando quiser só os componentes numa aplicação que já existe; use o clone para começar um sistema do zero com o AppShell, as telas base e o Storybook.
 
-### 1a. Clonando o repositório
+### 1a. Clonando o repositório (no prompt de migração, `docs/PROMPT_MIGRACAO.md`, é o Caminho C, "clonando o repositório e refazendo")
 
 1. Copie este repositório para a pasta do novo projeto (clone ou "Use this template"). Apague a pasta `.git` se quiser um histórico novo.
 2. `npm install`.
@@ -28,20 +28,20 @@ Dois jeitos de trazer o boilerplate: **clonar o repositório** (código-fonte in
 5. Ajuste o menu em `src/config/navigation.ts` e as rotas em `src/routes.tsx` e `src/config/routes-list.ts`.
 6. Rode `npm run typecheck`, `npm run lint`, `npm run check:rules`, `npm test`, `npm run test:layout` e `npm run test:a11y`.
 
-### 1b. Pelo pacote npm (serve também para o Caminho 2, projeto existente, sem copiar arquivos-fonte)
+### 1b. Pelo pacote npm (serve também para o Caminho 2, projeto existente, sem copiar arquivos-fonte; no prompt de migração, é o Caminho A)
 
 1. Instale o pacote (`@rendra-ui/web`, escopado na organização npm `rendra-ui`) e os peers: `react`, `react-dom` e `radix-ui`.
 2. Importe o CSS uma vez, na entrada do app: `import '@rendra-ui/web/tokens.css'`, `import '@rendra-ui/web/base.css'` e `import '@rendra-ui/web/components.css'`.
 3. Importe os componentes da entrada principal (`import { Button, AppShell } from '@rendra-ui/web'`) e, se usar react-router, a ponte do subcaminho próprio: `import { RendraRouterBridge } from '@rendra-ui/web/router-bridge'`. Os componentes pesados (`document-viewer`, `rich-text-editor`, `chart`, `widget-grid`) têm subcaminho próprio, para não pesar o pacote de quem não usa.
-4. A CLI `rendra` (`rendra codigos`, `rendra auditar` e `rendra trocar`) e o detalhe completo de cada entrada do pacote estão no `README.md`.
+4. A CLI, sempre como `npx @rendra-ui/web codigos`, `npx @rendra-ui/web auditar` e `npx @rendra-ui/web trocar` (o nome `rendra` no npm pertence a outro pacote), e o detalhe completo de cada entrada do pacote estão no `README.md`.
 
-## Caminho 2: projeto existente
+## Caminho 2: projeto existente (no prompt de migração, é o Caminho B, "copiando os arquivos-fonte")
 
 A ideia é trazer a base e depois migrar tela por tela, sem parar o projeto.
 
 1. **Dependências.** Instale as do `package.json` deste repositório: Tailwind v4, Radix, class-variance-authority, tailwind-merge, clsx, lucide-react, React Hook Form, Zod, IMask, React Day Picker, date-fns, TanStack Table v8, Recharts, Sonner, cmdk e Playwright. Se o projeto usa Tailwind v3, rode antes o guia oficial de migração para a v4 (`npx @tailwindcss/upgrade`). Alternativa sem copiar o código-fonte: instalar o pacote npm (seção "Caminho 1: projeto novo", 1b).
 2. **Base visual.** Copie `src/styles`, `src/brand`, `src/lib`, `src/hooks`, `src/components` e `src/catalog` (componente de `src/components/ui` importa `resolveCatalogCode` de lá; copiar sem essa pasta quebra o build). Importe `src/styles/globals.css` na entrada do app, envolva o app com `BrandProvider` e coloque o `<Toaster />` na raiz (veja `src/app.tsx`). A montagem também precisa do roteador: com react-router, envolva as rotas com `<RendraRouterBridge>` (`src/components/rendra-router-bridge.tsx`); com outro roteador, escreva um `RendraProvider` próprio (mesma peça, outra ponte).
-3. **Regras e testes.** Copie `scripts/check-design-rules.mjs` com a pasta `scripts/lib` inteira (`help-length.ts` e `var-prefix.ts`; o script não roda sem eles), `playwright.config.ts`, `tests/`, `eslint.config.js`, `.prettierrc.json` e `DESIGN_RULES.md`, e os scripts do `package.json`. Não copie o `CLAUDE.md` deste repositório: ele traz a matriz de modelos e depende do `AGENTS.md` ao lado, que quebra sozinho num projeto que só recebeu os arquivos-fonte. Se este projeto também for seguir a matriz de modelos, adapte um arquivo de agente enxuto (o resumo do `.github/copilot-instructions.md` deste repositório é um bom ponto de partida) em vez de copiar o `CLAUDE.md` inteiro.
+3. **Regras e testes.** Copie `scripts/check-design-rules.mjs` com a pasta `scripts/lib` inteira (`help-length.ts` e `var-prefix.ts`; o script não roda sem eles) e a pasta `src/cli` (o script importa `auditLines` de `src/cli/auditar.ts` para as sete regras genéricas; sem ela, `npm run check:rules` quebra), `playwright.config.ts`, `tests/`, `eslint.config.js`, `.prettierrc.json` e `DESIGN_RULES.md`, e os scripts do `package.json`. Não copie o `CLAUDE.md` deste repositório: ele traz a matriz de modelos e depende do `AGENTS.md` ao lado, que quebra sozinho num projeto que só recebeu os arquivos-fonte. Se este projeto também for seguir a matriz de modelos, adapte um arquivo de agente enxuto (o resumo do `.github/copilot-instructions.md` deste repositório é um bom ponto de partida) em vez de copiar o `CLAUDE.md` inteiro.
 4. **Convivência.** A escala do Tailwind foi zerada de propósito. Se o CSS antigo usa classes como `p-5` ou `bg-blue-500`, elas deixam de funcionar. Migre tela por tela e, se precisar, mantenha o CSS antigo isolado no arquivo de cada tela enquanto a migração acontece.
 5. **Migração** (seção "Ordem de migração").
 
@@ -49,8 +49,9 @@ A ideia é trazer a base e depois migrar tela por tela, sem parar o projeto.
 
 Só se aplica a quem clonou o repositório inteiro (caminho 1a, ou o caminho "clone e refazer" de uma migração, `docs/PROMPT_MIGRACAO.md`). O clone nasce publicável como o pacote `@rendra-ui/web`: antes de considerar o projeto pronto, troque ou remova o que só faz sentido no repositório do Rendra.
 
-- **Identidade de pacote**, no `package.json` do projeto: `name`, `bin`, `exports`, `files`, `publishConfig` e `peerDependencies`.
-- **Publicação**: apague `.github/workflows/publish.yml`, `registry.json` e `scripts/build-registry.mjs`, e remova do `package.json` os scripts `verify:pack` e `build:lib` e o arquivo `vite.lib.config.ts`.
+- **Identidade de pacote**, no `package.json` do projeto: `name`, `main`, `types`, `bin`, `exports`, `files`, `sideEffects`, `publishConfig` e `peerDependencies`.
+- **Publicação**: apague `.github/workflows/publish.yml`, `registry.json`, a pasta `bin/`, `scripts/build-registry.mjs`, `scripts/build-lib.mjs`, `scripts/fix-dts-aliases.mjs` e `scripts/verify-pack.mjs`, e remova do `package.json` os scripts `verify:pack` e `build:lib` e os arquivos `vite.lib.config.ts` e `tsconfig.build.json`.
+- **CI**: em `.github/workflows/ci.yml`, tire os passos `npm run build:lib`, `npm run verify:pack` e o par `npm run registry:build` seguido de `git diff --exit-code registry.json` (job "qualidade"). Sem isso, o primeiro push chega vermelho: esses passos chamam scripts que acabaram de ser apagados. `npm run test:css-layers` (job "navegador") não depende do pacote publicado, testa a camada CSS do app rodando (`npm run dev`): mantenha.
 - **Skill de migração parcial**: apague a pasta `skills/`, que só serve para migrar sistemas de terceiros para o Rendra.
 - **README e histórico**: troque o `README.md` pelo do projeto do usuário, mantendo a seção de crédito do Rendra; recomece o `CHANGELOG.md`.
 - **SEO**: adapte os textos de `src/config/seo.ts` e o `index.html` (título, descrição, Open Graph) para o produto do usuário.
