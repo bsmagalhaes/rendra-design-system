@@ -121,14 +121,67 @@ const testUtils = {
 }
 const uiTests = ui
   .filter((i) => existsSync(join(ROOT, i.files[0].replace(/\.tsx$/, '.test.tsx'))))
-  .map((i) => ({
-    name: `${i.name}-test`,
-    title: `${i.name} (teste)`,
-    description: `Testes de comportamento do ${i.name}, com Vitest e Testing Library.`,
-    files: [i.files[0].replace(/\.tsx$/, '.test.tsx')],
-  }))
+  .map((i) => {
+    const testFile = i.files[0].replace(/\.tsx$/, '.test.tsx')
+    // kanban também tem teste de função pura (kanban.test.ts), sem .tsx: entra junto do
+    // mesmo item, não como item à parte (o dono do arquivo continua sendo um só).
+    const pureTestFile = testFile.replace(/\.test\.tsx$/, '.test.ts')
+    const files =
+      pureTestFile !== testFile && existsSync(join(ROOT, pureTestFile))
+        ? [testFile, pureTestFile]
+        : [testFile]
+    return {
+      name: `${i.name}-test`,
+      title: `${i.name} (teste)`,
+      description: `Testes de comportamento do ${i.name}, com Vitest e Testing Library.`,
+      files,
+    }
+  })
 
-const items = [core, tokens, catalog, layout, appShell, ...ui, testUtils, ...uiTests]
+/*
+ * Testes de casca (app-shell) e das primitivas de layout: ao contrário dos componentes de
+ * src/components/ui, cada arquivo de casca não vira um item próprio (o item já é o pacote
+ * inteiro, appShell ou layout); por isso os testes destes dois entram cada um num único
+ * item -test, reunindo todos os arquivos .test.{ts,tsx} do respectivo diretório.
+ * forceReg garante test-utils mesmo quando o arquivo não importa @/test/render (os testes
+ * de casca montam o próprio BrandProvider/RendraProvider e dependem só do setupFiles do
+ * Vitest para os polyfills do jsdom, não de um import direto).
+ */
+const appShellTestFiles = readdirSync(join(ROOT, 'src/components/app-shell')).filter((f) =>
+  f.includes('.test.'),
+)
+const appShellTest = {
+  name: 'app-shell-test',
+  title: 'app-shell (teste)',
+  description:
+    'Testes de comportamento do AppShell: sidebar, header, menu superior, mega menu, busca, notificações e utilitários de navegação, com Vitest e Testing Library.',
+  files: appShellTestFiles.map((f) => posix.join('src/components/app-shell', f)),
+  forceReg: ['test-utils', 'app-shell'],
+}
+const layoutTestFiles = readdirSync(join(ROOT, 'src/components/layout')).filter((f) =>
+  f.includes('.test.'),
+)
+const layoutTest = {
+  name: 'layout-test',
+  title: 'layout (teste)',
+  description:
+    'Testes de comportamento das primitivas de layout: PageHeader e Container, Stack, Inline, Grid e Section, com Vitest e Testing Library.',
+  files: layoutTestFiles.map((f) => posix.join('src/components/layout', f)),
+  forceReg: ['test-utils', 'layout'],
+}
+
+const items = [
+  core,
+  tokens,
+  catalog,
+  layout,
+  appShell,
+  ...ui,
+  testUtils,
+  ...uiTests,
+  appShellTest,
+  layoutTest,
+]
 const isTest = (item) => item === testUtils || item.name.endsWith('-test')
 
 // Descobre a qual item pertence cada arquivo, para transformar import em dependência.
@@ -176,6 +229,9 @@ function analyze(item) {
   if (!['tokens', 'core', 'catalog'].includes(item.name) && !isTest(item)) reg.add('tokens')
   if (isTest(item)) {
     for (const d of item.dev ?? []) deps.add(`${d}@${versions[d]}`)
+    // Dependência declarada à mão (registro que o import não enxerga): os testes de
+    // casca dependem do setupFiles do Vitest (test-utils) mesmo sem importar @/test/render.
+    for (const r of item.forceReg ?? []) reg.add(r)
     return { devDependencies: [...deps].sort(), registryDependencies: [...reg].sort() }
   }
   return { dependencies: [...deps].sort(), registryDependencies: [...reg].sort() }
