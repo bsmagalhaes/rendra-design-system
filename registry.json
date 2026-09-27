@@ -1666,9 +1666,10 @@
       "type": "registry:item",
       "title": "brand-logo (teste)",
       "description": "Testes de comportamento do brand-logo, com Vitest e Testing Library.",
-      "devDependencies": ["vitest@^5.0.2"],
+      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/brand-logo.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
       ],
       "files": [
@@ -1809,7 +1810,11 @@
       "type": "registry:item",
       "title": "chat (teste)",
       "description": "Testes de comportamento do chat, com Vitest e Testing Library.",
-      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.2"
+      ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/chat.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
@@ -2423,7 +2428,11 @@
       "type": "registry:item",
       "title": "rich-text-editor (teste)",
       "description": "Testes de comportamento do rich-text-editor, com Vitest e Testing Library.",
-      "devDependencies": ["vitest@^5.0.2"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.2"
+      ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/rich-text-editor.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
@@ -2718,7 +2727,11 @@
       "type": "registry:item",
       "title": "widget-grid (teste)",
       "description": "Testes de comportamento do widget-grid, com Vitest e Testing Library.",
-      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.2"
+      ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/widget-grid.json"
@@ -2736,7 +2749,11 @@
       "type": "registry:item",
       "title": "wizard (teste)",
       "description": "Testes de comportamento do wizard, com Vitest e Testing Library.",
-      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.2"
+      ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/wizard.json"
