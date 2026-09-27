@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   publicar:
@@ -30,12 +31,8 @@ jobs:
             echo "Tag v$TAG não bate com a version $PKG do package.json." >&2
             exit 1
           fi
-      # Publica pelo segredo NPM_TOKEN. O workflow não pede id-token: com ele, o npm tenta
-      # o trusted publishing antes do token e recusa com 403 enquanto o trusted publisher do
-      # pacote no npm só permitir "npm stage publish". Para voltar ao trusted publishing com
-      # atestado de proveniência: marque "Allow npm publish" no npm, devolva "id-token: write"
-      # às permissões e troque este passo por "npm publish --provenance --access public".
-      - name: Publicar com o token
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Trusted publishing do npm: o pacote tem este repositório e este workflow cadastrados
+      # com "npm publish" permitido. Não usa token; o id-token do GitHub autentica e assina
+      # o atestado de proveniência.
+      - name: Publicar pelo trusted publishing
+        run: npm publish --provenance --access public

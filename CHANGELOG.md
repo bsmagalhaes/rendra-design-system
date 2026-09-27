@@ -2,6 +2,14 @@
 
 O que mudou em cada versão e o que um projeto derivado precisa fazer para atualizar. Segue o [versionamento semântico](https://semver.org/lang/pt-BR/). Datas em DD/MM/AAAA.
 
+## 2.2.1 (27/09/2026)
+
+Mesmo código da 2.2.0, agora publicado pelo trusted publishing do npm, com atestado de proveniência (o pacote mostra de qual commit e de qual workflow do GitHub ele saiu). A 2.2.0 saiu pelo token, sem atestado. Sem quebra.
+
+### Alterado
+
+- `.github/workflows/publish.yml` publica com `npm publish --provenance --access public` e `id-token: write`, sem o segredo `NPM_TOKEN`.
+
 ## 2.2.0 (27/09/2026)
 
 Tabela na `@tanstack/react-table` 9, rede de testes de comportamento em todos os componentes antigos e orientação completa para quem chega pelo link sem saber programar. Nenhuma quebra: atualizar é só subir a versão.
