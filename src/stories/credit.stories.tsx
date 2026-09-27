@@ -27,7 +27,7 @@ export const Logotipo: Story = {
 export const LogotipoSobreDegrade: Story = {
   name: 'BrandLogo: sobre o degradê da marca',
   render: () => (
-    <div className="rounded-surface bg-gradient-brand-foreground p-6">
+    <div className="rounded-surface bg-gradient-brand p-6">
       <BrandLogo on="brand" />
     </div>
   ),
