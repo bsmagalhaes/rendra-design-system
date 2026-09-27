@@ -5,9 +5,12 @@ Guia para levar o design system Rendra a um sistema novo ou a um sistema que já
 ## Pré-requisitos
 
 - Node.js 20 ou mais recente e npm 10 ou mais recente.
-- Projeto em **React 18 ou 19 com TypeScript**. Com Vite, a adoção é direta. Em outros bundlers (Next.js, por exemplo), é preciso adaptar a importação de SVG como componente (hoje via `vite-plugin-svgr`) e o alias `@/`.
-- Tailwind CSS **v4**. Em projeto com Tailwind v3, a migração para a v4 vem antes (veja "Projeto existente").
 - Para os testes de layout: `npx playwright install chromium`.
+
+O resto depende do caminho:
+
+- **Pelo pacote npm** (caminho 1b, ou a alternativa do caminho 2): **React 19.3 ou mais recente**, `react-dom` na mesma versão e `radix-ui` 1.6.7 ou mais recente; `typescript` é opcional, só para o comando `rendra trocar`. Não exige Tailwind CSS no projeto de destino: o CSS já sai compilado.
+- **Clonando o repositório** (caminho 1a) ou **copiando os arquivos** (caminho 2): projeto em **React 18 ou 19 com TypeScript**. Com Vite, a adoção é direta. Em outros bundlers (Next.js, por exemplo), é preciso adaptar a importação de SVG como componente (hoje via `vite-plugin-svgr`) e o alias `@/`. Tailwind CSS **v4**; em projeto com Tailwind v3, a migração para a v4 vem antes (veja "Projeto existente").
 
 ## Caminho 1: projeto novo
 
@@ -86,6 +89,8 @@ document.documentElement.dataset.palette = tenant.id
 - **gerado**: as mesmas 4 cores e o degradê de sempre; passa por `createPalette` por baixo, com o contraste AA corrigido automaticamente. É o modo equivalente ao `applyPalette` do exemplo acima.
 - **explícito**: você já tem os tokens prontos (por exemplo, migrando de outro design system) e informa cada um deles, pelo nome semântico, sem o prefixo `--rendra-` (`primary`, `primaryForeground`, `sidebar`...). Nada é recalculado; o contraste só é relatado. Use `enforceContrast: true` para o `createTheme` ajustar sozinho os pares que falham.
 - **misto**: sementes (como no gerado) mais sobrescritas pontuais; a sobrescrita sempre vence.
+
+O exemplo abaixo é do clone (caminho 1a), que reexporta a API de marca por `@/brand`. Pelo pacote npm (caminho 1b), o resto do código é igual, trocando só o import: `import { applyTheme, createTheme } from '@rendra-ui/web'`.
 
 ```ts
 import { applyTheme, createTheme } from '@/brand'
@@ -177,7 +182,7 @@ Cada tela migrada entra em `src/routes.tsx` e em `src/config/routes-list.ts` e p
 
 Cada componente do design system, e cada variante visual relevante, tem um código de catálogo (`src/catalog/components.ts`, formato `ABA-001`), escrito no atributo `data-rendra` do elemento raiz. É o mesmo código usado no `docs/BRIEFING_MODELO.md` e mostrado na vitrine `/componentes`. A lista completa está sempre em `src/catalog/components.ts`, na vitrine ou em `rendra codigos` (nunca copie a lista para outro documento: ela muda a cada componente novo).
 
-O pacote npm também traz a CLI `rendra`, com três comandos (uso, sem detalhe interno; completo no `README.md`):
+O pacote npm também traz a CLI `rendra`, com três comandos (uso, sem detalhe interno; completo no `README.md`). Sem instalar o pacote, use `npx @rendra-ui/web <comando>`; `npx rendra <comando>` só funciona com o pacote instalado neste projeto, porque o nome `rendra` no npm pertence a outro pacote:
 
 - `rendra codigos`: lista o catálogo de códigos.
 - `rendra auditar`: roda no projeto de destino as mesmas regras de design do `check:rules`.
