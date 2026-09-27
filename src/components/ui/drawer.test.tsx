@@ -19,14 +19,16 @@ function Harness({ dirty }: { dirty?: boolean }) {
 }
 
 describe('Drawer', () => {
-  it('abre com título e fecha pelo Esc', async () => {
+  it('abre com título e o conteúdo visível, e fecha pelo Esc fazendo o conteúdo sumir', async () => {
     renderApp(<Harness />)
     expect(screen.getByRole('dialog', { name: 'Novo cliente' })).toHaveAttribute(
       'data-rendra',
       'GAV-001',
     )
+    expect(screen.getByText('Campos')).toBeInTheDocument()
     await userEvent.keyboard('{Escape}')
     await waitFor(() => expect(screen.getByTestId('estado')).toHaveTextContent('fechado'))
+    expect(screen.queryByText('Campos')).not.toBeInTheDocument()
   })
 
   it('com alterações, pede confirmação antes de descartar', async () => {
