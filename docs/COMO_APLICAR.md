@@ -5,9 +5,12 @@ Guia para levar o design system Rendra a um sistema novo ou a um sistema que já
 ## Pré-requisitos
 
 - Node.js 20 ou mais recente e npm 10 ou mais recente.
-- Projeto em **React 18 ou 19 com TypeScript**. Com Vite, a adoção é direta. Em outros bundlers (Next.js, por exemplo), é preciso adaptar a importação de SVG como componente (hoje via `vite-plugin-svgr`) e o alias `@/`.
-- Tailwind CSS **v4**. Em projeto com Tailwind v3, a migração para a v4 vem antes (veja "Projeto existente").
 - Para os testes de layout: `npx playwright install chromium`.
+
+O resto depende do caminho:
+
+- **Pelo pacote npm** (caminho 1b, ou a alternativa do caminho 2): **React 19.3 ou mais recente**, `react-dom` na mesma versão e `radix-ui` 1.6.7 ou mais recente; `typescript` é opcional, só para o comando `rendra trocar`. Não exige Tailwind CSS no projeto de destino: o CSS já sai compilado.
+- **Clonando o repositório** (caminho 1a) ou **copiando os arquivos** (caminho 2): projeto em **React 18 ou 19 com TypeScript**. Com Vite, a adoção é direta. Em outros bundlers (Next.js, por exemplo), é preciso adaptar a importação de SVG como componente (hoje via `vite-plugin-svgr`) e o alias `@/`. Tailwind CSS **v4**; em projeto com Tailwind v3, a migração para a v4 vem antes (veja "Projeto existente").
 
 ## Caminho 1: projeto novo
 
