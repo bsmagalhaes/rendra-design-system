@@ -29,6 +29,16 @@ describe('Breadcrumb', () => {
     )
   })
 
+  it('o item da página atual aparece como texto, nunca como link', () => {
+    renderApp(<Breadcrumb items={items} />)
+    const currentTexts = screen.getAllByText('Novo cliente')
+    expect(currentTexts.length).toBeGreaterThan(0)
+    expect(screen.queryByRole('link', { name: 'Novo cliente' })).not.toBeInTheDocument()
+    expect(currentTexts.some((el) => el.getAttribute('aria-current') === 'page')).toBe(true)
+    // O item anterior, que tem destino, continua um link (na trilha do desktop).
+    expect(screen.getAllByRole('link', { name: 'Clientes' }).length).toBeGreaterThan(0)
+  })
+
   it('sem react-router: navega pelo linkComponent do RendraProvider', () => {
     render(
       <RendraProvider
