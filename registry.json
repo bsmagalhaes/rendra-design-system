@@ -2197,6 +2197,11 @@
           "path": "src/components/ui/kanban.test.tsx",
           "type": "registry:file",
           "target": "src/components/ui/kanban.test.tsx"
+        },
+        {
+          "path": "src/components/ui/kanban.test.ts",
+          "type": "registry:file",
+          "target": "src/components/ui/kanban.test.ts"
         }
       ]
     },
@@ -2773,6 +2778,87 @@
           "path": "src/components/ui/wizard.test.tsx",
           "type": "registry:file",
           "target": "src/components/ui/wizard.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "app-shell-test",
+      "type": "registry:item",
+      "title": "app-shell (teste)",
+      "description": "Testes de comportamento do AppShell: sidebar, header, menu superior, mega menu, busca, notificações e utilitários de navegação, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "lucide-react@^1.48.0",
+        "vitest@^5.0.2"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/app-shell.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/tooltip.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/app-shell/app-shell.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/app-shell/app-shell.test.tsx"
+        },
+        {
+          "path": "src/components/app-shell/command-search.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/app-shell/command-search.test.tsx"
+        },
+        {
+          "path": "src/components/app-shell/header.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/app-shell/header.test.tsx"
+        },
+        {
+          "path": "src/components/app-shell/mega-menu.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/app-shell/mega-menu.test.tsx"
+        },
+        {
+          "path": "src/components/app-shell/navigation-utils.test.ts",
+          "type": "registry:file",
+          "target": "src/components/app-shell/navigation-utils.test.ts"
+        },
+        {
+          "path": "src/components/app-shell/notifications.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/app-shell/notifications.test.tsx"
+        },
+        {
+          "path": "src/components/app-shell/sidebar.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/app-shell/sidebar.test.tsx"
+        }
+      ]
+    },
+    {
+      "name": "layout-test",
+      "type": "registry:item",
+      "title": "layout (teste)",
+      "description": "Testes de comportamento das primitivas de layout: PageHeader e Container, Stack, Inline, Grid e Section, com Vitest e Testing Library.",
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.2"
+      ],
+      "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/layout.json",
+        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/layout/page-header.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/layout/page-header.test.tsx"
+        },
+        {
+          "path": "src/components/layout/primitives.test.tsx",
+          "type": "registry:file",
+          "target": "src/components/layout/primitives.test.tsx"
         }
       ]
     }
