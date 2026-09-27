@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Eye, Pencil, Trash2, Users, Wallet } from 'lucide-react'
 import { useState } from 'react'
 import { Accordion } from '@/components/ui/accordion'
+import { ActionBar } from '@/components/ui/action-bar'
 import { Avatar, AvatarGroup } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
@@ -303,8 +304,7 @@ export const Cartao: Story = {
         <p className="text-sm">Plano mensal.</p>
       </CardContent>
       <CardFooter>
-        <Button variant="outline">Ver histórico</Button>
-        <Button>Renovar</Button>
+        <ActionBar cancel={{ label: 'Ver histórico' }} primary={{ label: 'Renovar' }} />
       </CardFooter>
     </Card>
   ),
