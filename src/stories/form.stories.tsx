@@ -1,15 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Lock, Mail, Search } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, type Resolver } from 'react-hook-form'
 import { COLOR_PICKER_SWATCHES } from '@/brand/palette'
 import { ActionBar } from '@/components/ui/action-bar'
+import { Button } from '@/components/ui/button'
 import { Checkbox, CheckboxGroup } from '@/components/ui/checkbox'
 import { Checklist, type ChecklistItem } from '@/components/ui/checklist'
 import { ColorPicker } from '@/components/ui/color-picker'
 import { DatePicker, type DateRange } from '@/components/ui/date-picker'
 import { Field } from '@/components/ui/field'
 import { Form, FormField, FormSection } from '@/components/ui/form'
+import { ImageCropper } from '@/components/ui/image-cropper'
 import { Input } from '@/components/ui/input'
 import { OtpInput } from '@/components/ui/otp-input'
 import { RadioGroup } from '@/components/ui/radio-group'
@@ -389,6 +391,53 @@ export const UploadComRecorte: Story = {
       />
     </Field>
   ),
+}
+
+// PNG mínimo válido (1x1), embutido como data: URL, para a story funcionar sem depender de rede.
+const SAMPLE_IMAGE =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='
+
+function ImageCropperDemo() {
+  const [file, setFile] = useState<File | null>(null)
+  const [recortada, setRecortada] = useState<File | null>(null)
+  useEffect(() => {
+    let ativo = true
+    fetch(SAMPLE_IMAGE)
+      .then((r) => r.blob())
+      .then((blob) => {
+        if (ativo) setFile(new File([blob], 'foto.png', { type: 'image/png' }))
+      })
+    return () => {
+      ativo = false
+    }
+  }, [])
+  if (recortada) {
+    return (
+      <div className="flex flex-col gap-3">
+        <p className="text-sm">Recorte confirmado: {recortada.name}</p>
+        <Button variant="outline" onClick={() => setRecortada(null)}>
+          Recortar de novo
+        </Button>
+      </div>
+    )
+  }
+  if (!file) return <p className="text-sm text-muted-foreground">Carregando imagem de exemplo…</p>
+  return (
+    <ImageCropper
+      file={file}
+      aspects={[
+        { id: 'quadrado', label: 'Quadrado', ratio: 1 },
+        { id: 'paisagem', label: 'Paisagem', ratio: 16 / 9 },
+      ]}
+      maxOutputWidth={800}
+      onConfirm={setRecortada}
+      onCancel={() => {}}
+    />
+  )
+}
+export const RecorteDeImagem: Story = {
+  name: 'ImageCropper',
+  render: () => <ImageCropperDemo />,
 }
 
 /* ------------------------------------------------ Rating, RepeatableField, Checklist */

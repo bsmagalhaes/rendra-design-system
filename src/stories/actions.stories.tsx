@@ -6,10 +6,16 @@ import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
@@ -123,6 +129,41 @@ export const Menu: Story = {
       </DropdownMenuContent>
     </DropdownMenu>
   ),
+}
+
+function MenuComSubitensDemo() {
+  const [comEmail, setComEmail] = useState(true)
+  const [ordenar, setOrdenar] = useState('nome')
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline">Colunas e ordenação</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start">
+        <DropdownMenuLabel>Colunas</DropdownMenuLabel>
+        <DropdownMenuCheckboxItem
+          checked={comEmail}
+          onCheckedChange={(v) => setComEmail(v === true)}
+        >
+          E-mail
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>Ordenar por</DropdownMenuSubTrigger>
+          <DropdownMenuSubContent>
+            <DropdownMenuRadioGroup value={ordenar} onValueChange={setOrdenar}>
+              <DropdownMenuRadioItem value="nome">Nome</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="data">Data de cadastro</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+export const MenuComSubitens: Story = {
+  name: 'DropdownMenu: subitens (checkbox, submenu e opções)',
+  render: () => <MenuComSubitensDemo />,
 }
 
 export const BarraUmBotao: Story = {
