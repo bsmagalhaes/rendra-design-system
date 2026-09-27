@@ -1330,7 +1330,7 @@
       "title": "table",
       "description": "Componente table do Rendra Design System.",
       "dependencies": [
-        "@tanstack/react-table@^8.21.3",
+        "@tanstack/react-table@^9.2.4",
         "date-fns@^4.4.0",
         "lucide-react@^1.48.0",
         "radix-ui@^1.6.7"
