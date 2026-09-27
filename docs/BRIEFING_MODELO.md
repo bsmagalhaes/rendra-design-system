@@ -153,6 +153,8 @@ Uma paleta é só **4 cores e o degradê da marca**. Pergunte apenas isto:
 - Degradê da marca, usado na sidebar e no painel do login (3 cores, da luz ao fundo; padrão: tons da primária, do médio ao bem escuro):
 - Texto sobre a primária e a secundária: automático (padrão, o que passar AA), sempre branco ou sempre escuro:
 
+Não sabe alguma cor em hex? Diga "não sei, sugira": a IA recomenda com base no tema escolhido em 4.1 (por exemplo, a paleta pronta mais parecida) e pede só a confirmação.
+
 **Não pergunte** erro, sucesso, alerta, informação, fundo, card, borda nem as cores do modo escuro: são do sistema ou geradas. As sementes vão em `src/brand/palettes.ts` e `npm run palettes:build` gera o resto com AA conferido; se uma cor precisar de ajuste para passar, o gerador mostra o tom usado, e a IA confirma com o usuário antes de seguir.
 
 **5.3 Qual paleta pronta** (se 5.1 = 2)
@@ -196,7 +198,7 @@ Para cada tela: nome, objetivo, contêiner (página, drawer ou modal) e priorida
 
 Cada componente do design system, e cada variante visual dele (não tamanho, não tom, formato), tem um **código de catálogo**: três ou quatro letras, hífen, três dígitos (`BTN-001`, `ABA-002`). É diferente do código de modelo do bloco 3.0 (`T1-C4-M5`): aquele escolhe tema, cores e menu; este escolhe **qual variante de cada componente** a tela usa.
 
-Veja todos com `npm run dev`, abra `/componentes` e olhe o selo ao lado de cada exemplo (ou rode `rendra codigos`, se o pacote com a CLI estiver instalado): todo código do catálogo tem selo na vitrine, e a lista completa e sempre atualizada é `src/catalog/components.ts`, nunca este documento. Diga, para cada situação abaixo, qual código quer (ou "não sei, sugira": o padrão já é uma sugestão fundamentada). O que não estiver na tabela é porque o componente **só tem um código** (é a variante única dele, sem escolha a fazer); ainda assim vale conferir o exemplo na vitrine.
+Veja todos com `npm run dev`, abra `/componentes` e olhe o selo ao lado de cada exemplo (ou rode `npx @rendra-ui/web codigos`): todo código do catálogo tem selo na vitrine, e a lista completa e sempre atualizada é `src/catalog/components.ts`, nunca este documento. Diga, para cada situação abaixo, qual código quer (ou "não sei, sugira": o padrão já é uma sugestão fundamentada). O que não estiver na tabela é porque o componente **só tem um código** (é a variante única dele, sem escolha a fazer); ainda assim vale conferir o exemplo na vitrine.
 
 | Situação                                          | Código padrão                                                                   | Outras opções do mesmo componente                                                                                      |
 | ------------------------------------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
