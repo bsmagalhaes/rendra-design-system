@@ -13,7 +13,7 @@ Esta skill leva o Rendra Design System para um sistema que já existe, sem exigi
 
 Antes de tudo, confirme com o usuário **qual dos três níveis** ele quer (pode ser mais de um, nesta ordem: tokens, depois padrões, depois componentes; nunca ao contrário, porque padrões e componentes partem da escala de tokens já certa) e **em qual pasta** do projeto de destino (`cwd`). Nunca decida sozinho o nível nem o escopo.
 
-Os comandos `rendra auditar` e `rendra trocar` vêm da CLI publicada junto com o pacote (`npx rendra <comando>`, ou `rendra` direto se instalado global). Só `rendra trocar` precisa do `typescript` do projeto de destino instalado, para ler e reescrever o JSX (`rendra auditar` não usa o parser, só regex por linha); sem o `typescript`, `rendra trocar` sai com mensagem clara e código de saída diferente de zero, e a saída pede para instalar (`npm install --save-dev typescript`) antes de continuar.
+Os comandos `rendra auditar` e `rendra trocar` vêm da CLI publicada junto com o pacote. Sem instalar o pacote no projeto de destino, use `npx @rendra-ui/web <comando>`; `npx rendra <comando>` só funciona com o pacote instalado (ou instalado global, como `rendra <comando>` direto), porque o nome `rendra` no npm pertence a outro pacote. Só `rendra trocar` precisa do `typescript` do projeto de destino instalado, para ler e reescrever o JSX (`rendra auditar` não usa o parser, só regex por linha); sem o `typescript`, `rendra trocar` sai com mensagem clara e código de saída diferente de zero, e a saída pede para instalar (`npm install --save-dev typescript`) antes de continuar.
 
 ## Nível 1: tokens
 
