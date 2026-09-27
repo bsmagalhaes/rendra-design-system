@@ -12,6 +12,7 @@ import { OtpInput } from '@/components/ui/otp-input'
 import { RadioGroup } from '@/components/ui/radio-group'
 import { Rating } from '@/components/ui/rating'
 import { RepeatableField, type RepeatableItem } from '@/components/ui/repeatable-field'
+import { RichTextEditor } from '@/components/ui/rich-text-editor'
 import { Select, type SelectOption } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
@@ -151,6 +152,19 @@ function OtpDemo() {
   )
 }
 export const CodigoOTP: Story = { name: 'OtpInput (2FA)', render: () => <OtpDemo /> }
+
+function RichTextDemo() {
+  const [html, setHtml] = useState('<p>Escreva a descrição completa aqui.</p>')
+  return (
+    <Field label="Descrição" help="Negrito, itálico, listas, link, tabela e imagem.">
+      <RichTextEditor value={html} onChange={setHtml} />
+    </Field>
+  )
+}
+export const EditorDeTextoRico: Story = {
+  name: 'RichTextEditor',
+  render: () => <RichTextDemo />,
+}
 
 /* ------------------------------------------------ Select */
 
