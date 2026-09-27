@@ -81,7 +81,7 @@ export default defineConfig({
           { lines: 85 },
         'src/components/ui/{table,button}.tsx': { lines: 75 },
         'src/components/ui/drawer.tsx': { lines: 75 },
-        'src/components/ui/pagination.tsx': { lines: 65 },
+        'src/components/ui/pagination.tsx': { lines: 80 },
         'src/components/ui/otp-input.tsx': { lines: 100 },
         'src/components/ui/toast.tsx': { lines: 90 },
         'src/components/ui/card.tsx': { lines: 70 },
