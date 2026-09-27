@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
   publicar:
@@ -31,20 +30,12 @@ jobs:
             echo "Tag v$TAG não bate com a version $PKG do package.json." >&2
             exit 1
           fi
-      # Dois caminhos. Com o segredo NPM_TOKEN, publica pelo token: as variáveis do OIDC
-      # ficam vazias para o npm não tentar o trusted publishing (que recusa com 403 quando
-      # o pacote não tem o GitHub cadastrado) e, sem OIDC, não há atestado de proveniência.
-      # Sem o segredo, publica pelo trusted publishing, com --provenance.
+      # Publica pelo segredo NPM_TOKEN. O workflow não pede id-token: com ele, o npm tenta
+      # o trusted publishing antes do token e recusa com 403 enquanto o trusted publisher do
+      # pacote no npm só permitir "npm stage publish". Para voltar ao trusted publishing com
+      # atestado de proveniência: marque "Allow npm publish" no npm, devolva "id-token: write"
+      # às permissões e troque este passo por "npm publish --provenance --access public".
       - name: Publicar com o token
-        if: ${{ env.NPM_TOKEN != '' }}
         run: npm publish --access public
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          ACTIONS_ID_TOKEN_REQUEST_URL: ''
-          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ''
-      - name: Publicar pelo trusted publishing
-        if: ${{ env.NPM_TOKEN == '' }}
-        run: npm publish --provenance --access public
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
