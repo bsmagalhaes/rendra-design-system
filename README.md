@@ -360,13 +360,15 @@ O CSS já sai compilado (estratégia A: o host recebe `tokens.css`, `base.css` e
 
 ### CLI (`rendra`)
 
-Três comandos. Com o pacote instalado: `npx rendra <comando>` (ou `rendra` direto, se instalado global). Sem instalar o pacote no projeto: `npx @rendra-ui/web <comando>` roda a mesma CLI direto do registry:
+Três comandos. Forma segura, que não exige instalar nada: `npx @rendra-ui/web <comando>`, direto do registry:
 
 ```bash
-rendra codigos                    # lista o catálogo de códigos de componente
-rendra auditar [pasta]            # regras genéricas de DESIGN_RULES.md no projeto de destino
-rendra trocar <DE> <PARA> --dry-run   # simula a troca de uma variante do catálogo pela outra
+npx @rendra-ui/web codigos                    # lista o catálogo de códigos de componente
+npx @rendra-ui/web auditar [pasta]            # regras genéricas de DESIGN_RULES.md no projeto de destino
+npx @rendra-ui/web trocar <DE> <PARA> --dry-run   # simula a troca de uma variante do catálogo pela outra
 ```
+
+Nota: `npx rendra <comando>` só funciona com o pacote instalado neste projeto (ou instalado global, como `rendra <comando>` direto). Sem instalar, não use `npx rendra`: o nome `rendra` no npm pertence a outro pacote, não a este.
 
 `rendra auditar` aplica sete regras estáticas, sem IA (cor fixa, valor arbitrário, estilo inline, fonte fixa, `100vh`, degrau fora da escala, raio fixo), o mesmo tipo de checagem do `check:rules` deste repositório, aplicado a qualquer projeto. `rendra trocar` reescreve a prop literal que distingue duas variantes do catálogo (`ABA-001` para `ABA-002`, por exemplo), sempre com `--dry-run` primeiro: um elemento sem a prop conta como a variante padrão do componente (troca também esse caso, inserindo ou removendo a prop conforme o lado); prop dinâmica (`variant={x}`) nunca é reescrita, só listada para revisão manual, e troca entre componentes diferentes nunca edita, só aponta onde o componente aparece. Só `rendra trocar` precisa do `typescript` instalado no projeto de destino (`peerDependency` opcional do pacote), para ler e reescrever o JSX; sem ele, avisa e sai com erro.
 

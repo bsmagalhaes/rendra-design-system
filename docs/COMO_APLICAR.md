@@ -182,7 +182,7 @@ Cada tela migrada entra em `src/routes.tsx` e em `src/config/routes-list.ts` e p
 
 Cada componente do design system, e cada variante visual relevante, tem um código de catálogo (`src/catalog/components.ts`, formato `ABA-001`), escrito no atributo `data-rendra` do elemento raiz. É o mesmo código usado no `docs/BRIEFING_MODELO.md` e mostrado na vitrine `/componentes`. A lista completa está sempre em `src/catalog/components.ts`, na vitrine ou em `rendra codigos` (nunca copie a lista para outro documento: ela muda a cada componente novo).
 
-O pacote npm também traz a CLI `rendra`, com três comandos (uso, sem detalhe interno; completo no `README.md`):
+O pacote npm também traz a CLI `rendra`, com três comandos (uso, sem detalhe interno; completo no `README.md`). Sem instalar o pacote, use `npx @rendra-ui/web <comando>`; `npx rendra <comando>` só funciona com o pacote instalado neste projeto, porque o nome `rendra` no npm pertence a outro pacote:
 
 - `rendra codigos`: lista o catálogo de códigos.
 - `rendra auditar`: roda no projeto de destino as mesmas regras de design do `check:rules`.
