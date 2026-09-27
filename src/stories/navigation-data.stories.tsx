@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Chart } from '@/components/ui/chart'
 import { DataToolbar, type ToolbarColumn } from '@/components/ui/data-toolbar'
+import { Field } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
 import { List } from '@/components/ui/list'
 import { Pagination } from '@/components/ui/pagination'
 import { QrCode } from '@/components/ui/qr-code'
@@ -17,7 +19,8 @@ import { StatCard } from '@/components/ui/stat-card'
 import { Table } from '@/components/ui/table'
 import { Tabs } from '@/components/ui/tabs'
 import { Timeline } from '@/components/ui/timeline'
-import { Stepper } from '@/components/ui/wizard'
+import { WidgetGrid } from '@/components/ui/widget-grid'
+import { Stepper, Wizard } from '@/components/ui/wizard'
 import { formatCurrency } from '@/lib/masks'
 import { bySegment, clients, monthly, statusTone, type Client } from '@/mocks/clients'
 import { clientColumns } from '@/pages/app/client-columns'
@@ -225,6 +228,37 @@ export const Etapas: Story = {
   ),
 }
 
+function WizardDemo() {
+  const [nome, setNome] = useState('')
+  const [cidade, setCidade] = useState('')
+  return (
+    <Wizard
+      steps={[
+        { id: 'dados', title: 'Dados', description: 'Nome e cidade' },
+        { id: 'revisao', title: 'Revisão', description: 'Confira antes de concluir' },
+      ]}
+      onValidateStep={(index) => index !== 0 || nome.trim().length > 0}
+      onFinish={() => undefined}
+    >
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="Nome" required>
+          <Input value={nome} onChange={setNome} />
+        </Field>
+        <Field label="Cidade">
+          <Input value={cidade} onChange={setCidade} />
+        </Field>
+      </div>
+      <p className="text-sm">
+        Revisão: {nome || '(sem nome)'} · {cidade || '(sem cidade)'}
+      </p>
+    </Wizard>
+  )
+}
+export const Assistente: Story = {
+  name: 'Wizard (etapas com validação)',
+  render: () => <WizardDemo />,
+}
+
 /* ------------------------------------------------ Dados */
 
 export const Indicadores: Story = {
@@ -263,6 +297,83 @@ export const Cartao: Story = {
     </Card>
   ),
 }
+function WidgetGridDemo() {
+  const [editable, setEditable] = useState(false)
+  return (
+    <div className="flex flex-col gap-4">
+      <Button variant="outline" onClick={() => setEditable((v) => !v)}>
+        {editable ? 'Concluir ajustes' : 'Ajustar painel'}
+      </Button>
+      <WidgetGrid
+        editable={editable}
+        storageKey="story-widget-grid"
+        widgets={[
+          {
+            id: 'receita',
+            w: 4,
+            h: 3,
+            content: (
+              <StatCard
+                className="h-full"
+                label="Receita do mês"
+                value={formatCurrency(61300)}
+                change={4.4}
+                changeLabel="vs. agosto"
+                icon={<Wallet />}
+              />
+            ),
+          },
+          {
+            id: 'ativos',
+            w: 4,
+            h: 3,
+            content: (
+              <StatCard
+                className="h-full"
+                label="Clientes ativos"
+                value="1.284"
+                change={2.1}
+                changeLabel="vs. agosto"
+                icon={<Users />}
+              />
+            ),
+          },
+          {
+            id: 'grafico',
+            w: 8,
+            h: 7,
+            minH: 5,
+            content: (
+              <Card className="h-full overflow-hidden">
+                <CardHeader>
+                  <CardTitle>Receita e meta</CardTitle>
+                </CardHeader>
+                <CardContent className="min-h-0 flex-1">
+                  <Chart
+                    aria-label="Receita e meta por mês"
+                    type="area"
+                    height="fill"
+                    data={monthly}
+                    xKey="mes"
+                    series={[
+                      { key: 'receita', label: 'Receita' },
+                      { key: 'meta', label: 'Meta', color: 3 },
+                    ]}
+                  />
+                </CardContent>
+              </Card>
+            ),
+          },
+        ]}
+      />
+    </div>
+  )
+}
+export const GradeDeWidgets: Story = {
+  name: 'WidgetGrid',
+  render: () => <WidgetGridDemo />,
+}
+
 export const Etiquetas: Story = {
   name: 'Badge',
   render: () => (
