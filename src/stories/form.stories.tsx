@@ -1,12 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Lock, Mail, Search } from 'lucide-react'
 import { useState } from 'react'
+import { useForm, type Resolver } from 'react-hook-form'
 import { COLOR_PICKER_SWATCHES } from '@/brand/palette'
+import { ActionBar } from '@/components/ui/action-bar'
 import { Checkbox, CheckboxGroup } from '@/components/ui/checkbox'
 import { Checklist, type ChecklistItem } from '@/components/ui/checklist'
 import { ColorPicker } from '@/components/ui/color-picker'
 import { DatePicker, type DateRange } from '@/components/ui/date-picker'
 import { Field } from '@/components/ui/field'
+import { Form, FormField, FormSection } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { OtpInput } from '@/components/ui/otp-input'
 import { RadioGroup } from '@/components/ui/radio-group'
@@ -443,6 +446,63 @@ function RepeatableFieldDemo() {
 export const CampoRepetivel: Story = {
   name: 'RepeatableField',
   render: () => <RepeatableFieldDemo />,
+}
+
+/* ------------------------------------------------ Form e FormSection */
+
+interface DadosCliente {
+  nome: string
+  email: string
+}
+
+/** Resolvedor simples (o projeto não depende do zod): nome e e-mail são obrigatórios. */
+const resolverCliente: Resolver<DadosCliente> = async (values) => {
+  const errors: Record<string, { type: string; message: string }> = {}
+  if (!values.nome) errors.nome = { type: 'required', message: 'Informe o nome.' }
+  if (!values.email) errors.email = { type: 'required', message: 'Informe o e-mail.' }
+  if (Object.keys(errors).length > 0) {
+    return { values: {}, errors } as Awaited<ReturnType<Resolver<DadosCliente>>>
+  }
+  return { values, errors: {} } as Awaited<ReturnType<Resolver<DadosCliente>>>
+}
+
+function FormularioDemo() {
+  const form = useForm<DadosCliente>({
+    defaultValues: { nome: '', email: '' },
+    resolver: resolverCliente,
+  })
+  const [saved, setSaved] = useState(false)
+  return (
+    <Form id="form-demo" form={form} onSubmit={() => setSaved(true)}>
+      <FormSection title="Dados do cliente" description="Usados no contrato e nas cobranças.">
+        <FormField
+          name="nome"
+          label="Nome"
+          required
+          render={(f) => <Input {...f} placeholder="Nome completo" />}
+        />
+        <FormField
+          name="email"
+          label="E-mail"
+          required
+          render={(f) => <Input {...f} type="email" placeholder="nome@empresa.com" />}
+        />
+      </FormSection>
+      {saved && (
+        <p className="text-sm font-medium text-success-soft-foreground">
+          Cliente salvo com sucesso.
+        </p>
+      )}
+      <ActionBar
+        primary={{ label: 'Salvar', type: 'submit', form: 'form-demo' }}
+        cancel={{ label: 'Cancelar' }}
+      />
+    </Form>
+  )
+}
+export const FormularioComSecao: Story = {
+  name: 'Form + FormSection (com validação)',
+  render: () => <FormularioDemo />,
 }
 
 function ChecklistDemo() {

@@ -1,8 +1,25 @@
 // @vitest-environment jsdom
 import { screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import userEvent from '@testing-library/user-event'
+import { afterEach, describe, expect, it } from 'vitest'
 import { renderApp } from '@/test/render'
 import { Chart } from './chart'
+
+const setViewportWidth = (w: number) =>
+  (globalThis as unknown as { setViewportWidth: (w: number) => void }).setViewportWidth(w)
+afterEach(() => setViewportWidth(1280))
+
+const manyMonths = [
+  { mes: 'Jan', valor: 10 },
+  { mes: 'Fev', valor: 12 },
+  { mes: 'Mar', valor: 14 },
+  { mes: 'Abr', valor: 9 },
+  { mes: 'Mai', valor: 18 },
+  { mes: 'Jun', valor: 20 },
+  { mes: 'Jul', valor: 22 },
+  { mes: 'Ago', valor: 25 },
+  { mes: 'Set', valor: 30 },
+]
 
 describe('Chart', () => {
   it('gauge usa o código CHT-006', () => {
@@ -44,5 +61,26 @@ describe('Chart', () => {
       'data-rendra',
       'CHT-002',
     )
+  })
+
+  it('no mobile, com muitos pontos, "Ver como lista" troca o gráfico pelos valores em lista', async () => {
+    setViewportWidth(360)
+    renderApp(
+      <Chart
+        type="line"
+        aria-label="Vendas por mês"
+        data={manyMonths}
+        xKey="mes"
+        series={[{ key: 'valor', label: 'Valor' }]}
+      />,
+    )
+    expect(screen.queryByRole('list')).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Ver como lista' }))
+    const list = screen.getByRole('list')
+    expect(list).toBeInTheDocument()
+    expect(screen.getByText('Set')).toBeInTheDocument()
+    expect(screen.getByText('30')).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Ver gráfico' }))
+    expect(screen.queryByRole('list')).not.toBeInTheDocument()
   })
 })

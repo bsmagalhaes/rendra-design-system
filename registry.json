@@ -1792,7 +1792,11 @@
       "type": "registry:item",
       "title": "chart (teste)",
       "description": "Testes de comportamento do chart, com Vitest e Testing Library.",
-      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.2"
+      ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/chart.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
@@ -2072,6 +2076,7 @@
       "description": "Testes de comportamento do form, com Vitest e Testing Library.",
       "devDependencies": [
         "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
         "react-hook-form@^7.89.0",
         "vitest@^5.0.2"
       ],
@@ -2506,7 +2511,11 @@
       "type": "registry:item",
       "title": "slider (teste)",
       "description": "Testes de comportamento do slider, com Vitest e Testing Library.",
-      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.2"
+      ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/slider.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
