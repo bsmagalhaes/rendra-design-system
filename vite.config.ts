@@ -87,6 +87,10 @@ export default defineConfig({
         'src/components/ui/wizard.tsx': { lines: 95 },
         'src/components/ui/widget-grid.tsx': { lines: 90 },
         'src/components/ui/brand-logo.tsx': { lines: 100 },
+        'src/components/ui/{action-bar,avatar,badge,brand-feedback-icon,empty-state,error-page,popover,tooltip}.tsx':
+          { lines: 100 },
+        'src/components/ui/button-group.tsx': { lines: 80 },
+        'src/components/ui/dropdown-menu.tsx': { lines: 60 },
         'src/lib/sortable.ts': { lines: 95 },
         'src/components/ui/{list,timeline}.tsx': { lines: 95 },
         'src/components/ui/upload.tsx': { lines: 80 },
