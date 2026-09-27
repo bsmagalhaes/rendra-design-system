@@ -1,14 +1,25 @@
 import {
-  getCoreRowModel,
-  getExpandedRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  createExpandedRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  filterFn_includesString,
+  globalFilteringFeature,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  sortFn_alphanumeric,
+  sortFn_basic,
+  tableFeatures,
+  useTable,
   type ColumnDef,
+  type ColumnVisibilityState,
+  type RowData,
   type RowSelectionState,
   type SortingState,
-  type VisibilityState,
 } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import {
@@ -297,6 +308,27 @@ function RowActions<T>({
   )
 }
 
+/*
+ * Features do TanStack Table 9, só as que o componente usa. Constante de módulo:
+ * criada uma única vez, nunca a cada render. columnFilteringFeature é pré-requisito
+ * técnico de globalFilteringFeature (sem UI de filtro de coluna).
+ */
+const tableFeatureSet = tableFeatures({
+  rowSortingFeature,
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowExpandingFeature,
+  columnVisibilityFeature,
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  sortFns: { basic: sortFn_basic, alphanumeric: sortFn_alphanumeric },
+  filterFns: { includesString: filterFn_includesString },
+})
+
 /* ================================================================ componente */
 
 /**
@@ -343,7 +375,7 @@ export function Table<T>({
   )
   const [sorting, setSorting] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
-  const [visibility, setVisibility] = useState<VisibilityState>(() =>
+  const [visibility, setVisibility] = useState<ColumnVisibilityState>(() =>
     Object.fromEntries(columnsProp.filter((c) => c.hidden).map((c) => [c.id, false])),
   )
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
@@ -410,18 +442,18 @@ export function Table<T>({
 
   const data = remote ? server.rows : (dataProp ?? [])
 
-  const defs = useMemo<ColumnDef<T>[]>(
+  const defs = useMemo<ColumnDef<typeof tableFeatureSet, T & RowData>[]>(
     () =>
       columns.map((c) => ({
         id: c.id,
         header: c.header,
-        accessorFn: (row: T) => {
+        accessorFn: (row: T & RowData) => {
           const v = c.accessor(row)
           return v instanceof Date ? v.getTime() : v
         },
         enableSorting: sortable && c.sortable !== false,
         enableHiding: c.hideable !== false,
-        sortingFn:
+        sortFn:
           c.kind === 'number' || c.kind === 'currency' || c.kind === 'date'
             ? 'basic'
             : 'alphanumeric',
@@ -429,8 +461,9 @@ export function Table<T>({
     [columns, sortable],
   )
 
-  const table = useReactTable({
-    data,
+  const table = useTable({
+    features: tableFeatureSet,
+    data: data as (T & RowData)[],
     columns: defs,
     getRowId: (r) => getRowId(r),
     state: {
@@ -454,22 +487,13 @@ export function Table<T>({
     enableRowSelection: Boolean(selectable),
     getRowCanExpand: () => Boolean(expandable),
     globalFilterFn: 'includesString',
-    getCoreRowModel: getCoreRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
-    // Remoto: o servidor já devolve a página buscada, ordenada e filtrada.
-    ...(remote
-      ? {
-          manualPagination: true,
-          manualSorting: true,
-          manualFiltering: true,
-          rowCount: server.total,
-        }
-      : {
-          getSortedRowModel: getSortedRowModel(),
-          getFilteredRowModel: getFilteredRowModel(),
-          ...(pageSize && !isMobile ? { getPaginationRowModel: getPaginationRowModel() } : {}),
-          autoResetPageIndex: true,
-        }),
+    // Os quatro modelos ficam sempre registrados (features é constante de módulo); a
+    // alternância local ou remoto é só pelas flags manual* e por rowCount, como na v8.
+    manualSorting: remote,
+    manualFiltering: remote,
+    // Mobile fatia as linhas na mão (rows, mais abaixo); sem pageSize não pagina.
+    manualPagination: remote || !pageSize || isMobile,
+    ...(remote ? { rowCount: server.total } : { autoResetPageIndex: true }),
   })
 
   const colById = (id: string) => columns.find((c) => c.id === id)!
