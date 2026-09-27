@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Handshake, ThumbsDown } from 'lucide-react'
 import { useState } from 'react'
 import { Calendar } from '@/components/ui/calendar'
-import { ChatComposer, ChatThread } from '@/components/ui/chat'
+import { ChatComposer, ChatThread, ConversationList } from '@/components/ui/chat'
 import { DocumentViewer } from '@/components/ui/document-viewer'
 import {
   Kanban,
@@ -101,6 +101,28 @@ function ChatDemo() {
 }
 
 export const Chat: Story = { render: () => <ChatDemo /> }
+
+function InboxDemo() {
+  const tickets = useState(() => demoTickets())[0]
+  const [activeId, setActiveId] = useState(tickets[0]?.id ?? null)
+  const active = tickets.find((t) => t.id === activeId)
+  return (
+    <div className="flex h-chart-md min-h-0 overflow-hidden rounded-surface border">
+      <div className="w-3xs shrink-0 overflow-y-auto border-r">
+        <ConversationList items={tickets} activeId={activeId} onSelect={setActiveId} />
+      </div>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <ChatThread messages={active?.messages ?? []} />
+        <ChatComposer onSend={() => undefined} />
+      </div>
+    </div>
+  )
+}
+
+export const CaixaDeEntrada: Story = {
+  name: 'ConversationList: caixa de entrada',
+  render: () => <InboxDemo />,
+}
 
 // PDF mínimo válido, embutido como data: URL, para a story funcionar sem depender de rede.
 const SAMPLE_PDF =
