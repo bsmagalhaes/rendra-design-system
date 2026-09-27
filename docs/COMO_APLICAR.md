@@ -87,6 +87,8 @@ document.documentElement.dataset.palette = tenant.id
 - **explícito**: você já tem os tokens prontos (por exemplo, migrando de outro design system) e informa cada um deles, pelo nome semântico, sem o prefixo `--rendra-` (`primary`, `primaryForeground`, `sidebar`...). Nada é recalculado; o contraste só é relatado. Use `enforceContrast: true` para o `createTheme` ajustar sozinho os pares que falham.
 - **misto**: sementes (como no gerado) mais sobrescritas pontuais; a sobrescrita sempre vence.
 
+O exemplo abaixo é do clone (caminho 1a), que reexporta a API de marca por `@/brand`. Pelo pacote npm (caminho 1b), o resto do código é igual, trocando só o import: `import { applyTheme, createTheme } from '@rendra-ui/web'`.
+
 ```ts
 import { applyTheme, createTheme } from '@/brand'
 
