@@ -1746,7 +1746,11 @@
       "type": "registry:item",
       "title": "calendar (teste)",
       "description": "Testes de comportamento do calendar, com Vitest e Testing Library.",
-      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.2"
+      ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/calendar.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
@@ -1764,8 +1768,13 @@
       "type": "registry:item",
       "title": "card (teste)",
       "description": "Testes de comportamento do card, com Vitest e Testing Library.",
-      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.2"
+      ],
       "registryDependencies": [
+        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/card.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
       ],
@@ -1885,7 +1894,11 @@
       "type": "registry:item",
       "title": "data-toolbar (teste)",
       "description": "Testes de comportamento do data-toolbar, com Vitest e Testing Library.",
-      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.2"
+      ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/data-toolbar.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
@@ -1903,7 +1916,12 @@
       "type": "registry:item",
       "title": "date-picker (teste)",
       "description": "Testes de comportamento do date-picker, com Vitest e Testing Library.",
-      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "date-fns@^4.4.0",
+        "vitest@^5.0.2"
+      ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/date-picker.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
@@ -2638,7 +2656,11 @@
       "type": "registry:item",
       "title": "toast (teste)",
       "description": "Testes de comportamento do toast, com Vitest e Testing Library.",
-      "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
+      "devDependencies": [
+        "@testing-library/react@^16.3.3",
+        "@testing-library/user-event@^14.6.7",
+        "vitest@^5.0.2"
+      ],
       "registryDependencies": [
         "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json",
         "https://bsmagalhaes.github.io/rendra-design-system/r/toast.json"
