@@ -2,6 +2,12 @@
 
 O que mudou em cada versão e o que um projeto derivado precisa fazer para atualizar. Segue o [versionamento semântico](https://semver.org/lang/pt-BR/). Datas em DD/MM/AAAA.
 
+## Não publicado
+
+### Alterado
+
+- **Sem robôs como colaboradores:** o workflow "Atualizar referências visuais" agora faz o commit com autor e committer do mantenedor, em vez de `github-actions[bot]`. O Dependabot de versões (`.github/dependabot.yml`) foi removido; ficam só os alertas de segurança do GitHub. A atualização de dependências passa a ser manual, como descrito no `CONTRIBUTING.md`.
+
 ## 2.2.2 (29/09/2026)
 
 O repositório e o site mudaram de endereço, para alinhar o nome ao do pacote (`@rendra-ui/web`). O código do pacote é o mesmo da 2.2.1. O pacote agora também aparece na busca do npm por "rendra" e "rendra-ui". Sem quebra no código.
