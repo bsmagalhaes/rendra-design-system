@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "rendra",
-  "homepage": "https://github.com/bsmagalhaes/rendra-design-system",
+  "homepage": "https://github.com/bsmagalhaes/rendra-ui-web",
   "items": [
     {
       "name": "core",
@@ -124,11 +124,11 @@
       "description": "Container, Stack, Inline, Grid, Section e PageHeader.",
       "dependencies": ["radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/app-shell.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/breadcrumb.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/info-hint.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/app-shell.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/breadcrumb.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/info-hint.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -160,17 +160,17 @@
       "description": "Casca da aplicação: sidebar, header, menu superior, mega menu, busca, notificações e barra inferior. Recebe o menu, o layout, o usuário e as notificações por prop; não lê src/config.",
       "dependencies": ["cmdk@^1.1.1", "lucide-react@^1.48.0", "radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/avatar.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-logo.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/breadcrumb.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/info-hint.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/popover.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tooltip.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/avatar.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/brand-feedback-icon.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/brand-logo.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/breadcrumb.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/dropdown-menu.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/info-hint.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/popover.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tooltip.json"
       ],
       "files": [
         {
@@ -232,8 +232,8 @@
       "description": "Componente accordion do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0", "radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -251,11 +251,11 @@
       "description": "Componente action-bar do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/app-shell.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/app-shell.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/dropdown-menu.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -273,9 +273,9 @@
       "description": "Componente alert do Rendra Design System.",
       "dependencies": ["class-variance-authority@^0.7.1", "lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/brand-feedback-icon.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -293,8 +293,8 @@
       "description": "Componente avatar do Rendra Design System.",
       "dependencies": ["class-variance-authority@^0.7.1", "radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -312,8 +312,8 @@
       "description": "Componente badge do Rendra Design System.",
       "dependencies": ["class-variance-authority@^0.7.1"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -331,8 +331,8 @@
       "description": "Componente brand-feedback-icon do Rendra Design System.",
       "dependencies": ["class-variance-authority@^0.7.1"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -350,8 +350,8 @@
       "description": "Componente brand-logo do Rendra Design System.",
       "dependencies": ["class-variance-authority@^0.7.1"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -369,9 +369,9 @@
       "description": "Componente breadcrumb do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/catalog.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -389,8 +389,8 @@
       "description": "Componente button-group do Rendra Design System.",
       "dependencies": [],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -408,10 +408,10 @@
       "description": "Componente button do Rendra Design System.",
       "dependencies": ["class-variance-authority@^0.7.1", "radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/spinner.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/catalog.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/spinner.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -429,12 +429,12 @@
       "description": "Componente calendar do Rendra Design System.",
       "dependencies": ["date-fns@^4.4.0", "lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button-group.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/card.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/empty-state.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button-group.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/card.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/empty-state.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -452,9 +452,9 @@
       "description": "Componente card do Rendra Design System.",
       "dependencies": [],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/info-hint.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/info-hint.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -472,10 +472,10 @@
       "description": "Componente chart do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0", "recharts@^3.10.1"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/catalog.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -495,14 +495,14 @@
       "description": "Componente chat do Rendra Design System.",
       "dependencies": ["date-fns@^4.4.0", "lucide-react@^1.48.0", "radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/avatar.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/badge.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/popover.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/avatar.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/badge.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/dropdown-menu.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/input.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/popover.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -520,8 +520,8 @@
       "description": "Componente checkbox do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0", "radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -539,11 +539,11 @@
       "description": "Componente checklist do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/checkbox.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/checkbox.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/input.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -561,10 +561,10 @@
       "description": "Componente color-picker do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/picker-panel.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/input.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/picker-panel.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -582,15 +582,15 @@
       "description": "Componente data-toolbar do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/action-bar.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/drawer.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/popover.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/switch.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/action-bar.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/drawer.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/dropdown-menu.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/input.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/popover.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/switch.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -608,12 +608,12 @@
       "description": "Componente date-picker do Rendra Design System.",
       "dependencies": ["date-fns@^4.4.0", "lucide-react@^1.48.0", "react-day-picker@^10.0.1"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/field.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/picker-panel.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/field.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/input.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/picker-panel.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -631,10 +631,10 @@
       "description": "Componente document-viewer do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/empty-state.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/empty-state.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -652,10 +652,10 @@
       "description": "Componente drawer do Rendra Design System.",
       "dependencies": ["radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/modal.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/overlay-shell.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/modal.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/overlay-shell.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -673,8 +673,8 @@
       "description": "Componente dropdown-menu do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0", "radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -692,9 +692,9 @@
       "description": "Componente empty-state do Rendra Design System.",
       "dependencies": [],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/brand-feedback-icon.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -712,10 +712,10 @@
       "description": "Componente error-page do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/brand-feedback-icon.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -733,9 +733,9 @@
       "description": "Componente field do Rendra Design System.",
       "dependencies": ["radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/layout.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/layout.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -753,11 +753,11 @@
       "description": "Componente form do Rendra Design System.",
       "dependencies": ["react-hook-form@^7.89.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/card.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/field.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/layout.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/card.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/field.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/layout.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -775,12 +775,12 @@
       "description": "Componente image-cropper do Rendra Design System.",
       "dependencies": [],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/action-bar.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/alert.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/slider.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tabs.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/action-bar.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/alert.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/slider.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tabs.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -798,9 +798,9 @@
       "description": "Componente image-viewer do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0", "radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -818,10 +818,10 @@
       "description": "Componente info-hint do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/modal.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/modal.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -839,10 +839,10 @@
       "description": "Componente input do Rendra Design System.",
       "dependencies": ["imask@^7.6.1", "lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/spinner.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/spinner.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -860,14 +860,14 @@
       "description": "Componente kanban do Rendra Design System.",
       "dependencies": ["date-fns@^4.4.0", "lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/avatar.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/badge.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tabs.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/avatar.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/badge.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/catalog.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/dropdown-menu.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tabs.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -885,11 +885,11 @@
       "description": "Componente list do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/badge.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/sortable-handle.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/badge.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/catalog.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/sortable-handle.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -907,12 +907,12 @@
       "description": "Componente modal do Rendra Design System.",
       "dependencies": ["radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/action-bar.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/overlay-shell.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/action-bar.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/brand-feedback-icon.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/catalog.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/overlay-shell.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -930,8 +930,8 @@
       "description": "Componente otp-input do Rendra Design System.",
       "dependencies": [],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -949,8 +949,8 @@
       "description": "Componente overlay-shell do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0", "radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -968,10 +968,10 @@
       "description": "Componente pagination do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/select.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/select.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -989,8 +989,8 @@
       "description": "Componente picker-panel do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0", "radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1008,8 +1008,8 @@
       "description": "Componente popover do Rendra Design System.",
       "dependencies": ["radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1027,8 +1027,8 @@
       "description": "Componente progress do Rendra Design System.",
       "dependencies": ["class-variance-authority@^0.7.1", "radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1046,9 +1046,9 @@
       "description": "Componente qr-code do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/empty-state.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/empty-state.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1066,9 +1066,9 @@
       "description": "Componente radio-group do Rendra Design System.",
       "dependencies": ["radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/catalog.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1086,9 +1086,9 @@
       "description": "Componente rating do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/catalog.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1106,8 +1106,8 @@
       "description": "Componente rendra-credit do Rendra Design System.",
       "dependencies": [],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1125,9 +1125,9 @@
       "description": "Componente repeatable-field do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1153,10 +1153,10 @@
         "lucide-react@^1.48.0"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tooltip.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/dropdown-menu.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tooltip.json"
       ],
       "files": [
         {
@@ -1174,11 +1174,11 @@
       "description": "Componente select do Rendra Design System.",
       "dependencies": ["cmdk@^1.1.1", "lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/picker-panel.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/spinner.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/picker-panel.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/spinner.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1196,8 +1196,8 @@
       "description": "Componente separator do Rendra Design System.",
       "dependencies": [],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1215,8 +1215,8 @@
       "description": "Componente skeleton do Rendra Design System.",
       "dependencies": [],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1234,8 +1234,8 @@
       "description": "Componente slider do Rendra Design System.",
       "dependencies": ["radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1253,8 +1253,8 @@
       "description": "Componente sortable-handle do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1272,8 +1272,8 @@
       "description": "Componente spinner do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1291,10 +1291,10 @@
       "description": "Componente stat-card do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/card.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/skeleton.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/card.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/skeleton.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1312,8 +1312,8 @@
       "description": "Componente switch do Rendra Design System.",
       "dependencies": ["radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1336,19 +1336,19 @@
         "radix-ui@^1.6.7"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/badge.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/card.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/checkbox.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/data-toolbar.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/empty-state.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/pagination.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/select.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/skeleton.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tooltip.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/badge.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/card.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/checkbox.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/data-toolbar.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/dropdown-menu.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/empty-state.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/pagination.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/select.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/skeleton.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tooltip.json"
       ],
       "files": [
         {
@@ -1366,10 +1366,10 @@
       "description": "Componente tabs do Rendra Design System.",
       "dependencies": ["radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/select.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/catalog.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/select.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1387,8 +1387,8 @@
       "description": "Componente textarea do Rendra Design System.",
       "dependencies": [],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1406,8 +1406,8 @@
       "description": "Componente timeline do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1425,9 +1425,9 @@
       "description": "Componente toast do Rendra Design System.",
       "dependencies": ["sonner@^2.0.8"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/brand-feedback-icon.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1445,8 +1445,8 @@
       "description": "Componente tooltip do Rendra Design System.",
       "dependencies": ["radix-ui@^1.6.7"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1464,14 +1464,14 @@
       "description": "Componente upload do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/catalog.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/image-cropper.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/progress.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/sortable-handle.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/brand-feedback-icon.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/catalog.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/image-cropper.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/progress.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/sortable-handle.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1489,8 +1489,8 @@
       "description": "Componente widget-grid do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0", "react-grid-layout@^2.2.4"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1508,10 +1508,10 @@
       "description": "Componente wizard do Rendra Design System.",
       "dependencies": ["lucide-react@^1.48.0"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/action-bar.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/progress.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tokens.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/action-bar.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/progress.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tokens.json"
       ],
       "files": [
         {
@@ -1535,7 +1535,7 @@
         "react-router@^8.4.0",
         "vitest@^5.0.2"
       ],
-      "registryDependencies": ["https://bsmagalhaes.github.io/rendra-design-system/r/tooltip.json"],
+      "registryDependencies": ["https://bsmagalhaes.github.io/rendra-ui-web/r/tooltip.json"],
       "files": [
         { "path": "src/test/setup.ts", "type": "registry:file", "target": "src/test/setup.ts" },
         { "path": "src/test/render.tsx", "type": "registry:file", "target": "src/test/render.tsx" }
@@ -1552,8 +1552,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/accordion.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/accordion.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1574,8 +1574,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/action-bar.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/action-bar.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1596,8 +1596,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/alert.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/alert.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1614,8 +1614,8 @@
       "description": "Testes de comportamento do avatar, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/avatar.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/avatar.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1632,8 +1632,8 @@
       "description": "Testes de comportamento do badge, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/badge.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/badge.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1650,8 +1650,8 @@
       "description": "Testes de comportamento do brand-feedback-icon, com Vitest e Testing Library.",
       "devDependencies": ["vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-feedback-icon.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/brand-feedback-icon.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1668,9 +1668,9 @@
       "description": "Testes de comportamento do brand-logo, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/brand-logo.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/brand-logo.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1687,8 +1687,8 @@
       "description": "Testes de comportamento do breadcrumb, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/breadcrumb.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/breadcrumb.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1709,8 +1709,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button-group.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button-group.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1731,8 +1731,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1753,8 +1753,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/calendar.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/calendar.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1775,9 +1775,9 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/button.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/card.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/button.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/card.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1798,8 +1798,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/chart.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/chart.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1820,8 +1820,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/chat.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/chat.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1842,8 +1842,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/checkbox.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/checkbox.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1864,8 +1864,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/checklist.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/checklist.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1886,9 +1886,9 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/color-picker.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/color-picker.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1909,8 +1909,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/data-toolbar.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/data-toolbar.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1932,8 +1932,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/date-picker.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/date-picker.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1954,8 +1954,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/document-viewer.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/document-viewer.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1976,8 +1976,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/drawer.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/drawer.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -1998,8 +1998,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/dropdown-menu.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/dropdown-menu.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2016,8 +2016,8 @@
       "description": "Testes de comportamento do empty-state, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/empty-state.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/empty-state.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2039,8 +2039,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/error-page.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/error-page.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2057,9 +2057,9 @@
       "description": "Testes de comportamento do field, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/field.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/field.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/input.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2081,9 +2081,9 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/form.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/form.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/input.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2100,8 +2100,8 @@
       "description": "Testes de comportamento do image-cropper, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/image-cropper.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/image-cropper.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2122,8 +2122,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/image-viewer.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/image-viewer.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2144,8 +2144,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/info-hint.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/info-hint.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2166,9 +2166,9 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/field.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/field.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/input.json"
       ],
       "files": [
         {
@@ -2189,8 +2189,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/kanban.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/kanban.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2212,8 +2212,8 @@
       "description": "Testes de comportamento do list, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/list.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/list.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2234,8 +2234,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/modal.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/modal.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2256,8 +2256,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/otp-input.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/otp-input.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2278,8 +2278,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/pagination.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/pagination.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2300,8 +2300,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/popover.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/popover.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2318,8 +2318,8 @@
       "description": "Testes de comportamento do progress, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/progress.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/progress.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2336,9 +2336,9 @@
       "description": "Testes de comportamento do qr-code, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/qr-code.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/qr-code.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2359,8 +2359,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/radio-group.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/radio-group.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2381,8 +2381,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/rating.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/rating.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2399,9 +2399,9 @@
       "description": "Testes de comportamento do rendra-credit, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/core.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/rendra-credit.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/core.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/rendra-credit.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2422,9 +2422,9 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/input.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/repeatable-field.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/input.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/repeatable-field.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2445,8 +2445,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/rich-text-editor.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/rich-text-editor.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2466,7 +2466,7 @@
         "@testing-library/user-event@^14.6.7",
         "vitest@^5.0.2"
       ],
-      "registryDependencies": ["https://bsmagalhaes.github.io/rendra-design-system/r/select.json"],
+      "registryDependencies": ["https://bsmagalhaes.github.io/rendra-ui-web/r/select.json"],
       "files": [
         {
           "path": "src/components/ui/select.test.tsx",
@@ -2482,8 +2482,8 @@
       "description": "Testes de comportamento do separator, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/separator.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/separator.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2500,8 +2500,8 @@
       "description": "Testes de comportamento do skeleton, com Vitest e Testing Library.",
       "devDependencies": ["vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/skeleton.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/skeleton.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2522,8 +2522,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/slider.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/slider.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2540,8 +2540,8 @@
       "description": "Testes de comportamento do spinner, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/spinner.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/spinner.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2558,8 +2558,8 @@
       "description": "Testes de comportamento do stat-card, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/stat-card.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/stat-card.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2580,8 +2580,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/switch.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/switch.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2602,8 +2602,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/table.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/table.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2624,8 +2624,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tabs.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tabs.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {
@@ -2646,8 +2646,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/textarea.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/textarea.json"
       ],
       "files": [
         {
@@ -2664,8 +2664,8 @@
       "description": "Testes de comportamento do timeline, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/timeline.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/timeline.json"
       ],
       "files": [
         {
@@ -2686,8 +2686,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/toast.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/toast.json"
       ],
       "files": [
         {
@@ -2708,8 +2708,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tooltip.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tooltip.json"
       ],
       "files": [
         {
@@ -2726,8 +2726,8 @@
       "description": "Testes de comportamento do upload, com Vitest e Testing Library.",
       "devDependencies": ["@testing-library/react@^16.3.3", "vitest@^5.0.2"],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/upload.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/upload.json"
       ],
       "files": [
         {
@@ -2748,8 +2748,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/widget-grid.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/widget-grid.json"
       ],
       "files": [
         {
@@ -2770,8 +2770,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/wizard.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/wizard.json"
       ],
       "files": [
         {
@@ -2793,9 +2793,9 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/app-shell.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/tooltip.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/app-shell.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/tooltip.json"
       ],
       "files": [
         {
@@ -2846,8 +2846,8 @@
         "vitest@^5.0.2"
       ],
       "registryDependencies": [
-        "https://bsmagalhaes.github.io/rendra-design-system/r/layout.json",
-        "https://bsmagalhaes.github.io/rendra-design-system/r/test-utils.json"
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/layout.json",
+        "https://bsmagalhaes.github.io/rendra-ui-web/r/test-utils.json"
       ],
       "files": [
         {

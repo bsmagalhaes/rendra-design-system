@@ -19,6 +19,6 @@
     "hooks": "@/hooks"
   },
   "registries": {
-    "@rendra": "https://bsmagalhaes.github.io/rendra-design-system/r/{name}.json"
+    "@rendra": "https://bsmagalhaes.github.io/rendra-ui-web/r/{name}.json"
   }
 }

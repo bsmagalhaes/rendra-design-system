@@ -35,9 +35,9 @@ export const siteSeo = {
     'white label',
     'mobile-first',
   ],
-  repository: 'https://github.com/bsmagalhaes/rendra-design-system',
+  repository: 'https://github.com/bsmagalhaes/rendra-ui-web',
   /** Endereço público do demo. O build troca por SITE_URL quando definido. */
-  url: 'https://bsmagalhaes.github.io/rendra-design-system/',
+  url: 'https://bsmagalhaes.github.io/rendra-ui-web/',
 }
 
 export const routeSeo: Record<string, RouteSeo> = {

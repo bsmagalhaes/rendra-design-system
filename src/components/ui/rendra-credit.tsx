@@ -10,7 +10,7 @@ import { cn } from '@/lib/cn'
  */
 
 export const RENDRA_CREDIT_TEXT = 'Feito com Rendra'
-export const RENDRA_CREDIT_HREF = 'https://github.com/bsmagalhaes/rendra-design-system'
+export const RENDRA_CREDIT_HREF = 'https://github.com/bsmagalhaes/rendra-ui-web'
 
 export interface RendraCreditProps {
   /** Padrão true; false remove o crédito. */

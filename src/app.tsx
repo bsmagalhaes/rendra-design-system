@@ -3,7 +3,7 @@ import { activeBrand, availableBrands, availablePalettes, BrandProvider } from '
 import { Toaster } from '@/components/ui/toast'
 import { routes } from '@/routes'
 
-// basename acompanha o base do Vite: "/" no desenvolvimento, "/rendra-design-system/" no demo.
+// basename acompanha o base do Vite: "/" no desenvolvimento, "/rendra-ui-web/" no demo.
 const router = createBrowserRouter(routes, {
   basename: import.meta.env.BASE_URL.replace(/\/$/, '') || '/',
 })

@@ -1,22 +1,25 @@
 {
   "name": "@rendra-ui/web",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "type": "module",
-  "description": "Design system e boilerplate React (Vite, TypeScript, Tailwind v4, Radix), com CLI de catálogo, auditoria e troca de variante.",
+  "description": "Rendra, design system e boilerplate React (Vite, TypeScript, Tailwind v4, Radix), com CLI de catálogo, auditoria e troca de variante.",
   "author": {
     "name": "Bruno Magalhaes",
     "email": "contato@brunomagalhaes.me",
     "url": "https://www.brunomagalhaes.me"
   },
-  "homepage": "https://github.com/bsmagalhaes/rendra-design-system#readme",
+  "homepage": "https://github.com/bsmagalhaes/rendra-ui-web#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bsmagalhaes/rendra-design-system.git"
+    "url": "git+https://github.com/bsmagalhaes/rendra-ui-web.git"
   },
   "bugs": {
-    "url": "https://github.com/bsmagalhaes/rendra-design-system/issues"
+    "url": "https://github.com/bsmagalhaes/rendra-ui-web/issues"
   },
   "keywords": [
+    "rendra",
+    "rendra-ui",
+    "rendra-design-system",
     "design-system",
     "react",
     "tailwindcss",

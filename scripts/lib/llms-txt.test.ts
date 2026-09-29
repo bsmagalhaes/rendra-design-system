@@ -6,7 +6,7 @@ describe('buildLlmsTxt', () => {
     site: {
       name: 'Rendra Design System',
       description: 'Template de sistema de teste.',
-      repository: 'https://github.com/exemplo/rendra-design-system',
+      repository: 'https://github.com/exemplo/rendra-ui-web',
     },
     pages: [
       { title: 'Painel', description: 'Dashboard de teste.', url: 'https://exemplo.test/' },
@@ -45,9 +45,9 @@ describe('buildLlmsTxt', () => {
   })
 
   it('linka a documentação a partir do repositório recebido', () => {
-    expect(txt).toContain('[README](https://github.com/exemplo/rendra-design-system#readme)')
+    expect(txt).toContain('[README](https://github.com/exemplo/rendra-ui-web#readme)')
     expect(txt).toContain(
-      '[Regras de design](https://github.com/exemplo/rendra-design-system/blob/main/DESIGN_RULES.md)',
+      '[Regras de design](https://github.com/exemplo/rendra-ui-web/blob/main/DESIGN_RULES.md)',
     )
   })
 })

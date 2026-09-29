@@ -1,6 +1,6 @@
 # Publica o demo no GitHub Pages (gratuito para repositório público) a cada push na main:
-#   https://bsmagalhaes.github.io/rendra-design-system/            vitrine e telas
-#   https://bsmagalhaes.github.io/rendra-design-system/storybook/  Storybook
+#   https://bsmagalhaes.github.io/rendra-ui-web/            vitrine e telas
+#   https://bsmagalhaes.github.io/rendra-ui-web/storybook/  Storybook
 name: Demo (GitHub Pages)
 
 on:
