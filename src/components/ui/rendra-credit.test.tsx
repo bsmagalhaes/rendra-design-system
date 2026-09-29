@@ -12,7 +12,7 @@ describe('RendraCredit', () => {
     renderApp(<RendraCredit />)
     const link = screen.getByRole('link', { name: /Feito com Rendra/ })
     expect(link).toHaveAttribute('href', RENDRA_CREDIT_HREF)
-    expect(link).toHaveAttribute('href', 'https://github.com/bsmagalhaes/rendra-design-system')
+    expect(link).toHaveAttribute('href', 'https://github.com/bsmagalhaes/rendra-ui-web')
     expect(link).toHaveAttribute('target', '_blank')
     expect(link.getAttribute('rel')).toContain('noopener')
     expect(link).toHaveAttribute('data-rendra', 'CRED-001')

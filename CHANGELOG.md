@@ -2,6 +2,17 @@
 
 O que mudou em cada versão e o que um projeto derivado precisa fazer para atualizar. Segue o [versionamento semântico](https://semver.org/lang/pt-BR/). Datas em DD/MM/AAAA.
 
+## 2.2.2 (29/09/2026)
+
+O repositório e o site mudaram de endereço, para alinhar o nome ao do pacote (`@rendra-ui/web`). O código do pacote é o mesmo da 2.2.1. O pacote agora também aparece na busca do npm por "rendra" e "rendra-ui". Sem quebra no código.
+
+### Alterado
+
+- **Repositório:** `github.com/bsmagalhaes/rendra-design-system` passou a `github.com/bsmagalhaes/rendra-ui-web`. Os links antigos do GitHub continuam redirecionando; o `repository`, o `homepage` e o `bugs` do pacote já apontam para o endereço novo.
+- **Site (demo, galeria e Storybook):** agora em `https://bsmagalhaes.github.io/rendra-ui-web/`. O endereço antigo (`/rendra-design-system/`) deixou de responder, porque o GitHub Pages não redireciona.
+- **Registry do shadcn:** agora em `https://bsmagalhaes.github.io/rendra-ui-web/r/{name}.json`. Quem copiou o `components.json` do Rendra (registry `@rendra`) ou usa `npx shadcn@latest add https://.../r/<item>.json` precisa trocar a URL para o endereço novo; a antiga deixou de funcionar.
+- **Busca no npm:** a descrição do pacote começa com "Rendra" e as palavras-chave `rendra`, `rendra-ui` e `rendra-design-system` foram acrescentadas.
+
 ## 2.2.1 (27/09/2026)
 
 Mesmo código da 2.2.0, agora publicado pelo trusted publishing do npm, com atestado de proveniência (o pacote mostra de qual commit e de qual workflow do GitHub ele saiu). A 2.2.0 saiu pelo token, sem atestado. Sem quebra.

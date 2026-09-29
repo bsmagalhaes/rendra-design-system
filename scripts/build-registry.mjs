@@ -8,7 +8,7 @@
  *   dist/r/<item>.json        cada item com o código, publicado no GitHub Pages
  *
  * Um projeto criado a partir deste boilerplate recebe atualizações assim:
- *   npx shadcn@latest add https://bsmagalhaes.github.io/rendra-design-system/r/select.json
+ *   npx shadcn@latest add https://bsmagalhaes.github.io/rendra-ui-web/r/select.json
  *
  * Os caminhos são espelhados (src/components/ui/select.tsx cai no mesmo lugar) e as
  * dependências entre itens e pacotes npm são resolvidas a partir dos imports de cada arquivo.
@@ -21,9 +21,10 @@ import { format, resolveConfig } from 'prettier'
 import { CATALOG } from '../src/catalog/components.ts'
 
 const ROOT = process.cwd()
-const BASE = (
-  process.env.REGISTRY_URL ?? 'https://bsmagalhaes.github.io/rendra-design-system'
-).replace(/\/$/, '')
+const BASE = (process.env.REGISTRY_URL ?? 'https://bsmagalhaes.github.io/rendra-ui-web').replace(
+  /\/$/,
+  '',
+)
 const OUT = join(ROOT, 'dist', 'r')
 const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'))
 const versions = { ...pkg.dependencies, ...pkg.devDependencies }
@@ -240,7 +241,7 @@ function analyze(item) {
 const index = {
   $schema: 'https://ui.shadcn.com/schema/registry.json',
   name: 'rendra',
-  homepage: 'https://github.com/bsmagalhaes/rendra-design-system',
+  homepage: 'https://github.com/bsmagalhaes/rendra-ui-web',
   items: [],
 }
 

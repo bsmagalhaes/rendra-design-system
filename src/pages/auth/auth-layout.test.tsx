@@ -13,7 +13,7 @@ describe('AuthLayout: crédito no rodapé', () => {
       </AuthLayout>,
     )
     const link = screen.getByRole('link', { name: /Feito com Rendra/ })
-    expect(link).toHaveAttribute('href', 'https://github.com/bsmagalhaes/rendra-design-system')
+    expect(link).toHaveAttribute('href', 'https://github.com/bsmagalhaes/rendra-ui-web')
     expect(link).toHaveAttribute('data-rendra', 'CRED-001')
   })
 
