@@ -2,7 +2,8 @@
 # Duas formas de rodar, sempre no branch do Pull Request (nunca na main, que é protegida):
 #   1. no PR, aplique o rótulo "atualizar-visual" (o rótulo sai sozinho ao terminar);
 #   2. na aba Actions, rode "Atualizar referências visuais" escolhendo o branch.
-# O workflow gera as capturas no Linux e faz um commit no próprio branch.
+# O workflow gera as capturas no Linux e faz um commit no próprio branch, com autor e committer
+# do mantenedor (Bruno Magalhaes), para o robô não aparecer como colaborador do repositório.
 name: Atualizar referências visuais
 
 on:
@@ -34,8 +35,8 @@ jobs:
       - name: Commit das referências
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "Bruno Magalhaes"
+          git config user.email "contato@brunomagalhaes.me"
           git add tests/__screenshots__/linux
           if git diff --cached --quiet; then
             echo "Nenhuma referência mudou."
