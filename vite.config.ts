@@ -5,11 +5,14 @@ import react from '@vitejs/plugin-react'
 import { defineConfig, type Plugin } from 'vite'
 import svgr from 'vite-plugin-svgr'
 
-// Endereço público do demo, usado no canonical, no Open Graph e no JSON-LD do index.html.
-const SITE_URL = process.env.SITE_URL ?? 'https://bsmagalhaes.github.io/rendra-ui-web/'
+// Endereço público da demo (agora em /demo/), usado no canonical, no Open Graph e no JSON-LD do index.html.
+const SITE_URL = process.env.SITE_URL ?? 'https://bsmagalhaes.github.io/rendra-ui-web/demo/'
+// O Storybook e o registry vivem na raiz do site, fora de /demo/.
+const ROOT_URL = SITE_URL.replace(/demo\/$/, '')
 const siteUrl = (): Plugin => ({
   name: 'site-url',
-  transformIndexHtml: (html) => html.replaceAll('__SITE_URL__', SITE_URL),
+  transformIndexHtml: (html) =>
+    html.replaceAll('__ROOT_URL__', ROOT_URL).replaceAll('__SITE_URL__', SITE_URL),
 })
 
 export default defineConfig({
@@ -18,7 +21,7 @@ export default defineConfig({
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
   server: { port: 5173, strictPort: true },
-  // Demo no GitHub Pages: o build de publicação define BASE_PATH=/rendra-ui-web/.
+  // Demo no GitHub Pages: o build de publicação (scripts/pages-build.mjs) define BASE_PATH=/rendra-ui-web/demo/.
   base: process.env.BASE_PATH ?? '/',
   // Testes unitários (Vitest). Os testes de layout (Playwright) ficam em tests/.
   test: {

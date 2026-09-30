@@ -14,6 +14,8 @@ export default tseslint.config(
       'test-results',
       'screenshots',
       'coverage',
+      // Árvore do GitHub Pages (scripts/pages-build.mjs): bundles da demo e do Storybook, não é código.
+      '.pages',
       // Fixtures da CLI (src/cli/*.test.ts): código de exemplo com violação de
       // propósito (valor arbitrário, prop dinâmica...), nunca compilado nem executado, só lido
       // pelo parser em teste. Mesma razão de scripts/check-design-rules.mjs nunca escanear

@@ -36,8 +36,8 @@ export const siteSeo = {
     'mobile-first',
   ],
   repository: 'https://github.com/bsmagalhaes/rendra-ui-web',
-  /** Endereço público do demo. O build troca por SITE_URL quando definido. */
-  url: 'https://bsmagalhaes.github.io/rendra-ui-web/',
+  /** Endereço público da demo (em /demo/). O build troca por SITE_URL quando definido. */
+  url: 'https://bsmagalhaes.github.io/rendra-ui-web/demo/',
 }
 
 export const routeSeo: Record<string, RouteSeo> = {
