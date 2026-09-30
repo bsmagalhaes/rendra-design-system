@@ -131,6 +131,8 @@ npm run test:a11y               # acessibilidade (axe-core, WCAG 2.1 AA)
 npm run test:visual             # regressão visual (referências do Linux, geradas no CI)
 npm run palettes:build          # gera src/styles/palettes.css das sementes de src/brand/palettes.ts
 npm run registry:build          # gera o registry.json (novo componente ou variante)
+npm run pages:build             # constrói a demo em /demo/, o registry, o SEO e monta o site em .pages/<repo> (com --storybook, inclui o Storybook)
+npm run pages:stage             # só a composição de .pages/<repo> (precisa de dist/ pronto)
 npm run build:lib               # build do pacote npm (dist/, com os subcaminhos e o CSS)
 npm run verify:pack             # confere o pacote publicável (npm pack e instalação num projeto à parte)
 ```

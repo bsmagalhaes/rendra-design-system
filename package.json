@@ -115,6 +115,8 @@
     "test:visual:update": "playwright test --project=visual --update-snapshots",
     "test:css-layers": "playwright test --project=css-layers",
     "registry:build": "node scripts/build-registry.mjs",
+    "pages:build": "node scripts/pages-build.mjs",
+    "pages:stage": "node scripts/pages-stage.mjs",
     "palettes:build": "node scripts/build-palettes.mjs"
   },
   "dependencies": {
