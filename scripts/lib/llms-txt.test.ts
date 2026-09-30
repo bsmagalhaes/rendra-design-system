@@ -50,4 +50,14 @@ describe('buildLlmsTxt', () => {
       '[Regras de design](https://github.com/exemplo/rendra-ui-web/blob/main/DESIGN_RULES.md)',
     )
   })
+
+  it('com a demo em /demo/, o Storybook continua pela URL da raiz', () => {
+    const doSite = buildLlmsTxt({
+      site: { name: 'X', description: 'Y', repository: 'https://github.com/exemplo/rendra-ui-web' },
+      pages: [{ title: 'Painel', description: 'D.', url: 'https://exemplo.test/demo/' }],
+      storybookUrl: 'https://exemplo.test/storybook/',
+    })
+    expect(doSite).toContain('- [Storybook](https://exemplo.test/storybook/)')
+    expect(doSite).not.toContain('https://exemplo.test/demo/storybook/')
+  })
 })

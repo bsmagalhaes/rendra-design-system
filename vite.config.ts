@@ -126,7 +126,7 @@ export default defineConfig({
         'src/cli/help.ts': { lines: 100 },
         'scripts/lib/robots.ts': { lines: 100 },
         'scripts/lib/llms-txt.ts': { lines: 100 },
-        'scripts/lib/{pages-stage,redirect-stubs}.ts': { lines: 90 },
+        'scripts/lib/{pages-stage,redirect-stubs,sitemap}.ts': { lines: 90 },
         'scripts/lib/verify-pack-checks.ts': { lines: 100 },
       },
     },
