@@ -12,9 +12,12 @@ import { dirname, join } from 'node:path'
 import { routeSeo, siteSeo } from '../src/config/seo.ts'
 import { buildLlmsTxt } from './lib/llms-txt.ts'
 import { buildRobotsTxt } from './lib/robots.ts'
+import { rootUrlFrom, routeUrl, sitemapXml } from './lib/sitemap.ts'
 
 const DIST = 'dist'
 const SITE = (process.env.SITE_URL ?? siteSeo.url).replace(/\/?$/, '/')
+// O Storybook e o registry vivem na raiz do site; a demo fica em `<raiz>/demo/`.
+const ROOT = rootUrlFrom(SITE)
 const template = readFileSync(join(DIST, 'index.html'), 'utf8')
 const today = new Date().toISOString().slice(0, 10)
 
@@ -26,7 +29,7 @@ const esc = (s) =>
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
 // Cada rota é uma pasta no Pages (/kanban redireciona para /kanban/): o endereço canônico tem a barra.
-const urlFor = (route) => (route === '/' ? SITE : `${SITE}${route.slice(1)}/`)
+const urlFor = (route) => routeUrl(SITE, route)
 
 /** Troca o conteúdo de uma meta (name ou property) no HTML. */
 function setMeta(html, attr, key, value) {
@@ -72,17 +75,7 @@ writeFileSync(
 const indexable = routes.filter(([, s]) => s.indexable !== false)
 writeFileSync(
   join(DIST, 'sitemap.xml'),
-  `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${indexable
-  .map(
-    ([route]) =>
-      `  <url><loc>${urlFor(route)}</loc><lastmod>${today}</lastmod><priority>${route === '/' ? '1.0' : '0.7'}</priority></url>`,
-  )
-  .join('\n')}
-  <url><loc>${SITE}storybook/</loc><lastmod>${today}</lastmod><priority>0.6</priority></url>
-</urlset>
-`,
+  sitemapXml({ siteUrl: SITE, routes: indexable.map(([route]) => route), today }),
 )
 
 writeFileSync(join(DIST, 'robots.txt'), buildRobotsTxt(SITE))
@@ -96,10 +89,10 @@ writeFileSync(
       description: s.description,
       url: urlFor(route),
     })),
-    storybookUrl: `${SITE}storybook/`,
+    storybookUrl: `${ROOT}storybook/`,
   }),
 )
 
 console.log(
-  `SEO: ${routes.length} páginas, sitemap com ${indexable.length + 1} endereços, robots.txt e llms.txt.`,
+  `SEO: ${routes.length} páginas, sitemap com ${indexable.length} endereços, robots.txt e llms.txt.`,
 )
