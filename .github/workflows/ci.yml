@@ -67,6 +67,9 @@ jobs:
       - name: CSS em camadas
         if: ${{ !cancelled() }}
         run: npm run test:css-layers
+      - name: Página de apresentação e composição do site
+        if: ${{ !cancelled() }}
+        run: npm run test:site
       - name: Relatório do Playwright
         if: ${{ failure() }}
         uses: actions/upload-artifact@v7
