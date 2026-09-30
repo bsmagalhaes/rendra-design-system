@@ -4,6 +4,7 @@
  * fundo #111111, marca em mono, título #f2f2f2 com a palavra-chave em #e8650a, tagline #c4c4c4,
  * rodapé #9a9a9a e o print desktop à direita.
  */
+import { escapeHtml } from './html.ts'
 
 export interface OgHtmlInput {
   produto: string
@@ -14,15 +15,12 @@ export interface OgHtmlInput {
   selo?: string
 }
 
-const escapar = (texto: string): string =>
-  texto.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-
 /** Última palavra em destaque: `Rendra Design System` vira `Rendra Design <span>System</span>`. */
 function comDestaque(texto: string): string {
   const partes = texto.trim().split(/\s+/)
-  if (partes.length < 2) return escapar(texto)
+  if (partes.length < 2) return escapeHtml(texto)
   const ultima = partes.pop() as string
-  return `${escapar(partes.join(' '))} <span>${escapar(ultima)}</span>`
+  return `${escapeHtml(partes.join(' '))} <span>${escapeHtml(ultima)}</span>`
 }
 
 export function buildOgHtml({ produto, tagline, imagem, selo }: OgHtmlInput): string {
@@ -43,7 +41,7 @@ h1{position:absolute;left:64px;top:190px;width:470px;margin:0;font-size:68px;lin
 </style></head><body><div class="og" style="width:1200px;height:630px">
 ${marca}
 <h1>${comDestaque(produto)}</h1>
-<p class="tagline">${escapar(tagline)}</p>
+<p class="tagline">${escapeHtml(tagline)}</p>
 <div class="rodape">React · Vite · Tailwind CSS · shadcn/ui</div>
 <div class="print"><img alt="" src="data:image/png;base64,${base64}"></div>
 </div></body></html>`
