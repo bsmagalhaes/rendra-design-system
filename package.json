@@ -107,6 +107,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "docs:images": "node scripts/readme-images.mjs",
+    "docs:og-image": "node scripts/og-image.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
