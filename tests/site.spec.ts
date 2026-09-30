@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { AI_SEARCH_BOTS } from '../scripts/lib/robots'
 
 /*
  * PÁGINA DE APRESENTAÇÃO E COMPOSIÇÃO DO SITE (npm run test:site): serve a árvore de
@@ -172,7 +173,8 @@ test.describe('composição do site', () => {
     const robots = await (await request.get('robots.txt')).text()
     expect(robots).toContain(`Sitemap: ${RAIZ}sitemap.xml`)
     expect(robots).toContain('User-agent: GPTBot\nDisallow: /')
-    expect(robots).toContain('User-agent: OAI-SearchBot\nAllow: /')
+    // Robôs de busca e resposta de IA nunca são bloqueados por nome (padrão dos produtos, seção 7).
+    for (const bot of AI_SEARCH_BOTS) expect(robots).not.toContain(`User-agent: ${bot}\nDisallow`)
     const llmsRaiz = await (await request.get('llms.txt')).text()
     expect(llmsRaiz).toContain(`${RAIZ}demo/`)
     expect(llmsRaiz).toContain(`${RAIZ}storybook/`)
@@ -203,10 +205,13 @@ test.describe('demo em subcaminho', () => {
       .locator('a[href^="/"]')
       .evaluateAll((as) => as.map((a) => a.getAttribute('href') ?? ''))
     expect(hrefs.length).toBeGreaterThan(0)
-    for (const href of hrefs) expect(href.startsWith(PREFIXO_DEMO), href).toBe(true)
+    // O roteador usa a base sem a barra final (`/rendra-ui-web/demo`) no link do início.
+    for (const href of hrefs) expect(href, href).toMatch(/^\/rendra-ui-web\/demo(\/|$)/)
 
-    await page.locator('main a[href^="/"]').first().click()
-    await expect(page).toHaveURL(new RegExp(`^http://localhost:4174${PREFIXO_DEMO}`))
+    const destino = page.locator('main a[href^="/"]:visible').first()
+    const href = await destino.getAttribute('href')
+    await destino.click()
+    await expect(page).toHaveURL(new RegExp(`^http://localhost:4174${href}/?$`))
     await expect(page.locator('main#conteudo')).toBeVisible()
     await page.goBack()
     await expect(page).toHaveURL(new RegExp(`${PREFIXO_DEMO}componentes/?$`))
