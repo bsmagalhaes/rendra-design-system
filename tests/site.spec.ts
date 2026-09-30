@@ -194,7 +194,9 @@ test.describe('página de apresentação do web', () => {
 
   test('sem travessão no texto visível', async ({ page }) => {
     const texto = await page.locator('body').innerText()
-    expect(texto).not.toMatch(/[–—]/)
+    for (const codigo of [0x2013, 0x2014]) {
+      expect(texto).not.toContain(String.fromCharCode(codigo))
+    }
   })
 
   test('lightbox abre pela galeria e fecha com Esc', async ({ page }) => {
