@@ -30,3 +30,26 @@ describe('endereço-base da demo', () => {
     expect(ler('.prettierignore')).toContain('docs/google*.html')
   })
 })
+
+describe('build e composição do Pages', () => {
+  it('o workflow constrói a demo em /demo/ pelo mesmo script do local e publica a árvore montada', () => {
+    const wf = ler('.github/workflows/pages.yml')
+    expect(wf).toMatch(/pages-build\.mjs\s+--storybook/)
+    expect(wf).toContain('.pages/${{ github.event.repository.name }}')
+    expect(wf).not.toMatch(/path:\s*dist\s*$/m)
+  })
+
+  it('pages-build define BASE_PATH e SITE_URL da demo a partir do repositório', () => {
+    const script = ler('scripts/pages-build.mjs')
+    expect(script).toContain('BASE_PATH')
+    expect(script).toContain('SITE_URL')
+    expect(script).toContain('pagesEnv')
+    expect(ler('scripts/lib/pages-env.ts')).toContain('/demo/')
+  })
+
+  it('o package.json expõe pages:build e pages:stage', () => {
+    const pkg = JSON.parse(ler('package.json')) as { scripts: Record<string, string> }
+    expect(pkg.scripts['pages:build']).toBe('node scripts/pages-build.mjs')
+    expect(pkg.scripts['pages:stage']).toBe('node scripts/pages-stage.mjs')
+  })
+})

@@ -1,6 +1,9 @@
-# Publica o demo no GitHub Pages (gratuito para repositório público) a cada push na main:
-#   https://bsmagalhaes.github.io/rendra-ui-web/            vitrine e telas
+# Publica o site no GitHub Pages a cada push na main:
+#   https://bsmagalhaes.github.io/rendra-ui-web/            página de apresentação
+#   https://bsmagalhaes.github.io/rendra-ui-web/demo/       vitrine e telas (a demo)
 #   https://bsmagalhaes.github.io/rendra-ui-web/storybook/  Storybook
+#   https://bsmagalhaes.github.io/rendra-ui-web/r/          registry do shadcn
+# O mesmo script monta a árvore no CI e na máquina do desenvolvedor: npm run pages:build.
 name: Demo (GitHub Pages)
 
 on:
@@ -27,24 +30,16 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - name: Build do app
-        run: npm run build
-        env:
-          BASE_PATH: /${{ github.event.repository.name }}/
-          SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
-      # SEO e AEO: uma página por rota (link direto responde 200 e o buscador indexa cada
-      # tela), 404.html para o resto, sitemap.xml, robots.txt e llms.txt.
-      - name: Páginas por rota, sitemap, robots e llms.txt
-        run: node scripts/seo-build.mjs
-        env:
-          SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
-      - name: Registry do shadcn (dist/r)
-        run: npm run registry:build
-      - name: Build do Storybook
-        run: npm run build-storybook -- --quiet --output-dir dist/storybook
+      # Build da demo em /<repo>/demo/, SEO (uma página por rota, sitemap, robots e llms.txt),
+      # registry (r/), Storybook e composição da árvore em .pages/<repo>. O endereço vem de
+      # GITHUB_REPOSITORY, então um fork publica no próprio endereço.
+      - name: Build da demo, registry, Storybook e composição do site
+        run: node scripts/pages-build.mjs --storybook
+      - name: Confere a árvore montada
+        run: test -f .pages/${{ github.event.repository.name }}/storybook/index.html && test -f .pages/${{ github.event.repository.name }}/r/select.json
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: dist
+          path: .pages/${{ github.event.repository.name }}
 
   deploy:
     needs: build
