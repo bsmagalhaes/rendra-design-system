@@ -35,4 +35,9 @@ describe('imagens da página', () => {
   it('a og-image não fica em docs/images (a galeria da demo importa a pasta inteira)', () => {
     expect(noDisco('og-image')).toBe(false)
   })
+
+  it('a página não exibe a captura de atendimento (logos de canais de terceiros)', () => {
+    expect(html).not.toContain('safira-atendimento')
+    expect(idsDaLista).toContain('safira-calendario')
+  })
 })
