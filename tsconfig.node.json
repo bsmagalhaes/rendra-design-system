@@ -16,6 +16,7 @@
     "vite.config.ts",
     "vite.lib.config.ts",
     "playwright.config.ts",
+    "playwright.site.config.ts",
     "tests",
     "scripts/lib"
   ]
