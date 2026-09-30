@@ -124,6 +124,115 @@ test.describe('página de apresentação do web', () => {
     }
   })
 
+  test('toda seção tem "Ver demo" e todo link interno responde 200 e existe como o Pages resolve', async ({
+    page,
+    request,
+  }) => {
+    const secoes = page.locator('main > section')
+    const total = await secoes.count()
+    expect(total).toBeGreaterThanOrEqual(8)
+    for (let i = 0; i < total; i += 1) {
+      await expect(secoes.nth(i).locator('a.ver-demo').first()).toBeAttached()
+    }
+    const origem = new URL(page.url()).origin
+    const hrefs = await page
+      .locator('a[href]')
+      .evaluateAll((as) => as.map((a) => (a as HTMLAnchorElement).href))
+    const internos = [
+      ...new Set(hrefs.filter((h) => h.startsWith(origem)).map((h) => h.split('#')[0]!)),
+    ]
+    expect(internos.length).toBeGreaterThan(5)
+    for (const href of internos) {
+      const caminho = decodeURIComponent(new URL(href).pathname).replace(/^\//, '')
+      // O Storybook só existe no build de publicação (pages.yml --storybook), não no test:site local.
+      if (caminho.startsWith(`${REPO}/storybook/`) && !existsSync(join(PAGES, 'storybook')))
+        continue
+      const resposta = await request.get(href)
+      expect(resposta.status(), href).toBe(200)
+      expect(existePeloPages(caminho), `${href} não existe como o GitHub Pages resolve`).toBe(true)
+    }
+  })
+
+  test('alvos de toque de 44px ou mais', async ({ page }) => {
+    const pequenos = await page
+      .locator('a.btn, button, summary, .brand, .hero-print')
+      .evaluateAll((els) =>
+        els
+          .filter((el) => el.getClientRects().length > 0)
+          .map((el) => ({
+            nome: (el.textContent ?? '').trim().slice(0, 30) || el.className,
+            r: el.getBoundingClientRect(),
+          }))
+          .filter(({ r }) => r.width < 44 || r.height < 44)
+          .map(({ nome, r }) => `${nome}: ${Math.round(r.width)}x${Math.round(r.height)}`),
+      )
+    expect(pequenos).toEqual([])
+  })
+
+  test('.wrap ocupa 90% da largura', async ({ page }) => {
+    const razao = await page.evaluate(
+      () =>
+        (document.querySelector('.wrap') as HTMLElement).getBoundingClientRect().width /
+        document.documentElement.clientWidth,
+    )
+    expect(razao).toBeCloseTo(0.9, 2)
+  })
+
+  test('marca oficial: selo, RENDRA WEB em mono 700 18px e a palavra do produto em laranja', async ({
+    page,
+  }) => {
+    const marca = page.locator('.brand b')
+    await expect(marca).toHaveText('RENDRA WEB')
+    await expect(marca).toHaveCSS('font-weight', '700')
+    await expect(marca).toHaveCSS('font-size', '18px')
+    await expect(marca).toHaveCSS('letter-spacing', '1.44px')
+    await expect(marca.locator('span')).toHaveText('WEB')
+    await expect(marca.locator('span')).toHaveCSS('color', 'rgb(232, 101, 10)')
+    await expect(page.locator('.brand')).toHaveCSS('column-gap', '14px')
+    await expect(page.locator('.brand svg')).toHaveCSS('width', '44px')
+  })
+
+  test('sem travessão no texto visível', async ({ page }) => {
+    const texto = await page.locator('body').innerText()
+    expect(texto).not.toMatch(/[–—]/)
+  })
+
+  test('lightbox abre pela galeria e fecha com Esc', async ({ page }) => {
+    await page.locator('#galeria button.thumb').first().click()
+    const dialogo = page.getByRole('dialog')
+    await expect(dialogo).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(dialogo).toBeHidden()
+  })
+
+  test('deep link ?imagem= abre o lightbox e ele grava a imagem na URL', async ({ page }) => {
+    await page.goto('./?imagem=safira-painel')
+    await expect(page.getByRole('dialog')).toBeVisible()
+    await page.getByRole('button', { name: 'Próxima' }).click()
+    await expect(page).toHaveURL(/\?imagem=(?!safira-painel$)[a-z0-9-]+$/)
+  })
+
+  test('botão copiar leva o comando para a área de transferência', async ({ page, context }) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write'])
+    const caixa = page.locator('#instalacao .codebox').first()
+    const esperado = (await caixa.locator('code').textContent()) ?? ''
+    await caixa.getByRole('button', { name: /Copiar/ }).click()
+    await expect(caixa.locator('.copy')).toHaveText('copiado')
+    // O Chromium do Windows devolve a quebra de linha da área de transferência como CRLF.
+    const copiado = await page.evaluate(() => navigator.clipboard.readText())
+    expect(copiado.replaceAll('\r\n', '\n')).toBe(esperado)
+  })
+
+  test('FAQ espelhada no JSON-LD', async ({ page }) => {
+    const perguntas = await page.locator('#faq details summary').allTextContents()
+    expect(perguntas.length).toBeGreaterThanOrEqual(4)
+    const ld = await page.locator('script[type="application/ld+json"]').allTextContents()
+    const faq = ld
+      .map((t) => JSON.parse(t) as { '@type'?: string; mainEntity?: Array<{ name: string }> })
+      .find((j) => j['@type'] === 'FAQPage')
+    expect(faq?.mainEntity?.map((q) => q.name)).toEqual(perguntas.map((p) => p.trim()))
+  })
+
   test('?codigo= na raiz leva para a demo com o modelo aplicado (README 2.2.2, W9)', async ({
     page,
   }) => {
