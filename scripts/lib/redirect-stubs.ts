@@ -3,12 +3,10 @@
  * do site (`/rendra-ui-web/clientes/`) e o README 2.2.2, publicado no npm, linka esses endereços.
  * Cada rota antiga ganha uma página que responde 200 e leva para `/demo/<rota>/`.
  */
+import { escapeHtml } from './html.ts'
 
 /** Destinos que já existem na raiz do Pages e nunca recebem um stub. */
 const RESERVADOS = ['demo', 'r', 'storybook']
-
-const escapar = (texto: string): string =>
-  texto.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
 
 /**
  * HTML de redirecionamento: `refresh` para quem não roda script, `canonical` para o buscador
@@ -17,7 +15,7 @@ const escapar = (texto: string): string =>
  * manda sinais conflitantes (observação O2 do Opus).
  */
 export function buildRedirectStub(destino: string): string {
-  const url = escapar(destino)
+  const url = escapeHtml(destino)
   return `<!doctype html>
 <html lang="pt-BR">
 <head>

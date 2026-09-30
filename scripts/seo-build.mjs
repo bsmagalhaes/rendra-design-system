@@ -10,6 +10,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { routeSeo, siteSeo } from '../src/config/seo.ts'
+import { escapeHtml } from './lib/html.ts'
 import { buildLlmsTxt } from './lib/llms-txt.ts'
 import { buildRobotsTxt } from './lib/robots.ts'
 import { rootUrlFrom, routeUrl, sitemapXml } from './lib/sitemap.ts'
@@ -21,26 +22,19 @@ const ROOT = rootUrlFrom(SITE)
 const template = readFileSync(join(DIST, 'index.html'), 'utf8')
 const today = new Date().toISOString().slice(0, 10)
 
-// Escape de atributo HTML para os textos fixos de src/config/seo.ts (não há entrada de usuário).
-const esc = (s) =>
-  s
-    .replaceAll('&', '&amp;')
-    .replaceAll('"', '&quot;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
 // Cada rota é uma pasta no Pages (/kanban redireciona para /kanban/): o endereço canônico tem a barra.
 const urlFor = (route) => routeUrl(SITE, route)
 
 /** Troca o conteúdo de uma meta (name ou property) no HTML. */
 function setMeta(html, attr, key, value) {
   const re = new RegExp(`(<meta\\s+${attr}="${key}"\\s+content=")[^"]*(")`)
-  return html.replace(re, `$1${esc(value)}$2`)
+  return html.replace(re, `$1${escapeHtml(value)}$2`)
 }
 
 function pageFor(route, seo) {
   const title = `${seo.title} | ${siteSeo.name}`
   const url = urlFor(route)
-  let html = template.replace(/<title>[^<]*<\/title>/, `<title>${esc(title)}</title>`)
+  let html = template.replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(title)}</title>`)
   html = setMeta(html, 'name', 'description', seo.description)
   html = setMeta(html, 'property', 'og:title', title)
   html = setMeta(html, 'property', 'og:description', seo.description)

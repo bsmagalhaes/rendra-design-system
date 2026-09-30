@@ -130,6 +130,7 @@ export default defineConfig({
         'scripts/lib/robots.ts': { lines: 100 },
         'scripts/lib/llms-txt.ts': { lines: 100 },
         'scripts/lib/{pages-stage,pages-env,redirect-stubs,sitemap,og-html}.ts': { lines: 90 },
+        'scripts/lib/html.ts': { lines: 100 },
         'scripts/lib/verify-pack-checks.ts': { lines: 100 },
       },
     },
