@@ -1,18 +1,18 @@
 # Rendra Design System
 
-**Template de sistema e layout de sistema administrativo em React, gratuito e open source: design system completo e boilerplate com tokens, três templates, componentes, AppShell, telas prontas (dashboard, listagem, cadastro, CRM kanban, agenda e chat omnichannel), Storybook e testes de layout.** Feito para ser o ponto de partida de todos os projetos: layouts previsíveis, espaçamento equilibrado e funcionamento completo no celular. Para aplicar a outro sistema, você troca cores, fonte e ícones da marca, e nenhum componente muda.
+**Template de sistema e layout de sistema administrativo em React, com código aberto sob a licença MIT: design system completo e boilerplate com tokens, três templates, componentes, AppShell, telas prontas (dashboard, listagem, cadastro, CRM kanban, agenda e chat omnichannel), Storybook e testes de layout.** Feito para ser o ponto de partida de todos os projetos: layouts previsíveis, espaçamento equilibrado e funcionamento completo no celular. Para aplicar a outro sistema, você troca cores, fonte e ícones da marca, e nenhum componente muda.
 
 ![React 19](https://img.shields.io/badge/React-19-149eca) ![TypeScript 5.9](https://img.shields.io/badge/TypeScript-5.9-3178c6) ![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8) ![Vite 8](https://img.shields.io/badge/Vite-8-646cff) ![Storybook 10](https://img.shields.io/badge/Storybook-10-ff4785) ![Playwright](https://img.shields.io/badge/testes-Vitest_e_Playwright-2ead33) [![CI](https://github.com/bsmagalhaes/rendra-ui-web/actions/workflows/ci.yml/badge.svg)](https://github.com/bsmagalhaes/rendra-ui-web/actions/workflows/ci.yml)
 
-**Veja funcionando, sem instalar nada:** [demo do app](https://bsmagalhaes.github.io/rendra-ui-web/) · [galeria com códigos de modelo](https://bsmagalhaes.github.io/rendra-ui-web/galeria/) · [Storybook](https://bsmagalhaes.github.io/rendra-ui-web/storybook/) · [vitrine de componentes](https://bsmagalhaes.github.io/rendra-ui-web/componentes/) · [atendimento](https://bsmagalhaes.github.io/rendra-ui-web/atendimento/) · [agenda](https://bsmagalhaes.github.io/rendra-ui-web/agenda/) · [kanban](https://bsmagalhaes.github.io/rendra-ui-web/kanban/). No demo, o menu do avatar troca modelo, paleta, modo e layout ao vivo.
+**Veja funcionando, sem instalar nada:** [página de apresentação](https://bsmagalhaes.github.io/rendra-ui-web/) · [demo do app](https://bsmagalhaes.github.io/rendra-ui-web/demo/) · [galeria com códigos de modelo](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/) · [Storybook](https://bsmagalhaes.github.io/rendra-ui-web/storybook/) · [vitrine de componentes](https://bsmagalhaes.github.io/rendra-ui-web/demo/componentes/) · [atendimento](https://bsmagalhaes.github.io/rendra-ui-web/demo/atendimento/) · [agenda](https://bsmagalhaes.github.io/rendra-ui-web/demo/agenda/) · [kanban](https://bsmagalhaes.github.io/rendra-ui-web/demo/kanban/). No demo, o menu do avatar troca modelo, paleta, modo e layout ao vivo.
 
-| Atendimento omnichannel                                                                                                              | Painel com widgets ajustáveis                                                                                                                        |
-| ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [![Atendimento](docs/images/safira-atendimento.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=safira-atendimento) | [![Painel em widgets](docs/images/safira-dashboard-ajuste.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=safira-dashboard-ajuste) |
+| Atendimento omnichannel                                                                                                                   | Painel com widgets ajustáveis                                                                                                                             |
+| ----------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![Atendimento](docs/images/safira-atendimento.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=safira-atendimento) | [![Painel em widgets](docs/images/safira-dashboard-ajuste.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=safira-dashboard-ajuste) |
 
-| Calendário e agenda                                                                                                                      | Kanban                                                                                                                |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| [![Calendário do mês](docs/images/safira-calendario.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=safira-calendario) | [![Kanban](docs/images/aurora-kanban.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=aurora-kanban) |
+| Calendário e agenda                                                                                                                           | Kanban                                                                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [![Calendário do mês](docs/images/safira-calendario.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=safira-calendario) | [![Kanban](docs/images/aurora-kanban.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=aurora-kanban) |
 
 ---
 
@@ -41,11 +41,11 @@ E duas de boas práticas, verificadas pelo `npm run check:rules`: **nunca botão
 
 ## Galeria
 
-> **Clique em qualquer imagem** para abri-la em popup na [galeria do demo](https://bsmagalhaes.github.io/rendra-ui-web/galeria/), com setas para passar e Esc para fechar. (O GitHub não permite popup dentro do README; por isso as telas já aparecem em tamanho de leitura aqui e os grupos extras abrem na própria página.)
+> **Clique em qualquer imagem** para abri-la em popup na [galeria do demo](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/), com setas para passar e Esc para fechar. (O GitHub não permite popup dentro do README; por isso as telas já aparecem em tamanho de leitura aqui e os grupos extras abrem na própria página.)
 
 ## Códigos de modelo
 
-Cada escolha visual tem um código curto: **T** para o tema (formato e fonte), **C** para as cores e **M** para o menu. `T1-C4-M5`, por exemplo, é o tema Safira com as cores Ardósia e o menu superior. Escolha na [galeria](https://bsmagalhaes.github.io/rendra-ui-web/galeria/), onde cada captura mostra seu código e o bloco "Monte seu código" abre o demo já aplicado, e informe o código no briefing: a IA já sabe o que aplicar e pula essas perguntas.
+Cada escolha visual tem um código curto: **T** para o tema (formato e fonte), **C** para as cores e **M** para o menu. `T1-C4-M5`, por exemplo, é o tema Safira com as cores Ardósia e o menu superior. Escolha na [galeria](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/), onde cada captura mostra seu código e o bloco "Monte seu código" abre o demo já aplicado, e informe o código no briefing: a IA já sabe o que aplicar e pula essas perguntas.
 
 | Tema                           | Cores                                    | Menu                                                |
 | ------------------------------ | ---------------------------------------- | --------------------------------------------------- |
@@ -56,7 +56,7 @@ Cada escolha visual tem um código curto: **T** para o tema (formato e fonte), *
 |                                |                                          | **M5** menu superior com lista suspensa             |
 |                                |                                          | **M6** menu superior com mega menu                  |
 
-No demo, o endereço também aplica um código: [`/?codigo=T1-C4-M5`](https://bsmagalhaes.github.io/rendra-ui-web/?codigo=T1-C4-M5). Os códigos ficam em [`src/config/presets.ts`](src/config/presets.ts).
+No demo, o endereço também aplica um código: [`/?codigo=T1-C4-M5`](https://bsmagalhaes.github.io/rendra-ui-web/demo/?codigo=T1-C4-M5). Os códigos ficam em [`src/config/presets.ts`](src/config/presets.ts).
 
 ### Os três templates
 
@@ -64,44 +64,44 @@ Cada template tem formato, fonte, símbolo e paleta próprios.
 
 **Rendra Safira**: quadrado, como uma pedra lapidada. Azul #0B6FE0, verde #98D10A e fonte Poppins.
 
-| Painel                                                                                                                        | Listagem de clientes                                                                                                                |
-| ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| [![Safira: painel](docs/images/safira-painel.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=safira-painel) | [![Safira: clientes](docs/images/safira-clientes.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=safira-clientes) |
+| Painel                                                                                                                             | Listagem de clientes                                                                                                                     |
+| ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| [![Safira: painel](docs/images/safira-painel.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=safira-painel) | [![Safira: clientes](docs/images/safira-clientes.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=safira-clientes) |
 
 **Rendra Equilíbrio**: o meio-termo, nem quadrado nem 100% arredondado. Violeta, ciano e fonte DM Sans.
 
-| Painel                                                                                                                                    | Listagem de clientes                                                                                                                            |
-| ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| [![Equilíbrio: painel](docs/images/equilibrio-painel.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=equilibrio-painel) | [![Equilíbrio: clientes](docs/images/equilibrio-clientes.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=equilibrio-clientes) |
+| Painel                                                                                                                                         | Listagem de clientes                                                                                                                                 |
+| ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![Equilíbrio: painel](docs/images/equilibrio-painel.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=equilibrio-painel) | [![Equilíbrio: clientes](docs/images/equilibrio-clientes.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=equilibrio-clientes) |
 
 **Rendra Aurora**: 100% arredondado, como um novo dia. Verde-petróleo, laranja e fonte Inter.
 
-| Painel                                                                                                                        | Listagem de clientes                                                                                                                |
-| ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| [![Aurora: painel](docs/images/aurora-painel.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=aurora-painel) | [![Aurora: clientes](docs/images/aurora-clientes.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=aurora-clientes) |
+| Painel                                                                                                                             | Listagem de clientes                                                                                                                     |
+| ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| [![Aurora: painel](docs/images/aurora-painel.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=aurora-painel) | [![Aurora: clientes](docs/images/aurora-clientes.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=aurora-clientes) |
 
 **Paleta Ardósia**: combinável com qualquer modelo. Azul-ardósia #2E414D e laranja #EA600D; com texto branco pedido, o gerador escurece o botão laranja para #C5510B, o tom mais próximo que passa AA (aqui no modelo Equilíbrio).
 
-| Painel                                                                                                                           | Listagem de clientes                                                                                                                   |
-| -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| [![Ardósia: painel](docs/images/ardosia-painel.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=ardosia-painel) | [![Ardósia: clientes](docs/images/ardosia-clientes.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=ardosia-clientes) |
+| Painel                                                                                                                                | Listagem de clientes                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![Ardósia: painel](docs/images/ardosia-painel.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=ardosia-painel) | [![Ardósia: clientes](docs/images/ardosia-clientes.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=ardosia-clientes) |
 
 ### Calendário, agenda e kanban
 
-| Agenda da semana (T2-C2)                                                                                                                | Kanban no celular (T1-C1)                                                                                                                      |
-| --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| [![Agenda da semana](docs/images/equilibrio-agenda.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=equilibrio-agenda) | [![Kanban no celular](docs/images/safira-kanban-mobile.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=safira-kanban-mobile) |
+| Agenda da semana (T2-C2)                                                                                                                     | Kanban no celular (T1-C1)                                                                                                                           |
+| -------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![Agenda da semana](docs/images/equilibrio-agenda.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=equilibrio-agenda) | [![Kanban no celular](docs/images/safira-kanban-mobile.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=safira-kanban-mobile) |
 
 <details>
 <summary><strong>Tipos de menu: M1 a M6</strong> (clique para abrir aqui mesmo)</summary>
 
-| M1: lateral recolhida, segunda barra                                                                  | M2: lateral recolhida, submenu na sidebar                                                             |
-| ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| [![M1](docs/images/menu-m1.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=menu-m1) | [![M2](docs/images/menu-m2.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=menu-m2) |
-| **M3: lateral expandida, segunda barra**                                                              | **M4: lateral expandida, submenu na sidebar**                                                         |
-| [![M3](docs/images/menu-m3.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=menu-m3) | [![M4](docs/images/menu-m4.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=menu-m4) |
-| **M5: superior, lista suspensa**                                                                      | **M6: superior, mega menu**                                                                           |
-| [![M5](docs/images/menu-m5.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=menu-m5) | [![M6](docs/images/menu-m6.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=menu-m6) |
+| M1: lateral recolhida, segunda barra                                                                       | M2: lateral recolhida, submenu na sidebar                                                                  |
+| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [![M1](docs/images/menu-m1.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=menu-m1) | [![M2](docs/images/menu-m2.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=menu-m2) |
+| **M3: lateral expandida, segunda barra**                                                                   | **M4: lateral expandida, submenu na sidebar**                                                              |
+| [![M3](docs/images/menu-m3.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=menu-m3) | [![M4](docs/images/menu-m4.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=menu-m4) |
+| **M5: superior, lista suspensa**                                                                           | **M6: superior, mega menu**                                                                                |
+| [![M5](docs/images/menu-m5.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=menu-m5) | [![M6](docs/images/menu-m6.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=menu-m6) |
 
 </details>
 
@@ -110,11 +110,11 @@ Cada template tem formato, fonte, símbolo e paleta próprios.
 
 O modelo (formato, fonte e símbolo) e a paleta (cores, degradês e sidebar) são camadas independentes: qualquer modelo aceita qualquer paleta. São 12 combinações (3 modelos × 4 paletas), todas na mesma tela de detalhe do cliente.
 
-| Modelo \ Paleta             | Safira                                                                                                                                | Equilíbrio                                                                                                                                    | Aurora                                                                                                                                | Ardósia                                                                                                                                 |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| **Safira** (quadrado)       | [![](docs/images/matriz-safira-safira.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=matriz-safira-safira)         | [![](docs/images/matriz-safira-equilibrio.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=matriz-safira-equilibrio)         | [![](docs/images/matriz-safira-aurora.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=matriz-safira-aurora)         | [![](docs/images/matriz-safira-ardosia.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=matriz-safira-ardosia)         |
-| **Equilíbrio** (meio-termo) | [![](docs/images/matriz-equilibrio-safira.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=matriz-equilibrio-safira) | [![](docs/images/matriz-equilibrio-equilibrio.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=matriz-equilibrio-equilibrio) | [![](docs/images/matriz-equilibrio-aurora.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=matriz-equilibrio-aurora) | [![](docs/images/matriz-equilibrio-ardosia.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=matriz-equilibrio-ardosia) |
-| **Aurora** (arredondado)    | [![](docs/images/matriz-aurora-safira.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=matriz-aurora-safira)         | [![](docs/images/matriz-aurora-equilibrio.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=matriz-aurora-equilibrio)         | [![](docs/images/matriz-aurora-aurora.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=matriz-aurora-aurora)         | [![](docs/images/matriz-aurora-ardosia.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=matriz-aurora-ardosia)         |
+| Modelo \ Paleta             | Safira                                                                                                                                     | Equilíbrio                                                                                                                                         | Aurora                                                                                                                                     | Ardósia                                                                                                                                      |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Safira** (quadrado)       | [![](docs/images/matriz-safira-safira.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=matriz-safira-safira)         | [![](docs/images/matriz-safira-equilibrio.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=matriz-safira-equilibrio)         | [![](docs/images/matriz-safira-aurora.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=matriz-safira-aurora)         | [![](docs/images/matriz-safira-ardosia.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=matriz-safira-ardosia)         |
+| **Equilíbrio** (meio-termo) | [![](docs/images/matriz-equilibrio-safira.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=matriz-equilibrio-safira) | [![](docs/images/matriz-equilibrio-equilibrio.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=matriz-equilibrio-equilibrio) | [![](docs/images/matriz-equilibrio-aurora.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=matriz-equilibrio-aurora) | [![](docs/images/matriz-equilibrio-ardosia.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=matriz-equilibrio-ardosia) |
+| **Aurora** (arredondado)    | [![](docs/images/matriz-aurora-safira.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=matriz-aurora-safira)         | [![](docs/images/matriz-aurora-equilibrio.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=matriz-aurora-equilibrio)         | [![](docs/images/matriz-aurora-aurora.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=matriz-aurora-aurora)         | [![](docs/images/matriz-aurora-ardosia.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=matriz-aurora-ardosia)         |
 
 </details>
 
@@ -123,26 +123,26 @@ O modelo (formato, fonte e símbolo) e a paleta (cores, degradês e sidebar) sã
 
 Mesmo componente, mesma API: no celular a tabela vira cards, a sidebar vira gaveta e a navegação ganha uma barra inferior.
 
-| Safira                                                                                                          | Equilíbrio                                                                                                              | Aurora                                                                                                          | Tabela em cards                                                                                                                       |
-| --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| [![](docs/images/safira-mobile.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=safira-mobile) | [![](docs/images/equilibrio-mobile.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=equilibrio-mobile) | [![](docs/images/aurora-mobile.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=aurora-mobile) | [![](docs/images/equilibrio-mobile-tabela.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=equilibrio-mobile-tabela) |
+| Safira                                                                                                               | Equilíbrio                                                                                                                   | Aurora                                                                                                               | Tabela em cards                                                                                                                            |
+| -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| [![](docs/images/safira-mobile.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=safira-mobile) | [![](docs/images/equilibrio-mobile.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=equilibrio-mobile) | [![](docs/images/aurora-mobile.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=aurora-mobile) | [![](docs/images/equilibrio-mobile-tabela.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=equilibrio-mobile-tabela) |
 
 </details>
 
 <details>
 <summary><strong>Modo escuro e outras telas</strong> (clique para abrir aqui mesmo)</summary>
 
-| Modo escuro (Safira)                                                                                            | Modo escuro (Equilíbrio)                                                                                                |
-| --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| [![](docs/images/safira-escuro.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=safira-escuro) | [![](docs/images/equilibrio-escuro.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=equilibrio-escuro) |
+| Modo escuro (Safira)                                                                                                 | Modo escuro (Equilíbrio)                                                                                                     |
+| -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| [![](docs/images/safira-escuro.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=safira-escuro) | [![](docs/images/equilibrio-escuro.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=equilibrio-escuro) |
 
-| Drawer com rodapé fixo (30/70)                                                                                  | Mega menu no menu superior                                                                                            |
-| --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| [![](docs/images/safira-drawer.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=safira-drawer) | [![](docs/images/aurora-mega-menu.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=aurora-mega-menu) |
+| Drawer com rodapé fixo (30/70)                                                                                       | Mega menu no menu superior                                                                                                 |
+| -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [![](docs/images/safira-drawer.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=safira-drawer) | [![](docs/images/aurora-mega-menu.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=aurora-mega-menu) |
 
-| Login (Aurora)                                                                                                |
-| ------------------------------------------------------------------------------------------------------------- |
-| [![](docs/images/aurora-login.png)](https://bsmagalhaes.github.io/rendra-ui-web/galeria/?imagem=aurora-login) |
+| Login (Aurora)                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------------ |
+| [![](docs/images/aurora-login.png)](https://bsmagalhaes.github.io/rendra-ui-web/demo/galeria/?imagem=aurora-login) |
 
 </details>
 
@@ -212,7 +212,7 @@ Login, esqueci a senha, verificação em duas etapas (2FA), nova senha, cadastro
 
 ## Stack
 
-React 19, TypeScript 5.9 (estrito), Vite 8, Tailwind CSS 4 (tema via `@theme`), shadcn/ui (copiado para o projeto), Radix UI, class-variance-authority, tailwind-merge com clsx, Lucide, React Router 8, TanStack Table 8, cmdk, Sonner, React Hook Form, Zod 4, IMask, React Day Picker 10, date-fns 4, Recharts 3, Storybook 10, Playwright com axe-core, Vitest, ESLint 9 (TypeScript, React Hooks e jsx-a11y) e Prettier com prettier-plugin-tailwindcss. Somente bibliotecas gratuitas e de código aberto.
+React 19, TypeScript 5.9 (estrito), Vite 8, Tailwind CSS 4 (tema via `@theme`), shadcn/ui (copiado para o projeto), Radix UI, class-variance-authority, tailwind-merge com clsx, Lucide, React Router 8, TanStack Table 8, cmdk, Sonner, React Hook Form, Zod 4, IMask, React Day Picker 10, date-fns 4, Recharts 3, Storybook 10, Playwright com axe-core, Vitest, ESLint 9 (TypeScript, React Hooks e jsx-a11y) e Prettier com prettier-plugin-tailwindcss. Somente bibliotecas de código aberto.
 
 ---
 
@@ -274,6 +274,9 @@ npm run storybook                 # Storybook em http://localhost:6006
 | `npm run build-storybook`    | Build estático do Storybook                           |
 | `npm run registry:build`     | Gera o registry do shadcn (`registry.json`, `dist/r`) |
 | `npm run docs:images`        | Regenera as imagens deste README (com o app rodando)  |
+| `npm run docs:og-image`      | Regenera a imagem social do site (`og-image.png`)     |
+| `npm run pages:build`        | Monta o site (página, demo, registry) em `.pages/`    |
+| `npm run test:site`          | Testa a página de apresentação e a composição do site |
 
 No app, o menu do avatar troca **modelo**, **paleta**, **tema** e **layout**. As mesmas opções estão em Configurações.
 
@@ -401,8 +404,8 @@ Nota: `npx rendra <comando>` só funciona com o pacote instalado neste projeto (
 **O que é o Rendra Design System?**
 Um template de sistema e design system open source em React, TypeScript e Tailwind CSS. Traz o layout de sistema administrativo pronto (menu, header fixo, rodapé de ações), telas base como dashboard, listagem, cadastro, CRM kanban, agenda e chat, e componentes acessíveis para criar sistemas novos ou migrar o layout de sistemas existentes.
 
-**É gratuito?**
-Sim. Licença MIT, só com bibliotecas gratuitas: React, Tailwind CSS, Radix, shadcn/ui, TanStack Table, Recharts e Tiptap. Nada de Tailwind Plus ou tema pago.
+**Posso usar em projeto comercial?**
+Sim. Licença MIT: você pode usar, copiar, alterar e distribuir, inclusive em projetos comerciais, mantendo o aviso de copyright e o arquivo `LICENSE`. As bibliotecas usadas são de código aberto: React, Tailwind CSS, Radix, shadcn/ui, TanStack Table, Recharts e Tiptap.
 
 **Funciona no celular?**
 Sim, de verdade: tudo é escrito primeiro para 360px, tabelas viram cartões, o menu vai para a barra inferior, não há rolagem horizontal e os alvos de toque têm pelo menos 44px. Os testes abrem cada tela em cinco larguras, nos três modelos, no modo claro e no escuro.

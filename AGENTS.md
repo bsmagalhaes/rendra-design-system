@@ -133,6 +133,8 @@ npm run palettes:build          # gera src/styles/palettes.css das sementes de s
 npm run registry:build          # gera o registry.json (novo componente ou variante)
 npm run pages:build             # constrói a demo em /demo/, o registry, o SEO e monta o site em .pages/<repo> (com --storybook, inclui o Storybook)
 npm run pages:stage             # só a composição de .pages/<repo> (precisa de dist/ pronto)
+npm run docs:og-image           # regenera a imagem social (og-image.png) do site
+npm run test:site               # Playwright: página de apresentação e composição do site
 npm run build:lib               # build do pacote npm (dist/, com os subcaminhos e o CSS)
 npm run verify:pack             # confere o pacote publicável (npm pack e instalação num projeto à parte)
 ```
