@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rendra Design System: componentes React, Tailwind e shadcn</title>
+    <meta
+      name="description"
+      content="Design system e boilerplate React (Vite, TypeScript, Tailwind CSS v4, Radix e shadcn/ui): mais de 50 componentes, 3 modelos de marca, 4 paletas, telas de sistema prontas e briefing guiado para IA. Licença MIT, código completo no GitHub, uso comercial permitido."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="noai, noimageai" />
+    <meta name="author" content="Bruno Magalhaes" />
+    <meta name="theme-color" content="#111111" />
+    <link rel="canonical" href="https://bsmagalhaes.github.io/rendra-ui-web/" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Rendra Design System" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta
+      property="og:title"
+      content="Rendra Design System: componentes React, Tailwind e shadcn"
+    />
+    <meta
+      property="og:description"
+      content="Mais de 50 componentes, 3 modelos de marca, 4 paletas e telas de sistema prontas em React, Tailwind CSS e shadcn/ui. Licença MIT, código completo no GitHub."
+    />
+    <meta property="og:url" content="https://bsmagalhaes.github.io/rendra-ui-web/" />
+    <meta property="og:image" content="https://bsmagalhaes.github.io/rendra-ui-web/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Rendra Design System: painel administrativo no modelo Safira"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://bsmagalhaes.github.io/rendra-ui-web/og-image.png" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "Rendra Design System",
+        "description": "Design system e boilerplate React (Vite, TypeScript, Tailwind CSS v4, Radix e shadcn/ui): mais de 50 componentes, 3 modelos de marca, 4 paletas, telas de sistema prontas e briefing guiado para IA.",
+        "codeRepository": "https://github.com/bsmagalhaes/rendra-ui-web",
+        "url": "https://bsmagalhaes.github.io/rendra-ui-web/",
+        "image": "https://bsmagalhaes.github.io/rendra-ui-web/og-image.png",
+        "programmingLanguage": ["TypeScript"],
+        "runtimePlatform": "Navegador, React 19",
+        "license": "https://opensource.org/licenses/MIT",
+        "inLanguage": "pt-BR",
+        "author": {
+          "@type": "Person",
+          "name": "Bruno Magalhaes",
+          "url": "https://www.brunomagalhaes.me"
+        }
+      }
+    </script>
+    <script>
+      // Links antigos do README publicado no npm (2.2.2): a raiz com ?codigo=T1-C4-M5 abria a demo com o modelo aplicado.
+      if (new URLSearchParams(location.search).has('codigo'))
+        location.replace('demo/' + location.search)
+    </script>
+    <style>
+      /* Identidade da família Rendra: a mesma da página do Rendra IDE (https://bsmagalhaes.github.io/rendra-ui-ide/).
+     Só modo escuro, sem fonte externa. A demo em /demo/ segue os modelos e paletas do próprio design system. */
+      :root {
+        --site-bg: #111111;
+        --site-bg-2: #171717;
+        --site-card: #1c1c1c;
+        --site-line: #2c2c2c;
+        --site-fg: #f2f2f2;
+        --site-fg-2: #c4c4c4;
+        --site-muted: #9a9a9a;
+        --site-primary: #e8650a;
+        --site-primary-text: #ff8a3d;
+        --site-on-primary: #111111;
+        --mono: ui-monospace, 'Cascadia Code', 'JetBrains Mono', Consolas, monospace;
+        --sans: 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--site-bg);
+        color: var(--site-fg);
+        font: 16px/1.6 var(--sans);
+        overflow-x: hidden;
+      }
+      a {
+        color: var(--site-primary-text);
+      }
+      a:focus-visible,
+      button:focus-visible,
+      summary:focus-visible {
+        outline: 2px solid var(--site-primary-text);
+        outline-offset: 2px;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+      .wrap {
+        width: 90%;
+        margin: 0 auto;
+      }
+      .skip {
+        position: absolute;
+        left: -999px;
+        top: 8px;
+        background: var(--site-card);
+        color: var(--site-fg);
+        padding: 10px 16px;
+        border-radius: 8px;
+        z-index: 20;
+      }
+      .skip:focus {
+        left: 8px;
+      }
+      h1,
+      h2,
+      h3 {
+        line-height: 1.2;
+        margin: 0;
+      }
+      .eyebrow {
+        font: 600 12px/1 var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--site-primary-text);
+        margin-bottom: 14px;
+      }
+
+      .topo {
+        padding-top: 32px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        text-decoration: none;
+        color: var(--site-fg);
+        width: fit-content;
+        min-height: 44px;
+      }
+      .brand svg {
+        width: 44px;
+        height: 44px;
+        flex: none;
+      }
+      .brand b {
+        font: 700 18px var(--mono);
+        letter-spacing: 0.08em;
+      }
+      .brand b span {
+        color: var(--site-primary);
+      }
+
+      .hero {
+        padding: 40px 0 72px;
+      }
+      .hero h1 {
+        font-size: clamp(34px, 5vw, 58px);
+        letter-spacing: -1px;
+        margin-bottom: 18px;
+        max-width: 980px;
+      }
+      .hero h1 span {
+        color: var(--site-primary);
+      }
+      .hero p {
+        color: var(--site-fg-2);
+        font-size: 19px;
+        margin: 0 0 28px;
+        max-width: 760px;
+      }
+      .cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 46px;
+        min-width: 44px;
+        padding: 0 22px;
+        border-radius: 8px;
+        font: 600 16px var(--sans);
+        text-decoration: none;
+        border: 1px solid var(--site-line);
+        color: var(--site-fg);
+        background: var(--site-card);
+        cursor: pointer;
+      }
+      .btn.primary {
+        background: var(--site-primary);
+        border-color: var(--site-primary);
+        color: var(--site-on-primary);
+      }
+      .btn:hover {
+        filter: brightness(1.1);
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 24px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+      .tags li {
+        font: 12px var(--mono);
+        color: var(--site-fg-2);
+        border: 1px solid var(--site-line);
+        border-radius: 999px;
+        padding: 4px 12px;
+      }
+      .hero-print {
+        display: block;
+        margin-top: 48px;
+        border: 1px solid var(--site-line);
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--site-bg-2);
+      }
+      .hero-print img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip" href="#conteudo">Ir para o conteúdo</a>
+
+    <header class="topo">
+      <div class="wrap">
+        <a class="brand" href="./" aria-label="Rendra Web, início">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" aria-hidden="true">
+            <rect width="44" height="44" rx="10" fill="#1c1c1c" stroke="#2c2c2c" />
+            <path
+              d="M15 31V13h9.2a5.6 5.6 0 0 1 1.6 11L31 31"
+              fill="none"
+              stroke="#e8650a"
+              stroke-width="3.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <b>RENDRA <span>WEB</span></b>
+        </a>
+      </div>
+    </header>
+
+    <main id="conteudo">
+      <section class="hero" id="inicio" aria-labelledby="titulo">
+        <div class="wrap">
+          <div class="eyebrow">Design system web · React</div>
+          <h1 id="titulo">Design system em React para sistemas, <span>pronto para usar</span>.</h1>
+          <p>
+            A base do seu próximo sistema: mais de 50 componentes, 3 modelos de marca, 4 paletas e
+            telas prontas, em React, Vite, Tailwind CSS e shadcn/ui. Licença MIT, código completo no
+            GitHub, uso comercial permitido.
+          </p>
+          <div class="cta">
+            <a class="btn primary ver-demo" href="demo/">Ver demo: o sistema rodando</a>
+            <a
+              class="btn"
+              href="https://github.com/bsmagalhaes/rendra-ui-web"
+              target="_blank"
+              rel="noopener"
+              >Ver no GitHub</a
+            >
+          </div>
+          <ul class="tags">
+            <li>React</li>
+            <li>Vite</li>
+            <li>Tailwind CSS</li>
+            <li>shadcn/ui</li>
+            <li>MIT</li>
+          </ul>
+          <a class="hero-print" href="demo/"
+            ><img
+              src="images/safira-painel.png"
+              width="1920"
+              height="1080"
+              fetchpriority="high"
+              alt="Painel administrativo do Rendra Design System no modelo Safira, com indicadores, gráficos e lista de clientes. Abrir a demo."
+          /></a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
