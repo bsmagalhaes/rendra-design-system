@@ -21,7 +21,7 @@ Este é o **Rendra Design System**: um design system completo e boilerplate Reac
 1. Este arquivo, inteiro.
 2. [`DESIGN_RULES.md`](DESIGN_RULES.md): as regras de interface. Elas valem mais do que qualquer hábito seu. Uma alteração que não as segue está errada, mesmo que funcione.
 3. [`README.md`](README.md) e, quando for aplicar em outro projeto, [`docs/COMO_APLICAR.md`](docs/COMO_APLICAR.md).
-4. Se o trabalho seguir a matriz de modelos (levantamento, plano, validação e execução por papéis diferentes), leia também o [`CLAUDE.md`](CLAUDE.md): a matriz de modelos e as regras de operação.
+4. Se o trabalho seguir a matriz de modelos (levantamento, plano, validação e execução por papéis diferentes), leia também o [`CLAUDE.md`](CLAUDE.md): a matriz de modelos.
 
 ## Fluxo de início (siga antes de qualquer alteração)
 
