@@ -20,6 +20,18 @@ jobs:
           node-version: 24
           cache: npm
           registry-url: https://registry.npmjs.org
+      # O trusted publishing exige npm 11.5.1 ou mais recente. O Node 24 do runner costuma
+      # trazer uma 11.x recente, mas nem toda 24.x: se vier menor, atualiza; sempre imprime a
+      # versão usada, para o log da publicação provar qual npm assinou.
+      - name: npm com suporte a trusted publishing (11.5.1 ou mais recente)
+        run: |
+          NPM_ATUAL="$(npm --version)"
+          MENOR="$(printf '%s\n%s\n' 11.5.1 "$NPM_ATUAL" | sort -V | head -n1)"
+          if [ "$MENOR" != "11.5.1" ]; then
+            echo "npm $NPM_ATUAL é anterior à 11.5.1; atualizando."
+            npm install -g npm@^11.5.1
+          fi
+          echo "npm em uso: $(npm --version)"
       - run: npm ci
       - run: npm run build:lib
       - run: npm run verify:pack
