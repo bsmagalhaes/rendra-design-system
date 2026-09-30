@@ -8,6 +8,7 @@
  */
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join, sep } from 'node:path'
+import { buildRedirectStub, staleRoutePaths } from './redirect-stubs.ts'
 import { buildRobotsTxt } from './robots.ts'
 
 /** Arquivos de `docs/` que vão para a raiz do Pages (robots.txt, sitemap.xml e llms.txt são gerados). */
@@ -43,7 +44,14 @@ function sitemapDaRaiz(urls: string[]): string {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${itens}\n</urlset>\n`
 }
 
-export function stageSite({ distDir, docsDir, outDir, rootUrl, llmsTxt }: StageOptions): void {
+export function stageSite({
+  distDir,
+  docsDir,
+  outDir,
+  rootUrl,
+  routes,
+  llmsTxt,
+}: StageOptions): void {
   for (const nome of ARQUIVOS_DA_RAIZ) {
     if (!existsSync(join(docsDir, nome)))
       throw new Error(`docs/${nome} ausente: a página de apresentação precisa dele`)
@@ -88,4 +96,12 @@ export function stageSite({ distDir, docsDir, outDir, rootUrl, llmsTxt }: StageO
   writeFileSync(join(outDir, 'sitemap.xml'), sitemapDaRaiz(urls))
   writeFileSync(join(outDir, 'robots.txt'), buildRobotsTxt(rootUrl))
   writeFileSync(join(outDir, 'llms.txt'), llmsTxt)
+
+  for (const rota of staleRoutePaths(routes)) {
+    mkdirSync(join(outDir, rota), { recursive: true })
+    writeFileSync(
+      join(outDir, rota, 'index.html'),
+      buildRedirectStub(rootUrl + 'demo/' + rota + '/'),
+    )
+  }
 }

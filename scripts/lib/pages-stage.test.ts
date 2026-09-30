@@ -60,6 +60,28 @@ describe('stageSite', () => {
     rmSync(a.base, { recursive: true, force: true })
   })
 
+  it('grava um stub em cada rota antiga apontando para a demo, sem tocar a página da raiz', () => {
+    const a = arranjo()
+    stage(a, ['/', '/clientes', '/clientes/1000'])
+    const stub = readFileSync(join(a.out, 'clientes', 'index.html'), 'utf8')
+    expect(stub).toContain(`url=${ROOT}demo/clientes/`)
+    expect(stub).toContain('location.search + location.hash')
+    expect(readFileSync(join(a.out, 'clientes', '1000', 'index.html'), 'utf8')).toContain(
+      `url=${ROOT}demo/clientes/1000/`,
+    )
+    expect(readFileSync(join(a.out, 'index.html'), 'utf8')).toBe('raiz:index.html')
+    rmSync(a.base, { recursive: true, force: true })
+  })
+
+  it('não grava stub por cima de demo/, r/ e storybook/', () => {
+    const a = arranjo()
+    stage(a, ['/demo', '/r', '/storybook'])
+    expect(readFileSync(join(a.out, 'demo', 'index.html'), 'utf8')).toBe('demo')
+    expect(readFileSync(join(a.out, 'r', 'select.json'), 'utf8')).toBe('{"name":"select"}')
+    expect(readFileSync(join(a.out, 'storybook', 'index.html'), 'utf8')).toBe('sb')
+    rmSync(a.base, { recursive: true, force: true })
+  })
+
   it('mantém o arquivo do Search Console na raiz', () => {
     const a = arranjo()
     stage(a)
