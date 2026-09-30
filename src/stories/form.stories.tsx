@@ -210,7 +210,6 @@ function SelectDemo(props: {
         <Select
           {...common}
           multiple
-          selectAll
           options={options}
           value={multi}
           onChange={setMulti}
@@ -234,7 +233,7 @@ export const SelectComBusca: Story = {
   render: () => <SelectDemo searchable />,
 }
 export const SelectMultiplo: Story = {
-  name: 'Select: multiple + selectAll',
+  name: 'Select: multiple (selecionar todos automático com mais de 5 opções)',
   render: () => <SelectDemo multiple />,
 }
 export const SelectCriar: Story = {

@@ -417,7 +417,7 @@ export function FormsSection() {
         id="select"
         title="Select"
         description="Um único Select. No celular abre como painel inferior, com busca no topo e confirmação no rodapé."
-        props="options, multiple, searchable, selectAll, showCount, maxChips, creatable, onCreate, loadOptions (async), loading, clearable, size, invalid, disabled"
+        props="options, multiple, searchable, selectAll (automático com mais de 5 opções; false desliga), showCount, maxChips, creatable, onCreate, loadOptions (async), loading, clearable, size, invalid, disabled"
         code="SEL-001"
       >
         <Grid cols={{ base: 1, md: 2, xl: 3 }} gap="fields">
@@ -433,7 +433,7 @@ export function FormsSection() {
           <Field label="Com busca">
             <Select label="Cidade" options={cities} searchable placeholder="Escolha a cidade" />
           </Field>
-          <Field label="Múltiplo com chips e selecionar todos">
+          <Field label="Múltiplo com chips (5 opções: selecionar todos por selectAll)">
             <Select
               multiple
               selectAll
@@ -443,8 +443,8 @@ export function FormsSection() {
               onChange={setMulti}
             />
           </Field>
-          <Field label="Múltiplo com contador">
-            <Select multiple showCount selectAll label="Cidades" options={cities} searchable />
+          <Field label="Múltiplo com contador (selecionar todos automático: mais de 5 opções)">
+            <Select multiple showCount label="Cidades" options={cities} searchable />
           </Field>
           <Field label="Criar opção" help="Digite um nome que não existe.">
             <Select
