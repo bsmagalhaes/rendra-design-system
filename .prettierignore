@@ -10,3 +10,8 @@ coverage
 test/fixtures
 # Verificação do Google Search Console: o conteúdo precisa ficar exatamente como veio
 public/google*.html
+
+# Árvore do GitHub Pages montada por scripts/pages-build.mjs
+.pages
+# Verificação do Google Search Console na composição do site: o conteúdo precisa ficar exatamente como veio
+docs/google*.html

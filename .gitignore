@@ -29,3 +29,6 @@ docs/superpowers/
 
 # Briefing do projeto (respostas do roteiro de docs/BRIEFING_MODELO.md): fica só na máquina
 docs/BRIEFING.md
+
+# Árvore do GitHub Pages montada por scripts/pages-build.mjs
+.pages
