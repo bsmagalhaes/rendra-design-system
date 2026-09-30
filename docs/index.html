@@ -55,6 +55,62 @@
         }
       }
     </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "O que é o Rendra Design System?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "É um design system e boilerplate React (Vite, TypeScript, Tailwind CSS v4, Radix e shadcn/ui). Traz mais de 50 componentes, o AppShell com menu lateral e superior, telas de exemplo, 3 modelos de marca e 4 paletas, para começar um sistema novo ou migrar o layout de um existente."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Posso usar em projeto comercial?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sim. A licença é MIT: você pode usar, copiar, alterar e distribuir, inclusive em projetos comerciais, mantendo o aviso de copyright e o arquivo LICENSE. O crédito \"Feito com Rendra\" na tela é opcional."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Como troco a marca do sistema?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Com 4 cores, um degradê, um modelo, o nome e o logotipo, sem mexer em componente. Cada combinação de modelo, paleta e menu tem um código, como T2-C3-M5, que você informa no briefing."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Posso usar só alguns componentes?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sim. Instale o pacote npm @rendra-ui/web ou traga um componente por vez pelo registry do shadcn, com npx shadcn@latest add e o endereço do componente em r/ neste site."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Como uso com uma IA de código?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Cole o link do repositório numa IA de código (Claude Code, Codex, Cursor, Gemini ou Copilot). O AGENTS.md é o ponto de entrada: a IA conduz o briefing, planeja em etapas e roda os testes."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Os componentes são acessíveis?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Foram feitos para isso: toque mínimo de 44x44, foco visível, nada que dependa de hover e verificação automática com axe (WCAG 2.1 AA) em todas as telas, nos três modelos, no claro e no escuro."
+            }
+          }
+        ]
+      }
+    </script>
     <script>
       // Links antigos do README publicado no npm (2.2.2): a raiz com ?codigo=T1-C4-M5 abria a demo com o modelo aplicado.
       if (new URLSearchParams(location.search).has('codigo'))
@@ -236,6 +292,322 @@
         height: auto;
       }
 
+      section + section {
+        border-top: 1px solid var(--site-line);
+      }
+      section {
+        padding: 72px 0;
+      }
+      .hero {
+        border-top: 0;
+      }
+      h2 {
+        font-size: clamp(26px, 3.4vw, 36px);
+        margin-bottom: 12px;
+      }
+      h3 {
+        font-size: 18px;
+      }
+      .lead {
+        color: var(--site-fg-2);
+        font-size: 18px;
+        max-width: 760px;
+        margin: 0 0 32px;
+      }
+      code {
+        font-family: var(--mono);
+        font-size: 0.92em;
+        color: var(--site-fg);
+      }
+      .acao {
+        margin: 32px 0 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .features {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+      .feature {
+        background: var(--site-card);
+        border: 1px solid var(--site-line);
+        border-radius: 12px;
+        padding: 24px;
+      }
+      .feature h3 {
+        margin-bottom: 8px;
+      }
+      .feature p {
+        margin: 0;
+        color: var(--site-fg-2);
+        font-size: 15px;
+      }
+      .feature .ico {
+        font: 700 14px var(--mono);
+        color: var(--site-primary-text);
+        margin-bottom: 12px;
+      }
+      .matriz,
+      .prints,
+      .gallery {
+        display: grid;
+        gap: 20px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      .prints {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .prints.duas-colunas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      }
+      figure {
+        margin: 0;
+        background: var(--site-card);
+        border: 1px solid var(--site-line);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      figure button {
+        all: unset;
+        display: block;
+        cursor: zoom-in;
+        width: 100%;
+        min-height: 44px;
+      }
+      figure button:focus-visible {
+        outline: 2px solid var(--site-primary-text);
+        outline-offset: -2px;
+      }
+      figure img {
+        display: block;
+        width: 100%;
+        height: auto;
+        background: var(--site-bg-2);
+      }
+      .gallery figure img {
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        object-position: top;
+      }
+      figcaption {
+        padding: 12px 14px;
+        color: var(--site-fg-2);
+        font-size: 14px;
+      }
+      figcaption b {
+        color: var(--site-fg);
+        font-family: var(--mono);
+      }
+      .duas {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+        margin-bottom: 24px;
+      }
+      .duas h3,
+      h3.sub {
+        margin-bottom: 10px;
+      }
+      h3.sub {
+        margin-top: 40px;
+      }
+      .duas p {
+        color: var(--site-fg-2);
+        margin: 0 0 14px;
+      }
+      .codebox {
+        position: relative;
+      }
+      .code {
+        margin: 0;
+        background: #0b0b0b;
+        border: 1px solid var(--site-line);
+        border-radius: 10px;
+        padding: 18px 20px;
+        padding-right: 96px;
+        font: 14px/1.7 var(--mono);
+        color: #e6e6e6;
+        overflow-x: auto;
+      }
+      .code.quebra {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+      .copy {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        min-width: 44px;
+        min-height: 44px;
+        font: 12px var(--mono);
+        background: var(--site-card);
+        color: var(--site-fg-2);
+        border: 1px solid var(--site-line);
+        border-radius: 6px;
+        padding: 0 10px;
+        cursor: pointer;
+      }
+      .tabela {
+        border: 1px solid var(--site-line);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .tabela [role='row'] {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 16px;
+        padding: 12px 18px;
+        background: var(--site-card);
+      }
+      .tabela [role='row'] + [role='row'] {
+        border-top: 1px solid var(--site-line);
+      }
+      .tabela [role='columnheader'] {
+        font: 600 12px var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--site-muted);
+      }
+      .tabela [role='cell'] {
+        overflow-wrap: anywhere;
+        font-size: 15px;
+        color: var(--site-fg-2);
+      }
+      details {
+        background: var(--site-card);
+        border: 1px solid var(--site-line);
+        border-radius: 10px;
+        padding: 0 20px;
+        margin-bottom: 12px;
+      }
+      summary {
+        cursor: pointer;
+        font-weight: 600;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+      }
+      details p {
+        color: var(--site-fg-2);
+        margin: 0 0 16px;
+      }
+      footer {
+        border-top: 1px solid var(--site-line);
+        padding: 48px 0 64px;
+        color: var(--site-muted);
+        font-size: 14px;
+      }
+      footer .cols {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 32px;
+      }
+      footer h3 {
+        color: var(--site-fg);
+        font-size: 15px;
+        margin-bottom: 10px;
+      }
+      footer p {
+        margin: 0 0 8px;
+      }
+      footer a {
+        color: var(--site-fg-2);
+      }
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.92);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        padding: 56px 64px;
+      }
+      .lightbox.open {
+        display: flex;
+      }
+      .lightbox img {
+        max-height: 100%;
+        max-width: 100%;
+        width: auto;
+        height: auto;
+        border-radius: 8px;
+      }
+      .lightbox .cap {
+        position: absolute;
+        bottom: 16px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: var(--site-fg-2);
+        font-size: 14px;
+      }
+      .lb-btn {
+        position: absolute;
+        background: var(--site-card);
+        color: var(--site-fg);
+        border: 1px solid var(--site-line);
+        border-radius: 999px;
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+        cursor: pointer;
+      }
+      .lb-close {
+        top: 12px;
+        right: 12px;
+      }
+      .lb-prev {
+        left: 12px;
+        top: 50%;
+      }
+      .lb-next {
+        right: 12px;
+        top: 50%;
+      }
+      @media (max-width: 900px) {
+        .features,
+        .prints {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .matriz {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .duas,
+        footer .cols {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+      @media (max-width: 600px) {
+        section {
+          padding: 56px 0;
+        }
+        .features,
+        .prints,
+        .prints.duas-colunas {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .matriz {
+          gap: 12px;
+        }
+        .gallery {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 12px;
+        }
+        .tabela [role='row'] {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 4px;
+        }
+        .lightbox {
+          padding: 56px 8px;
+        }
+      }
       @media (prefers-reduced-motion: reduce) {
         html {
           scroll-behavior: auto;
@@ -288,6 +660,7 @@
               rel="noopener"
               >Ver no GitHub</a
             >
+            <a class="btn" href="#instalacao">Instalar</a>
           </div>
           <ul class="tags">
             <li>React</li>
@@ -306,6 +679,946 @@
           /></a>
         </div>
       </section>
+
+      <section id="proposta" aria-labelledby="t-proposta">
+        <div class="wrap">
+          <div class="eyebrow">Proposta</div>
+          <h2 id="t-proposta">Uma base para trocar de marca sem reescrever tela</h2>
+          <p class="lead">
+            O Rendra separa a marca do componente: você muda cores, modelo, nome e logotipo, e o
+            sistema inteiro acompanha.
+          </p>
+          <div class="features">
+            <div class="feature">
+              <div class="ico" aria-hidden="true">01</div>
+              <h3>Tokens em três camadas</h3>
+              <p>
+                Modelo, paleta e sistema. Trocar a marca são 4 cores, um degradê, um modelo, o nome
+                e o logotipo, sem tocar em componente.
+              </p>
+            </div>
+            <div class="feature">
+              <div class="ico" aria-hidden="true">T×C</div>
+              <h3>3 modelos e 4 paletas</h3>
+              <p>
+                Safira, Equilíbrio e Aurora, com as paletas Safira, Equilíbrio, Aurora e Ardósia.
+                Cada combinação tem um código, como T2-C3.
+              </p>
+            </div>
+            <div class="feature">
+              <div class="ico" aria-hidden="true">50+</div>
+              <h3>Componentes acessíveis</h3>
+              <p>
+                Botões, formulários, tabelas, modais, gavetas, gráficos, calendário, kanban, chat e
+                o AppShell, com foco visível e toque mínimo de 44x44.
+              </p>
+            </div>
+            <div class="feature">
+              <div class="ico" aria-hidden="true">360</div>
+              <h3>Mobile primeiro</h3>
+              <p>
+                Escrito para 360 px: a tabela vira cartões, o menu lateral vira gaveta e a navegação
+                ganha uma barra inferior. Nada depende de hover.
+              </p>
+            </div>
+            <div class="feature">
+              <div class="ico" aria-hidden="true">IA</div>
+              <h3>Briefing guiado para IA</h3>
+              <p>
+                AGENTS.md, CLAUDE.md e um briefing conduzem uma IA de código do primeiro comando à
+                migração do seu sistema.
+              </p>
+            </div>
+            <div class="feature">
+              <div class="ico" aria-hidden="true">OK</div>
+              <h3>Testes de layout e axe</h3>
+              <p>
+                O Playwright confere cada tela em várias larguras, nos três modelos, no claro e no
+                escuro, e o axe barra violação de acessibilidade.
+              </p>
+            </div>
+          </div>
+          <p class="acao">
+            <a class="btn ver-demo" href="demo/tokens/">Ver demo: tokens e contraste AA ao vivo</a>
+          </p>
+        </div>
+      </section>
+
+      <section id="modelos" aria-labelledby="t-modelos">
+        <div class="wrap">
+          <div class="eyebrow">Modelos e paletas</div>
+          <h2 id="t-modelos">3 modelos por 4 paletas: 12 combinações com código</h2>
+          <p class="lead">
+            Cada linha é um modelo (fonte e formato dos cantos) e cada coluna, uma paleta. O código
+            completo soma o menu: <code>T1-C4-M5</code> é o modelo Safira, a paleta Ardósia e o menu
+            superior. Informe o código no briefing e a IA aplica a combinação.
+          </p>
+          <div class="matriz">
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="matriz-safira-safira"
+                aria-label="Ampliar: T1-C1, modelo Safira com a paleta Safira"
+              >
+                <img
+                  src="images/matriz-safira-safira.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Painel no modelo Safira com a paleta Safira, código T1-C1"
+                />
+              </button>
+              <figcaption><b>T1-C1</b> · Safira com Safira</figcaption>
+            </figure>
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="matriz-safira-equilibrio"
+                aria-label="Ampliar: T1-C2, modelo Safira com a paleta Equilíbrio"
+              >
+                <img
+                  src="images/matriz-safira-equilibrio.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Painel no modelo Safira com a paleta Equilíbrio, código T1-C2"
+                />
+              </button>
+              <figcaption><b>T1-C2</b> · Safira com Equilíbrio</figcaption>
+            </figure>
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="matriz-safira-aurora"
+                aria-label="Ampliar: T1-C3, modelo Safira com a paleta Aurora"
+              >
+                <img
+                  src="images/matriz-safira-aurora.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Painel no modelo Safira com a paleta Aurora, código T1-C3"
+                />
+              </button>
+              <figcaption><b>T1-C3</b> · Safira com Aurora</figcaption>
+            </figure>
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="matriz-safira-ardosia"
+                aria-label="Ampliar: T1-C4, modelo Safira com a paleta Ardósia"
+              >
+                <img
+                  src="images/matriz-safira-ardosia.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Painel no modelo Safira com a paleta Ardósia, código T1-C4"
+                />
+              </button>
+              <figcaption><b>T1-C4</b> · Safira com Ardósia</figcaption>
+            </figure>
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="matriz-equilibrio-safira"
+                aria-label="Ampliar: T2-C1, modelo Equilíbrio com a paleta Safira"
+              >
+                <img
+                  src="images/matriz-equilibrio-safira.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Painel no modelo Equilíbrio com a paleta Safira, código T2-C1"
+                />
+              </button>
+              <figcaption><b>T2-C1</b> · Equilíbrio com Safira</figcaption>
+            </figure>
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="matriz-equilibrio-equilibrio"
+                aria-label="Ampliar: T2-C2, modelo Equilíbrio com a paleta Equilíbrio"
+              >
+                <img
+                  src="images/matriz-equilibrio-equilibrio.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Painel no modelo Equilíbrio com a paleta Equilíbrio, código T2-C2"
+                />
+              </button>
+              <figcaption><b>T2-C2</b> · Equilíbrio com Equilíbrio</figcaption>
+            </figure>
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="matriz-equilibrio-aurora"
+                aria-label="Ampliar: T2-C3, modelo Equilíbrio com a paleta Aurora"
+              >
+                <img
+                  src="images/matriz-equilibrio-aurora.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Painel no modelo Equilíbrio com a paleta Aurora, código T2-C3"
+                />
+              </button>
+              <figcaption><b>T2-C3</b> · Equilíbrio com Aurora</figcaption>
+            </figure>
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="matriz-equilibrio-ardosia"
+                aria-label="Ampliar: T2-C4, modelo Equilíbrio com a paleta Ardósia"
+              >
+                <img
+                  src="images/matriz-equilibrio-ardosia.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Painel no modelo Equilíbrio com a paleta Ardósia, código T2-C4"
+                />
+              </button>
+              <figcaption><b>T2-C4</b> · Equilíbrio com Ardósia</figcaption>
+            </figure>
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="matriz-aurora-safira"
+                aria-label="Ampliar: T3-C1, modelo Aurora com a paleta Safira"
+              >
+                <img
+                  src="images/matriz-aurora-safira.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Painel no modelo Aurora com a paleta Safira, código T3-C1"
+                />
+              </button>
+              <figcaption><b>T3-C1</b> · Aurora com Safira</figcaption>
+            </figure>
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="matriz-aurora-equilibrio"
+                aria-label="Ampliar: T3-C2, modelo Aurora com a paleta Equilíbrio"
+              >
+                <img
+                  src="images/matriz-aurora-equilibrio.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Painel no modelo Aurora com a paleta Equilíbrio, código T3-C2"
+                />
+              </button>
+              <figcaption><b>T3-C2</b> · Aurora com Equilíbrio</figcaption>
+            </figure>
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="matriz-aurora-aurora"
+                aria-label="Ampliar: T3-C3, modelo Aurora com a paleta Aurora"
+              >
+                <img
+                  src="images/matriz-aurora-aurora.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Painel no modelo Aurora com a paleta Aurora, código T3-C3"
+                />
+              </button>
+              <figcaption><b>T3-C3</b> · Aurora com Aurora</figcaption>
+            </figure>
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="matriz-aurora-ardosia"
+                aria-label="Ampliar: T3-C4, modelo Aurora com a paleta Ardósia"
+              >
+                <img
+                  src="images/matriz-aurora-ardosia.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Painel no modelo Aurora com a paleta Ardósia, código T3-C4"
+                />
+              </button>
+              <figcaption><b>T3-C4</b> · Aurora com Ardósia</figcaption>
+            </figure>
+          </div>
+          <p class="acao">
+            <a class="btn ver-demo" href="demo/galeria/">Ver demo: galeria com troca ao vivo</a>
+          </p>
+        </div>
+      </section>
+
+      <section id="componentes" aria-labelledby="t-componentes">
+        <div class="wrap">
+          <div class="eyebrow">Componentes</div>
+          <h2 id="t-componentes">Mais de 50 componentes, em 7 grupos</h2>
+          <p class="lead">
+            Ações, formulário, navegação, dados, planejamento, feedback e composição. A vitrine
+            mostra cada componente ao vivo, com o código de cada variante, e o Storybook lista as
+            propriedades.
+          </p>
+          <div class="prints duas-colunas">
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="safira-drawer"
+                aria-label="Ampliar: Gaveta com formulário"
+              >
+                <img
+                  src="images/safira-drawer.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Gaveta com formulário e rodapé fixo, no modelo Safira"
+                />
+              </button>
+              <figcaption><b>Gaveta</b> · formulário com rodapé fixo, modelo Safira</figcaption>
+            </figure>
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="safira-dashboard-ajuste"
+                aria-label="Ampliar: Painel em widgets"
+              >
+                <img
+                  src="images/safira-dashboard-ajuste.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Painel em widgets que o usuário reorganiza, no modelo Safira"
+                />
+              </button>
+              <figcaption><b>Painel em widgets</b> · blocos que o usuário reorganiza</figcaption>
+            </figure>
+          </div>
+          <p class="acao">
+            <a class="btn ver-demo" href="demo/componentes/">Ver demo: vitrine de componentes</a>
+            <a class="btn" href="storybook/">Ver o Storybook</a>
+          </p>
+        </div>
+      </section>
+
+      <section id="telas" aria-labelledby="t-telas">
+        <div class="wrap">
+          <div class="eyebrow">Telas prontas</div>
+          <h2 id="t-telas">Telas de sistema para trocar pelas do seu produto</h2>
+          <p class="lead">
+            Painel, clientes, atendimento, agenda e funil já vêm montados com o menu, a barra
+            inferior no celular e o tema escolhido.
+          </p>
+          <div class="prints">
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="safira-painel"
+                aria-label="Ampliar: Painel"
+              >
+                <img
+                  src="images/safira-painel.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Painel: indicadores, gráficos e clientes recentes"
+                />
+              </button>
+              <figcaption><b>Painel</b> · indicadores, gráficos e clientes recentes</figcaption>
+            </figure>
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="safira-clientes"
+                aria-label="Ampliar: Clientes"
+              >
+                <img
+                  src="images/safira-clientes.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Clientes: tabela com busca, filtros e ações"
+                />
+              </button>
+              <figcaption><b>Clientes</b> · tabela com busca, filtros e ações</figcaption>
+            </figure>
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="safira-atendimento"
+                aria-label="Ampliar: Atendimento"
+              >
+                <img
+                  src="images/safira-atendimento.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Atendimento: conversas por etapa e mensagens"
+                />
+              </button>
+              <figcaption><b>Atendimento</b> · conversas por etapa e mensagens</figcaption>
+            </figure>
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="equilibrio-agenda"
+                aria-label="Ampliar: Agenda"
+              >
+                <img
+                  src="images/equilibrio-agenda.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Agenda: calendário da semana com eventos"
+                />
+              </button>
+              <figcaption><b>Agenda</b> · calendário da semana com eventos</figcaption>
+            </figure>
+            <figure>
+              <button
+                type="button"
+                class="mini"
+                data-open="aurora-kanban"
+                aria-label="Ampliar: Funil de vendas"
+              >
+                <img
+                  src="images/aurora-kanban.png"
+                  width="1920"
+                  height="1080"
+                  loading="lazy"
+                  alt="Funil de vendas: quadro kanban por etapa"
+                />
+              </button>
+              <figcaption><b>Funil de vendas</b> · quadro kanban por etapa</figcaption>
+            </figure>
+          </div>
+          <p class="acao">
+            <a class="btn ver-demo" href="demo/">Ver demo: painel de exemplo</a>
+            <a class="btn" href="demo/clientes/">Clientes</a>
+            <a class="btn" href="demo/atendimento/">Atendimento</a>
+            <a class="btn" href="demo/agenda/">Agenda</a>
+            <a class="btn" href="demo/kanban/">Funil</a>
+          </p>
+        </div>
+      </section>
+
+      <section id="ia" aria-labelledby="t-ia">
+        <div class="wrap">
+          <div class="eyebrow">IA e briefing guiado</div>
+          <h2 id="t-ia">Cole um prompt e a IA conduz o resto</h2>
+          <p class="lead">
+            Funciona com Claude Code, Codex, Cursor, Gemini e Copilot. A IA pergunta uma decisão por
+            vez, grava o briefing e planeja em etapas.
+          </p>
+          <div class="duas">
+            <div>
+              <h3>Projeto novo</h3>
+              <p>Cole na sua IA de código:</p>
+              <div class="codebox">
+                <button class="copy" type="button" aria-label="Copiar: prompt de projeto novo">
+                  copiar
+                </button>
+                <pre
+                  class="code quebra"
+                  tabindex="0"
+                ><code>Clone https://github.com/bsmagalhaes/rendra-ui-web e use como base do meu novo sistema. Siga o AGENTS.md do repositório.</code></pre>
+              </div>
+            </div>
+            <div>
+              <h3>Migrar um sistema existente</h3>
+              <p>Abra a IA na pasta do seu sistema e cole:</p>
+              <div class="codebox">
+                <button class="copy" type="button" aria-label="Copiar: prompt de migração">
+                  copiar
+                </button>
+                <pre
+                  class="code quebra"
+                  tabindex="0"
+                ><code>Aplique neste projeto o design system https://github.com/bsmagalhaes/rendra-ui-web. Leia, nesta ordem: https://github.com/bsmagalhaes/rendra-ui-web/blob/main/AGENTS.md, https://github.com/bsmagalhaes/rendra-ui-web/blob/main/DESIGN_RULES.md, https://github.com/bsmagalhaes/rendra-ui-web/blob/main/docs/PROMPT_MIGRACAO.md e https://github.com/bsmagalhaes/rendra-ui-web/blob/main/docs/COMO_APLICAR.md, e siga o fluxo de migração, começando pelo briefing.</code></pre>
+              </div>
+            </div>
+          </div>
+          <h3 class="sub">O arquivo que cada IA lê</h3>
+          <div class="tabela" role="table" aria-label="Arquivo de instruções por ferramenta">
+            <div role="row">
+              <span role="columnheader">Arquivo</span><span role="columnheader">Ferramenta</span>
+            </div>
+            <div role="row">
+              <code role="cell">AGENTS.md</code
+              ><span role="cell">Ponto de entrada (Codex, Jules, Gemini, Cursor e outras)</span>
+            </div>
+            <div role="row">
+              <code role="cell">CLAUDE.md</code><span role="cell">Claude Code</span>
+            </div>
+            <div role="row">
+              <code role="cell">GEMINI.md</code><span role="cell">Gemini CLI</span>
+            </div>
+            <div role="row">
+              <code role="cell">.github/copilot-instructions.md</code
+              ><span role="cell">GitHub Copilot</span>
+            </div>
+            <div role="row">
+              <code role="cell">.cursor/rules/rendra.mdc</code><span role="cell">Cursor</span>
+            </div>
+            <div role="row">
+              <code role="cell">.windsurfrules</code><span role="cell">Windsurf</span>
+            </div>
+          </div>
+          <p class="acao">
+            <a class="btn ver-demo" href="demo/">Ver demo: o resultado, antes de pedir à IA</a>
+          </p>
+        </div>
+      </section>
+
+      <section id="instalacao" aria-labelledby="t-instalacao">
+        <div class="wrap">
+          <div class="eyebrow">Instalação</div>
+          <h2 id="t-instalacao">Rode em poucos comandos</h2>
+          <p class="lead">
+            Pré-requisito:
+            <a href="https://nodejs.org" target="_blank" rel="noopener">Node.js</a> 22 ou mais
+            recente. Escolha o caminho: clonar o repositório inteiro, instalar o pacote, ou trazer
+            um componente por vez.
+          </p>
+          <div class="duas">
+            <div>
+              <h3>Clonar e rodar</h3>
+              <div class="codebox">
+                <button class="copy" type="button" aria-label="Copiar: clonar e rodar">
+                  copiar
+                </button>
+                <pre
+                  class="code"
+                  tabindex="0"
+                ><code>git clone https://github.com/bsmagalhaes/rendra-ui-web meu-sistema
+cd meu-sistema
+npm install
+npm run dev</code></pre>
+              </div>
+            </div>
+            <div>
+              <h3>Como pacote npm</h3>
+              <div class="codebox">
+                <button class="copy" type="button" aria-label="Copiar: instalar o pacote">
+                  copiar
+                </button>
+                <pre
+                  class="code"
+                  tabindex="0"
+                ><code>npm install @rendra-ui/web react react-dom radix-ui</code></pre>
+              </div>
+            </div>
+          </div>
+          <div class="duas">
+            <div>
+              <h3>Um componente por vez (registry do shadcn)</h3>
+              <div class="codebox">
+                <button
+                  class="copy"
+                  type="button"
+                  aria-label="Copiar: adicionar um componente pelo registry"
+                >
+                  copiar
+                </button>
+                <pre
+                  class="code quebra"
+                  tabindex="0"
+                ><code>npx shadcn@latest add https://bsmagalhaes.github.io/rendra-ui-web/r/select.json</code></pre>
+              </div>
+            </div>
+            <div>
+              <h3>CLI: catálogo de códigos</h3>
+              <div class="codebox">
+                <button
+                  class="copy"
+                  type="button"
+                  aria-label="Copiar: listar o catálogo de códigos"
+                >
+                  copiar
+                </button>
+                <pre class="code" tabindex="0"><code>npx @rendra-ui/web codigos</code></pre>
+              </div>
+            </div>
+          </div>
+          <p class="acao">
+            <a class="btn ver-demo" href="demo/">Ver demo: veja rodando antes de instalar</a>
+            <a
+              class="btn"
+              href="https://www.npmjs.com/package/@rendra-ui/web"
+              target="_blank"
+              rel="noopener"
+              >Pacote no npm</a
+            >
+          </p>
+        </div>
+      </section>
+
+      <section id="galeria" aria-labelledby="t-galeria">
+        <div class="wrap">
+          <div class="eyebrow">Galeria</div>
+          <h2 id="t-galeria">As telas, em tamanho real</h2>
+          <p class="lead">
+            Clique numa imagem para ampliar, com setas para passar e Esc para fechar. As telas usam
+            dados de demonstração.
+          </p>
+          <div class="gallery" id="gallery"></div>
+          <p class="acao">
+            <a class="btn ver-demo" href="demo/galeria/">Ver demo: galeria ao vivo</a>
+          </p>
+        </div>
+      </section>
+
+      <section id="faq" aria-labelledby="t-faq">
+        <div class="wrap">
+          <div class="eyebrow">Perguntas frequentes</div>
+          <h2 id="t-faq">Dúvidas comuns</h2>
+          <details>
+            <summary>O que é o Rendra Design System?</summary>
+            <p>
+              É um design system e boilerplate React (Vite, TypeScript, Tailwind CSS v4, Radix e
+              shadcn/ui). Traz mais de 50 componentes, o AppShell com menu lateral e superior, telas
+              de exemplo, 3 modelos de marca e 4 paletas, para começar um sistema novo ou migrar o
+              layout de um existente.
+            </p>
+          </details>
+          <details>
+            <summary>Posso usar em projeto comercial?</summary>
+            <p>
+              Sim. A licença é MIT: você pode usar, copiar, alterar e distribuir, inclusive em
+              projetos comerciais, mantendo o aviso de copyright e o arquivo LICENSE. O crédito
+              &quot;Feito com Rendra&quot; na tela é opcional.
+            </p>
+          </details>
+          <details>
+            <summary>Como troco a marca do sistema?</summary>
+            <p>
+              Com 4 cores, um degradê, um modelo, o nome e o logotipo, sem mexer em componente. Cada
+              combinação de modelo, paleta e menu tem um código, como T2-C3-M5, que você informa no
+              briefing.
+            </p>
+          </details>
+          <details>
+            <summary>Posso usar só alguns componentes?</summary>
+            <p>
+              Sim. Instale o pacote npm @rendra-ui/web ou traga um componente por vez pelo registry
+              do shadcn, com npx shadcn@latest add e o endereço do componente em r/ neste site.
+            </p>
+          </details>
+          <details>
+            <summary>Como uso com uma IA de código?</summary>
+            <p>
+              Cole o link do repositório numa IA de código (Claude Code, Codex, Cursor, Gemini ou
+              Copilot). O AGENTS.md é o ponto de entrada: a IA conduz o briefing, planeja em etapas
+              e roda os testes.
+            </p>
+          </details>
+          <details>
+            <summary>Os componentes são acessíveis?</summary>
+            <p>
+              Foram feitos para isso: toque mínimo de 44x44, foco visível, nada que dependa de hover
+              e verificação automática com axe (WCAG 2.1 AA) em todas as telas, nos três modelos, no
+              claro e no escuro.
+            </p>
+          </details>
+          <p class="acao">
+            <a class="btn ver-demo" href="demo/">Ver demo: veja rodando antes de decidir</a>
+          </p>
+        </div>
+      </section>
     </main>
+
+    <footer>
+      <div class="wrap cols">
+        <div>
+          <h3>Autor</h3>
+          <p>Criado e mantido por <b>Bruno Magalhaes</b>.</p>
+          <p>
+            <a href="https://www.brunomagalhaes.me" target="_blank" rel="noopener"
+              >www.brunomagalhaes.me</a
+            >
+          </p>
+          <p><a href="mailto:contato@brunomagalhaes.me">contato@brunomagalhaes.me</a></p>
+          <p>
+            <a href="https://www.instagram.com/brunomagalhaes.me/" target="_blank" rel="noopener"
+              >@brunomagalhaes.me</a
+            >
+          </p>
+        </div>
+        <div>
+          <h3>Licença</h3>
+          <p>
+            <a
+              href="https://github.com/bsmagalhaes/rendra-ui-web/blob/main/LICENSE"
+              target="_blank"
+              rel="noopener"
+              >MIT</a
+            >
+            © 2026 Bruno Magalhaes. Pode usar, copiar, alterar e distribuir, inclusive em projetos
+            comerciais, mantendo o aviso de copyright.
+          </p>
+          <p>
+            <a
+              href="https://github.com/bsmagalhaes/rendra-ui-web/blob/main/CHANGELOG.md"
+              target="_blank"
+              rel="noopener"
+              >Novidades de cada versão</a
+            >
+          </p>
+        </div>
+        <div>
+          <h3>Créditos</h3>
+          <p>
+            Feito com
+            <a href="https://github.com/bsmagalhaes/rendra-ui-web" target="_blank" rel="noopener"
+              >Rendra</a
+            >. Fontes Poppins, DM Sans e Inter (licença OFL), nos modelos da demo.
+          </p>
+          <p>
+            React, Vite, Tailwind CSS, Radix e shadcn/ui são projetos de terceiros. Projeto
+            independente, sem afiliação.
+          </p>
+          <p>
+            <a href="https://bsmagalhaes.github.io/" target="_blank" rel="noopener"
+              >Todos os projetos</a
+            >
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <div
+      class="lightbox"
+      id="lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Imagem ampliada"
+    >
+      <button class="lb-btn lb-close" type="button" aria-label="Fechar">×</button>
+      <button class="lb-btn lb-prev" type="button" aria-label="Anterior">‹</button>
+      <img alt="" />
+      <button class="lb-btn lb-next" type="button" aria-label="Próxima">›</button>
+      <div class="cap"></div>
+    </div>
+
+    <script>
+      // [arquivo em images/ sem a extensão, título, legenda, largura, altura]
+      const IMAGES = [
+        [
+          'safira-painel',
+          'Painel',
+          'modelo Safira, indicadores, gráficos e clientes recentes',
+          1920,
+          1080,
+        ],
+        [
+          'safira-clientes',
+          'Clientes',
+          'modelo Safira, tabela com busca, filtros e ações',
+          1920,
+          1080,
+        ],
+        [
+          'safira-atendimento',
+          'Atendimento',
+          'modelo Safira, conversas por etapa e mensagens',
+          1920,
+          1080,
+        ],
+        ['equilibrio-agenda', 'Agenda', 'modelo Equilíbrio, calendário da semana', 1920, 1080],
+        ['aurora-kanban', 'Funil de vendas', 'modelo Aurora, quadro kanban por etapa', 1920, 1080],
+        ['safira-calendario', 'Calendário', 'modelo Safira, visão do mês', 1920, 1080],
+        [
+          'safira-dashboard-ajuste',
+          'Painel em widgets',
+          'modelo Safira, blocos que o usuário reorganiza',
+          1920,
+          1080,
+        ],
+        ['safira-drawer', 'Gaveta', 'modelo Safira, formulário com rodapé fixo', 1920, 1080],
+        [
+          'aurora-mega-menu',
+          'Mega menu',
+          'modelo Aurora, menu superior com painel de seções',
+          1920,
+          1080,
+        ],
+        ['safira-escuro', 'Modo escuro', 'modelo Safira no escuro', 1920, 1080],
+        [
+          'equilibrio-painel',
+          'Painel Equilíbrio',
+          'modelo Equilíbrio, painel com a paleta Equilíbrio',
+          1920,
+          1080,
+        ],
+        ['aurora-painel', 'Painel Aurora', 'modelo Aurora, painel com a paleta Aurora', 1920, 1080],
+        ['ardosia-painel', 'Paleta Ardósia', 'painel com grafite e laranja', 1920, 1080],
+        [
+          'equilibrio-mobile',
+          'No celular',
+          'modelo Equilíbrio, indicadores e barra inferior',
+          780,
+          1688,
+        ],
+        ['aurora-mobile', 'No celular', 'modelo Aurora, indicadores e barra inferior', 780, 1688],
+        ['safira-kanban-mobile', 'Funil no celular', 'modelo Safira, uma etapa por vez', 780, 1688],
+        ['matriz-safira-safira', 'Matriz T1-C1', 'modelo Safira com a paleta Safira', 1920, 1080],
+        [
+          'matriz-safira-equilibrio',
+          'Matriz T1-C2',
+          'modelo Safira com a paleta Equilíbrio',
+          1920,
+          1080,
+        ],
+        ['matriz-safira-aurora', 'Matriz T1-C3', 'modelo Safira com a paleta Aurora', 1920, 1080],
+        ['matriz-safira-ardosia', 'Matriz T1-C4', 'modelo Safira com a paleta Ardósia', 1920, 1080],
+        [
+          'matriz-equilibrio-safira',
+          'Matriz T2-C1',
+          'modelo Equilíbrio com a paleta Safira',
+          1920,
+          1080,
+        ],
+        [
+          'matriz-equilibrio-equilibrio',
+          'Matriz T2-C2',
+          'modelo Equilíbrio com a paleta Equilíbrio',
+          1920,
+          1080,
+        ],
+        [
+          'matriz-equilibrio-aurora',
+          'Matriz T2-C3',
+          'modelo Equilíbrio com a paleta Aurora',
+          1920,
+          1080,
+        ],
+        [
+          'matriz-equilibrio-ardosia',
+          'Matriz T2-C4',
+          'modelo Equilíbrio com a paleta Ardósia',
+          1920,
+          1080,
+        ],
+        ['matriz-aurora-safira', 'Matriz T3-C1', 'modelo Aurora com a paleta Safira', 1920, 1080],
+        [
+          'matriz-aurora-equilibrio',
+          'Matriz T3-C2',
+          'modelo Aurora com a paleta Equilíbrio',
+          1920,
+          1080,
+        ],
+        ['matriz-aurora-aurora', 'Matriz T3-C3', 'modelo Aurora com a paleta Aurora', 1920, 1080],
+        ['matriz-aurora-ardosia', 'Matriz T3-C4', 'modelo Aurora com a paleta Ardósia', 1920, 1080],
+      ]
+      const gallery = document.getElementById('gallery')
+      gallery.innerHTML = IMAGES.map(
+        ([id, title, text, w, h]) =>
+          '<figure><button type="button" class="thumb" data-open="' +
+          id +
+          '" aria-label="Ampliar: ' +
+          title +
+          '"><img src="images/' +
+          id +
+          '.png" alt="' +
+          title +
+          ': ' +
+          text +
+          '" loading="lazy" width="' +
+          w +
+          '" height="' +
+          h +
+          '"></button><figcaption><b>' +
+          title +
+          '</b> · ' +
+          text +
+          '</figcaption></figure>',
+      ).join('')
+
+      const lb = document.getElementById('lightbox')
+      const lbImg = lb.querySelector('img')
+      const fechar = lb.querySelector('.lb-close')
+      let atual = 0
+      let opener = null
+      function mostrar(i, gravar = true) {
+        atual = (i + IMAGES.length) % IMAGES.length
+        const [id, title, text] = IMAGES[atual]
+        lbImg.src = 'images/' + id + '.png'
+        lbImg.alt = title + ': ' + text
+        lb.querySelector('.cap').textContent = title + ' · ' + text
+        lb.classList.add('open')
+        fechar.focus()
+        if (gravar) history.replaceState(null, '', '?imagem=' + id)
+      }
+      function fecharLb() {
+        lb.classList.remove('open')
+        history.replaceState(null, '', location.pathname)
+        if (opener) opener.focus()
+        opener = null
+      }
+      document.addEventListener('click', (e) => {
+        const alvo = e.target.closest('[data-open]')
+        if (!alvo) return
+        opener = alvo
+        mostrar(IMAGES.findIndex(([id]) => id === alvo.dataset.open))
+      })
+      fechar.onclick = fecharLb
+      lb.querySelector('.lb-prev').onclick = () => mostrar(atual - 1)
+      lb.querySelector('.lb-next').onclick = () => mostrar(atual + 1)
+      lb.addEventListener('click', (e) => {
+        if (e.target === lb) fecharLb()
+      })
+      document.addEventListener('keydown', (e) => {
+        if (!lb.classList.contains('open')) return
+        if (e.key === 'Escape') fecharLb()
+        if (e.key === 'ArrowLeft') mostrar(atual - 1)
+        if (e.key === 'ArrowRight') mostrar(atual + 1)
+        if (e.key === 'Tab') {
+          const foco = [...lb.querySelectorAll('button')]
+          const i = foco.indexOf(document.activeElement)
+          e.preventDefault()
+          foco[(i + (e.shiftKey ? -1 : 1) + foco.length) % foco.length].focus()
+        }
+      })
+      const inicio = new URLSearchParams(location.search).get('imagem')
+      if (inicio && IMAGES.some(([id]) => id === inicio))
+        mostrar(
+          IMAGES.findIndex(([id]) => id === inicio),
+          false,
+        )
+
+      document.querySelectorAll('.copy').forEach((b) =>
+        b.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(b.parentElement.querySelector('code').textContent)
+            b.textContent = 'copiado'
+          } catch {
+            b.textContent = 'selecione e copie'
+          }
+          setTimeout(() => {
+            b.textContent = 'copiar'
+          }, 1800)
+        }),
+      )
+    </script>
   </body>
 </html>
