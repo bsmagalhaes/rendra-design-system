@@ -51,6 +51,9 @@ interface BaseProps {
   'aria-describedby'?: string
 }
 
+/** Acima deste número de opções, o "Selecionar todos" aparece sem a prop `selectAll`. */
+const SELECT_ALL_AUTO_MIN = 5
+
 interface SingleProps extends BaseProps {
   multiple?: false
   value?: string | null
@@ -65,7 +68,10 @@ interface MultipleProps extends BaseProps {
   multiple: true
   value?: string[]
   onChange?: (value: string[]) => void
-  /** Opção "Selecionar todos" no topo da lista. */
+  /**
+   * Linha "Selecionar todos" no topo da lista (vira "Desmarcar todos" com tudo marcado).
+   * Padrão: aparece sozinha com mais de 5 opções; `false` desliga, `true` força com 5 ou menos.
+   */
   selectAll?: boolean
   /** Mostra "3 selecionados" no lugar dos chips. */
   showCount?: boolean
@@ -163,6 +169,8 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
 
   const enabled = all.filter((o) => !o.disabled)
   const allSelected = enabled.length > 0 && enabled.every((o) => multiValue.includes(o.value))
+  const showSelectAll =
+    multiple && ((props as MultipleProps).selectAll ?? all.length > SELECT_ALL_AUTO_MIN)
   const toggleAll = () => {
     const next = allSelected ? [] : enabled.map((o) => o.value)
     if (isMobile) setDraft(next)
@@ -315,14 +323,14 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
           </span>
         </Command.Item>
       )}
-      {multiple && (props as MultipleProps).selectAll && !q && enabled.length > 0 && (
+      {showSelectAll && !q && enabled.length > 0 && (
         <Command.Item
           value="__todos__"
           onSelect={toggleAll}
           className={cn(itemClass, 'font-medium')}
         >
           {checkbox(allSelected)}
-          Selecionar todos
+          {allSelected ? 'Desmarcar todos' : 'Selecionar todos'}
         </Command.Item>
       )}
       {Object.entries(groups).map(([group, opts]) => (

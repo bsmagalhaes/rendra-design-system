@@ -76,4 +76,46 @@ describe('Select', () => {
     await open()
     expect(screen.queryByRole('option')).not.toBeInTheDocument()
   })
+
+  describe('múltiplo: "Selecionar todos" automático', () => {
+    const make = (n: number) =>
+      Array.from({ length: n }, (_, i) => ({ value: `v${i}`, label: `Item ${i}` }))
+
+    it('com 6 opções aparece sem a prop', async () => {
+      render(<Select label="Estado" options={make(6)} multiple />)
+      await open()
+      expect(await screen.findByRole('option', { name: /Selecionar todos/ })).toBeInTheDocument()
+    })
+
+    it('com 5 opções não aparece', async () => {
+      render(<Select label="Estado" options={make(5)} multiple />)
+      await open()
+      await screen.findByRole('option', { name: /Item 0/ })
+      expect(screen.queryByText(/Selecionar todos/)).not.toBeInTheDocument()
+    })
+
+    it('com 5 opções e selectAll aparece', async () => {
+      render(<Select label="Estado" options={make(5)} multiple selectAll />)
+      await open()
+      expect(await screen.findByRole('option', { name: /Selecionar todos/ })).toBeInTheDocument()
+    })
+
+    it('selectAll={false} com 6 opções não aparece', async () => {
+      render(<Select label="Estado" options={make(6)} multiple selectAll={false} />)
+      await open()
+      await screen.findByRole('option', { name: /Item 0/ })
+      expect(screen.queryByText(/Selecionar todos/)).not.toBeInTheDocument()
+    })
+
+    it('o texto vira "Desmarcar todos" com tudo marcado e volta depois', async () => {
+      render(<Select label="Estado" options={make(6)} multiple />)
+      await open()
+      await userEvent.click(await screen.findByRole('option', { name: /Selecionar todos/ }))
+      expect(await screen.findByRole('option', { name: /Desmarcar todos/ })).toBeInTheDocument()
+      expect(screen.queryByText('Selecionar todos')).not.toBeInTheDocument()
+      await userEvent.click(screen.getByRole('option', { name: /Item 0/ }))
+      expect(await screen.findByRole('option', { name: /Selecionar todos/ })).toBeInTheDocument()
+      expect(screen.queryByText('Desmarcar todos')).not.toBeInTheDocument()
+    })
+  })
 })
