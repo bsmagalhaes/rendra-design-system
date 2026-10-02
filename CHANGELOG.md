@@ -2,12 +2,24 @@
 
 O que mudou em cada versão e o que um projeto derivado precisa fazer para atualizar. Segue o [versionamento semântico](https://semver.org/lang/pt-BR/). Datas em DD/MM/AAAA.
 
-## Não publicado
+## 2.3.0 (02/10/2026)
+
+Novidade no Select múltiplo, correção no Input secret e uma página de apresentação para o projeto. Sem quebra: quem não quer a linha "Selecionar todos" em listas longas passa `selectAll={false}`.
+
+### Corrigido
+
+- **Input `variant="secret"` com `clearable`:** em edição, o botão "Limpar campo" olhava o `value` do consumidor, então aparecia por causa do valor salvo (que nunca deve chegar ao campo) e não esvaziava o que a pessoa digitou. Agora o campo tem rascunho próprio, abre vazio, o botão aparece só depois de digitar e "Limpar campo" esvazia o campo e avisa `onChange` e `onValueChange`.
+
+### Adicionado
+
+- **Página de apresentação do Rendra Design System** (hero, seções, galeria com lightbox e FAQ), `og-image` composta, `sitemap`, `llms.txt` e stubs de redirecionamento com canonical para as rotas antigas. A demo passa a viver em `/demo/` e o Pages é montado por um script só, igual no CI e no local. O README e o briefing do web foram atualizados com a demo em `/demo/`.
+- **Matriz de modelos** no `CLAUDE.md` do projeto (levantamento, plano, validação do plano, execução e validação da entrega por modelos diferentes).
 
 ### Alterado
 
 - **Select múltiplo com "Selecionar todos" automático:** com mais de 5 opções (todas as mostradas, incluindo desabilitadas e de qualquer grupo), a linha aparece sem passar `selectAll`. `selectAll={false}` desliga; com 5 opções ou menos continua opt-in por `selectAll`. A linha é uma só e alterna: vira "Desmarcar todos" quando todas as opções habilitadas estão marcadas. Quem não quer a linha em listas longas passa `selectAll={false}`.
 - **Sem robôs como colaboradores:** o workflow "Atualizar referências visuais" agora faz o commit com autor e committer do mantenedor, em vez de `github-actions[bot]`. O Dependabot de versões (`.github/dependabot.yml`) foi removido; ficam só os alertas de segurança do GitHub. A atualização de dependências passa a ser manual, como descrito no `CONTRIBUTING.md`.
+- **Textos públicos sem promessa de gratuidade:** metas, JSON-LD, FAQ e o texto da demo não prometem mais que não haverá versão paga, com teste que barra a volta.
 
 ## 2.2.2 (29/09/2026)
 
