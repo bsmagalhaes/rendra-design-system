@@ -163,6 +163,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const [showPassword, setShowPassword] = useState(false)
   const [inner, setInner] = useState(String(value ?? defaultValue ?? ''))
   const current = value ?? inner
+  // variant="secret" em edição: o campo nunca deriva de `value` do consumidor (o valor salvo
+  // não pode aparecer nem acionar o "Limpar campo"); o rascunho é próprio e abre vazio.
+  const [secretDraft, setSecretDraft] = useState('')
+  const [lastIsEditing, setLastIsEditing] = useState(isEditing)
+  if (isEditing !== lastIsEditing) {
+    setLastIsEditing(isEditing)
+    if (isEditing) setSecretDraft('')
+  }
   const cb = useRef({ onChange, onValueChange, onCentsChange })
   cb.current = { onChange, onValueChange, onCentsChange }
   const lookupKind =
@@ -243,6 +251,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const resetValue = () => {
     if (maskRef.current) maskRef.current.value = ''
     setInner('')
+    setSecretDraft('')
     onChange?.('')
     onValueChange?.('', '')
     onCentsChange?.(null)
@@ -354,8 +363,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         {...(isSecret
           ? {
               // "Trocar" sempre abre vazio: o valor salvo nunca chega a existir no DOM.
-              defaultValue: '',
+              value: secretDraft,
               onChange: (e: ChangeEvent<HTMLInputElement>) => {
+                setSecretDraft(e.target.value)
                 onChange?.(e.target.value)
                 onValueChange?.(e.target.value, e.target.value)
               },
@@ -398,7 +408,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       {!hasUnits && suffix && (
         <span className="shrink-0 text-sm text-muted-foreground">{suffix}</span>
       )}
-      {clearable && current && !disabled && (
+      {clearable && (isSecret ? secretDraft : current) && !disabled && (
         <button
           type="button"
           onClick={clear}
