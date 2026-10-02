@@ -2,7 +2,7 @@
 
 ## Fluxo de início
 
-Siga o fluxo descrito no [`AGENTS.md`](AGENTS.md): se `docs/BRIEFING.md` não existir, pergunte primeiro se é projeto novo, migração de layout ou contribuição, conduza o briefing de `docs/BRIEFING_MODELO.md` e só então planeje e execute em etapas.
+Siga o fluxo descrito no [`AGENTS.md`](AGENTS.md): se `docs/BRIEFING.md` não existir, pergunte primeiro se é projeto novo, migração de layout ou contribuição, conduza o briefing de `docs/BRIEFING_MODELO.md` e só então planeje e execute em etapas. Sem terminal, conduza o briefing em texto e entregue o `docs/BRIEFING.md` para a pessoa levar a uma IA com terminal, com a continuação de projeto novo ou a de migração, conforme o caso (ramo (d) do `AGENTS.md`).
 
 @AGENTS.md
 
@@ -46,6 +46,8 @@ npm run build         # build de produção
 - Toda tela nova: entre em `routes.tsx` e `routes-list.ts`, passe no `test:layout` e tenha story em `src/stories/pages.stories.tsx`.
 - Textos da interface em português do Brasil.
 - Crédito "Feito com Rendra" (`RendraCredit`, rodapé do login): se pedirem para tirar, tire (`credit={false}`), mas avise as duas coisas juntas: a licença MIT exige manter o aviso de copyright e o arquivo `LICENSE` no código e nas cópias, com ou sem crédito visível; e o crédito na tela é opcional, com preferência por mantê-lo no rodapé do login ou movê-lo para outro lugar visível, como uma tela "Sobre". Nunca diga que a MIT obriga crédito visível na interface: não obriga. Detalhes no `AGENTS.md`.
+
+A seção "REGRA INEGOCIÁVEL: MATRIZ DE MODELOS" abaixo vale para a manutenção do próprio Rendra Design System. Em projeto novo ou migração feitos a partir deste repositório, siga o "Fluxo de início" do `AGENTS.md`, sem subagentes obrigatórios.
 
 # REGRA INEGOCIÁVEL: MATRIZ DE MODELOS
 

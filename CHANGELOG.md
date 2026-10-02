@@ -20,6 +20,9 @@ Novidade no Select múltiplo, correção no Input secret e uma página de aprese
 - **Select múltiplo com "Selecionar todos" automático:** com mais de 5 opções (todas as mostradas, incluindo desabilitadas e de qualquer grupo), a linha aparece sem passar `selectAll`. `selectAll={false}` desliga; com 5 opções ou menos continua opt-in por `selectAll`. A linha é uma só e alterna: vira "Desmarcar todos" quando todas as opções habilitadas estão marcadas. Quem não quer a linha em listas longas passa `selectAll={false}`.
 - **Sem robôs como colaboradores:** o workflow "Atualizar referências visuais" agora faz o commit com autor e committer do mantenedor, em vez de `github-actions[bot]`. O Dependabot de versões (`.github/dependabot.yml`) foi removido; ficam só os alertas de segurança do GitHub. A atualização de dependências passa a ser manual, como descrito no `CONTRIBUTING.md`.
 - **Textos públicos sem promessa de gratuidade:** metas, JSON-LD, FAQ e o texto da demo não prometem mais que não haverá versão paga, com teste que barra a volta.
+- **Limpeza do clone:** a lista "Limpeza do clone" do `docs/COMO_APLICAR.md` cresceu: passa a incluir os arquivos da página de apresentação e os testes dela (`7fddd16`, `01ccb8b`) e o `scripts/lib/texto-publico.test.ts`, que só vale para os textos do Rendra.
+- **Início por chat sem terminal:** o `AGENTS.md` ganhou o ramo (d), que conduz o briefing em texto e entrega o `docs/BRIEFING.md` com as linhas de continuação, e os ramos (b) e (c) aceitam briefing colado sem refazer as perguntas. O `CLAUDE.md` deixa claro que a matriz de modelos vale para a manutenção do próprio Rendra.
+- Simulação dos dois leigos aprovada em 02/10/2026 (Regra um, item 7): começar um sistema novo e migrar um sistema existente, nos três perfis de IA (com terminal e agentes, com terminal sem agentes, chat sem terminal), com o clone no ar e as verificações verdes a partir do link, sem lacuna bloqueadora.
 
 ## 2.2.2 (29/09/2026)
 

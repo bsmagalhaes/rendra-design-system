@@ -278,6 +278,16 @@ describe('Input variant="secret" (A10)', () => {
     expect(screen.queryByLabelText('Chave de API')).not.toBeInTheDocument()
   })
 
+  it('"Trocar", digitar, "Cancelar" e "Trocar" de novo abre o campo vazio', async () => {
+    render(<SecretField />)
+    await userEvent.click(screen.getByRole('button', { name: 'Trocar' }))
+    await userEvent.type(screen.getByLabelText('Chave de API'), 'rascunho')
+    expect(screen.getByLabelText('Chave de API')).toHaveValue('rascunho')
+    await userEvent.click(screen.getByRole('button', { name: 'Cancelar' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Trocar' }))
+    expect(screen.getByLabelText('Chave de API')).toHaveValue('')
+  })
+
   it('"Remover" tira a dica mascarada e mostra "Nenhum valor salvo"', async () => {
     const onRemoveSpy = vi.fn()
     render(<SecretField onRemoveSpy={onRemoveSpy} />)
