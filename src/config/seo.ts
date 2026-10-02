@@ -17,7 +17,7 @@ export const siteSeo = {
   /** Frase curta que aparece nos resultados de busca e no compartilhamento. */
   tagline: 'Template de sistema e layout de sistema administrativo em React',
   description:
-    'Template de sistema gratuito e open source em React, TypeScript e Tailwind CSS: layout de sistema administrativo com dashboard, tabelas, formulários, CRM kanban, agenda, chat omnichannel e mais de 50 componentes. Mobile-first, acessível (WCAG 2.1 AA), em português do Brasil e pronto para white label.',
+    'Template de sistema open source, sob licença MIT, em React, TypeScript e Tailwind CSS: layout de sistema administrativo com dashboard, tabelas, formulários, CRM kanban, agenda, chat omnichannel e mais de 50 componentes. Mobile-first, acessível (WCAG 2.1 AA), em português do Brasil e pronto para white label.',
   keywords: [
     'template de sistema',
     'layout de sistema',
