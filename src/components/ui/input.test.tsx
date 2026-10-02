@@ -302,4 +302,42 @@ describe('Input variant="secret" (A10)', () => {
     expect(button).toBeDisabled()
     expect(button).toHaveAttribute('aria-busy', 'true')
   })
+
+  it('clearable em edição não aparece só porque o consumidor passou o valor salvo em value', () => {
+    render(
+      <Input
+        aria-label="Chave de API"
+        variant="secret"
+        isEditing
+        clearable
+        value="segredo-salvo"
+        onChange={() => {}}
+      />,
+    )
+    expect(screen.getByLabelText('Chave de API')).toHaveValue('')
+    expect(screen.queryByRole('button', { name: 'Limpar campo' })).not.toBeInTheDocument()
+  })
+
+  it('clearable em edição aparece depois de digitar e "Limpar campo" esvazia o campo e avisa o consumidor', async () => {
+    const onChange = vi.fn()
+    const onValueChange = vi.fn()
+    render(
+      <Input
+        aria-label="Chave de API"
+        variant="secret"
+        isEditing
+        clearable
+        onChange={onChange}
+        onValueChange={onValueChange}
+      />,
+    )
+    expect(screen.queryByRole('button', { name: 'Limpar campo' })).not.toBeInTheDocument()
+    await userEvent.type(screen.getByLabelText('Chave de API'), 'novo-valor')
+    expect(screen.getByLabelText('Chave de API')).toHaveValue('novo-valor')
+    await userEvent.click(screen.getByRole('button', { name: 'Limpar campo' }))
+    expect(screen.getByLabelText('Chave de API')).toHaveValue('')
+    expect(screen.queryByRole('button', { name: 'Limpar campo' })).not.toBeInTheDocument()
+    expect(onChange).toHaveBeenLastCalledWith('')
+    expect(onValueChange).toHaveBeenLastCalledWith('', '')
+  })
 })
