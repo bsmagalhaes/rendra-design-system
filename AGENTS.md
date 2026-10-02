@@ -27,14 +27,16 @@ Este é o **Rendra Design System**: um design system completo e boilerplate Reac
 
 ### Passo 1: descobrir o estado
 
-Descubra primeiro em qual dos três ramos você está.
+Descubra primeiro em qual dos quatro ramos você está.
+
+Primeiro: se você não consegue rodar comandos nem gravar arquivos (chat sem terminal), vá direto ao ramo (d); nunca passe comandos para a pessoa rodar.
 
 **(a) Você já está numa pasta de projeto** (um clone do Rendra que virou o projeto do usuário, ou este próprio repositório), sem que ninguém tenha apontado você para outro sistema.
 
 - Confira se **`docs/BRIEFING.md` existe na máquina** (é um arquivo fora do controle de versão, veja `.gitignore`: não aparece no `git status` nem no histórico, então a checagem é sempre no disco, nunca por comando de git).
 - Existindo e com status "confirmado": leia o briefing e siga a partir do passo 5, na etapa em que o trabalho parou.
 - Existindo e "rascunho": retome o briefing de onde parou.
-- Não existindo: siga o passo 2.
+- Não existindo: siga o passo 2. Se a pessoa colar um briefing pronto na conversa, grave em `docs/BRIEFING.md` com o status que ele traz e siga o parágrafo "Briefing colado" abaixo, sem refazer as perguntas.
 
 **(b) Você foi apontado para começar um projeto novo a partir do link do repositório**, e o usuário ainda não tem uma pasta de projeto. Antes de perguntar qualquer coisa do briefing, faça a parte técnica por ele, nesta ordem:
 
@@ -45,9 +47,29 @@ Descubra primeiro em qual dos três ramos você está.
 5. `npx playwright install chromium` (uma vez, para os testes de layout).
 6. `npm run dev` e informe ao usuário o endereço http://localhost:5173.
 
-Depois disso, siga os passos 3 a 5 deste arquivo.
+Depois disso, siga os passos 3 a 5 deste arquivo; se a pessoa avisou que já tem o briefing pronto (ramo d), peça para colar, grave em `docs/BRIEFING.md` e siga do Passo 5, sem refazer as perguntas.
 
-**(c) Você foi apontado a partir de outro sistema** ("use este design system no meu sistema", "migre meu sistema para o Rendra"), e está trabalhando na pasta desse sistema, onde este `AGENTS.md` não existe. Leia o repositório de referência pelos links, nesta ordem: [`AGENTS.md`](https://github.com/bsmagalhaes/rendra-ui-web/blob/main/AGENTS.md), [`DESIGN_RULES.md`](https://github.com/bsmagalhaes/rendra-ui-web/blob/main/DESIGN_RULES.md), [`docs/PROMPT_MIGRACAO.md`](https://github.com/bsmagalhaes/rendra-ui-web/blob/main/docs/PROMPT_MIGRACAO.md) e [`docs/COMO_APLICAR.md`](https://github.com/bsmagalhaes/rendra-ui-web/blob/main/docs/COMO_APLICAR.md). O `docs/PROMPT_MIGRACAO.md` decide: você analisa o projeto primeiro (versão do React, estrutura, se o código atual vale a pena aproveitar) e recomenda, numa frase simples, qual dos três caminhos seguir, pedindo só a confirmação do usuário, nunca perguntando o critério direto (ele não sabe responder isso sozinho): React 19.3 ou mais recente e o projeto quer se manter atualizado pelo pacote, o **caminho pacote npm**; React 18, ou uma estrutura que não recebe o pacote, mas vale aproveitar o projeto atual, o **caminho de cópia de arquivos-fonte**; sistema antigo que não vale a pena manter, o **caminho clone e refazer** (recomeça o histórico com `git init` limpo, sem vínculo com o repositório do Rendra, trazendo as regras de negócio do sistema atual: não é um projeto novo sem histórico de negócio). Cada caminho remete, ao final, a `docs/COMO_APLICAR.md` para o detalhe técnico e aos passos 3 e 4 deste arquivo para o briefing completo (o Passo 2 não se aplica aqui: você já sabe que é migração, não precisa perguntar o tipo de trabalho), com o bloco 10 do roteiro ("Somente para migração") preenchido e registrado em `docs/BRIEFING.md` com o status.
+**(c) Você foi apontado a partir de outro sistema** ("use este design system no meu sistema", "migre meu sistema para o Rendra"), e está trabalhando na pasta desse sistema, onde este `AGENTS.md` não existe. Leia o repositório de referência pelos links, nesta ordem: [`AGENTS.md`](https://github.com/bsmagalhaes/rendra-ui-web/blob/main/AGENTS.md), [`DESIGN_RULES.md`](https://github.com/bsmagalhaes/rendra-ui-web/blob/main/DESIGN_RULES.md), [`docs/PROMPT_MIGRACAO.md`](https://github.com/bsmagalhaes/rendra-ui-web/blob/main/docs/PROMPT_MIGRACAO.md) e [`docs/COMO_APLICAR.md`](https://github.com/bsmagalhaes/rendra-ui-web/blob/main/docs/COMO_APLICAR.md). O `docs/PROMPT_MIGRACAO.md` decide: você analisa o projeto primeiro (versão do React, estrutura, se o código atual vale a pena aproveitar) e recomenda, numa frase simples, qual dos três caminhos seguir, pedindo só a confirmação do usuário, nunca perguntando o critério direto (ele não sabe responder isso sozinho): React 19.3 ou mais recente e o projeto quer se manter atualizado pelo pacote, o **caminho pacote npm**; React 18, ou uma estrutura que não recebe o pacote, mas vale aproveitar o projeto atual, o **caminho de cópia de arquivos-fonte**; sistema antigo que não vale a pena manter, o **caminho clone e refazer** (recomeça o histórico com `git init` limpo, sem vínculo com o repositório do Rendra, trazendo as regras de negócio do sistema atual: não é um projeto novo sem histórico de negócio). Cada caminho remete, ao final, a `docs/COMO_APLICAR.md` para o detalhe técnico e aos passos 3 e 4 deste arquivo para o briefing completo (o Passo 2 não se aplica aqui: você já sabe que é migração, não precisa perguntar o tipo de trabalho), com o bloco 10 do roteiro ("Somente para migração") preenchido e registrado em `docs/BRIEFING.md` com o status. Se a pessoa avisou que já tem o briefing pronto (ramo d), peça para colar, grave em `docs/BRIEFING.md` com o bloco 10 e siga do Passo 5, sem refazer as perguntas.
+
+**(d) Chat sem terminal.** Se você não consegue rodar `git clone` nem gravar arquivos, diga em uma linha ("Vou conduzir o briefing aqui; a instalação fica para uma IA com terminal, no fim eu explico"), leia `AGENTS.md` e `docs/BRIEFING_MODELO.md` pelas URLs `https://raw.githubusercontent.com/bsmagalhaes/rendra-ui-web/main/AGENTS.md` e `https://raw.githubusercontent.com/bsmagalhaes/rendra-ui-web/main/docs/BRIEFING_MODELO.md`, faça o "Passo 2" e o briefing completo em texto puro e, ao confirmar, entregue o `docs/BRIEFING.md` inteiro num bloco de texto, com o status, mais as linhas de continuação para a pessoa, conforme o tipo de trabalho do briefing.
+
+Projeto novo:
+
+1. Instale uma IA de código com terminal (Claude Code, Codex, Cursor, Gemini CLI ou Copilot).
+2. Cole nela: `Clone https://github.com/bsmagalhaes/rendra-ui-web e use como base do meu novo sistema. Siga o AGENTS.md do repositório. Meu briefing já está pronto, vou colar.`
+3. Cole o briefing na mensagem seguinte; a IA salva em `docs/BRIEFING.md` e segue do Passo 5.
+
+Migração de um sistema que já existe:
+
+1. Instale uma IA de código com terminal (Claude Code, Codex, Cursor, Gemini CLI ou Copilot).
+2. Abra essa IA dentro da pasta do seu sistema e cole: `Aplique neste sistema o design system https://github.com/bsmagalhaes/rendra-ui-web. Siga o AGENTS.md do repositório. Meu briefing já está pronto, vou colar.`
+3. Cole o briefing na mensagem seguinte; a IA salva em `docs/BRIEFING.md` e segue o ramo (c), do Passo 5.
+
+Na migração pelo chat, peça em uma mensagem as versões de `react` e `react-dom` do `package.json`, recomende o caminho e entregue o briefing com o bloco 10.
+
+**Briefing colado.** Briefing vindo de um chat sem terminal conta a partir do dia em que é colado: mostre o resumo curto, pergunte se algo mudou e marque de novo "confirmado em" com a data do dia, sem refazer as perguntas.
+
+Em qualquer ramo: comandos, instalação, testes e capturas de tela são sempre feitos pela IA; à pessoa cabe só decidir e aprovar. Quando alguma etapa exigir uma ação dela (login, confirmação no navegador, código de verificação), a IA explica exatamente o que fazer em uma linha.
 
 ### Passo 2: perguntar o tipo de trabalho
 

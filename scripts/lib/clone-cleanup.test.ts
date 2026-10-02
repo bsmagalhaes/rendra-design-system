@@ -56,6 +56,12 @@ describe('limpeza do clone (docs/COMO_APLICAR.md)', () => {
     for (const arquivo of paraApagar) expect(usados.get(arquivo), arquivo).toBeUndefined()
   })
 
+  it('a regra de texto só do Rendra (texto-publico.test.ts) está na lista de limpeza e existe', () => {
+    const regras = guia.split('\n').find((l) => l.startsWith('- **Regras só do Rendra**')) ?? ''
+    expect(regras).toContain('`scripts/lib/texto-publico.test.ts`')
+    expect(existsSync(join(raiz, 'scripts/lib/texto-publico.test.ts'))).toBe(true)
+  })
+
   it('o sitemap fica: o seo-build da demo do clone o importa', () => {
     expect(paraApagar.has('scripts/lib/sitemap.ts')).toBe(false)
     expect(paraApagar.has('scripts/lib/sitemap.test.ts')).toBe(false)
