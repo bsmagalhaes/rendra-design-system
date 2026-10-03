@@ -2,12 +2,13 @@
 /*
  * Gera a og-image do site (1200x630) sem servidor e sem regravar as capturas do README:
  *   npm run docs:og-image
- * Lê docs/images/safira-painel.png, monta a página com scripts/lib/og-html.ts, renderiza no
+ * Lê docs/images/safira-painel.webp, monta a página com scripts/lib/og-html.ts, renderiza no
  * Chromium do Playwright e grava docs/og-image.png (página de apresentação) e public/og-image.png
  * (imagem social de toda página da demo). `npm run docs:images` continua sendo só das capturas.
  */
 import { readFileSync, writeFileSync } from 'node:fs'
 import { chromium } from '@playwright/test'
+import sharp from 'sharp'
 import { siteSeo } from '../src/config/seo.ts'
 import { buildOgHtml } from './lib/og-html.ts'
 
@@ -20,7 +21,7 @@ const REPOSITORIO_RENDRA = 'https://github.com/bsmagalhaes/rendra-ui-web'
 const html = buildOgHtml({
   produto: siteSeo.name,
   tagline: siteSeo.tagline,
-  imagem: readFileSync('docs/images/safira-painel.png'),
+  imagem: readFileSync('docs/images/safira-painel.webp'),
   selo: siteSeo.repository === REPOSITORIO_RENDRA ? SELO_RENDRA : undefined,
 })
 
@@ -28,7 +29,12 @@ const browser = await chromium.launch()
 try {
   const page = await browser.newPage({ viewport: { width: 1200, height: 630 } })
   await page.setContent(html, { waitUntil: 'load' })
-  const png = await page.screenshot({ type: 'png', clip: { x: 0, y: 0, width: 1200, height: 630 } })
+  const bruto = await page.screenshot({
+    type: 'png',
+    clip: { x: 0, y: 0, width: 1200, height: 630 },
+  })
+  // A og-image fica PNG (redes sociais não leem WebP de forma confiável), mas otimizada.
+  const png = await sharp(bruto).png({ compressionLevel: 9, effort: 10 }).toBuffer()
   writeFileSync('docs/og-image.png', png)
   writeFileSync('public/og-image.png', png)
   console.log(`og-image: OK (1200x630, ${png.length} bytes) em docs/ e public/`)
