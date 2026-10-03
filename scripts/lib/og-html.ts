@@ -9,7 +9,7 @@ import { escapeHtml } from './html.ts'
 export interface OgHtmlInput {
   produto: string
   tagline: string
-  /** Print desktop (PNG) que aparece à direita, em moldura simples. */
+  /** Print desktop (WebP) que aparece à direita, em moldura simples. */
   imagem: Uint8Array
   /** SVG do selo da família. Só o Rendra informa; um clone não herda a marca (W6). */
   selo?: string
@@ -43,6 +43,6 @@ ${marca}
 <h1>${comDestaque(produto)}</h1>
 <p class="tagline">${escapeHtml(tagline)}</p>
 <div class="rodape">React · Vite · Tailwind CSS · shadcn/ui</div>
-<div class="print"><img alt="" src="data:image/png;base64,${base64}"></div>
+<div class="print"><img alt="" src="data:image/webp;base64,${base64}"></div>
 </div></body></html>`
 }

@@ -53,7 +53,7 @@ export function PlanningSection() {
     () => tickets[0]?.messages.slice(0, 3) ?? [],
   )
   const images = useMemo(() => {
-    const files = import.meta.glob<string>('../../../docs/images/safira-*.png', {
+    const files = import.meta.glob<string>('../../../docs/images/safira-*.webp', {
       eager: true,
       query: '?url',
       import: 'default',
@@ -61,7 +61,7 @@ export function PlanningSection() {
     return Object.entries(files)
       .slice(0, 4)
       .map(([path, src]) => {
-        const name = path.split('/').pop()?.replace('.png', '') ?? ''
+        const name = path.split('/').pop()?.replace('.webp', '') ?? ''
         return { src, alt: `Captura ${name.replace('-', ': ')}` }
       })
   }, [])

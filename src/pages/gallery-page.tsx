@@ -19,12 +19,12 @@ import { cn } from '@/lib/cn'
  * menu), o mesmo que o briefing aceita. As imagens são geradas com npm run docs:images.
  */
 
-const files = import.meta.glob<string>('../../docs/images/*.png', {
+const files = import.meta.glob<string>('../../docs/images/*.webp', {
   eager: true,
   query: '?url',
   import: 'default',
 })
-const url = (name: string) => files[`../../docs/images/${name}.png`] ?? ''
+const url = (name: string) => files[`../../docs/images/${name}.webp`] ?? ''
 
 const T = { safira: 'T1', equilibrio: 'T2', aurora: 'T3' } as const
 const C = { safira: 'C1', equilibrio: 'C2', aurora: 'C3', ardosia: 'C4' } as const

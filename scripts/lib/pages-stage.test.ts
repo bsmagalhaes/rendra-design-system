@@ -31,7 +31,7 @@ function arranjo({ comStorybook = true } = {}) {
     writeFileSync(join(dist, 'storybook', 'index.html'), 'sb')
   }
   mkdirSync(join(docs, 'images'), { recursive: true })
-  writeFileSync(join(docs, 'images', 'safira-painel.png'), 'png')
+  writeFileSync(join(docs, 'images', 'safira-painel.webp'), 'webp')
   for (const nome of RAIZ) writeFileSync(join(docs, nome), `raiz:${nome}`)
   return { base, dist, docs, out: join(base, '.pages', 'rendra-ui-web') }
 }
@@ -54,7 +54,7 @@ describe('stageSite', () => {
     expect(readFileSync(join(a.out, 'demo', 'index.html'), 'utf8')).toBe('demo')
     expect(readFileSync(join(a.out, 'r', 'select.json'), 'utf8')).toBe('{"name":"select"}')
     expect(readFileSync(join(a.out, 'storybook', 'index.html'), 'utf8')).toBe('sb')
-    expect(readFileSync(join(a.out, 'images', 'safira-painel.png'), 'utf8')).toBe('png')
+    expect(readFileSync(join(a.out, 'images', 'safira-painel.webp'), 'utf8')).toBe('webp')
     expect(existsSync(join(a.out, 'demo', 'r'))).toBe(false)
     expect(existsSync(join(a.out, 'demo', 'storybook'))).toBe(false)
     rmSync(a.base, { recursive: true, force: true })

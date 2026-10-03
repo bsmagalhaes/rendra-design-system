@@ -18,7 +18,7 @@ describe('buildOgHtml', () => {
     expect(html).toContain('height:630px')
     expect(html).toContain('Rendra Design <span>System</span>')
     expect(html).toContain('Layout de sistema em React')
-    expect(html).toContain(`src="data:image/png;base64,${base64}"`)
+    expect(html).toContain(`src="data:image/webp;base64,${base64}"`)
   })
 
   it('usa a identidade da família: fundo #111111, título #f2f2f2, destaque #e8650a, tagline #c4c4c4', () => {

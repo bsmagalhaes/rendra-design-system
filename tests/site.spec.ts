@@ -214,6 +214,26 @@ test.describe('página de apresentação do web', () => {
     await expect(page).toHaveURL(/\?imagem=(?!safira-painel$)[a-z0-9-]+$/)
   })
 
+  test('todas as imagens da página carregam em WebP', async ({ page }) => {
+    const imgs = page.locator('main img')
+    const total = await imgs.count()
+    expect(total).toBeGreaterThan(10)
+    for (let i = 0; i < total; i++) {
+      await imgs.nth(i).scrollIntoViewIfNeeded()
+    }
+    await expect
+      .poll(() =>
+        imgs.evaluateAll(
+          (els) =>
+            els.filter((el) => {
+              const img = el as HTMLImageElement
+              return !img.complete || img.naturalWidth === 0 || !/\.webp$/.test(img.currentSrc)
+            }).length,
+        ),
+      )
+      .toBe(0)
+  })
+
   test('botão copiar leva o comando para a área de transferência', async ({ page, context }) => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write'])
     const caixa = page.locator('#instalacao .codebox').first()

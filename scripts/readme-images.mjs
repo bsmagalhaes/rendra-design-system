@@ -5,6 +5,7 @@
  */
 import { mkdirSync } from 'node:fs'
 import { chromium } from '@playwright/test'
+import { saveWebp } from './lib/webp.mjs'
 
 const BASE = process.env.BASE_URL ?? 'http://localhost:5173'
 const OUT = 'docs/images'
@@ -47,9 +48,9 @@ async function shot(
   await page.evaluate(() => document.fonts.ready)
   if (act) await act(page)
   await page.waitForTimeout(1800) // gráficos e ícones animados terminam
-  await page.screenshot({ path: `${OUT}/${name}.png` })
+  const bytes = await saveWebp(await page.screenshot({ type: 'png' }), `${OUT}/${name}.webp`)
   await ctx.close()
-  console.log('ok', name)
+  console.log('ok', name, bytes)
 }
 
 const browser = await chromium.launch()
